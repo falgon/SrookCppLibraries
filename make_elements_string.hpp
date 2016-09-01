@@ -59,7 +59,7 @@ constexpr std::string make_elements_string(Args... str)
 	std::string s=os.str();
 	s.pop_back();
 	os.str("");
-	os.clear(std::stringstream::goodbit)
+	os.clear(std::stringstream::goodbit);
 	return s;
 }
 } // inline namespace from_string
