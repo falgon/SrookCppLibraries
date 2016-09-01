@@ -58,6 +58,8 @@ constexpr std::string make_elements_string(Args... str)
 	transfer_ostream_parpack(_delimiter,str...);
 	std::string s=os.str();
 	s.pop_back();
+	os.str("");
+	os.clear(std::stringstream::goodbit)
 	return s;
 }
 } // inline namespace from_string
