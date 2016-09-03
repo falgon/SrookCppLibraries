@@ -4,7 +4,7 @@
 #include<cstring>
 
 namespace srook{
-namespace v1{
+inline namespace v1{
 
 std::string& str_replace(std::string& str,const char* src,const char* rhs)
 {
