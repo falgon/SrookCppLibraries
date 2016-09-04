@@ -19,14 +19,14 @@ public:
         {}
 
         emplace_insert_iterator&
-        operator=(typename Container::value_type& value)
+        operator=(const typename Container::value_type& value)
         {
                 iter=container->emplace(iter,value);
                 ++iter;
                 return *this;
         }
         emplace_insert_iterator&
-        operator=(typename Container::value_type&& value)
+        operator=(const typename Container::value_type&& value)
         {
                 iter=container->emplace(iter,std::move(value));
                 ++iter;
