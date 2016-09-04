@@ -5,7 +5,11 @@
 
 namespace srook{
 <<<<<<< HEAD
+<<<<<<< HEAD
 namespace v1{
+=======
+inline namespace v1{
+>>>>>>> 3fcc3fa90d2434943b137c5f6ea2d36a1277fa08
 =======
 inline namespace v1{
 >>>>>>> 3fcc3fa90d2434943b137c5f6ea2d36a1277fa08
