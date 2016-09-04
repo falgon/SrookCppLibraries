@@ -18,13 +18,13 @@ public:
         {}
         
         emplace_front_insert_iterator&
-        operator=(typename Container::value_type& value)
+        operator=(const typename Container::value_type& value)
         {
                 container->emplace_front(value);
                 return *this;
         }
         emplace_front_insert_iterator&
-        operator=(typename Container::value_type&& value)
+        operator=(const typename Container::value_type&& value)
         {
                 container->emplace_front(std::move(value));
                 return *this;
