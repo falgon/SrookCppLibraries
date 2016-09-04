@@ -1,0 +1,2 @@
+# srookCppLibraries
+mikoCppLibrariesの後継。無駄な記述をしないための無駄なUselessライブラリ。
