@@ -30,7 +30,7 @@ inline namespace v1{
 
 inline namespace iterator{
 template<char _delimiter=' ',class Iterator>
-constexpr std::string make_elements_string(Iterator b,Iterator e)
+constexpr auto make_elements_string(Iterator b,Iterator e)->decltype(typename Iterator::iterator_category(),std::string())
 {
 	std::ostringstream result;
 	for(; b!=e; ++b)result<<*b<<_delimiter;
@@ -38,6 +38,17 @@ constexpr std::string make_elements_string(Iterator b,Iterator e)
 	s.pop_back();
 	return s;
 }
+
+template<char _delimiter=' ',class Pointer>
+constexpr auto make_elements_string(Pointer* b,Pointer* e)->std::string
+{
+	std::ostringstream result;
+	for(; b!=e; ++b)result<<*b<<_delimiter;
+	std::string s=result.str();
+	s.pop_back();
+	return s;
+}
+
 } // inline namespace iterator
 
 inline namespace from_string{
