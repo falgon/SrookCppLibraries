@@ -26,28 +26,30 @@
 #include<boost/fusion/include/for_each.hpp>
 #endif
 
+#include<iostream>
+
 namespace srook{
 inline namespace v1{
 
 inline namespace from_iterator{
 
 template<char _delimiter=' ',class ForwardIterator>
-constexpr auto make_elements_string(ForwardIterator&& first,ForwardIterator&& last)
+constexpr auto make_elements_string(ForwardIterator first,const ForwardIterator& last)
 	->decltype(typename ForwardIterator::iterator_category(),std::string())
 {
 	std::ostringstream result;
-	for(auto it_b=first; it_b!=last; ++it_b)result<<*it_b<<_delimiter;
+	for(; first!=last; ++first)result<<*first<<_delimiter;
 	std::string s=std::move(result.str());
 	s.pop_back();
 	return s;
 }
 
 template<char _delimiter=' ',class Pointer>
-constexpr auto make_elements_string(const Pointer* const b,const Pointer* const e)
+constexpr auto make_elements_string(Pointer* first,Pointer* last)
 	->std::string
 {
 	std::ostringstream result;
-	for(auto it_b=b; it_b!=e; ++it_b)result<<*it_b<<_delimiter;
+	for(; first!=last; ++first)result<<*first<<_delimiter;
 	std::string s=std::move(result.str());
 	s.pop_back();
 	return s;
