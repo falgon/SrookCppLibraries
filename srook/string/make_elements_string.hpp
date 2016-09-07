@@ -199,4 +199,3 @@ constexpr std::string make_elements_string(mk_elements_string_iota_pair_type<_Tp
 
 } // namespace srook
 #endif
-
