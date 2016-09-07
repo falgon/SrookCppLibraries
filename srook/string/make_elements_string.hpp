@@ -157,7 +157,38 @@ constexpr std::string make_elements_string(const std::tuple<Args...>& tp)
 #endif
 } // inline namespace from_container
 
+inline namespace mkelm_str_iota_nm{
+template<class _Tp>
+struct mk_elements_string_iota_pair_type{
+	_Tp first;
+	const _Tp last;
+	
+	mk_elements_string_iota_pair_type(const _Tp& x,const _Tp& y):first(x),last(y){}
+	mk_elements_string_iota_pair_type(mk_elements_string_iota_pair_type&&)=default;
+	mk_elements_string_iota_pair_type(const mk_elements_string_iota_pair_type&)=delete;
+	mk_elements_string_iota_pair_type operator=(const mk_elements_string_iota_pair_type&)=delete;
+	mk_elements_string_iota_pair_type operator=(mk_elements_string_iota_pair_type&&)=delete;
+};
+
+template<class _Tp>
+auto mkelm_str_iota(const _Tp& x,const _Tp& y)
+{
+	return mk_elements_string_iota_pair_type<_Tp>(x,y);
+}
+
+template<char _delimiter=' ',class _Tp>
+constexpr std::string make_elements_string(mk_elements_string_iota_pair_type<_Tp> m)
+{
+	std::ostringstream result;
+	for(; m.first<m.last; ++m.first)result<<m.first<<_delimiter;
+	std::string s=result.str();
+	s.pop_back();
+	return s;
+}
+} // inline namespace mkelm_str_iota_nm
+
 } // inline namespace v1
+
 } // namespace srook
 #endif
 
