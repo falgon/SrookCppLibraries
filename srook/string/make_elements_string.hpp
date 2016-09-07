@@ -171,7 +171,7 @@ struct mk_elements_string_iota_pair_type{
 };
 
 template<class _Tp>
-auto mkelm_str_iota(const _Tp& x,const _Tp& y)
+constexpr auto mkelm_str_iota(const _Tp& x,const _Tp& y)
 {
 	return mk_elements_string_iota_pair_type<_Tp>(x,y);
 }
@@ -191,4 +191,3 @@ constexpr std::string make_elements_string(mk_elements_string_iota_pair_type<_Tp
 
 } // namespace srook
 #endif
-
