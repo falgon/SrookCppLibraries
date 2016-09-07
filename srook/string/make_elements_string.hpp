@@ -26,8 +26,6 @@
 #include<boost/fusion/include/for_each.hpp>
 #endif
 
-#include<iostream>
-
 namespace srook{
 inline namespace v1{
 
