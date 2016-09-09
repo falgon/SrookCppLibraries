@@ -8,6 +8,17 @@
 #include<stack>
 #include<utility>
 
+#if __has_include(<experimental/iterator>)
+#define POSSIBLE_TO_INCLUDE_EXPERIMENTAL_ITERATOR
+#endif
+
+#if __has_include(<boost/range/algorithm/copy.hpp>)
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_COPY
+#include<boost/range/algorithm/copy.hpp>
+#else
+#include<algorithm>
+#endif
+
 #if __has_include(<boost/fusion/adapted/std_tuple.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_FUSION_STD_TUPLE
 #endif
@@ -83,15 +94,29 @@ constexpr decltype(auto) make_elements_string(const Args&... str)
 
 inline namespace from_range{
 
+#ifndef POSSILE_TO_INCLUDE_EXPERIMENTAL_ITERATOR
 template<char _delimiter=' ',class Container>
-constexpr std::string make_elements_string(const Container& c)
+constexpr std::string make_elements_string(Container&& c)
 {
 	std::ostringstream result;
-	for(auto&& it:c)result<<it<<_delimiter;
+	for(auto it:std::forward<Container>(c))result<<it<<_delimiter;
 	std::string s=std::move(result.str());
 	s.pop_back();
 	return s;
 }
+#else
+template<char _delimiter=' ',class Container>
+constexpr std::string make_elements_string(Container&& c)
+{
+	std::stringstream ss;
+#ifndef POSSIBLE_TO_INCLUDE_BOOST_RANGE_COPY
+	boost::copy(std::forward<Container>(c),std::experimental::make_ostream_joiner(ss,_delimiter));
+#else
+	std::copy(std::cbegin(c),std::cend(c),std::experimental::make_ostream_joiner(ss,_delimiter));
+#endif
+	return ss.str();
+}
+#endif
 
 template<char _delimiter=' ',class FirstType,class SecondType>
 constexpr std::string make_elements_string(const std::map<FirstType,SecondType>& m)
