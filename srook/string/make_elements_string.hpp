@@ -109,7 +109,7 @@ template<char _delimiter=' ',class Container>
 constexpr std::string make_elements_string(Container&& c)
 {
 	std::stringstream ss;
-#ifndef POSSIBLE_TO_INCLUDE_BOOST_RANGE_COPY
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_COPY
 	boost::copy(std::forward<Container>(c),std::experimental::make_ostream_joiner(ss,_delimiter));
 #else
 	std::copy(std::cbegin(c),std::cend(c),std::experimental::make_ostream_joiner(ss,_delimiter));
