@@ -128,10 +128,6 @@ struct digits_values final:private noncopyable{
 		return result;
 	}
 
-	template<typename _ResultType>
-	digits_values diff(const digits_values<_ResultType>& oth)
-	{}
-
 	typename std::vector<result_type>::const_iterator cbegin()const{return v.cbegin();}
 	typename std::vector<result_type>::const_iterator cend()const{return v.cend();}
 	typename std::vector<result_type>::iterator begin(){return v.begin();}
