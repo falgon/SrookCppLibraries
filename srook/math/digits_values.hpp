@@ -103,36 +103,34 @@ struct digits_values final:private noncopyable{
 	result_type operator[](const std::size_t& index)const
 	{return v.at(index);}
 	
-	digits_values operator+(digits_values& oth)
+	template<typename _ResultType>
+	digits_values operator+(const digits_values<_ResultType>& oth)
 	{
 		const auto this_size=digit();
 		const auto oth_size=oth.digit();	
 		const auto max_v=std::max(this_size,oth_size);
 		
-		digits_values result;
-		result.v.reserve(max_v);
-		std::copy(max_v==this_size?cbegin():oth.cbegin(),max_v==this_size?cend():oth.cend(),std::back_inserter(result.v));
+		using bigger_type=if_c_t<sizeof(_ResultType) < sizeof(result_type),result_type,_ResultType>;
 
-		using bigger_type=
-			if_c_t<
-			sizeof(typename std::remove_reference<decltype(oth)>::type::result_type) < sizeof(result_type),
-			result_type,
-			typename std::remove_reference<decltype(oth)>::type::result_type
-			>;
-		
+		digits_values<bigger_type> result;
+		result.v.reserve(max_v);
+
 		if(max_v==this_size){
+			std::copy(cbegin(),cend(),std::back_inserter(result.v));
 			std::size_t counter=0;
-			for(auto& i:oth)
-				result.v[counter++]+=i;
+			for(auto i=oth.cbegin(); i!=oth.cend(); ++i)result.v[counter++]+=*i;
 		}else{
+			std::copy(oth.cbegin(),oth.cend(),std::back_inserter(result.v));
 			std::size_t counter=0;
-			for(auto& i:v)
-				result.v[counter++]+=i;
+			for(auto i=cbegin(); i!=cend(); ++i)result.v[counter++]+=*i;
 		}
-		
+
 		return result;
 	}
 
+	template<typename _ResultType>
+	digits_values diff(const digits_values<_ResultType>& oth)
+	{}
 
 	typename std::vector<result_type>::const_iterator cbegin()const{return v.cbegin();}
 	typename std::vector<result_type>::const_iterator cend()const{return v.cend();}
