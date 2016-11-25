@@ -110,7 +110,7 @@ struct digits_values final:private noncopyable{
 		const auto oth_size=oth.digit();	
 		const auto max_v=std::max(this_size,oth_size);
 		
-		using bigger_type=if_c_t<sizeof(_ResultType) < sizeof(result_type),result_type,_ResultType>;
+		//using bigger_type=if_c_t<sizeof(_ResultType) < sizeof(result_type),result_type,_ResultType>;
 
 		digits_values<bigger_type> result;
 		result.v.reserve(max_v);
