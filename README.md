@@ -9,3 +9,7 @@ http://roki.hateblo.jp/entry/2016/11/25/%E6%A1%81%E6%AF%8E%E3%81%AE%E5%87%A6%E7%
 
 * type_traits.copy_move_able ->
 http://roki.hateblo.jp/entry/2016/12/01/%E5%9E%8B%E3%81%8CTrivially_Copyable%E3%81%A0%E3%81%91%E3%81%A7%E3%81%AF%E3%81%AA%E3%81%8FCopyable%E3%81%A7%E3%81%82%E3%82%8B%E3%81%8B%E3%82%92%E5%88%A4%E5%AE%9A%E3%81%99%E3%82%8B%E3%83%A1%E3%82%BF%E9%96%A2
+
+## Copyrights
+Copyright (C) 2011-2016 Roki.
+Distributed under the MIT License
