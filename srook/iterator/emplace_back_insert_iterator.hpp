@@ -24,7 +24,7 @@ public:
 	}
 	emplace_back_insert_iterator&
 	operator=(const typename Container::value_type&& value)
-    	{
+    {
 		container->emplace_back(std::move(value));
 		return *this;
 	}
