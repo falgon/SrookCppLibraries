@@ -1,5 +1,6 @@
-#ifndef INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER
-#define INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER
+#ifndef INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
+#define INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
+#include<cstddef>
 namespace srook{
 namespace mpl{
 inline namespace v1{
