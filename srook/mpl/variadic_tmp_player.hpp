@@ -222,6 +222,20 @@ struct PopBack<pack<Head,Tail...>>:PopBack<Head,Tail...>{};
 template<class... Pack>
 using PopBack_t=typename PopBack<Pack...>::type;
 
+// Reverse
+template<class... Args>
+struct Reverse{
+	using type=Concat_t<Last_t<Args...>,typename Reverse<PopBack_t<Args...>>::type>;
+};
+template<>
+struct Reverse<pack<>>{
+	using type=pack<>;
+};
+template<class... Args>
+struct Reverse<pack<Args...>>:Reverse<Args...>{};
+template<class... Args>
+using Reverse_t=typename Reverse<Args...>::type;
+
 // Partial Head
 template<std::size_t,class...>
 struct PartialHead;
