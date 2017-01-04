@@ -1,6 +1,7 @@
 #ifndef INCLUDED_SROOK_INTERVAL_SEQUENCE_IMPL
 #define INCLUDED_SROOK_INTERVAL_SEQUENCE_IMPL
 #include<utility>
+#include<memory>
 namespace srook{
 inline namespace v1{
 
