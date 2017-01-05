@@ -59,6 +59,41 @@ template<class Mode,class T,class R,class Head,class... Pack>
 struct Replacer<Mode,T,R,pack<Head,Pack...>>:Replacer<Mode,T,R,Head,Pack...>{};
 template<class Mode,class T,class R,class... Pack>
 using Replacer_t=typename Replacer<Mode,T,R,Pack...>::type;
+
+// make pack: automatic pack generater
+template<class T,std::size_t size>
+struct make_pack_impl{
+	using type=Concat_t<T,typename make_pack_impl<T,size-1>::type>;
+};
+template<class T>
+struct make_pack_impl<T,0>{
+	using type=pack<>;
+};
+template<class T,std::size_t size>
+using make_pack=typename make_pack_impl<T,size>::type;
+
+// pack setting
+template<class T,std::size_t s>
+struct pack_setting{
+	static constexpr std::size_t size=s;
+	using type=T;
+};
+
+// make some pack: automatic multiple types pack generater
+template<class... PackSetting>
+struct make_someting_pack_impl{
+private:
+	using inner_type=make_pack<typename First_t<PackSetting...>::type,First_t<PackSetting...>::size>;
+public:
+	using type=Concat_t<inner_type,typename make_someting_pack_impl<PopFront_t<PackSetting...>>::type>;
+};
+template<>
+struct make_someting_pack_impl<pack<>>{
+		using type=pack<>;
+};
+template<class... PackSetting>
+using make_some_pack=typename make_someting_pack_impl<PackSetting...>::type;
+
 } // namespace v1
 } // namespace mpl
 } // namespace srook
