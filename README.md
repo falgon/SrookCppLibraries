@@ -1,4 +1,4 @@
-# srookCppLibraries
+# srook C++ Libraries
 mikoCppLibrariesの後継。無駄な記述をしないための無駄なUselessライブラリ。全体的に開発段階のため不安定である。
 
 ## How to
