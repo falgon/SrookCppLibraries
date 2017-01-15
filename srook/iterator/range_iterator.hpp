@@ -2,25 +2,36 @@
 #define SROOK_INCLUDED_RANGE_ITERATOR
 #include<iterator>
 namespace srook{
+inline namespace v1{
 
 struct OnlyHeadAndTail_Iterator_Tag{};
+
 template<class Iterator>
-using derived_type=std::iterator<OnlyHeadAndTail_Iterator_Tag,typename std::iterator_traits<Iterator>::value_type>;
-template<class Iterator>
-struct range_iterator:public derived_type<Iterator>{
-	typedef Iterator iterator;
-	typedef iterator const_iterator;
+struct range_iterator final{
+	using iterator_category=OnlyHeadAndTail_Iterator_Tag;
+	using iterator=Iterator;
+	using const_iterator=iterator;
+	using value_type=typename std::iterator_traits<iterator>::value_type;
+	using pointer=typename std::iterator_traits<iterator>::pointer;
+	using difference_type=typename std::iterator_traits<iterator>::difference_type;
+	using reference=typename std::iterator_traits<iterator>::reference;
 	
-	explicit range_iterator(Iterator first,Iterator last):first_(first),last_(last){}
-	iterator begin()const{return first_;}
-	iterator end()const{return last_;}
-	const_iterator cbegin()const{return first_;}
-	const_iterator cend()const{return last_;}
+	explicit constexpr range_iterator(iterator&& first,iterator&& last)noexcept
+		:first_(std::move(first)),last_(std::move(last)){}
+
+	constexpr iterator begin()const noexcept{return first_;}
+	constexpr iterator end()const noexcept{return last_;}
+	constexpr const_iterator cbegin()const noexcept{return first_;}
+	constexpr const_iterator cend()const noexcept{return last_;}
 private:
 	iterator first_,last_;
 };
 template<class Iterator>
-range_iterator<Iterator> make_range_iterator(Iterator first,Iterator last){return range_iterator<Iterator>(first,last);}
-
+constexpr range_iterator<Iterator> make_range_iterator(Iterator first,Iterator last)
+{
+	return range_iterator<Iterator>(std::move(first),std::move(last));
 }
+
+} // inline namespace v1
+} // namespace
 #endif
