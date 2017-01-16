@@ -3,9 +3,10 @@
 namespace srook{
 
 template<class Range,class Function>
-auto operator|(Range& r,Function f){return f(r);}
-template<class Range,class Function>
-auto operator|(const Range& r,Function f){return f(r);}
+auto operator|(Range&& r,Function&& f)
+{
+	return f(std::forward<Range>(r));
+}
 
 } // namespace roki
 #endif
