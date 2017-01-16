@@ -12,6 +12,7 @@
 #endif
 
 namespace srook{
+namespace adaptors{
 inline namespace v1{
 
 template<class OutputStream,class Delimiter_t>
@@ -41,6 +42,7 @@ print_t<Ostream,Delimiter_t> print(Ostream& os=std::cout,Delimiter_t&& delimiter
 }
 
 } // inline namespace v1
+} // namespace adaptors
 } // namespace srook
 
 #ifdef POSSIBLE_TO_BOOST_COPY

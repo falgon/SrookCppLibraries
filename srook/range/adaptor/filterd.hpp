@@ -4,6 +4,7 @@
 #include<srook/iterator/filterd_iterator.hpp>
 
 namespace srook{
+namespace adaptors{
 inline namespace v1{
 
 template<class Predicate>
@@ -40,5 +41,6 @@ filterd(Predicate&& pred)
 }
 
 } // inline namespace v1
+} // adaptors
 } // namespace srook
 #endif

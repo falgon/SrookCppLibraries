@@ -4,6 +4,8 @@
 #include<srook/iterator/range_iterator.hpp>
 #include<type_traits>
 namespace srook{
+namespace adaptors{
+inline namespace v1{
 
 template<class Iterator>
 struct copied_t{
@@ -31,5 +33,7 @@ copied_t<std::remove_reference_t<Iterator>> make_copied_t(Iterator&& first,Itera
 }
 const auto copied=[](auto&& r)noexcept{return make_copied_t(r.cbegin(),r.cend());};
 
-}
+} // inline namespace v1
+} // namespace adaptors
+} // namespace srook
 #endif

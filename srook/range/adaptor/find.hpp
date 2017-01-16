@@ -21,6 +21,7 @@
 #endif
 
 namespace srook{
+namespace adaptors{
 inline namespace v1{
 
 namespace mpl{
@@ -159,8 +160,8 @@ find(Target&& t)
 	return find_t<std::remove_reference_t<Target>>(std::forward<Target>(t));
 }
 
-
-} // namespace v1
+} // inline namespace v1
+} // namespace adaptors
 } // namespace srook
 
 #ifdef INCLUDED_BOOST_RANGE_FIND

@@ -7,7 +7,10 @@
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
 
-namespace roki{
+namespace srook{
+namespace adaptors{
+inline namespace v1{
+
 template<class Pred,class Range,class Tuple,std::size_t... I>
 auto apply_(Pred pred,Range& r,Tuple& tpl,std::index_sequence<I...>)
 {
@@ -55,5 +58,8 @@ const struct emplace_fronter_t{
 		return r;
 	}
 }emplace_fronter={};
-} // namespace roki
+
+} // inline namespace v1
+} // namespace adaptors 
+} // namespace srook
 #endif
