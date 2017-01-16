@@ -1,5 +1,6 @@
 #ifndef SROOK_INCLUDED_ADAPTOR_OPERATOR
 #define SROOK_INCLUDED_ADAPTOR_OPERATOR
+#include<utility>
 namespace srook{
 
 template<class Range,class Function>
