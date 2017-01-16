@@ -6,7 +6,8 @@
 #if __has_include(<boost/range/algorithm/copy.hpp>)
 #define POSSIBLE_TO_BOOST_COPY
 #include<boost/range/algorithm/copy.hpp>
-#elif POSSIBLE_TO_STD_COPY
+#elif 
+#define POSSIBLE_TO_STD_COPY
 #include<algorithm>
 #endif
 
