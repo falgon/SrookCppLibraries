@@ -5,7 +5,7 @@
 #if __has_include(<boost/range/algorithm/sort.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_SORT
 #include<boost/range/algorithm/sort.hpp>
-#elif
+#else
 #include<algorithm>
 #endif
 namespace srook{
@@ -17,14 +17,14 @@ struct sort_t_comp{
 	explicit constexpr sort_t_comp(const Compare& comp):comp_(comp){}
 	explicit constexpr sort_t_comp(Compare&& comp):comp_(std::move(comp)){}
 	template<class Range>
-	srook::range_iterator<std::decay_t<Range>> operator()(Range&& r)
+	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
 #ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 		boost::sort(r,std::move(comp_));
 #else
-		std::sort(r.cbegin(),r.cend(),std::move(comp_));
+		std::sort(r.begin(),r.end(),std::move(comp_));
 #endif
-		return srook::make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
 	Compare comp_;
@@ -37,14 +37,14 @@ constexpr sort_t_comp<std::decay_t<Compare>> sort(Compare&& comp)
 
 struct sort_t{
 	template<class Range>
-	srook::range_iterator<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
+	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
 #ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 		boost::sort(r);
 #else
-		std::sort(r.cbegin(),r.cend());
+		std::sort(r.begin(),r.end());
 #endif
-		return srook::make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.begin(),r.end());
 	}
 };
 constexpr sort_t sort()
