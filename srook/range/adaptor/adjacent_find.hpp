@@ -1,7 +1,6 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_ADJACENT_FIND_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_ADJACENT_FIND_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
-#include<srook/mpl/variadic_player.hpp>
 #if __has_include(<boost/range/algorithm/adjacent_find.hpp>)
 #define POSSIBLE_TO_BOOST_ADJACENT_FIND
 #include<boost/range/algorithm/adjacent_find.hpp>
