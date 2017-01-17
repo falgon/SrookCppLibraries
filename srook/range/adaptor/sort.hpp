@@ -21,10 +21,10 @@ struct sort_t_comp{
 	{
 #ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 		boost::sort(r,std::move(comp_));
-#elif
+#else
 		std::sort(r.cbegin(),r.cend(),std::move(comp_));
 #endif
-		return make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.cbegin(),r.cend());
 	}
 private:
 	Compare comp_;
@@ -41,10 +41,10 @@ struct sort_t{
 	{
 #ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 		boost::sort(r);
-#elif
+#else
 		std::sort(r.cbegin(),r.cend());
 #endif
-		return make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.cbegin(),r.cend());
 	}
 };
 constexpr sort_t sort()
