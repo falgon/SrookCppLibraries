@@ -4,7 +4,7 @@
 #if __has_include(<boost/algorithm/cxx11/all_of.hpp>)
 #define POSSIBLE_TO_BOOST_ALGORITHM_CXX11_ALL_OF
 #include<boost/algorithm/cxx11/all_of.hpp>
-#elif
+#else
 #include<algorithm>
 #endif
 namespace srook{
@@ -19,7 +19,7 @@ struct all_of_t{
 	{
 #ifdef POSSIBLE_TO_BOOST_ALGORITHM_CXX11_ALL_OF
 		return boost::algorithm::all_of(std::forward<Range>(r),std::move(pred_));
-#elif
+#else
 		return std::all_of(r.cbegin(),r.cend(),std::move(pred_));
 #endif
 	}

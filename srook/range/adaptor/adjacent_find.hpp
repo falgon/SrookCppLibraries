@@ -4,7 +4,7 @@
 #if __has_include(<boost/range/algorithm/adjacent_find.hpp>)
 #define POSSIBLE_TO_BOOST_ADJACENT_FIND
 #include<boost/range/algorithm/adjacent_find.hpp>
-#elif
+#else
 #include<algorithm>
 #endif
 namespace srook{
@@ -18,7 +18,7 @@ struct adjacent_find_t_predicate{
 	{
 #ifdef POSSIBLE_TO_BOOST_ADJACENT_FIND
 		return boost::range::adjacent_find(std::forward<Range>(r),std::move(pred_));
-#elif
+#else
 		return std::adjacent_find(r.cbegin(),r.cend(),std::move(pred_));
 #endif
 	}
@@ -37,7 +37,7 @@ struct adjacent_find_t{
 	{
 #ifdef POSSIBLE_TO_BOOST_ADJACENT_FIND
 		return boost::range::adjacent_find(std::forward<Range>(r));
-#elif
+#else
 		return std::adjacent_find(r.cbegin(),r.cend());
 #endif
 	}

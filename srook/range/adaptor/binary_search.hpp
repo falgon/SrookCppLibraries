@@ -4,7 +4,7 @@
 #if __has_include(<boost/range/algorithm/binary_search.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
 #include<boost/range/algorithm/binary_search.hpp>
-#elif
+#else
 #include<algorithm>
 #endif
 namespace srook{
@@ -20,7 +20,7 @@ struct binary_search_t{
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
 		return boost::range::binary_search(std::forward<Range>(r),std::move(target));
-#elif
+#else
 		return std::binary_search(r.cbegin(),r.cend(),std::move(target));
 #endif
 	}
@@ -45,7 +45,7 @@ struct binary_search_t_compare{
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
 		return boost::range::binary_search(std::forward<Range>(r),std::move(target),std::move(cmp));
-#elif
+#else
 		return std::binary_search(r.cbegin(),r.cend(),std::move(target),std::move(cmp));
 #endif
 	}

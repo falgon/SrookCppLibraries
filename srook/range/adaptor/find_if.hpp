@@ -5,7 +5,7 @@
 #if __has_include(<boost/range/algorithm/find_if.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_FIND_IF
 #include<boost/range/algorithm/find_if.hpp>
-#elif
+#else
 #include<algorithm>
 #endif
 namespace srook{
@@ -19,7 +19,7 @@ struct find_if_t{
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_FIND_IF
 		return boost::range::find_if(std::forward<Range>(r),std::move(pred_));
-#elif
+#else
 		return std::find_if(r.cbegin(),r.cend(),std::move(pred_));
 #endif
 	}
