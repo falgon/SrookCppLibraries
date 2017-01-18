@@ -295,6 +295,25 @@ template<std::size_t index,class Head,class... Tail>
 struct At<index,pack<Head,Tail...>>:At<index,Head,Tail...>{};
 template<std::size_t index,class... Pack>
 using At_t=typename At<index,Pack...>::type;
+
+// SwapAt
+template<class,class,std::size_t,class,class>
+struct SwapAt;
+template<class LH,class... LT,class RH,class... RT,std::size_t n,class LHeads,class RHeads>
+struct SwapAt<pack<LH,LT...>,pack<RH,RT...>,n,LHeads,RHeads>{
+	using L_type=typename SwapAt<pack<LT...>,pack<RT...>,n-1,Concat_t<LH,LHeads>,Concat_t<RH,RHeads>>::L_type;
+	using R_type=typename SwapAt<pack<LT...>,pack<RT...>,n-1,Concat_t<LH,LHeads>,Concat_t<RH,RHeads>>::R_type;
+};
+template<class LT,class... L,class RT,class... R,class LHeads,class RHeads>
+struct SwapAt<pack<LT,L...>,pack<RT,R...>,0,LHeads,RHeads>{
+	using L_type=Concat_t<LHeads,pack<RT,L...>>;
+	using R_type=Concat_t<RHeads,pack<LT,R...>>;
+};
+template<class LPack,class RPack,std::size_t IndexTarget>
+using SwapAt_L=typename SwapAt<LPack,RPack,IndexTarget,pack<>,pack<>>::L_type;
+template<class LPack,class RPack,std::size_t IndexTarget>
+using SwapAt_R=typename SwapAt<LPack,RPack,IndexTarget,pack<>,pack<>>::R_type;
+
 } // inline namespace v1
 } // namespace mpl
 } // namespace roki

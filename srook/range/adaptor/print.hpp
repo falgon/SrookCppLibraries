@@ -17,7 +17,9 @@ inline namespace v1{
 
 template<class OutputStream,class Delimiter_t>
 struct print_t final{
-	explicit constexpr print_t(OutputStream& outputstream,Delimiter_t&& delimiter)noexcept
+	explicit constexpr print_t(OutputStream& outputstream,const Delimiter_t& delimiter)
+		:outputstream_(outputstream),delimiter_(delimiter){}
+	explicit constexpr print_t(OutputStream& outputstream,Delimiter_t&& delimiter)
 		:outputstream_(outputstream),delimiter_(std::forward<Delimiter_t>(delimiter)){}
 	
 	template<class Range>
