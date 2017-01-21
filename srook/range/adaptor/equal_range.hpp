@@ -1,6 +1,7 @@
 #ifndef INCLUDED_SROOK_ADAPTOR_EQUAL_RANGE
 #define INCLUDED_SROOK_ADAPTOR_EQUAL_RANGE
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<map>
 #include<utility>
 #if __has_include(<boost/range/algorithm/equal_range.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
@@ -25,6 +26,11 @@ struct equal_range_t{
 #else
 		return std::equal_range(r.cbegin(),r.cend(),std::move(value));
 #endif
+	}
+	template<class Key,class T>
+	auto operator()(const std::map<Key,T>& m)
+	{
+		return m.equal_range(std::move(value));
 	}
 private:
 	T value;
