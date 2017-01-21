@@ -1,6 +1,7 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_EQUAL
 #define INCLUDED_SROOK_RANGE_ADAPTOR_EQUAL
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/mpl/has_iterator.hpp>
 #include<type_traits>
 #if __has_include(<boost/range/algorithm/equal.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
@@ -109,14 +110,6 @@ private:
 	Iterator first_,last_;
 	Predicate pred_;
 };
-
-
-namespace mpl{
-template<class,class=std::void_t<>>
-constexpr bool has_iterator_v=std::false_type::value;
-template<class T>
-constexpr bool has_iterator_v<T,std::void_t<typename T::iterator>> =std::true_type::value;
-}
 
 template<class R,EQUAL_REQUIRE(mpl::has_iterator_v<std::decay_t<R>>)>
 constexpr equal_range_t<std::decay_t<R>> equal(R&& range)
