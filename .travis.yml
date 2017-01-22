@@ -1,7 +1,7 @@
 language: cpp
 script:
         - clang-5.0 --version
-        - clang-5.0 -Wall -Wextra -pedantic -std=c++1z -I./ tests/test.cpp && ./a.out
+        - clang-5.0 -lstdc++ -Wall -Wextra -pedantic -std=c++1z -I./ tests/test.cpp && ./a.out
 compiler:
         - clang
 install:
