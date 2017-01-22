@@ -27,8 +27,8 @@ struct equal_range_t{
 		return std::equal_range(r.cbegin(),r.cend(),std::move(value));
 #endif
 	}
-	template<class Key,class T>
-	auto operator()(const std::map<Key,T>& m)
+	template<class Key,class Tp>
+	auto operator()(const std::map<Key,Tp>& m)
 	{
 		return m.equal_range(std::move(value));
 	}

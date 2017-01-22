@@ -21,7 +21,7 @@ struct copy_if_t{
 	operator ()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_COPY_IF
-		boost::copy_if(std::forward<Range>(r),std::move(iter_),std::move(pred_));
+		boost::copy_if(r,std::move(iter_),std::move(pred_));
 #else
 		std::copy_if(r.cbegin(),r.cend(),std::move(iter_),std::move(pred_));
 #endif

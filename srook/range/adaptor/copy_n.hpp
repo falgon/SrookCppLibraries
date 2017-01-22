@@ -21,7 +21,7 @@ struct copy_n_t{
 	operator ()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_COPY_N
-		boost::copy_n(std::forward<Range>(r),std::move(n_),std::move(iter_));
+		boost::copy_n(r,std::move(n_),std::move(iter_));
 #else
 		std::copy_n(r.cbegin(),std::move(n_),std::move(iter_));
 #endif
