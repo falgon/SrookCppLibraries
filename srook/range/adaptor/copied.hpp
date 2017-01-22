@@ -5,6 +5,7 @@
 #include<type_traits>
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -33,7 +34,12 @@ copied_t<std::remove_reference_t<Iterator>> make_copied_t(Iterator&& first,Itera
 }
 const auto copied=[](auto&& r)noexcept{return make_copied_t(r.cbegin(),r.cend());};
 
+
 } // inline namespace v1
+} // namespace detail
+
+using detail::copied;
+
 } // namespace adaptors
 } // namespace srook
 #endif

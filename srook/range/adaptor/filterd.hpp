@@ -5,6 +5,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Predicate>
@@ -41,6 +42,10 @@ filterd(Predicate&& pred)
 }
 
 } // inline namespace v1
-} // adaptors
+} // namespace detail
+
+using detail::filterd;
+
+} // namespace adaptors
 } // namespace srook
 #endif

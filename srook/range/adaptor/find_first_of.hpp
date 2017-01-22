@@ -22,6 +22,7 @@
 #define FIND_FIRST_OF_REQUIRES(...) std::enable_if_t<__VA_ARGS__,std::nullptr_t> =nullptr
 
 namespace srook{
+namespace detail{
 namespace adaptors{
 inline namespace v1{
 
@@ -178,6 +179,10 @@ find_first_of(
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::find_first_of;
+
 } // namespace adaptors
 } // namespace srook
 

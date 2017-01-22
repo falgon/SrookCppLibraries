@@ -12,6 +12,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class T>
@@ -67,6 +68,10 @@ struct equal_range_compare_t<std::decay_t<T>,std::decay_t<Compare>> equal_range(
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::equal_range;
+
 } // namespace adaptors
 } // namespace srook
 

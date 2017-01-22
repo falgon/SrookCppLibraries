@@ -9,6 +9,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Pred,class Range,class Tuple,std::size_t... I>
@@ -60,6 +61,12 @@ const struct emplace_fronter_t{
 }emplace_fronter={};
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::emplacer;
+using detail::emplace_fronter;
+using detail::variadic;
+
 } // namespace adaptors 
 } // namespace srook
 #endif

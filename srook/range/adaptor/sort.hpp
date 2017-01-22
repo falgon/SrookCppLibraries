@@ -10,6 +10,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Compare>
@@ -53,6 +54,10 @@ constexpr sort_t sort()
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::sort;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH

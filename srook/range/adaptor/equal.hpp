@@ -24,6 +24,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Range>
@@ -148,6 +149,10 @@ constexpr equal_iterator_predicate_t<std::decay_t<Iterator>,std::decay_t<Predica
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::equal;
+
 } // namespace adaptors
 } // namespace srook
 

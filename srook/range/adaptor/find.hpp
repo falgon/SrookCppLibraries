@@ -22,6 +22,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 namespace mpl{
@@ -161,6 +162,10 @@ find(Target&& t)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::find;
+
 } // namespace adaptors
 } // namespace srook
 

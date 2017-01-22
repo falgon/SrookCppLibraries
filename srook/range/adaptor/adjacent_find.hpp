@@ -9,6 +9,10 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
+
+inline namespace v1{
+
 template<class Predicate>
 struct adjacent_find_t_predicate{
 	explicit constexpr adjacent_find_t_predicate(const Predicate& pred):pred_(pred){}
@@ -46,6 +50,11 @@ constexpr adjacent_find_t adjacent_find()
 {
 	return adjacent_find_t();
 }
+
+} // inline namespace v1
+} // namespace detail
+
+using detail::adjacent_find;
 
 } // namespace adaptors
 } // namespace srook

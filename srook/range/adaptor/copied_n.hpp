@@ -4,6 +4,7 @@
 #include<iterator>
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -38,6 +39,10 @@ private:
 };
 
 } // inline namespace
+} // namespace detail
+
+using detail::copied_n;
+
 } // namespace adaptors
 } // namespace srook
 #endif

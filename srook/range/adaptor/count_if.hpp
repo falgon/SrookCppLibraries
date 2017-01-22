@@ -12,6 +12,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Predicate>
@@ -36,6 +37,10 @@ constexpr count_if_t<std::decay_t<Predicate>> count_if(Predicate&& t)
 }
 
 } // inline namespace
+} // namespace detail
+
+using detail::count_if;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_COUNT_IF

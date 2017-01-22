@@ -4,6 +4,7 @@
 #include<srook/range/adaptor/filterd.hpp>
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator,class Predicate>
@@ -50,6 +51,10 @@ constexpr copied_ifer<std::decay_t<Predicate>> copied_if(Predicate&& pred)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::copied_if;
+
 } // namespace adaptors
 } // namespace srook
 #endif

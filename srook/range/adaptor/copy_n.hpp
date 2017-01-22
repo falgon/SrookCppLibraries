@@ -10,6 +10,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -38,6 +39,10 @@ copy_n_t<std::decay_t<Iterator>> copy_n(std::size_t n,Iterator&& iter)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::copy_n;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_COPY_N

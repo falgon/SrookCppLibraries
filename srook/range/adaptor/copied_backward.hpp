@@ -4,6 +4,7 @@
 #include<iterator>
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -26,6 +27,10 @@ copied_backword_t<Iterator> make_copied_backword(Iterator first,Iterator last)
 const auto copied_backword=[](auto&& r){return make_copied_backword(r.cbegin(),r.cend());};
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::copied_backword;
+
 } // namespace mpl
 } // namespace srook
 #endif

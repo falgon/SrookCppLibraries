@@ -9,6 +9,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 template<class Predicate>
 struct all_of_t{
@@ -33,6 +34,10 @@ constexpr all_of_t<std::decay_t<Predicate>> all_of(Predicate&& pred)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::all_of;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_ALGORITHM_CXX11_ALL_OF

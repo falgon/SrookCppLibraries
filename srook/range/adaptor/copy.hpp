@@ -11,6 +11,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -38,6 +39,10 @@ copy_t<std::decay_t<Iterator>> copy(Iterator&& iter)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::copy;
+
 } // namespace adaptors
 } // namespace srook
 

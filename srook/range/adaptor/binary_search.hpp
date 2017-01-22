@@ -9,6 +9,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Target>
@@ -60,6 +61,10 @@ constexpr binary_search_t_compare<std::decay_t<Target>,std::decay_t<Compare>> bi
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::binary_search;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH

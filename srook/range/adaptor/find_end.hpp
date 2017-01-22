@@ -9,6 +9,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator>
@@ -99,6 +100,10 @@ constexpr find_end_range_predicate_t<std::decay_t<Range>,std::decay_t<Predicate>
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::find_end;
+
 } // namespace adaptors
 } // namespace srook
 #endif

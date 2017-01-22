@@ -12,6 +12,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class T>
@@ -36,6 +37,10 @@ constexpr count_t<std::decay_t<T>> count(T&& t)
 }
 
 } // inline namespace
+} // namespace detail
+
+using detail::count;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_COUNT

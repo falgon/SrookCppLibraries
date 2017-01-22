@@ -10,6 +10,9 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
+inline namespace v1{
+
 template<class Predicate>
 struct find_if_t{
 	explicit constexpr find_if_t(const Predicate& pred):pred_(pred){}
@@ -31,6 +34,11 @@ find_if_t<std::decay_t<Predicate>> find_if(Predicate&& pred)
 {
 	return find_if_t<std::decay_t<Predicate>>(std::forward<Predicate>(pred));
 }
+
+} // inline namespace v1
+} // namespace detail
+
+using detail::find_if;
 
 } // namespace adaptors
 } // namespace srook

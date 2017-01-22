@@ -10,6 +10,7 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class T>
@@ -39,6 +40,10 @@ constexpr fill_n_t<std::decay_t<T>> fill_n(std::size_t x,T&& value)
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::fill_n;
+
 } // namespace adaptors
 } // namespace srook
 

@@ -10,6 +10,7 @@
 #endif
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Iterator,class Predicate>
@@ -38,6 +39,10 @@ copy_if_t<std::decay_t<Iterator>,std::decay_t<Predicate>> copy_if(Iterator&& ite
 }
 
 } // inline namespace v1
+} // namespace detail
+
+using detail::copy_if;
+
 } // namespace adaptors
 } // namespace srook
 #ifdef POSSIBLE_TO_BOOST_RANGE_COPY_IF

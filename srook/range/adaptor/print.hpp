@@ -3,6 +3,7 @@
 #include<iterator>
 #include<iostream>
 #include<srook/iterator/range_iterator.hpp>
+#include<srook/range/adaptor/adaptor_operator.hpp>
 #if __has_include(<boost/range/algorithm/copy.hpp>)
 #define POSSIBLE_TO_BOOST_COPY
 #include<boost/range/algorithm/copy.hpp>
@@ -13,6 +14,8 @@
 
 namespace srook{
 namespace adaptors{
+namespace detail{
+
 inline namespace v1{
 
 template<class OutputStream,class Delimiter_t>
@@ -43,7 +46,12 @@ print_t<Ostream,Delimiter_t> print(Ostream& os=std::cout,Delimiter_t&& delimiter
 	return print_t<Ostream,Delimiter_t>(os,std::forward<Delimiter_t>(delimiter));
 }
 
+
 } // inline namespace v1
+} // namespace detail
+
+using detail::print;
+
 } // namespace adaptors
 } // namespace srook
 

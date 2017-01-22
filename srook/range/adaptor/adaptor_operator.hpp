@@ -3,6 +3,7 @@
 #include<utility>
 namespace srook{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Range,class Function>
@@ -12,6 +13,7 @@ auto operator|(Range&& r,Function&& f)
 }
 
 } // inline namespace
+} // namespace detail
 } // namespace adaptors
 } // namespace roki
 #endif
