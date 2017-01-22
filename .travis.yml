@@ -1,13 +1,14 @@
 language: cpp
 script:
-        - clang-3.8 --version
-        - clang-3.8 -Wall -Wextra -pedantic -std=c++1z tests/test.cpp && ./a.out
+        - clang-5.0 --version
+        - clang-5.0 -Wall -Wextra -pedantic -std=c++1z tests/test.cpp && ./a.out
 compiler:
         - clang
 install:
         - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
         - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
         - sudo add-apt-repository --yes 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main'
-        - sudo apt-get -qq update
-        - sudo apt-get -qq install clang-3.8
+        - sudo add-apt-repository --yes 'deb http://us.archive.ubuntu.com/ubuntu wily main universe'
+        - sudo apt-get update
+        - sudo apt-get -qq install clang-5.0
         - sudo apt-get -qq install libboost1.58-all-dev
