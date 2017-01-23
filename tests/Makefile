@@ -5,4 +5,4 @@ clang_target1: range_adaptor_print_exp.cpp
 gcc_target1: range_adaptor_print_exp.cpp
 	g++-6 -Wall -Wextra -pedantic -std=c++1z -I../ range_adaptor_print_exp.cpp -o 0x01_gcc.out
 clean:
-	rm 0x01_clang.out 0x01_gcc.out
+	$(RM) 0x01_clang.out 0x01_gcc.out
