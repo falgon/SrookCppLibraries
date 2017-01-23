@@ -8,6 +8,7 @@
 #define POSSIBLE_TO_BOOST_ADJACENT_FIND
 #else
 #include<algorithm>
+#endif
 #else
 #include<algorithm>
 #endif
