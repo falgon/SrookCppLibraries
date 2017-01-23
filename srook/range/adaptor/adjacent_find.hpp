@@ -2,9 +2,11 @@
 #define INCLUDED_SROOK_RANGE_ADAPTOR_ADJACENT_FIND_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #if __has_include(<boost/range/algorithm/adjacent_find.hpp>)
-#define POSSIBLE_TO_BOOST_ADJACENT_FIND
-#include<boost/range/algorithm/adjacent_find.hpp>
 #include<boost/version.hpp>
+#if (BOOST_VERSION != 105800)
+#include<boost/range/algorithm/adjacent_find.hpp>
+#define POSSIBLE_TO_BOOST_ADJACENT_FIND
+#endif
 #else
 #include<algorithm>
 #endif
