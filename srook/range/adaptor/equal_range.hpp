@@ -16,8 +16,8 @@ namespace detail{
 inline namespace v1{
 
 template<class T>
-struct equal_range_t{
-	explicit constexpr equal_range_t(T t):value(std::move(t)){}
+struct equal_range_range_t{
+	explicit constexpr equal_range_range_t(T t):value(std::move(t)){}
 
 	template<class R>
 	std::pair<typename std::decay_t<R>::iterator,typename std::decay_t<R>::iterator> operator()(R&& r)
@@ -56,9 +56,9 @@ private:
 };
 
 template<class T>
-constexpr equal_range_t<std::decay_t<T>> equal_range(T&& value)
+constexpr equal_range_range_t<std::decay_t<T>> equal_range(T&& value)
 {
-	return equal_range_t<std::decay_t<T>>(std::forward<T>(value));
+	return equal_range_range_t<std::decay_t<T>>(std::forward<T>(value));
 }
 
 template<class T,class Compare>

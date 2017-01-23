@@ -24,12 +24,12 @@ copied_backword_t<Iterator> make_copied_backword(Iterator first,Iterator last)
 {
 	return copied_backword_t<Iterator>(std::move(first),std::move(last));
 }
-const auto copied_backword=[](auto&& r){return make_copied_backword(r.cbegin(),r.cend());};
+const auto copied_backward=[](auto&& r){return make_copied_backword(r.cbegin(),r.cend());};
 
 } // inline namespace v1
 } // namespace detail
 
-using detail::copied_backword;
+using detail::copied_backward;
 
 } // namespace mpl
 } // namespace srook

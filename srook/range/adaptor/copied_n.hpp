@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SROOK_ADAPTOR_COPY_N
-#define INCLUDED_SROOK_ADAPTOR_COPY_N
+#ifndef INCLUDED_SROOK_ADAPTOR_COPIED_N
+#define INCLUDED_SROOK_ADAPTOR_COPIED_N
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<iterator>
 namespace srook{

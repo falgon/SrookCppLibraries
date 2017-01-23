@@ -1,6 +1,7 @@
 #ifndef INCLUDED_SROOK_ADAPTOR_FIND_FIRST_OF_HPP
 #define INCLUDED_SROOK_ADAPTOR_FIND_FIRST_OF_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
 #include<type_traits>
 #if __has_include(<boost/range/algorithm/find_first_of.hpp>)
@@ -19,11 +20,9 @@
 #include<srook/optional.hpp>
 #endif
 
-#define FIND_FIRST_OF_REQUIRES(...) std::enable_if_t<__VA_ARGS__,std::nullptr_t> =nullptr
-
 namespace srook{
-namespace detail{
 namespace adaptors{
+namespace detail{
 inline namespace v1{
 
 template<class Range>
@@ -66,9 +65,9 @@ struct find_first_of_range_t<std::string>{
 	std::string::size_type operator()(const std::string& str)
 	{
 		if(n_)
-			return str.find_first_of(data_,pos_);
+			return data_.find_first_of(str.c_str(),pos_,n_.value());
 		else
-			return str.find_first_of(data_.c_str(),pos_,n_.value());
+			return data_.find_first_of(str,pos_);
 	}
 private:
 	const std::string data_;
@@ -135,13 +134,13 @@ find_first_of(Range&& r)
 {
 	return find_first_of_range_t<std::decay_t<Range>>(std::forward<Range>(r));
 }
-template<class Iterator,FIND_FIRST_OF_REQUIRES(!mpl::has_iterator_v<std::decay_t<Iterator>>)>
+template<class Iterator,REQUIRES(!::srook::mpl::has_iterator_v<std::decay_t<Iterator>>)>
 constexpr find_first_of_iterator_t<std::decay_t<Iterator>>
 find_first_of(Iterator&& first,Iterator&& last)
 {
 	return find_first_of_iterator_t<std::decay_t<Iterator>>(std::forward<Iterator>(first),std::forward<Iterator>(last));
 }
-template<class Range,class Predicate,FIND_FIRST_OF_REQUIRES(mpl::has_iterator_v<std::decay_t<Range>>)>
+template<class Range,class Predicate,REQUIRES(::srook::mpl::has_iterator_v<std::decay_t<Range>>)>
 constexpr find_first_of_range_predicate_t<std::decay_t<Range>,std::decay_t<Predicate>>
 find_first_of(Range&& r,Predicate&& pred)
 {
