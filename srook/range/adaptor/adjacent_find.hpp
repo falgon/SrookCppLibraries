@@ -6,7 +6,8 @@
 #if (BOOST_VERSION != 105800)
 #include<boost/range/algorithm/adjacent_find.hpp>
 #define POSSIBLE_TO_BOOST_ADJACENT_FIND
-#endif
+#else
+#include<algorithm>
 #else
 #include<algorithm>
 #endif
