@@ -1,9 +1,13 @@
 language: cpp
 script:
         - clang-5.0 --version
-        - clang-5.0 -lstdc++ -Wall -Wextra -pedantic -std=c++1z -I./ tests/test.cpp && ./a.out
+        - g++-6 --version
+        - cd tests && make
+        - ./0x01_clang && ./0x01_gcc
+        - make clean
 compiler:
         - clang
+        - gcc-6
 install:
         - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
         - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -12,3 +16,4 @@ install:
         - sudo apt-get -qq update
         - sudo apt-get -qq install clang-5.0
         - sudo apt-get -qq install libboost1.58-all-dev
+        - sudo apt-get -qq install g++-6
