@@ -7,4 +7,4 @@ clang_target1: range/adaptor/adaptor_exp.cpp
 gcc_target1: range/adaptor/adaptor_exp.cpp
 	g++-6 $(FLAGS) $(INCLUDE_PATH) range/adaptor/adaptor_exp.cpp -o 0x01_gcc.out
 clean:
-	$(RM) 0x01_clang.out 0x01_gcc.out
+	$(RM) testts/0x01_clang.out tests/0x01_gcc.out
