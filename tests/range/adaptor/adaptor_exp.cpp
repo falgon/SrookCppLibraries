@@ -265,7 +265,7 @@ const struct find_first_of_check_t{
 		[[maybe_unused]]
 #endif	
 		std::string::size_type result1 = str | srook::adaptors::find_first_of(search_string);
-/*#ifdef __GNUC__
+#ifdef __GNUC__
 		[[gnu::unused]]
 #else
 		[[maybe_unused]]
@@ -276,7 +276,7 @@ const struct find_first_of_check_t{
 #else
 		[[maybe_unused]]
 #endif
-		std::string::size_type result3 = str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size(),search_string.size());*/
+		std::string::size_type result3 = str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size(),search_string.size());
 	}
 }find_first_of_check={};
 
