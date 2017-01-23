@@ -4,6 +4,7 @@
 #if __has_include(<boost/range/algorithm/adjacent_find.hpp>)
 #define POSSIBLE_TO_BOOST_ADJACENT_FIND
 #include<boost/range/algorithm/adjacent_find.hpp>
+#include<boost/version.hpp>
 #else
 #include<algorithm>
 #endif
@@ -20,7 +21,7 @@ struct adjacent_find_t_predicate{
 	template<class Range>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_ADJACENT_FIND
+#if defined(POSSIBLE_TO_BOOST_ADJACENT_FIND) && (BOOST_VERSION !=105800)
 		return boost::range::adjacent_find(std::forward<Range>(r),std::move(pred_));
 #else
 		return std::adjacent_find(r.cbegin(),r.cend(),std::move(pred_));
@@ -39,7 +40,7 @@ struct adjacent_find_t{
 	template<class Range>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_ADJACENT_FIND
+#if defined(POSSIBLE_TO_BOOST_ADJACENT_FIND) && (BOOST_VERSION !=105800)
 		return boost::range::adjacent_find(std::forward<Range>(r));
 #else
 		return std::adjacent_find(r.cbegin(),r.cend());
