@@ -2,6 +2,7 @@
 #define INCLUDED_SROOK_ADAPTOR_SORT_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/iterator/range_iterator.hpp>
+#include<list>
 #if __has_include(<boost/range/algorithm/sort.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_SORT
 #include<boost/range/algorithm/sort.hpp>
@@ -45,6 +46,12 @@ struct sort_t{
 #else
 		std::sort(r.begin(),r.end());
 #endif
+		return srook::make_range_iterator(r.begin(),r.end());
+	}
+	template<class T>
+	srook::range_iterator<typename std::list<T>::iterator> operator()(const std::list<T>& r)
+	{
+		r.sort();
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 };
