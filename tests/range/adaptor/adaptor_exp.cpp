@@ -30,6 +30,7 @@
 #include<utility>
 #include<boost/range/algorithm_ext/iota.hpp>
 #include<boost/range/algorithm/for_each.hpp>
+#include<boost/version.hpp>
 
 // Test Ranges
 #include<vector>
@@ -164,7 +165,9 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
 auto make_test_ranges()
 {
 	std::vector<int> v(range_size);
+#if (BOOST_VERSION != 105800)
 	std::deque<int> deq(range_size);
+#endif
 	{
 		std::uniform_int_distribution<> dist(0,42);
 		std::random_device rng;
@@ -172,11 +175,17 @@ auto make_test_ranges()
 		auto apply_dist=[&dist,&engine](auto& x){x=dist(engine);};
 
 		boost::range::for_each(v,apply_dist);
+#if (BOOST_VERSION != 105800)
 		boost::range::for_each(deq,apply_dist);
+#endif
 	}
 	std::string str="Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.";
 	
-	return std::make_tuple(std::move(v),std::move(deq),std::move(str));
+	return std::make_tuple(std::move(v),std::move(str)
+#if (BOOST_VERSION != 105800)
+			,std::move(deq)
+#endif
+			);
 }
 
 const struct find_check_t{
