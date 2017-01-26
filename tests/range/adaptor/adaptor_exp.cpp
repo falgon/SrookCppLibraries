@@ -24,7 +24,12 @@
 #include<srook/range/adaptor/generate.hpp>
 #include<srook/range/adaptor/generate_n.hpp>
 #include<srook/range/adaptor/includes.hpp>
-#include<srook/range/adaptor/in_place.hpp>
+#include<srook/range/adaptor/inplace_merge.hpp>
+#include<srook/range/adaptor/is_heap.hpp>
+#include<srook/range/adaptor/is_heap_until.hpp>
+#include<srook/range/adaptor/is_partitioned.hpp>
+
+#include<srook/range/adaptor/make_heap.hpp>
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
 
@@ -399,6 +404,50 @@ const struct includes_check_t:exclude_range<std::list>{
 }includes_check={};
 #undef st_ctype
 
+const struct inplace_merge_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it = r | srook::adaptors::sort() | srook::adaptors::inplace_merge(r);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it2 = r | srook::adaptors::inplace_merge(r.begin(),r.end());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it3 = r | srook::adaptors::inplace_merge(r,std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it4 = r | srook::adaptors::inplace_merge(r.begin(),r.end(),std::greater<>());
+	}
+}inplace_merge_check={};
+
+const struct is_partitioned_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b = r | srook::adaptors::is_partitioned([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+	}
+}is_partitioned_check={};
+
 int main()
 {
 	const auto tests=std::make_tuple(
@@ -640,7 +689,44 @@ int main()
 				}
 			),
 			make_tester(generate_n_check),
-			make_tester(includes_check)
+			make_tester(includes_check),
+			make_tester(inplace_merge_check),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					const bool b1 = r | srook::adaptors::is_heap();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					const bool b2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap(std::greater<>());
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename decltype(r)::const_iterator it1 = r | srook::adaptors::is_heap_until();
+
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename decltype(r)::const_iterator it2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap_until(std::greater<>());
+				}
+			),
+			make_tester(is_partitioned_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
