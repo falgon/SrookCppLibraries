@@ -19,6 +19,12 @@
 #include<srook/range/adaptor/find.hpp>
 #include<srook/range/adaptor/find_end.hpp>
 #include<srook/range/adaptor/find_first_of.hpp>
+#include<srook/range/adaptor/find_if_not.hpp>
+#include<srook/range/adaptor/for_each.hpp>
+#include<srook/range/adaptor/generate.hpp>
+#include<srook/range/adaptor/generate_n.hpp>
+#include<srook/range/adaptor/includes.hpp>
+#include<srook/range/adaptor/in_place.hpp>
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
 
@@ -161,7 +167,13 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
 	);
 }
 
-
+/* 
+ *
+ *
+ * Creating ranges
+ *
+ *
+ */
 auto make_test_ranges()
 {
 	std::vector<int> v(range_size);
@@ -187,6 +199,20 @@ auto make_test_ranges()
 #endif
 			);
 }
+
+
+/*
+ *
+ *
+ * The below is intended to change debugging contents by classification of iterator which range contains.
+ *
+ *
+ */
+template<template<class...>class Range>
+struct exclude_range{
+	template<class... Ts>
+	constexpr void operator()(const Range<Ts...>&)const{}
+};
 
 const struct find_check_t{
 	template<class Range,REQUIRES(!std::is_same<std::decay_t<Range>,std::string>{})>
@@ -215,22 +241,20 @@ const struct find_check_t{
 	}
 }find_check={};
 
-const struct fill_check_t{
-	template<class Range,REQUIRES(!std::is_same<std::decay_t<Range>,std::string>{})>
+const struct fill_check_t:exclude_range<std::basic_string>{
+	template<class Range>
 	void operator()(Range r)const
 	{
 		r | srook::adaptors::fill(42);
 	}
-	constexpr void operator()(const std::string&)const noexcept{}
 }fill_check={};
 
-const struct fill_n_check_t{
-	template<class Range,REQUIRES(!std::is_same<std::decay_t<Range>,std::string>{})>
+const struct fill_n_check_t:exclude_range<std::basic_string>{
+	template<class Range>
 	void operator()(Range r)const
 	{
 		r.begin() | srook::adaptors::fill_n(r.size(),42);
 	}
-	constexpr void operator()(const std::string&)const noexcept{}
 }fill_n_check={};
 
 const struct find_first_of_check_t{
@@ -289,7 +313,7 @@ const struct find_first_of_check_t{
 	}
 }find_first_of_check={};
 
-const struct binary_search_check_t{
+const struct binary_search_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
@@ -306,10 +330,74 @@ const struct binary_search_check_t{
 #endif
 		bool b2 = r | srook::adaptors::binary_search(4,std::greater<>());
 	}
-	template<class T>
-	void operator()(const std::list<T>&)const{}
 }binary_search_check={};
 
+const struct find_if_not_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range&& r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<decltype(r)>::const_iterator result_it = 
+			r | srook::adaptors::find_if_not([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+	}
+}find_if_not_check={};
+
+const struct generate_n_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::iterator it = r | srook::adaptors::generate_n(r.size(),[]{return 42;});
+	}
+}generate_n_check={};
+
+#define st_ctype(x) static_cast<core_type>(x)
+const struct includes_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+		using core_type=typename std::decay_t<Range>::value_type;
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result1 = 
+			r | srook::adaptors::sort() | srook::adaptors::includes(std::decay_t<Range>{st_ctype(0),st_ctype(1),st_ctype(2)});
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result2 =
+			r | srook::adaptors::includes(std::decay_t<Range>{st_ctype(0),st_ctype(1),st_ctype(2)},std::greater<>());
+
+		auto test_range=r;
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result3 = 
+			r | srook::adaptors::includes(test_range.cbegin(),test_range.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result4 =
+			r | srook::adaptors::includes(test_range.cbegin(),test_range.cend(),std::greater<>());
+	}		
+}includes_check={};
+#undef st_ctype
 
 int main()
 {
@@ -525,14 +613,34 @@ int main()
 						typename std::decay_t<decltype(x)>::const_iterator it4 = x | srook::adaptors::find_end(hs.cbegin(),hs.cend(),f);
 					}
 			),
-			make_tester(find_first_of_check)/*,
+			make_tester(find_first_of_check),
 			make_tester(
 				[](auto r)
 				{
 					r | srook::adaptors::sort();
 					r | srook::adaptors::sort(std::greater<>());
 				}		
-			)*/
+			),
+			make_tester(find_if_not_check),
+			make_tester(
+				[](const auto& r)
+				{
+					r | srook::adaptors::for_each([](typename std::decay_t<decltype(r)>::value_type x){std::cout<<x<<" ";});
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto range_iterator = r | srook::adaptors::generate([]{return 42;});
+				}
+			),
+			make_tester(generate_n_check),
+			make_tester(includes_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
