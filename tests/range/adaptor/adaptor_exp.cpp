@@ -28,6 +28,9 @@
 #include<srook/range/adaptor/is_heap.hpp>
 #include<srook/range/adaptor/is_heap_until.hpp>
 #include<srook/range/adaptor/is_partitioned.hpp>
+#include<srook/range/adaptor/is_permutation.hpp>
+#include<srook/range/adaptor/is_sorted.hpp>
+#include<srook/range/adaptor/is_sorted_until.hpp>
 
 #include<srook/range/adaptor/make_heap.hpp>
 #include<srook/range/adaptor/sort.hpp>
@@ -436,6 +439,7 @@ const struct is_partitioned_check_t:exclude_range<std::list>{
 	}
 }is_partitioned_check={};
 
+
 int main()
 {
 	const auto tests=std::make_tuple(
@@ -714,7 +718,85 @@ int main()
 					typename decltype(r)::const_iterator it2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap_until(std::greater<>());
 				}
 			),
-			make_tester(is_partitioned_check)
+			make_tester(is_partitioned_check),
+			make_tester(
+				[](const auto& r)
+				{
+					auto a=r;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b1 = r | srook::adaptors::is_permutation(a);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b2 = r | srook::adaptors::is_permutation(a.cbegin());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b3 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend());
+
+					const auto test_f=[](typename decltype(a)::value_type x,typename decltype(a)::value_type y){return x==y;};
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b4 = r | srook::adaptors::is_permutation(a,test_f);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b5 = r | srook::adaptors::is_permutation(a.cbegin(),test_f);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b6 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend(),test_f);
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b1 = r | srook::adaptors::is_sorted();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b2 = r | srook::adaptors::is_sorted(std::greater<>());
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::is_sorted_until();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::is_sorted_until(std::greater<>());
+				}
+			)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
