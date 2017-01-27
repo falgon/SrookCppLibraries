@@ -413,25 +413,13 @@ const struct inplace_merge_check_t:exclude_range<std::list>{
 #else
 		[[maybe_unused]]
 #endif
-		auto range_it = r | srook::adaptors::sort() | srook::adaptors::inplace_merge(r);
+		auto range_it2 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end());
 #ifdef __GNUC__
 		[[gnu::unused]]
 #else
 		[[maybe_unused]]
 #endif
-		auto range_it2 = r | srook::adaptors::inplace_merge(r.begin(),r.end());
-#ifdef __GNUC__
-		[[gnu::unused]]
-#else
-		[[maybe_unused]]
-#endif
-		auto range_it3 = r | srook::adaptors::inplace_merge(r,std::greater<>());
-#ifdef __GNUC__
-		[[gnu::unused]]
-#else
-		[[maybe_unused]]
-#endif
-		auto range_it4 = r | srook::adaptors::inplace_merge(r.begin(),r.end(),std::greater<>());
+		auto range_it4 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end(),std::greater<>());
 	}
 }inplace_merge_check={};
 
