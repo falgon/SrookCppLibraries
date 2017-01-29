@@ -31,8 +31,17 @@
 #include<srook/range/adaptor/is_permutation.hpp>
 #include<srook/range/adaptor/is_sorted.hpp>
 #include<srook/range/adaptor/is_sorted_until.hpp>
-
+#include<srook/range/adaptor/lexicographical_compare.hpp>
+#include<srook/range/adaptor/lower_bound.hpp>
 #include<srook/range/adaptor/make_heap.hpp>
+#include<srook/range/adaptor/max.hpp>
+#include<srook/range/adaptor/min.hpp>
+#include<srook/range/adaptor/max_element.hpp>
+#include<srook/range/adaptor/min_element.hpp>
+#include<srook/range/adaptor/merge.hpp>
+#include<srook/range/adaptor/minmax.hpp>
+#include<srook/range/adaptor/minmax_element.hpp>
+
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
 
@@ -51,6 +60,7 @@
 #include<deque>
 #include<string>
 #include<list>
+#include<initializer_list>
 
 namespace{
 	constexpr std::size_t range_size=10;
@@ -439,6 +449,72 @@ const struct is_partitioned_check_t:exclude_range<std::list>{
 	}
 }is_partitioned_check={};
 
+const struct lexicographical_compare_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+		auto tmp=r;
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::lexicographical_compare(tmp);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b2 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b3 = r | srook::adaptors::lexicographical_compare(tmp,std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b4 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend(),std::greater<>());
+	}
+}lexicographical_compare_check={};
+
+#define st(x) static_cast<typename std::decay_t<Range>::value_type>(x)
+const struct lower_bound_check_t{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it1 = r | srook::adaptors::lower_bound(st(42));
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it2 = r | srook::adaptors::lower_bound(st(42),std::greater<>());
+	}
+}lower_bound_check={};
+#undef st
+
+const struct merge_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+		auto a=r;
+		std::decay_t<Range> result;
+		
+		r | srook::adaptors::merge(a,std::back_inserter(result));
+		r | srook::adaptors::merge(a.cbegin(),a.cend(),std::back_inserter(result));
+		r | srook::adaptors::merge(a,std::back_inserter(result),std::greater<>());
+		r | srook::adaptors::merge(a.cbegin(),a.cend(),std::back_inserter(result),std::greater<>());
+	}
+}merge_check={};
 
 int main()
 {
@@ -795,6 +871,149 @@ int main()
 					[[maybe_unused]]
 #endif
 					typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::is_sorted_until(std::greater<>());
+				}
+			),
+			make_tester(lexicographical_compare_check),
+			make_tester(lower_bound_check),
+			make_tester(
+				[](const auto& r)
+				{
+					const auto get_initpack = []()->std::initializer_list<int>{return {1,2,3,4,5};};
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type a = r | srook::adaptors::max();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type b = r | srook::adaptors::max(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto c = 42 | srook::adaptors::max(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto d = 42 | srook::adaptors::max(32,std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(get_initpack())>::value_type e = get_initpack() | srook::adaptors::max();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(get_initpack())>::value_type f = get_initpack() | srook::adaptors::max(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type g = r | srook::adaptors::min();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type h = r | srook::adaptors::min(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto i = 42 | srook::adaptors::min(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto j = 42 | srook::adaptors::min(32,std::greater<>());
+				}
+			),
+			make_tester(
+				[](const auto& r){
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::max_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::max_element(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it3 = r | srook::adaptors::min_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it4 = r | srook::adaptors::min_element(std::greater<>());
+				}
+			),
+			make_tester(merge_check),
+			make_tester(
+				[](const auto& r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p1 = r | srook::adaptors::minmax();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p2 = r | srook::adaptors::minmax(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p3 = 42 | srook::adaptors::minmax(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p4 = 42 | srook::adaptors::minmax(42,std::greater<>());
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p1 = r | srook::adaptors::minmax_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p2 = r | srook::adaptors::minmax_element(std::greater<>());
 				}
 			)
 	);
