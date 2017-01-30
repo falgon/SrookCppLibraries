@@ -39,8 +39,10 @@ struct filterd_iterator final{
         skip();
         return tmp;
     }
+
     reference operator*(){return *first_;}
-    constexpr bool operator==(const filterd_iterator& rhs)const{return first_==rhs.first_;}
+	const reference operator*()const{return *first_;}
+	constexpr bool operator==(const filterd_iterator& rhs)const{return first_==rhs.first_;}
     constexpr bool operator!=(const filterd_iterator& rhs)const{return !operator==(rhs);}
 private:
     void skip(){while(first_!=last_ && !pred(*first_))++first_;}

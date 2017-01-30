@@ -41,6 +41,9 @@
 #include<srook/range/adaptor/merge.hpp>
 #include<srook/range/adaptor/minmax.hpp>
 #include<srook/range/adaptor/minmax_element.hpp>
+#include<srook/range/adaptor/mismatch.hpp>
+#include<srook/range/adaptor/move.hpp>
+#include<srook/range/adaptor/moved.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
@@ -516,6 +519,46 @@ const struct merge_check_t:exclude_range<std::list>{
 	}
 }merge_check={};
 
+const struct mismatch_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+		auto a=r;
+		const auto pred=[](typename std::decay_t<Range>::value_type x,typename decltype(a)::value_type y){return x==y;};
+		typedef std::pair<typename std::decay_t<Range>::const_iterator,typename decltype(a)::const_iterator> result_type;
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p1 = r | srook::adaptors::mismatch(a);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p2 = r | srook::adaptors::mismatch(a.cbegin());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p3 = r | srook::adaptors::mismatch(a,pred);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p4 = r | srook::adaptors::mismatch(a.cbegin(),a.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p5 = r | srook::adaptors::mismatch(a.cbegin(),a.cend(),pred);
+	}
+}mismatch_check={};
+		
 int main()
 {
 	const auto tests=std::make_tuple(
@@ -1015,7 +1058,30 @@ int main()
 #endif
 					auto p2 = r | srook::adaptors::minmax_element(std::greater<>());
 				}
-			)
+			),
+			make_tester(mismatch_check),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					decltype(r) a = r | srook::adaptors::move;
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					decltype(r) a = r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
+				}
+			)		
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
