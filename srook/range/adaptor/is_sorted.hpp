@@ -25,7 +25,7 @@ struct is_sorted_t{
 #else
 		std::is_sorted(r.cbegin(),r.cend());
 #endif
-	};
+	}
 };
 
 template<class Compare>
