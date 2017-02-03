@@ -44,6 +44,10 @@
 #include<srook/range/adaptor/mismatch.hpp>
 #include<srook/range/adaptor/move.hpp>
 #include<srook/range/adaptor/moved.hpp>
+#include<srook/range/adaptor/move_backward.hpp>
+#include<srook/range/adaptor/next_permutation.hpp>
+#include<srook/range/adaptor/none_of.hpp>
+#include<srook/range/adaptor/nth_element.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
@@ -558,7 +562,61 @@ const struct mismatch_check_t:exclude_range<std::list>{
 		result_type p5 = r | srook::adaptors::mismatch(a.cbegin(),a.cend(),pred);
 	}
 }mismatch_check={};
-		
+
+
+const struct next_permutation_check_t:exclude_range<std::list>{
+	template<class R>
+	void operator()(R r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::next_permutation();
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b2 = r | srook::adaptors::next_permutation(std::greater<>());
+	}
+}next_permutation_check={};
+
+const struct none_of_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::none_of([](const typename std::decay_t<Range>::value_type x){return x%2==0;});
+	}
+}none_of_check={};
+
+
+const struct nth_element_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const srook::range_iterator<decltype(r.begin())> iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const srook::range_iterator<decltype(r.begin())> iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
+	}
+}nth_element_check={};
+
+
 int main()
 {
 	const auto tests=std::make_tuple(
@@ -1081,7 +1139,21 @@ int main()
 #endif
 					decltype(r) a = r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
 				}
-			)		
+			),
+			make_tester(
+				[](auto r)
+				{
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					r | srook::adaptors::move_backward(r.end());
+				}
+			),
+			make_tester(next_permutation_check),
+			make_tester(none_of_check),
+			make_tester(nth_element_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
