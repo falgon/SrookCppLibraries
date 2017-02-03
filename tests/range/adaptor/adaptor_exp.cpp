@@ -606,13 +606,13 @@ const struct nth_element_check_t:exclude_range<std::list>{
 #else
 		[[maybe_unused]]
 #endif
-		const srook::range_iterator<decltype(r.begin())> iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
+		const auto iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
 #ifdef __GNUC__
 		[[gnu::unused]]
 #else
 		[[maybe_unused]]
 #endif
-		const srook::range_iterator<decltype(r.begin())> iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
+		const auto iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
 	}
 }nth_element_check={};
 
@@ -1148,7 +1148,7 @@ int main()
 #else
 					[[maybe_unused]]
 #endif
-					r | srook::adaptors::move_backward(r.end());
+					const auto b = r | srook::adaptors::move_backward(r.end());
 				}
 			),
 			make_tester(next_permutation_check),
