@@ -253,9 +253,18 @@ const struct find_check_t{
 		auto search_string="important"s;
 		
 		std::size_t pos=str | srook::adaptors::find(search_string);
-
-		SROOK_attribute_UNUSED std::size_t pos1=str | srook::adaptors::find(search_string,pos);
-		SROOK_attribute_UNUSED std::size_t pos2=str | srook::adaptors::find(search_string,pos,search_string.size());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		std::size_t pos1=str | srook::adaptors::find(search_string,pos);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		std::size_t pos2=str | srook::adaptors::find(search_string,pos,search_string.size());
 	}
 }find_check={};
 
@@ -281,21 +290,53 @@ const struct find_first_of_check_t{
 	{
 		auto hs=r;
 		const auto f=[](typename std::decay_t<Range>::value_type x,typename std::decay_t<Range>::value_type y){return x<y;};
-
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it1 = r | srook::adaptors::find_first_of(hs);
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it2 = r | srook::adaptors::find_first_of(hs.cbegin(),hs.cend());
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it3 = r | srook::adaptors::find_first_of(hs,f);
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it4 = r | srook::adaptors::find_first_of(hs.cbegin(),hs.cend(),f);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it1 = r | srook::adaptors::find_first_of(hs);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it2 = r | srook::adaptors::find_first_of(hs.cbegin(),hs.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it3 = r | srook::adaptors::find_first_of(hs,f);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it4 = r | srook::adaptors::find_first_of(hs.cbegin(),hs.cend(),f);
 	}
 	void operator()(const std::string& str)const
 	{
 		using namespace std::string_literals;
 		auto search_string="important"s;
-
-		SROOK_attribute_UNUSED std::string::size_type result1 = str | srook::adaptors::find_first_of(search_string);
-		SROOK_attribute_UNUSED std::string::size_type result2 = str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size());
-		SROOK_attribute_UNUSED std::string::size_type result3 = 
-			str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size(),search_string.size());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif	
+		std::string::size_type result1 = str | srook::adaptors::find_first_of(search_string);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		std::string::size_type result2 = str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		std::string::size_type result3 = str | srook::adaptors::find_first_of(search_string.c_str(),search_string.size(),search_string.size());
 	}
 }find_first_of_check={};
 
@@ -303,9 +344,18 @@ const struct binary_search_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-
-		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::sort() | srook::adaptors::binary_search(4);
-		SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::binary_search(4,std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::sort() | srook::adaptors::binary_search(4);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b2 = r | srook::adaptors::binary_search(4,std::greater<>());
 	}
 }binary_search_check={};
 
@@ -313,8 +363,12 @@ const struct find_if_not_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range&& r)const
 	{
-
-		SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator result_it = 
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<decltype(r)>::const_iterator result_it = 
 			r | srook::adaptors::find_if_not([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 	}
 }find_if_not_check={};
@@ -323,8 +377,12 @@ const struct generate_n_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::iterator it = r | srook::adaptors::generate_n(r.size(),[]{return 42;});
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::iterator it = r | srook::adaptors::generate_n(r.size(),[]{return 42;});
 	}
 }generate_n_check={};
 
@@ -334,17 +392,35 @@ const struct includes_check_t:exclude_range<std::list>{
 	void operator()(Range r)const
 	{
 		using core_type=typename std::decay_t<Range>::value_type;
-
-		SROOK_attribute_UNUSED const bool result1 = 
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result1 = 
 			r | srook::adaptors::sort() | srook::adaptors::includes(std::decay_t<Range>{st_ctype(0),st_ctype(1),st_ctype(2)});
-		SROOK_attribute_UNUSED const bool result2 =
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result2 =
 			r | srook::adaptors::includes(std::decay_t<Range>{st_ctype(0),st_ctype(1),st_ctype(2)},std::greater<>());
 
 		auto test_range=r;
-
-		SROOK_attribute_UNUSED const bool result3 = 
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result3 = 
 			r | srook::adaptors::includes(test_range.cbegin(),test_range.cend());
-		SROOK_attribute_UNUSED const bool result4 =
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const bool result4 =
 			r | srook::adaptors::includes(test_range.cbegin(),test_range.cend(),std::greater<>());
 	}		
 }includes_check={};
@@ -354,8 +430,18 @@ const struct inplace_merge_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-		SROOK_attribute_UNUSED auto range_it2 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end());
-		SROOK_attribute_UNUSED auto range_it4 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end(),std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it2 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		auto range_it4 = r | srook::adaptors::inplace_merge(std::next(r.begin(),r.size()-1),r.end(),std::greater<>());
 	}
 }inplace_merge_check={};
 
@@ -363,7 +449,12 @@ const struct is_partitioned_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(const Range& r)const
 	{
-		SROOK_attribute_UNUSED bool b = r | srook::adaptors::is_partitioned([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b = r | srook::adaptors::is_partitioned([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 	}
 }is_partitioned_check={};
 
@@ -372,11 +463,30 @@ const struct lexicographical_compare_check_t:exclude_range<std::list>{
 	void operator()(const Range& r)const
 	{
 		auto tmp=r;
-
-		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::lexicographical_compare(tmp);
-		SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend());
-		SROOK_attribute_UNUSED bool b3 = r | srook::adaptors::lexicographical_compare(tmp,std::greater<>());
-		SROOK_attribute_UNUSED bool b4 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend(),std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::lexicographical_compare(tmp);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b2 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b3 = r | srook::adaptors::lexicographical_compare(tmp,std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b4 = r | srook::adaptors::lexicographical_compare(tmp.cbegin(),tmp.cend(),std::greater<>());
 	}
 }lexicographical_compare_check={};
 
@@ -385,8 +495,18 @@ const struct lower_bound_check_t{
 	template<class Range>
 	void operator()(const Range& r)const
 	{
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it1 = r | srook::adaptors::lower_bound(st(42));
-		SROOK_attribute_UNUSED typename std::decay_t<Range>::const_iterator it2 = r | srook::adaptors::lower_bound(st(42),std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it1 = r | srook::adaptors::lower_bound(st(42));
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		typename std::decay_t<Range>::const_iterator it2 = r | srook::adaptors::lower_bound(st(42),std::greater<>());
 	}
 }lower_bound_check={};
 #undef st
@@ -412,12 +532,36 @@ const struct mismatch_check_t:exclude_range<std::list>{
 		auto a=r;
 		const auto pred=[](typename std::decay_t<Range>::value_type x,typename decltype(a)::value_type y){return x==y;};
 		typedef std::pair<typename std::decay_t<Range>::const_iterator,typename decltype(a)::const_iterator> result_type;
-
-		SROOK_attribute_UNUSED result_type p1 = r | srook::adaptors::mismatch(a);
-		SROOK_attribute_UNUSED result_type p2 = r | srook::adaptors::mismatch(a.cbegin());
-		SROOK_attribute_UNUSED result_type p3 = r | srook::adaptors::mismatch(a,pred);
-		SROOK_attribute_UNUSED result_type p4 = r | srook::adaptors::mismatch(a.cbegin(),a.cend());
-		SROOK_attribute_UNUSED result_type p5 = r | srook::adaptors::mismatch(a.cbegin(),a.cend(),pred);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p1 = r | srook::adaptors::mismatch(a);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p2 = r | srook::adaptors::mismatch(a.cbegin());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p3 = r | srook::adaptors::mismatch(a,pred);
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p4 = r | srook::adaptors::mismatch(a.cbegin(),a.cend());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		result_type p5 = r | srook::adaptors::mismatch(a.cbegin(),a.cend(),pred);
 	}
 }mismatch_check={};
 
@@ -426,9 +570,18 @@ const struct next_permutation_check_t:exclude_range<std::list>{
 	template<class R>
 	void operator()(R r)const
 	{
-
-		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::next_permutation();
-		SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::next_permutation(std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::next_permutation();
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b2 = r | srook::adaptors::next_permutation(std::greater<>());
 	}
 }next_permutation_check={};
 
@@ -436,8 +589,12 @@ const struct none_of_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(const Range& r)const
 	{
-
-		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::none_of([](const typename std::decay_t<Range>::value_type x){return x%2==0;});
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		bool b1 = r | srook::adaptors::none_of([](const typename std::decay_t<Range>::value_type x){return x%2==0;});
 	}
 }none_of_check={};
 
@@ -446,9 +603,18 @@ const struct nth_element_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-
-		SROOK_attribute_UNUSED const auto iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
-		SROOK_attribute_UNUSED const auto iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const auto iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
+#ifdef __GNUC__
+		[[gnu::unused]]
+#else
+		[[maybe_unused]]
+#endif
+		const auto iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
 	}
 }nth_element_check={};
 
@@ -467,45 +633,74 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it = x | srook::adaptors::adjacent_find();
-					SROOK_attribute_UNUSED decltype(it) it1 = x | srook::adaptors::adjacent_find(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(x)>::const_iterator it = x | srook::adaptors::adjacent_find();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					decltype(it) it1 = x | srook::adaptors::adjacent_find(std::greater<>());
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED bool b = x | srook::adaptors::all_of([](const auto& x){return x%2==0;});
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b = x | srook::adaptors::all_of([](const auto& x){return x%2==0;});
 				}
 			),
 			make_tester(binary_search_check),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test = x | srook::adaptors::copied;
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_backward;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test = x | srook::adaptors::copied_backward;
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_if([](const auto& x){return x%2==0;});
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test = x | srook::adaptors::copied_if([](const auto& x){return x%2==0;});
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_n(42);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test = x | srook::adaptors::copied_n(42);
 				}
 			),
 			make_tester(
@@ -536,16 +731,23 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED typename std::iterator_traits<typename std::decay_t<decltype(x)>::iterator>::difference_type value = 
-						x | srook::adaptors::count(10);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::iterator_traits<typename std::decay_t<decltype(x)>::iterator>::difference_type value= x | srook::adaptors::count(10);
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
-					SROOK_attribute_UNUSED typename std::iterator_traits<typename std::decay_t<decltype(x)>::iterator>::difference_type value = 
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::iterator_traits<typename std::decay_t<decltype(x)>::iterator>::difference_type value = 
 						x | srook::adaptors::count_if([](typename std::decay_t<decltype(x)>::value_type v){return v%2==0;});
 				}
 			),
@@ -557,19 +759,47 @@ int main()
 
 					auto pred=
 						[](typename decltype(range)::value_type x,typename decltype(range)::value_type y){return x-1<=y && y<=x+1;};
-
-					SROOK_attribute_UNUSED bool b0 = x | srook::adaptors::equal(range);
-					SROOK_attribute_UNUSED bool b1 = x | srook::adaptors::equal(range.begin());
-					SROOK_attribute_UNUSED bool b2 = x | srook::adaptors::equal(range,pred);
-					SROOK_attribute_UNUSED bool b3 = x | srook::adaptors::equal(range.begin(),range.end(),pred);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b0 = x | srook::adaptors::equal(range);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b1 = x | srook::adaptors::equal(range.begin());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b2 = x | srook::adaptors::equal(range,pred);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b3 = x | srook::adaptors::equal(range.begin(),range.end(),pred);
 				}
 			),
 			make_tester(
 				[](auto x)
 				{
-
-					SROOK_attribute_UNUSED auto test = x | srook::adaptors::equal_range(5);
-					SROOK_attribute_UNUSED auto test1 = x | srook::adaptors::equal_range(5,std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test = x | srook::adaptors::equal_range(5);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto test1 = x | srook::adaptors::equal_range(5,std::greater<>());
 				}
 			),
 			make_tester(fill_check),
@@ -585,11 +815,30 @@ int main()
 							{
 								return x < y;
 							};
-
-						SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it1 = x | srook::adaptors::find_end(hs);
-						SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it2 = x | srook::adaptors::find_end(hs.cbegin(),hs.cend());
-						SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it3 = x | srook::adaptors::find_end(hs,f);
-						SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it4 = x | srook::adaptors::find_end(hs.cbegin(),hs.cend(),f);
+#ifdef __GNUC__
+						[[gnu::unused]]
+#else
+						[[maybe_unused]]
+#endif
+						typename std::decay_t<decltype(x)>::const_iterator it1 = x | srook::adaptors::find_end(hs);
+#ifdef __GNUC__
+						[[gnu::unused]]
+#else
+						[[maybe_unused]]
+#endif
+						typename std::decay_t<decltype(x)>::const_iterator it2 = x | srook::adaptors::find_end(hs.cbegin(),hs.cend());
+#ifdef __GNUC__
+						[[gnu::unused]]
+#else
+						[[maybe_unused]]
+#endif
+						typename std::decay_t<decltype(x)>::const_iterator it3 = x | srook::adaptors::find_end(hs,f);
+#ifdef __GNUC__
+						[[gnu::unused]]
+#else
+						[[maybe_unused]]
+#endif
+						typename std::decay_t<decltype(x)>::const_iterator it4 = x | srook::adaptors::find_end(hs.cbegin(),hs.cend(),f);
 					}
 			),
 			make_tester(find_first_of_check),
@@ -610,8 +859,12 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-
-					SROOK_attribute_UNUSED auto range_iterator = r | srook::adaptors::generate([]{return 42;});
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto range_iterator = r | srook::adaptors::generate([]{return 42;});
 				}
 			),
 			make_tester(generate_n_check),
@@ -620,17 +873,36 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-
-					SROOK_attribute_UNUSED const bool b1 = r | srook::adaptors::is_heap();
-					SROOK_attribute_UNUSED const bool b2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					const bool b1 = r | srook::adaptors::is_heap();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					const bool b2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap(std::greater<>());
 				}
 			),
 			make_tester(
 				[](auto r)
 				{
-					SROOK_attribute_UNUSED typename decltype(r)::const_iterator it1 = r | srook::adaptors::is_heap_until();
-					SROOK_attribute_UNUSED typename decltype(r)::const_iterator it2 = 
-						r | srook::adaptors::make_heap() | srook::adaptors::is_heap_until(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename decltype(r)::const_iterator it1 = r | srook::adaptors::is_heap_until();
+
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename decltype(r)::const_iterator it2 = r | srook::adaptors::make_heap() | srook::adaptors::is_heap_until(std::greater<>());
 				}
 			),
 			make_tester(is_partitioned_check),
@@ -638,30 +910,78 @@ int main()
 				[](const auto& r)
 				{
 					auto a=r;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b1 = r | srook::adaptors::is_permutation(a);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b2 = r | srook::adaptors::is_permutation(a.cbegin());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b3 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend());
 
-					SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::is_permutation(a);
-					SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::is_permutation(a.cbegin());
-					SROOK_attribute_UNUSED bool b3 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend());
-					
 					const auto test_f=[](typename decltype(a)::value_type x,typename decltype(a)::value_type y){return x==y;};
-					SROOK_attribute_UNUSED bool b4 = r | srook::adaptors::is_permutation(a,test_f);
-					SROOK_attribute_UNUSED bool b5 = r | srook::adaptors::is_permutation(a.cbegin(),test_f);
-					SROOK_attribute_UNUSED bool b6 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend(),test_f);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b4 = r | srook::adaptors::is_permutation(a,test_f);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b5 = r | srook::adaptors::is_permutation(a.cbegin(),test_f);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b6 = r | srook::adaptors::is_permutation(a.cbegin(),a.cend(),test_f);
 				}
 			),
 			make_tester(
 				[](const auto& r)
 				{
-					SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::is_sorted();
-					SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::is_sorted(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b1 = r | srook::adaptors::is_sorted();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					bool b2 = r | srook::adaptors::is_sorted(std::greater<>());
 				}
 			),
 			make_tester(
 				[](const auto& r)
 				{
-
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::is_sorted_until();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::is_sorted_until(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::is_sorted_until();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::is_sorted_until(std::greater<>());
 				}
 			),
 			make_tester(lexicographical_compare_check),
@@ -670,68 +990,175 @@ int main()
 				[](const auto& r)
 				{
 					const auto get_initpack = []()->std::initializer_list<int>{return {1,2,3,4,5};};
-
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::value_type a = r | srook::adaptors::max();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::value_type b = r | srook::adaptors::max(std::greater<>());
-					SROOK_attribute_UNUSED auto c = 42 | srook::adaptors::max(32);
-					SROOK_attribute_UNUSED auto d = 42 | srook::adaptors::max(32,std::greater<>());
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(get_initpack())>::value_type e = get_initpack() | srook::adaptors::max();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(get_initpack())>::value_type f = 
-						get_initpack() | srook::adaptors::max(std::greater<>());
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::value_type g = r | srook::adaptors::min();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::value_type h = r | srook::adaptors::min(std::greater<>());
-					SROOK_attribute_UNUSED auto i = 42 | srook::adaptors::min(32);
-					SROOK_attribute_UNUSED auto j = 42 | srook::adaptors::min(32,std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type a = r | srook::adaptors::max();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type b = r | srook::adaptors::max(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto c = 42 | srook::adaptors::max(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto d = 42 | srook::adaptors::max(32,std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(get_initpack())>::value_type e = get_initpack() | srook::adaptors::max();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(get_initpack())>::value_type f = get_initpack() | srook::adaptors::max(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type g = r | srook::adaptors::min();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::value_type h = r | srook::adaptors::min(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto i = 42 | srook::adaptors::min(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto j = 42 | srook::adaptors::min(32,std::greater<>());
 				}
 			),
 			make_tester(
 				[](const auto& r){
-
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::max_element();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::max_element(std::greater<>());
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it3 = r | srook::adaptors::min_element();
-					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it4 = r | srook::adaptors::min_element(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::max_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::max_element(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it3 = r | srook::adaptors::min_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					typename std::decay_t<decltype(r)>::const_iterator it4 = r | srook::adaptors::min_element(std::greater<>());
 				}
 			),
 			make_tester(merge_check),
 			make_tester(
 				[](const auto& r)
 				{
-
-					SROOK_attribute_UNUSED auto p1 = r | srook::adaptors::minmax();
-					SROOK_attribute_UNUSED auto p2 = r | srook::adaptors::minmax(std::greater<>());
-					SROOK_attribute_UNUSED auto p3 = 42 | srook::adaptors::minmax(32);
-					SROOK_attribute_UNUSED auto p4 = 42 | srook::adaptors::minmax(42,std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p1 = r | srook::adaptors::minmax();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p2 = r | srook::adaptors::minmax(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p3 = 42 | srook::adaptors::minmax(32);
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p4 = 42 | srook::adaptors::minmax(42,std::greater<>());
 				}
 			),
 			make_tester(
 				[](const auto& r)
 				{
-
-					SROOK_attribute_UNUSED auto p1 = r | srook::adaptors::minmax_element();
-					SROOK_attribute_UNUSED auto p2 = r | srook::adaptors::minmax_element(std::greater<>());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p1 = r | srook::adaptors::minmax_element();
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					auto p2 = r | srook::adaptors::minmax_element(std::greater<>());
 				}
 			),
 			make_tester(mismatch_check),
 			make_tester(
 				[](auto r)
 				{
-					SROOK_attribute_UNUSED decltype(r) a = r | srook::adaptors::move;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					decltype(r) a = r | srook::adaptors::move;
 				}
 			),
 			make_tester(
 				[](auto r)
 				{
-
-					SROOK_attribute_UNUSED decltype(r) a = 
-						r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					decltype(r) a = r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
 				}
 			),
 			make_tester(
 				[](auto r)
 				{
-
-					SROOK_attribute_UNUSED const auto b = r | srook::adaptors::move_backward(r.end());
+#ifdef __GNUC__
+					[[gnu::unused]]
+#else
+					[[maybe_unused]]
+#endif
+					const auto b = r | srook::adaptors::move_backward(r.end());
 				}
 			),
 			make_tester(next_permutation_check),
