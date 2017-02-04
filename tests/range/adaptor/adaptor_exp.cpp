@@ -466,7 +466,7 @@ const struct partial_sort_copy_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-		Range result(r.size());
+		Range result(r);
 
 		SROOK_attribute_UNUSED typename Range::iterator iter1 = r | srook::adaptors::partial_sort_copy(result);
 		SROOK_attribute_UNUSED typename Range::iterator iter2 = r | srook::adaptors::partial_sort_copy(result,std::greater<>());
