@@ -49,6 +49,7 @@
 #include<srook/range/adaptor/none_of.hpp>
 #include<srook/range/adaptor/nth_element.hpp>
 #include<srook/range/adaptor/partial_sort.hpp>
+#include<srook/range/adaptor/partial_sort_copy.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
@@ -452,7 +453,7 @@ const struct nth_element_check_t:exclude_range<std::list>{
 	}
 }nth_element_check={};
 
-const struct partial_sort_check_t{
+const struct partial_sort_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
@@ -460,6 +461,19 @@ const struct partial_sort_check_t{
 		SROOK_attribute_UNUSED const auto iter2 = r | srook::adaptors::partial_sort(std::next(r.begin(),r.size()/2),std::greater<>());
 	}
 }partial_sort_check={};
+
+const struct partial_sort_copy_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+		Range result(r.size());
+
+		SROOK_attribute_UNUSED typename Range::iterator iter1 = r | srook::adaptors::partial_sort_copy(result);
+		SROOK_attribute_UNUSED typename Range::iterator iter2 = r | srook::adaptors::partial_sort_copy(result,std::greater<>());
+		SROOK_attribute_UNUSED typename Range::iterator iter3 = r | srook::adaptors::partial_sort_copy(result.begin(),result.end());
+		SROOK_attribute_UNUSED typename Range::iterator iter4 = r | srook::adaptors::partial_sort_copy(result.begin(),result.end(),std::greater<>());
+	}
+}partial_sort_copy_check={};
 
 int main()
 {
@@ -737,7 +751,8 @@ int main()
 			make_tester(next_permutation_check),
 			make_tester(none_of_check),
 			make_tester(nth_element_check),
-			make_tester(partial_sort_check)
+			make_tester(partial_sort_check),
+			make_tester(partial_sort_copy_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
