@@ -4,21 +4,21 @@
 
 [mikoCppLibraries](https://github.com/falgon/mikoCppLibraries)の後継。無駄な記述をしないための無駄なUselessライブラリ。全体的に開発段階のため不安定である。
 
-# Check on
-## OS
+## Check on
+### OS
 * Ubuntu 16.04
 * Mac OS Sierra
 
-## Compiler
+### Compiler
 * Clang 5.0.0 Head
 * GCC 6.3.0
 * Apple LLVM Clang 800.0.42.1
 
-# Recommendation
+## Recommendation
 Boost C++ Libraries version after 1.5.8
 (This library often uses boost-c++, but works without it.)
 
-# Infotmation
+## Information
 If addition of a library is stabilized, wiki may be written.
 
 ## Copyrights
