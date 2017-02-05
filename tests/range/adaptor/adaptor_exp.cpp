@@ -50,6 +50,7 @@
 #include<srook/range/adaptor/nth_element.hpp>
 #include<srook/range/adaptor/partial_sort.hpp>
 #include<srook/range/adaptor/partial_sort_copy.hpp>
+#include<srook/range/adaptor/partition.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
@@ -427,7 +428,6 @@ const struct next_permutation_check_t:exclude_range<std::list>{
 	template<class R>
 	void operator()(R r)const
 	{
-
 		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::next_permutation();
 		SROOK_attribute_UNUSED bool b2 = r | srook::adaptors::next_permutation(std::greater<>());
 	}
@@ -437,7 +437,6 @@ const struct none_of_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(const Range& r)const
 	{
-
 		SROOK_attribute_UNUSED bool b1 = r | srook::adaptors::none_of([](const typename std::decay_t<Range>::value_type x){return x%2==0;});
 	}
 }none_of_check={};
@@ -447,7 +446,6 @@ const struct nth_element_check_t:exclude_range<std::list>{
 	template<class Range>
 	void operator()(Range r)const
 	{
-
 		SROOK_attribute_UNUSED const auto iter1= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2));
 		SROOK_attribute_UNUSED const auto iter2= r | srook::adaptors::nth_element(std::next(r.begin(),r.size()/2),std::greater<>());
 	}
@@ -481,7 +479,6 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED typename std::decay_t<decltype(x)>::const_iterator it = x | srook::adaptors::adjacent_find();
 					SROOK_attribute_UNUSED decltype(it) it1 = x | srook::adaptors::adjacent_find(std::greater<>());
 				}
@@ -489,7 +486,6 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED bool b = x | srook::adaptors::all_of([](const auto& x){return x%2==0;});
 				}
 			),
@@ -497,28 +493,24 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied;
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_backward;
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_if([](const auto& x){return x%2==0;});
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-
 					SROOK_attribute_UNUSED auto test = x | srook::adaptors::copied_n(42);
 				}
 			),
@@ -581,7 +573,6 @@ int main()
 			make_tester(
 				[](auto x)
 				{
-
 					SROOK_attribute_UNUSED auto test = x | srook::adaptors::equal_range(5);
 					SROOK_attribute_UNUSED auto test1 = x | srook::adaptors::equal_range(5,std::greater<>());
 				}
@@ -624,7 +615,6 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-
 					SROOK_attribute_UNUSED auto range_iterator = r | srook::adaptors::generate([]{return 42;});
 				}
 			),
@@ -673,7 +663,6 @@ int main()
 			make_tester(
 				[](const auto& r)
 				{
-
 					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it1 = r | srook::adaptors::is_sorted_until();
 					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it2 = r | srook::adaptors::is_sorted_until(std::greater<>());
 				}
@@ -721,7 +710,6 @@ int main()
 			make_tester(
 				[](const auto& r)
 				{
-
 					SROOK_attribute_UNUSED auto p1 = r | srook::adaptors::minmax_element();
 					SROOK_attribute_UNUSED auto p2 = r | srook::adaptors::minmax_element(std::greater<>());
 				}
@@ -736,7 +724,6 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-
 					SROOK_attribute_UNUSED decltype(r) a = 
 						r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
 				}
@@ -744,7 +731,6 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-
 					SROOK_attribute_UNUSED const auto b = r | srook::adaptors::move_backward(r.end());
 				}
 			),
@@ -752,7 +738,13 @@ int main()
 			make_tester(none_of_check),
 			make_tester(nth_element_check),
 			make_tester(partial_sort_check),
-			make_tester(partial_sort_copy_check)
+			make_tester(partial_sort_copy_check),
+			make_tester(
+				[](auto r)
+				{
+					SROOK_attribute_UNUSED const auto pos = r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+				}
+			)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
