@@ -51,6 +51,7 @@
 #include<srook/range/adaptor/partial_sort.hpp>
 #include<srook/range/adaptor/partial_sort_copy.hpp>
 #include<srook/range/adaptor/partition.hpp>
+#include<srook/range/adaptor/partition_copy.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
@@ -473,6 +474,31 @@ const struct partial_sort_copy_check_t:exclude_range<std::list>{
 	}
 }partial_sort_copy_check={};
 
+const struct partition_copy_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(const Range& r)const
+	{
+		Range result1(r.size()),result2(r.size());
+		const auto pred=[](const typename std::decay_t<Range>::value_type x){return x%2==0;};
+
+		SROOK_attribute_UNUSED const auto p1 = r | srook::adaptors::partition_copy(std::back_inserter(result1),std::back_inserter(result2),pred);
+		SROOK_attribute_UNUSED const auto p2 = r | srook::adaptors::partition_copy(result1.begin(),result2,pred);
+		SROOK_attribute_UNUSED const auto p3 = r | srook::adaptors::partition_copy(result1,result2.begin(),pred);
+		SROOK_attribute_UNUSED const auto p4 = r | srook::adaptors::partition_copy(result1,result2,pred);
+	}
+
+	void operator()(const std::string& str)const
+	{
+		std::string result1,result2;
+		const auto pred=[](const std::string::value_type x){return x=='a';};
+		
+		SROOK_attribute_UNUSED const auto p1 = str | srook::adaptors::partition_copy(result1.begin(),result2.begin(),pred);
+		SROOK_attribute_UNUSED const auto p2 = str | srook::adaptors::partition_copy(result1,result2.begin(),pred);
+		SROOK_attribute_UNUSED const auto p3 = str | srook::adaptors::partition_copy(result1.begin(),result2,pred);
+		SROOK_attribute_UNUSED const auto p4 = str | srook::adaptors::partition_copy(result1,result2,pred);
+	}
+}partition_copy_check={};
+
 int main()
 {
 	const auto tests=std::make_tuple(
@@ -744,7 +770,8 @@ int main()
 				{
 					SROOK_attribute_UNUSED const auto pos = r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 				}
-			)
+			),
+			make_tester(partition_copy_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
