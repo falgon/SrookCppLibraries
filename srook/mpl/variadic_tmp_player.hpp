@@ -2,7 +2,7 @@
 #define INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
 #include<cstddef>
 namespace srook{
-namespace mpl{
+inline namespace mpl{
 inline namespace v1{
 // pack
 template<class... T>

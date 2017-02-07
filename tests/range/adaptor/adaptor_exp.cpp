@@ -477,7 +477,7 @@ const struct partial_sort_copy_check_t:exclude_range<std::list>{
 	}
 }partial_sort_copy_check={};
 
-const struct partition_copy_check_t:exclude_range<std::list>{
+const struct partition_copy_check_t:exclude_range<std::list>,exclude_range<std::basic_string>{
 	template<class Range>
 	void operator()(const Range& r)const
 	{
@@ -488,17 +488,6 @@ const struct partition_copy_check_t:exclude_range<std::list>{
 		SROOK_attribute_UNUSED const auto p2 = r | srook::adaptors::partition_copy(result1.begin(),result2,pred);
 		SROOK_attribute_UNUSED const auto p3 = r | srook::adaptors::partition_copy(result1,result2.begin(),pred);
 		SROOK_attribute_UNUSED const auto p4 = r | srook::adaptors::partition_copy(result1,result2,pred);
-	}
-
-	void operator()(std::string str)const
-	{
-		std::string result1,result2;
-		const auto pred=[](const std::string::value_type x){return x=='a';};
-		
-		SROOK_attribute_UNUSED const auto p1 = str | srook::adaptors::partition_copy(result1.begin(),result2.begin(),pred);
-		SROOK_attribute_UNUSED const auto p2 = str | srook::adaptors::partition_copy(result1,result2.begin(),pred);
-		SROOK_attribute_UNUSED const auto p3 = str | srook::adaptors::partition_copy(result1.begin(),result2,pred);
-		SROOK_attribute_UNUSED const auto p4 = str | srook::adaptors::partition_copy(result1,result2,pred);
 	}
 }partition_copy_check={};
 

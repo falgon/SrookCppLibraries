@@ -2,7 +2,7 @@
 #define SROOK_INCLUDE_VARIADIC_PLAYER_HPP
 #include<srook/mpl/variadic_tmp_player.hpp>
 namespace srook{
-namespace mpl{
+inline namespace mpl{
 inline namespace v1{
 
 // Tag to ***er.
