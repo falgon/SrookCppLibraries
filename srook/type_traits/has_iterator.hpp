@@ -2,6 +2,7 @@
 #define INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
 #include<type_traits>
 #include<iterator>
+#include<srook/config/compiler_version.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -32,8 +33,23 @@ constexpr bool has_iterator_v<
 		std::is_base_of<
 			std::iterator<typename T::iterator_category,void,void,void,void>,T
 		>::value,
-		std::true_type,
-		std::false_type
+#ifdef SROOK_GCC_VERSION
+#if SROOK_GCC_VERSION > 619
+		std::false_type,std::true_type
+#else
+		std::true_type,std::true_type // not support
+#endif
+
+#elif defined(SROOK_CLANG_VERSION)
+#if SROOK_CLANG_VERSION > 380
+		std::false_type,std::true_type
+#else
+		std::true_type,std::false_type // deprecate
+#endif
+
+#elif defined(__APPLE__) // deprecate
+		std::true_type,std::false_type
+#endif
 >::type::value;
 
 } // inline namespace v1
