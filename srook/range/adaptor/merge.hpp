@@ -87,13 +87,24 @@ private:
 	Compare comp_;
 };
 
-template<class Range,class OutputIterator,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+template<
+	class Range,
+	class OutputIterator,
+	REQUIRES( (srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>) && !has_iterator_v<std::decay_t<OutputIterator>>)
+>
 constexpr merge_range_t<std::decay_t<Range>,std::decay_t<OutputIterator>> merge(Range&& r,OutputIterator&& oiter)
 {
 	return merge_range_t<std::decay_t<Range>,std::decay_t<OutputIterator>>(std::forward<Range>(r),std::forward<OutputIterator>(oiter));
 }
 
-template<class Iterator,class OutputIterator,REQUIRES(!srook::mpl::has_iterator_v<std::decay_t<Iterator>>)>
+template<
+	class Iterator,
+	class OutputIterator,
+	REQUIRES(
+			!srook::mpl::has_iterator_v<std::decay_t<Iterator>> &&
+			!has_iterator_v<std::decay_t<OutputIterator>>
+	)
+>
 constexpr merge_iterator_t<std::decay_t<Iterator>,std::decay_t<OutputIterator>> merge(Iterator&& first,Iterator&& last,OutputIterator&& oiter)
 {
 	return merge_iterator_t<
@@ -102,7 +113,16 @@ constexpr merge_iterator_t<std::decay_t<Iterator>,std::decay_t<OutputIterator>> 
 	>(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<OutputIterator>(oiter));
 }
 
-template<class Range,class OutputIterator,class Compare,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+template<
+	class Range,
+	class OutputIterator,
+	class Compare,
+	REQUIRES( 
+			(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_callable_v<std::decay_t<Range>>) &&
+			!has_iterator_v<std::decay_t<OutputIterator>> &&
+			is_callable_v<std::decay_t<Compare>>
+	)
+>
 constexpr merge_range_compare_t<std::decay_t<Range>,std::decay_t<OutputIterator>,std::decay_t<Compare>> merge(Range&& r,OutputIterator&& oiter,Compare&& comp)
 {
 	return merge_range_compare_t<
@@ -112,7 +132,16 @@ constexpr merge_range_compare_t<std::decay_t<Range>,std::decay_t<OutputIterator>
 	>(std::forward<Range>(r),std::forward<OutputIterator>(oiter),std::forward<Compare>(comp));
 }
 
-template<class Iterator,class OutputIterator,class Compare,REQUIRES(!srook::mpl::has_iterator_v<std::decay_t<Iterator>>)>
+template<
+	class Iterator,
+	class OutputIterator,
+	class Compare,
+	REQUIRES(
+			!srook::mpl::has_iterator_v<std::decay_t<Iterator>> && 
+			!has_iterator_v<std::decay_t<OutputIterator>> &&
+			is_callable_v<std::decay_t<Compare>>
+	)
+>
 constexpr merge_iterator_compare_t<std::decay_t<Iterator>,std::decay_t<OutputIterator>,std::decay_t<Compare>>
 merge(Iterator&& first,Iterator&& last,OutputIterator&& oiter,Compare&& comp)
 {
