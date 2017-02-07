@@ -77,6 +77,7 @@
 #include<list>
 #include<initializer_list>
 
+/*
 namespace{
 	constexpr std::size_t range_size=10;
 }
@@ -199,6 +200,7 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
 			std::integral_constant<std::size_t,std::tuple_size<std::remove_reference_t<Tuple_range>>::value-1>()
 	);
 }
+*/
 
 /* 
  *
@@ -207,6 +209,8 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
  *
  *
  */
+
+/*
 auto make_test_ranges()
 {
 	std::vector<int> v(range_size);
@@ -232,7 +236,7 @@ auto make_test_ranges()
 #endif
 			);
 }
-
+*/
 
 /*
  *
@@ -241,6 +245,8 @@ auto make_test_ranges()
  *
  *
  */
+
+/*
 template<template<class...>class Range>
 struct exclude_range{
 	template<class... Ts>
@@ -510,10 +516,11 @@ const struct print_check_t{
 		std::cout<<std::endl;
 	}
 }print_check={};
+*/
 
 int main()
 {
-	const auto tests=std::make_tuple(
+	/*const auto tests=std::make_tuple(
 			make_tester(
 				[](const auto& x)
 				{
@@ -800,5 +807,5 @@ int main()
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
-	ap.play_invoker();
+	ap.play_invoker();*/
 }
