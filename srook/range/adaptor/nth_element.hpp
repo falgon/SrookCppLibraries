@@ -22,15 +22,15 @@ struct nth_element_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator>)>
 	explicit constexpr nth_element_t(Iterator iter):iter_(std::move(iter)){}
 	
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
-	srook::range_iterator<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
+	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
 		boost::range::nth_element(std::forward<Range>(r),std::move(iter_));
 #else
 		std::nth_element(r.begin(),std::move(iter_),r.end());
 #endif
-		return srook::make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
 	Iterator iter_;
@@ -41,15 +41,15 @@ struct nth_element_compare_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator> && srook::is_callable_v<Compare>)>
 	explicit constexpr nth_element_compare_t(Iterator iter,Compare comp):iter_(std::move(iter)),comp_(std::move(comp)){}
 	
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
-	srook::range_iterator<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
+	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
 		boost::range::nth_element(std::forward<Range>(r),std::move(iter_),std::move(comp_));
 #else
 		std::nth_element(r.begin(),std::move(iter_),r.end());
 #endif
-		return srook::make_range_iterator(r.cbegin(),r.cend());
+		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
 	Iterator iter_;

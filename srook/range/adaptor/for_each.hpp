@@ -1,6 +1,11 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_FOR_EACH
 #define INCLUDED_SROOK_RANGE_ADAPTOR_FOR_EACH
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
+
 #if __has_include(<boost/range/algorithm/for_each.hpp>)
 #include<boost/range/algorithm/for_each.hpp>
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH
@@ -15,8 +20,9 @@ inline namespace v1{
 
 template<class Predicate>
 struct for_each_t{
+	template<REQUIRES(is_callable_v<Predicate>)>
 	explicit constexpr for_each_t(Predicate pred):pred_(std::move(pred)){}
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	auto operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH

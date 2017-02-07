@@ -3,6 +3,7 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #include<initializer_list>
 #include<type_traits>
 #include<srook/type_traits/is_callable.hpp>
@@ -33,7 +34,9 @@ private:
 
 template<class T,class Compare>
 struct min_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr min_compare_t(T t,Compare comp):value(std::move(t)),comp_(std::move(comp)){}
+	
 	const T& operator()(const T& rhs)
 	{
 		return std::min(rhs,std::move(value),std::move(comp_));
@@ -54,7 +57,8 @@ struct min_initializer_list_t{
 		*std::min_element(ilist.begin(),ilist.end());
 #endif
 	}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return
@@ -68,7 +72,9 @@ struct min_initializer_list_t{
 
 template<class Compare>
 struct min_initializer_list_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr min_initializer_list_compare_t(Compare comp):comp_(std::move(comp)){}
+	
 	template<class T>
 	T operator()(std::initializer_list<T> ilist)
 	{
@@ -79,7 +85,8 @@ struct min_initializer_list_compare_t{
 		*std::min_element(ilist.begin(),ilist.end(),std::move(comp_));
 #endif
 	}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return

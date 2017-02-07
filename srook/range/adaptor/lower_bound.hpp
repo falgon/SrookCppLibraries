@@ -1,8 +1,10 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_LOWER_BOUND_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_LOWER_BOUND_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
-#include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/algorithm/lower_bound.hpp>)
 #include<boost/range/algorithm/lower_bound.hpp>
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
@@ -18,7 +20,8 @@ inline namespace v1{
 template<class T>
 struct lower_bound_t{
 	explicit constexpr lower_bound_t(T t):value(std::move(t)){}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
@@ -35,8 +38,10 @@ private:
 
 template<class T,class Compare>
 struct lower_bound_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr lower_bound_compare_t(T t,Compare comp):value(std::move(t)),comp_(std::move(comp)){}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return

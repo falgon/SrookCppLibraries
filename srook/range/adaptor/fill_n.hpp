@@ -1,6 +1,11 @@
 #ifndef INCLUDED_SROOK_ADAPTOR_FILL_N_HPP
 #define INCLUDED_SROOK_ADAPTOR_FILL_N_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
+
 #if __has_include(<boost/range/adaptor/fill_n.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N
 #include<boost/range/adaptor/fill_n.hpp>
@@ -20,7 +25,7 @@ struct fill_n_t{
 	explicit constexpr fill_n_t(const std::size_t& size,T&& t):size_(size),value_(std::move(t)){}
 	explicit constexpr fill_n_t(std::size_t&& size,T&& t):size_(std::move(size)),value_(std::move(t)){}
 
-	template<class OutputIterator>
+	template<class OutputIterator,REQUIRES(!has_iterator_v<std::decay_t<OutputIterator>>)>
 	std::decay_t<OutputIterator> operator()(OutputIterator&& iter)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N

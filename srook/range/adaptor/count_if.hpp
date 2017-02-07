@@ -1,6 +1,10 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_COUNT_IF
 #define INCLUDED_SROOK_RANGE_ADAPTOR_COUNT_IF
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/algorithm/count.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_COUNT_IF
 #include<boost/range/algorithm/count_if.hpp>

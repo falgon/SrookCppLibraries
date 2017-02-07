@@ -1,6 +1,10 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_COUNT
 #define INCLUDED_SROOK_RANGE_ADAPTOR_COUNT
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/algorithm/count.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_COUNT
 #include<boost/range/algorithm/count.hpp>
@@ -18,7 +22,7 @@ inline namespace v1{
 template<class T>
 struct count_t{
 	explicit constexpr count_t(T t):value(std::move(t)){}
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::iterator_traits<typename std::decay_t<Range>::iterator>::difference_type operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_COUNT

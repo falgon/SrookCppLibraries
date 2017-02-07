@@ -22,14 +22,22 @@ struct partition_copy_iter_iter_t{
 	
 	template<
 		class Range1,
-		REQUIRES(!srook::mpl::has_iterator_v<Outer1> && srook::mpl::has_iterator_v<std::decay_t<Range1>> && srook::is_callable_v<Predicate>)
+		REQUIRES(
+				!srook::mpl::has_iterator_v<Outer1> && 
+				(srook::mpl::has_iterator_v<std::decay_t<Range1>> || is_range_iterator_v<std::decay_t<Range1>>) && 
+				srook::is_callable_v<Predicate>
+		)
 	>
 	explicit constexpr partition_copy_iter_iter_t(Outer1 o_iter1,Range1&& o_range1,Predicate pred)
 		:out_true(std::move(o_iter1)),out_false(o_range1.begin()),pred_(std::move(pred)){}
 
 	template<
 		class Range1,
-		REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range1>> && !srook::mpl::has_iterator_v<Outer2> && srook::is_callable_v<Predicate>)
+		REQUIRES(
+				(srook::mpl::has_iterator_v<std::decay_t<Range1>> || is_range_iterator_v<std::decay_t<Range1>>) && 
+				!srook::mpl::has_iterator_v<Outer2> && 
+				srook::is_callable_v<Predicate>
+		)	
 	>
 	explicit constexpr partition_copy_iter_iter_t(Range1&& o_range1,Outer2 o_iter1,Predicate pred)
 		:out_true(o_range1.begin()),out_false(std::move(o_iter1)),pred_(std::move(pred)){}
@@ -37,13 +45,17 @@ struct partition_copy_iter_iter_t{
 	template<
 		class Range1,
 		class Range2,
-		REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range1>> && srook::mpl::has_iterator_v<std::decay_t<Range2>> && srook::is_callable_v<Predicate>)
+		REQUIRES(
+				(srook::mpl::has_iterator_v<std::decay_t<Range1>> || is_range_iterator_v<std::decay_t<Range1>>) &&
+				(srook::mpl::has_iterator_v<std::decay_t<Range2>> || is_range_iterator_v<std::decay_t<Range2>>) && 
+				srook::is_callable_v<Predicate>
+		)
 	>
 	explicit constexpr partition_copy_iter_iter_t(Range1&& o_range1,Range2&& o_range2,Predicate pred)
 		:out_true(o_range1.begin()),out_false(o_range2.begin()),pred_(std::move(pred)){}
 
 
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	std::pair<Outer1,Outer2> operator()(Range&& r)
 	{
 		return std::partition_copy(r.cbegin(),r.cend(),std::move(out_true),std::move(out_false),std::move(pred_));
@@ -80,7 +92,7 @@ template<
 	class Outer2,
 	class Predicate,
 	REQUIRES(
-			srook::mpl::has_iterator_v<std::decay_t<Outer1>> &&
+			(srook::mpl::has_iterator_v<std::decay_t<Outer1>> || is_range_iterator_v<std::decay_t<Outer1>>) &&
 			!srook::mpl::has_iterator_v<std::decay_t<Outer2>> &&
 			srook::is_callable_v<std::decay_t<Predicate>>
 	)
@@ -101,7 +113,7 @@ template<
 	class Predicate,
 	REQUIRES(
 			!srook::mpl::has_iterator_v<std::decay_t<Outer1>> &&
-			srook::mpl::has_iterator_v<std::decay_t<Outer2>> &&
+			(srook::mpl::has_iterator_v<std::decay_t<Outer2>> || is_range_iterator_v<std::decay_t<Outer2>>) &&
 			srook::is_callable_v<std::decay_t<Predicate>>
 	)
 >
@@ -120,8 +132,8 @@ template<
 	class Outer2,
 	class Predicate,
 	REQUIRES(
-			srook::mpl::has_iterator_v<std::decay_t<Outer1>> &&
-			srook::mpl::has_iterator_v<std::decay_t<Outer2>> &&
+			(srook::mpl::has_iterator_v<std::decay_t<Outer1>> || is_range_iterator_v<std::decay_t<Outer1>>) &&
+			(srook::mpl::has_iterator_v<std::decay_t<Outer2>> || is_range_iterator_v<std::decay_t<Outer2>>) &&
 			srook::is_callable_v<std::decay_t<Predicate>>
 	)
 >

@@ -3,6 +3,7 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #include<algorithm>
 
 namespace srook{
@@ -15,7 +16,7 @@ struct move_backward_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator>)>
 	explicit constexpr move_backward_t(Iterator iter):iter_(std::move(iter)){}
 	
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::iterator operator()(R&& r)
 	{
 		return std::move_backward(r.begin(),r.end(),std::move(iter_));

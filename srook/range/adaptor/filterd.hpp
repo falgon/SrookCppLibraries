@@ -19,14 +19,14 @@ struct range_filter{
     constexpr range_iterator<
         filterd_iterator<
             Predicate,
-            typename std::remove_reference_t<Range>::const_iterator
+            typename std::remove_reference_t<Range>::iterator
         >
     >
     operator()(Range&& r)noexcept
     {
         return make_range_iterator(
-            make_filterd_iterator(std::move(pred),r.cbegin(),r.cend()),
-            make_filterd_iterator(std::move(pred),r.cend(),r.cend())
+            make_filterd_iterator(std::move(pred),r.begin(),r.end()),
+            make_filterd_iterator(std::move(pred),r.end(),r.end())
         );
     }
 private:

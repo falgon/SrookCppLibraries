@@ -2,6 +2,9 @@
 #define INCLUDED_SROOK_ADAPTOR_COPY
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/iterator/range_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
 #if __has_include(<boost/range/algorithm/copy.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_COPY
 #include<boost/range/algorithm/copy.hpp>
@@ -18,16 +21,15 @@ template<class Iterator>
 struct copy_t{
 	explicit constexpr copy_t(Iterator iter)
 		:iter_(std::move(iter)){}
-	template<class Range>
-	srook::range_iterator<typename std::decay_t<Range>::const_iterator>
-	operator()(Range&& r)
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
+	auto operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_COPY
 		boost::copy(r,std::move(iter_));
 #else
 		std::copy(r.begin(),r.end(),std::move(iter_));
 #endif
-		return make_range_iterator(r.cbegin(),r.cend());
+		return make_range_iterator(r.begin(),r.end());
 	}
 private:
 	Iterator iter_;

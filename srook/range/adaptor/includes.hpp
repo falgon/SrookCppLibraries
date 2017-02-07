@@ -1,8 +1,11 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_INCLUDES
 #define INCLUDED_SROOK_RANGE_ADAPTOR_INCLUDES
 #include<srook/range/adaptor/adaptor_operator.hpp>
-#include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
+
 #include<algorithm>
 #if __has_include(<boost/range/algorithm/set_algorithm.hpp>)
 #include<boost/range/algorithm/set_algorithm.hpp>
@@ -16,43 +19,46 @@ inline namespace v1{
 
 template<class Range>
 struct includes_t{
+	template<REQUIRES(has_iterator_v<Range> || is_range_iterator_v<Range>)>
 	explicit constexpr includes_t(const Range& r):r_(r){}
-	explicit constexpr includes_t(Range&& r):r_(std::move(r)){}
 
-	template<class R>
-	bool operator()(R&& range)
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
+	bool operator()(R&& range)const
 	{
 #ifdef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
-		return boost::range::includes(std::forward<R>(range),std::move(r_));
+		return boost::range::includes(std::forward<R>(range),r_);
 #else
 		return std::includes(range.cbegin(),range.cend(),r_.cbegin(),r_.cend());
 #endif
 	}
 private:
-	Range r_;
+	const Range& r_;
 };
 template<class Range,class Compare>
 struct includes_compare_t{
+	template<REQUIRES( (has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>) && is_callable_v<Compare> )>
 	explicit constexpr includes_compare_t(const Range& r,Compare comp):r_(r),comp_(std::move(comp)){}
-	explicit constexpr includes_compare_t(Range&& r,Compare comp):r_(std::move(r)),comp_(std::move(comp)){}
-	template<class R>
+
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& range)
 	{
 #ifdef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
-		return boost::range::includes(std::forward<R>(range),std::move(r_),std::move(comp_));
+		return boost::range::includes(std::forward<R>(range),r_,std::move(comp_));
 #else
 		return std::includes(range.cbegin(),range.cend(),r_.cbegin(),r_.cend(),std::move(comp_));
 #endif
 	}
 private:
-	Range r_;
+	const Range& r_;
 	Compare comp_;
 };
 
 template<class Iterator>
 struct includes_iterator_t{
+	template<REQUIRES(!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>)>
 	explicit constexpr includes_iterator_t(Iterator first,Iterator last):first_(std::move(first)),last_(std::move(last)){}
-	template<class Range>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 		return std::includes(r.cbegin(),r.cend(),std::move(first_),std::move(last_));
@@ -63,8 +69,10 @@ private:
 
 template<class Iterator,class Compare>
 struct includes_iterator_compare_t{
+	template<REQUIRES( (!has_iterator_v<std::decay_t<Iterator>> || is_range_iterator_v<std::decay_t<Iterator>>) && is_callable_v<Compare> )>
 	explicit constexpr includes_iterator_compare_t(Iterator first,Iterator last,Compare comp):first_(std::move(first)),last_(std::move(last)),comp_(std::move(comp)){}
-	template<class Range>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 		return std::includes(r.cbegin(),r.cend(),std::move(first_),std::move(last_),std::move(comp_));

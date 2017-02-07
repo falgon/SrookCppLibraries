@@ -4,6 +4,7 @@
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/algorithm/permutation.hpp>)
 #include<boost/range/algorithm/permutation.hpp>
 #define POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
@@ -17,7 +18,7 @@ namespace detail{
 inline namespace v1{
 
 struct next_permutation_t{
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return
@@ -33,7 +34,8 @@ template<class Compare>
 struct next_permutation_compare_t{
 	template<REQUIRES(srook::is_callable_v<std::decay_t<Compare>>)>
 	explicit constexpr next_permutation_compare_t(Compare comp):comp_(std::move(comp)){}
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return

@@ -4,6 +4,7 @@
 #include<boost/range/algorithm/mismatch.hpp>
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_MISMATCH
 #endif
+#include<srook/iterator/range_iterator.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
@@ -23,7 +24,7 @@ struct mismatch_iterator_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator>)>
 	explicit constexpr mismatch_iterator_t(Iterator iter):iter_(std::move(iter)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,Iterator> operator()(R&& r)
 	{
 		return std::mismatch(r.cbegin(),r.cend(),std::move(iter_));
@@ -34,11 +35,11 @@ private:
 
 template<class Iterator,class BinaryPredicate>
 struct mismatch_iterator_binarypredicate{
-	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator> && srook::is_callable_v<BinaryPredicate>)>
+	template<REQUIRES( (!srook::mpl::has_iterator_v<Iterator> || is_range_iterator_v<std::decay_t<Iterator>>) && srook::is_callable_v<BinaryPredicate> )>
 	explicit constexpr mismatch_iterator_binarypredicate(Iterator iter,BinaryPredicate binary_pred)
 		:iter_(std::move(iter)),pred_(std::move(binary_pred)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,Iterator> operator()(R&& r)
 	{
 		return std::mismatch(r.cbegin(),r.cend(),std::move(iter_),std::move(pred_));
@@ -53,7 +54,7 @@ struct mismatch_iterators_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator>)>
 	explicit constexpr mismatch_iterators_t(Iterator first,Iterator last):first_(std::move(first)),last_(std::move(last)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,Iterator> operator()(R&& r)
 	{
 		return std::mismatch(r.cbegin(),r.cend(),std::move(first_),std::move(last_));
@@ -64,10 +65,10 @@ private:
 
 template<class Range>
 struct mismatch_ranges_t{
-	template<REQUIRES(srook::mpl::has_iterator_v<Range>)>
+	template<REQUIRES(srook::mpl::has_iterator_v<Range> || is_range_iterator_v<std::decay_t<Range>>)>
 	explicit constexpr mismatch_ranges_t(const Range& r):r_(r){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,typename Range::const_iterator> operator()(R&& r)
 	{
 		return
@@ -87,7 +88,7 @@ struct mismatch_iterators_binarypredicate_t{
 	explicit constexpr mismatch_iterators_binarypredicate_t(Iterator first,Iterator last,BinaryPredicate binary_pred)
 		:first_(std::move(first)),last_(std::move(last)),pred_(std::move(binary_pred)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,Iterator> operator()(R&& r)
 	{
 		return std::mismatch(r.cbegin(),r.cend(),std::move(first_),std::move(last_),std::move(pred_));
@@ -99,11 +100,11 @@ private:
 
 template<class Range,class BinaryPredicate>
 struct mismatch_ranges_binarypredicate_t{
-	template<REQUIRES(srook::mpl::has_iterator_v<Range> && srook::is_callable_v<BinaryPredicate>)>
+	template<REQUIRES( (srook::mpl::has_iterator_v<Range> || is_range_iterator_v<std::decay_t<Range>>) && srook::is_callable_v<BinaryPredicate>)>
 	explicit constexpr mismatch_ranges_binarypredicate_t(const Range& r,BinaryPredicate binary_pred)
 		:r_(r),pred_(std::move(binary_pred)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::const_iterator,typename Range::const_iterator> operator()(R&& r)
 	{
 		return

@@ -16,8 +16,10 @@ inline namespace v1{
 
 template<class Range,class OutputIterator>
 struct merge_range_t{
+	template<REQUIRES( (has_iterator_v<Range> || is_range_iterator_v<Range>) && !has_iterator_v<OutputIterator> )>
 	explicit constexpr merge_range_t(const Range& r,OutputIterator oiter):r_(r),oiter_(std::move(oiter)){}
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	OutputIterator operator()(R&& r)
 	{
 		return
@@ -34,8 +36,10 @@ private:
 
 template<class Iterator,class OutputIterator>
 struct merge_iterator_t{
+	template<REQUIRES( (!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>) && !has_iterator_v<Iterator> )>
 	explicit constexpr merge_iterator_t(Iterator first,Iterator last,OutputIterator oiter):first_(std::move(first)),last_(std::move(last)),oiter_(std::move(oiter)){}
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	OutputIterator operator()(R&& r)
 	{
 		return std::merge(r.begin(),r.end(),std::move(first_),std::move(last_),std::move(oiter_));
@@ -47,8 +51,10 @@ private:
 
 template<class Range,class OutputIterator,class Compare>
 struct merge_range_compare_t{
+	template<REQUIRES( (has_iterator_v<Range> || is_range_iterator_v<Range>) && !has_iterator_v<OutputIterator> && is_callable_v<Compare>)>
 	explicit constexpr merge_range_compare_t(const Range& r,OutputIterator oiter,Compare comp):r_(r),oiter_(std::move(oiter)),comp_(std::move(comp)){}
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	OutputIterator operator()(R&& r)
 	{
 		return
@@ -66,9 +72,11 @@ private:
 
 template<class Iterator,class OutputIterator,class Compare>
 struct merge_iterator_compare_t{
+	template<REQUIRES( (!has_iterator_v<Iterator> || is_range_iterator_v<std::decay_t<Iterator>>) && !has_iterator_v<OutputIterator> && is_callable_v<Compare> )>
 	explicit constexpr merge_iterator_compare_t(Iterator first,Iterator last,OutputIterator oiter,Compare comp)
 		:first_(std::move(first)),last_(std::move(last)),oiter_(std::move(oiter)),comp_(std::move(comp)){}
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	OutputIterator operator()(R&& r)
 	{
 		return std::merge(r.begin(),r.end(),std::move(first_),std::move(last_),std::move(oiter_),std::move(comp_));

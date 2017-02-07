@@ -4,6 +4,7 @@
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/config/compiler.hpp>
 #include<srook/config/require.hpp>
+#include<srook/type_traits/has_iterator.hpp>
 #include<algorithm>
 
 namespace srook{
@@ -15,7 +16,7 @@ template<class Size,class Generate>
 struct generate_n_t{
 	explicit constexpr generate_n_t(Size s,Generate gen)
 		:s_(std::move(s)),gen_(std::move(gen)){}
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	auto operator()(Range&& r)
 	{
 #if (__has_include(<boost/config/compiler/gcc.hpp>) || __has_include(<boost/config/compiler/clang.hpp>)) && \

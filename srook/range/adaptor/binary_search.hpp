@@ -1,6 +1,11 @@
 #ifndef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 #define INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
+
 #if __has_include(<boost/range/algorithm/binary_search.hpp>)
 #define POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
 #include<boost/range/algorithm/binary_search.hpp>
@@ -16,7 +21,7 @@ template<class Target>
 struct binary_search_t{
 	explicit constexpr binary_search_t(const Target& t):target(t){}
 	explicit constexpr binary_search_t(Target&& t):target(std::move(t)){}
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH

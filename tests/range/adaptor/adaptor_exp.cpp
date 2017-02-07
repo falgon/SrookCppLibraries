@@ -52,9 +52,12 @@
 #include<srook/range/adaptor/partial_sort_copy.hpp>
 #include<srook/range/adaptor/partition.hpp>
 #include<srook/range/adaptor/partition_copy.hpp>
+#include<srook/range/adaptor/partition_point.hpp>
+#include<srook/range/adaptor/pop_heap.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
 #include<srook/range/adaptor/print.hpp>
+
 
 #include<srook/mpl/variadic_player.hpp>
 #include<srook/config/attribute.hpp>
@@ -487,7 +490,7 @@ const struct partition_copy_check_t:exclude_range<std::list>{
 		SROOK_attribute_UNUSED const auto p4 = r | srook::adaptors::partition_copy(result1,result2,pred);
 	}
 
-	void operator()(const std::string& str)const
+	void operator()(std::string str)const
 	{
 		std::string result1,result2;
 		const auto pred=[](const std::string::value_type x){return x=='a';};
@@ -498,6 +501,26 @@ const struct partition_copy_check_t:exclude_range<std::list>{
 		SROOK_attribute_UNUSED const auto p4 = str | srook::adaptors::partition_copy(result1,result2,pred);
 	}
 }partition_copy_check={};
+
+const struct pop_heap_check_t:exclude_range<std::list>{
+	template<class Range>
+	void operator()(Range r)const
+	{
+		SROOK_attribute_UNUSED const auto iter1 = r | srook::adaptors::make_heap() | srook::adaptors::pop_heap();
+		SROOK_attribute_UNUSED const auto iter2 = r | srook::adaptors::pop_heap(std::greater<>());
+	}
+}pop_heap_check={};
+
+const struct print_check_t{
+	template<class T>
+	void operator()(const T&)const{}
+
+	void operator()(std::string str)const
+	{
+		SROOK_attribute_UNUSED const auto range_iter = str | srook::adaptors::print(std::cout,"");
+		std::cout<<std::endl;
+	}
+}print_check={};
 
 int main()
 {
@@ -543,7 +566,8 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-					x | srook::adaptors::copy(std::ostream_iterator<typename std::decay_t<decltype(x)>::value_type>(std::cout," "));
+					std::decay_t<decltype(x)> test=x;
+					x | srook::adaptors::copy(test.begin());
 				}
 			),
 			make_tester(
@@ -556,13 +580,15 @@ int main()
 			make_tester(
 				[](const auto& x)
 				{
-					x | srook::adaptors::copy_if(std::ostream_iterator<typename std::decay_t<decltype(x)>::value_type>(std::cout," "),[](auto&& x){return x%2==0;});
+					std::decay_t<decltype(x)> test=x;
+					x | srook::adaptors::copy_if(test.begin(),[](auto&& x){return x%2==0;});
 				}
 			),
 			make_tester(
 				[](const auto& x)
 				{
-					x | srook::adaptors::copy_n(4,std::ostream_iterator<typename std::decay_t<decltype(x)>::value_type>(std::cout," "));
+					std::decay_t<decltype(x)> test=x;
+					x | srook::adaptors::copy_n(4,test.begin());
 				}
 			),
 			make_tester(
@@ -635,7 +661,7 @@ int main()
 			make_tester(
 				[](const auto& r)
 				{
-					r | srook::adaptors::for_each([](typename std::decay_t<decltype(r)>::value_type x){std::cout<<x<<" ";});
+					r | srook::adaptors::for_each([](typename std::decay_t<decltype(r)>::value_type){});
 				}
 			),
 			make_tester(
@@ -768,10 +794,20 @@ int main()
 			make_tester(
 				[](auto r)
 				{
-					SROOK_attribute_UNUSED const auto pos = r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+					SROOK_attribute_UNUSED const auto pos = 
+						r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 				}
 			),
-			make_tester(partition_copy_check)
+			make_tester(partition_copy_check),
+			make_tester(
+				[](const auto& r)
+				{
+					SROOK_attribute_UNUSED const auto iter = 
+						r | srook::adaptors::partition_point([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
+				}
+			),
+			make_tester(pop_heap_check),
+			make_tester(print_check)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());

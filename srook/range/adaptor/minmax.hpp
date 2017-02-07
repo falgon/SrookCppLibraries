@@ -23,6 +23,7 @@ private:
 
 template<class T,class Compare>
 struct minmax_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr minmax_compare_t(T t,Compare comp):value(std::move(t)),comp_(std::move(comp)){}
 	
 	template<REQUIRES(!srook::mpl::has_iterator_v<std::decay_t<T>>)>
@@ -36,7 +37,7 @@ private:
 };
 
 struct minmax_range_t{
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	constexpr std::pair<typename std::decay_t<Range>::value_type,typename std::decay_t<Range>::value_type> operator()(Range&& r)
 	{
 		auto p = std::minmax_element(r.cbegin(),r.cend());
@@ -46,8 +47,10 @@ struct minmax_range_t{
 
 template<class Compare>
 struct minmax_range_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr minmax_range_compare_t(Compare comp):comp_(std::move(comp)){}
-	template<class Range>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	constexpr std::pair<typename std::decay_t<Range>::value_type,typename std::decay_t<Range>::value_type> operator()(Range&& r)
 	{
 		auto p = std::minmax_element(r.cbegin(),r.cend(),std::move(comp_));

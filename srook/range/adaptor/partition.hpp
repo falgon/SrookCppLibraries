@@ -21,7 +21,7 @@ struct partition_t{
 	template<REQUIRES(srook::is_callable_v<Predicate>)>
 	explicit constexpr partition_t(Predicate pred):pred_(std::move(pred)){}
 
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::iterator operator()(Range&& r)
 	{
 		return

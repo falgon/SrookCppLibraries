@@ -3,6 +3,7 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
 #include<initializer_list>
 #include<type_traits>
 #include<srook/type_traits/is_callable.hpp>
@@ -33,6 +34,7 @@ private:
 
 template<class T,class Compare>
 struct max_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr max_compare_t(T t,Compare comp):value(std::move(t)),comp_(std::move(comp)){}
 	const T& operator()(const T& rhs)
 	{
@@ -54,7 +56,7 @@ struct max_initializer_list_t{
 		*std::max_element(ilist.begin(),ilist.end());
 #endif
 	}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return
@@ -68,6 +70,7 @@ struct max_initializer_list_t{
 
 template<class Compare>
 struct max_initializer_list_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr max_initializer_list_compare_t(Compare comp):comp_(std::move(comp)){}
 	template<class T>
 	T operator()(std::initializer_list<T> ilist)
@@ -79,7 +82,7 @@ struct max_initializer_list_compare_t{
 		*std::max_element(ilist.begin(),ilist.end(),std::move(comp_));
 #endif
 	}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return

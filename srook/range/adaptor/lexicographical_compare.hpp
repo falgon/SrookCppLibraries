@@ -16,8 +16,10 @@ inline namespace v1{
 
 template<class Range>
 struct lexicographical_compare_range{
+	template<REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	explicit constexpr lexicographical_compare_range(const Range& r):r_(r){}
-	template<class R>
+	
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return 
@@ -33,9 +35,11 @@ private:
 
 template<class Iterator>
 struct lexicographical_compare_iterator{
+	template<REQUIRES(!has_iterator_v<std::decay_t<Iterator>> || is_range_iterator_v<std::decay_t<Iterator>>)>
    	explicit constexpr lexicographical_compare_iterator(Iterator first,Iterator last)
 		:first_(std::move(first)),last_(std::move(last)){}
-	template<class R>
+
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return std::lexicographical_compare(r.cbegin(),r.cend(),std::move(first_),std::move(last_));
@@ -46,9 +50,11 @@ private:
 
 template<class Range,class Comp>
 struct lexicographical_compare_range_comp{
+	template<REQUIRES( (has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>) && is_callable_v<Comp> )>
 	explicit constexpr lexicographical_compare_range_comp(const Range& r,Comp comp)
 		:r_(r),comp_(std::move(comp)){}
-	template<class R>
+	
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return
@@ -65,9 +71,11 @@ private:
 
 template<class Iterator,class Comp>
 struct lexicographical_compare_iterator_comp{
+	template<REQUIRES( (!has_iterator_v<std::decay_t<Iterator>> || is_range_iterator_v<std::decay_t<Iterator>>) && is_callable_v<Comp> )>
 	explicit constexpr lexicographical_compare_iterator_comp(Iterator first,Iterator last,Comp comp)
 		:first_(std::move(first)),last_(std::move(last)),comp_(std::move(comp)){}
-	template<class R>
+	
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 		return std::lexicographical_compare(r.cbegin(),r.cend(),std::move(first_),std::move(last_),std::move(comp_));

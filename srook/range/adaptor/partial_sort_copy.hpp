@@ -10,6 +10,7 @@
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
+#include<srook/iterator/range_iterator.hpp>
 
 namespace srook{
 namespace adaptors{
@@ -21,7 +22,7 @@ struct partial_sort_copy_t{
 	template<REQUIRES(!srook::mpl::has_iterator_v<Iterator>)>
 	explicit constexpr partial_sort_copy_t(Iterator first,Iterator last):first_(std::move(first)),last_(std::move(last)){}
  
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	Iterator operator()(Range&& r)
 	{
 		return std::partial_sort_copy(r.begin(),r.end(),std::move(first_),std::move(last_));
@@ -37,7 +38,7 @@ struct partial_sort_copy_compare_t{
 	explicit constexpr partial_sort_copy_compare_t(Iterator first,Iterator last,Compare comp)
 		:first_(std::move(first)),last_(std::move(last)),comp_(std::move(comp)){}
 
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	Iterator operator()(Range&& r)
 	{
 		return std::partial_sort_copy(r.begin(),r.end(),std::move(first_),std::move(last_),std::move(comp_));
@@ -49,10 +50,10 @@ private:
 
 template<class Range>
 struct partial_sort_copy_range_t{
-	template<REQUIRES(srook::mpl::has_iterator_v<Range>)>
+	template<REQUIRES(srook::mpl::has_iterator_v<Range> || is_range_iterator_v<std::decay_t<Range>>)>
 	explicit constexpr partial_sort_copy_range_t(Range& r):r_(r){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<Range>::iterator operator()(R&& r)
 	{
 		return
@@ -68,10 +69,10 @@ private:
 
 template<class Range,class Compare>
 struct partial_sort_copy_range_compare_t{
-	template<REQUIRES(srook::mpl::has_iterator_v<Range> && srook::is_callable_v<Compare>)>
+	template<REQUIRES( (srook::mpl::has_iterator_v<Range> || is_range_iterator_v<std::decay_t<Range>>) && srook::is_callable_v<Compare>)>
 	explicit constexpr partial_sort_copy_range_compare_t(Range& r,Compare comp):r_(r),comp_(std::move(comp)){}
 
-	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>>)>
+	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<Range>::iterator operator()(R&& r)
 	{
 		return

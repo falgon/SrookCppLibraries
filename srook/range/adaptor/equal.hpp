@@ -3,6 +3,9 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/mpl/has_iterator.hpp>
 #include<type_traits>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/config/require.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/algorithm/equal.hpp>)
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
 #include<boost/range/algorithm/equal.hpp>
@@ -30,7 +33,7 @@ inline namespace v1{
 template<class Range>
 struct equal_range_t{
 	explicit constexpr equal_range_t(const Range& r):r_(r){}
-	template<class R>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
@@ -59,7 +62,7 @@ struct equal_iterator_t{
 		:first_(std::move(first)),
 		last_(last?std::move(last.value()):last){}
 
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 		if(last_)
@@ -83,7 +86,7 @@ template<class Range,class Predicate>
 struct equal_range_predicate_t{
 	explicit constexpr equal_range_predicate_t(const Range& r,Predicate pred):r_(r),pred_(std::move(pred)){}
 	
-	template<class R>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
@@ -102,7 +105,7 @@ struct equal_iterator_predicate_t{
 	explicit constexpr equal_iterator_predicate_t(Iterator first,Iterator last,Predicate pred)
 		:first_(std::move(first)),last_(std::move(last)),pred_(std::move(pred)){}
 
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 		return std::equal(r.cbegin(),r.cend(),std::move(first_),std::move(last_),std::move(pred_));

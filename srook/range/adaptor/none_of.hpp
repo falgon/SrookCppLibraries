@@ -15,7 +15,8 @@ template<class Predicate>
 struct none_of_t{
 	template<REQUIRES(srook::is_callable_v<Predicate>)>
 	explicit constexpr none_of_t(Predicate pred):pred_(std::move(pred)){}
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
 		return none_of(r.cbegin(),r.cend(),std::move(pred_));

@@ -3,6 +3,8 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #include<algorithm>
 
 namespace srook{
@@ -12,9 +14,10 @@ inline namespace v1{
 
 template<class Iterator>
 struct inplace_iterator_t{
+	template<REQUIRES( !has_iterator_v<Iterator> || is_range_iterator_v<Iterator> )>
 	explicit constexpr inplace_iterator_t(Iterator first,Iterator last):first_(std::move(first)),last_(std::move(last)){}
 	
-	template<class R>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::decay_t<R>& operator()(R&& range)
 	{
 		std::inplace_merge(range.begin(),std::move(first_),std::move(last_));
@@ -26,12 +29,14 @@ private:
 
 template<class Iterator,class Compare>
 struct inplace_merge_iterator_compare_t{
+	template<REQUIRES( (!has_iterator_v<std::decay_t<Iterator>> || is_range_iterator_v<Iterator>) && is_callable_v<Compare> )>
 	explicit constexpr inplace_merge_iterator_compare_t(Iterator first,Iterator last,Compare comp):first_(std::move(first)),last_(std::move(last)),comp_(std::move(comp)){}
-	template<class R>
-	std::decay_t<R>& operator()(R&& range)
+	
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
+	auto  operator()(R&& range)
 	{
 		std::inplace_merge(range.begin(),std::move(first_),std::move(last_),std::move(comp_));
-		return range;
+		return make_range_iterator(range.begin(),range.end());
 	}
 private:
 	Iterator first_,last_;

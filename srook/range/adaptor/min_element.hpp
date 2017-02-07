@@ -4,6 +4,7 @@
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/iterator/range_iterator.hpp>
 #if __has_include(<boost/range/adaptor/min_element.hpp>)
 #include<boost/range/adaptor/min_element.hpp>
 #define POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
@@ -17,7 +18,7 @@ namespace detail{
 inline namespace v1{
 
 struct min_element_t{
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
@@ -34,7 +35,7 @@ struct min_element_compare_t{
 	template<REQUIRES(srook::is_callable_v<Compare>)>
 	explicit constexpr min_element_compare_t(Compare comp):comp_(std::move(comp)){}
 
-	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>>)>
+	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return

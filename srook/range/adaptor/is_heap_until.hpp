@@ -1,6 +1,10 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTORS_IS_HEAP_UNTIL_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTORS_IS_HEAP_UNTIL_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/iterator/range_iterator.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
 #if __has_include(<boost/range/algorithm/is_heap_until.hpp>)
 #include<boost/range/algorithm/is_heap_until.hpp>
 #define POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
@@ -14,7 +18,7 @@ namespace detail{
 inline namespace v1{
 
 struct is_heap_until_t{
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
@@ -28,8 +32,10 @@ struct is_heap_until_t{
 
 template<class Compare>
 struct is_heap_until_compare_t{
+	template<REQUIRES(is_callable_v<Compare>)>
 	explicit constexpr is_heap_until_compare_t(Compare comp):comp_(std::move(comp)){}
-	template<class Range>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::iterator operator()(Range&& r)
 	{
 		return

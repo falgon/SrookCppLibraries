@@ -3,6 +3,7 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
 #include<type_traits>
 #if __has_include(<boost/range/algorithm/find_first_of.hpp>)
 #define POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
@@ -27,8 +28,9 @@ inline namespace v1{
 
 template<class Range>
 struct find_first_of_range_t{
+	template<REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	explicit constexpr find_first_of_range_t(const Range& r):r_(r){}
-	template<class R>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
@@ -83,9 +85,10 @@ private:
 
 template<class Iterator>
 struct find_first_of_iterator_t{
+	template<REQUIRES(!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>)>
 	explicit constexpr find_first_of_iterator_t(const Iterator& first,const Iterator& last)
 		:first_(first),last_(last){}
-	template<class Range>
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return std::find_first_of(r.cbegin(),r.cend(),first_,last_);
@@ -96,9 +99,10 @@ private:
 };
 template<class Range,class Predicate>
 struct find_first_of_range_predicate_t{
+	template<REQUIRES( (has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>) && is_callable_v<Predicate> )>
 	explicit constexpr find_first_of_range_predicate_t(const Range& r,const Predicate& pred)
 		:r_(r),pred_(pred){}
-	template<class R>
+	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
@@ -111,11 +115,15 @@ private:
 	const Range& r_;
 	const Predicate& pred_;
 };
+
 template<class Iterator,class Predicate>
 struct find_first_of_iterator_predicate_t{
+	
+	template<REQUIRES( (!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>) && is_callable_v<Predicate> )>
 	explicit constexpr find_first_of_iterator_predicate_t(const Iterator& first,const Iterator& last,const Predicate& pred)
 		:first_(first),last_(last),pred_(pred){}
-	template<class Range>
+	
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return std::find_first_of(r.cbegin(),r.cend(),first_,last_,pred_);
