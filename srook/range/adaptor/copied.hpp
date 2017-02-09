@@ -32,7 +32,7 @@ copied_t<std::remove_reference_t<Iterator>> make_copied_t(Iterator&& first,Itera
 {
 	return copied_t<std::remove_reference_t<Iterator>>(std::forward<Iterator>(first),std::forward<Iterator>(last));
 }
-const auto copied=[](auto&& r)noexcept{return make_copied_t(r.cbegin(),r.cend());};
+const auto copied=[](auto&& r)noexcept{return make_copied_t(r.begin(),r.end());};
 
 
 } // inline namespace v1

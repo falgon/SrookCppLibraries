@@ -32,7 +32,7 @@ struct copied_n{
 	template<class Range>
 	copied_n_t<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
 	{
-		return make_copied_n_t(r.cbegin(),std::move(n_));
+		return make_copied_n_t(r.begin(),std::move(n_));
 	}
 private:
 	std::size_t n_;

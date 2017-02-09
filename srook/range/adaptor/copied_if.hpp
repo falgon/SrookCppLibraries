@@ -39,7 +39,7 @@ struct copied_ifer{
 	template<class Range>
 	copied_if_t<typename std::decay_t<Range>::const_iterator,Predicate> operator()(Range&& r)
 	{
-		return make_copied_if_t(r.cbegin(),r.cend(),std::move(pred_));
+		return make_copied_if_t(r.begin(),r.end(),std::move(pred_));
 	}
 private:
 	Predicate pred_;
