@@ -159,12 +159,31 @@ private:
 	};
 };
 
+template<class>
+struct to_string_t;
+
+template<class charT>
+struct to_string_t<std::basic_string<charT>>{
+	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
+	std::basic_string<charT> operator()(Range&& r)
+	{
+		return std::basic_string<charT>(r.begin(),r.end());
+	}
+};
+
+template<class CharT>
+constexpr to_string_t<CharT> to_string()
+{
+	return to_string_t<CharT>();
+}
+
 	
 } // inline namespace v1
 } // namespace detail
 
 using detail::to_range;
 using detail::to_array;
+using detail::to_string;
 
 } // namespace adaptors
 } // namesapce srook
