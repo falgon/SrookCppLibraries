@@ -84,4 +84,7 @@ using detail::remove_copy;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_REMOVE_COPY
+#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_REMOVE_COPY
+#endif
 #endif
