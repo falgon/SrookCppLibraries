@@ -17,34 +17,6 @@ namespace detail{
 inline namespace v1{
 
 template<class Iterator>
-struct reversed_copied_range_t{
-	explicit constexpr reversed_copied_range_t(Iterator first,Iterator last)
-		:first_(std::move(first)),last_(std::move(last)){}
-
-	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	operator Range()
-	{
-		return Range(std::make_reverse_iterator(std::move(last_)),std::make_reverse_iterator(std::move(first_)));
-	}
-private:
-	Iterator first_,last_;
-};
-
-template<class Iterator>
-constexpr reversed_copied_range_t<std::decay_t<Iterator>> make_reversed_copied_t(Iterator&& first,Iterator&& last)
-{
-	return reversed_copied_range_t<std::decay_t<Iterator>>(std::forward<Iterator>(first),std::forward<Iterator>(last));
-}
-
-const struct reversed_copied_t{
-	template<class Range>
-	constexpr reversed_copied_range_t<typename std::decay_t<Range>::iterator> operator()(Range&& r)const
-	{
-		return reversed_copied_range_t<typename std::decay_t<Range>::iterator>(r.begin(),r.end());
-	}
-}reversed_copied={};
-
-template<class Iterator>
 struct reverse_copy_t{
 	template<REQUIRES(!has_iterator_v<Iterator>)>
 	explicit constexpr reverse_copy_t(Iterator iter):iter_(std::move(iter)){}
@@ -78,7 +50,6 @@ constexpr reverse_copy_t<typename std::decay_t<Range>::iterator> reverse_copy(Ra
 } // inline namespace v1
 } // namespace detail
 
-using detail::reversed_copied;
 using detail::reverse_copy;
 
 } // namespace adaptors
