@@ -4,6 +4,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/config/require.hpp>
+#include<srook/utility/lambda_wrapper.hpp>
 #include<iterator>
 
 namespace srook{
@@ -41,7 +42,7 @@ struct skipping_iterator_functor_core{
 		skipper_(first_,last_,pred_);
 		return *this;
 	}
-	skipping_iterator_functor_core& operator++(int)
+	skipping_iterator_functor_core operator++(int)
 	{
 		skipping_iterator_functor_core tmp=*this;
 		++first_;
@@ -53,7 +54,7 @@ struct skipping_iterator_functor_core{
 	void operator delete(void*)=delete;
 protected:
 	Iterator first_,last_;
-	Predicate pred_;
+	lambda_wrapper<Predicate> pred_;
 	Skipper skipper_;
 };
 
