@@ -89,7 +89,7 @@
 #include<list>
 #include<initializer_list>
 
-/*
+
 namespace{
 	constexpr std::size_t range_size=10;
 }
@@ -212,7 +212,7 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
 			std::integral_constant<std::size_t,std::tuple_size<std::remove_reference_t<Tuple_range>>::value-1>()
 	);
 }
-*/
+
 
 /* 
  *
@@ -222,13 +222,13 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
  *
  */
 
-/*
+
 auto make_test_ranges()
 {
 	std::vector<int> v(range_size);
-#if (BOOST_VERSION != 105800)
+/*#if (BOOST_VERSION != 105800)
 	std::deque<int> deq(range_size);
-#endif
+#endif*/
 	{
 		std::uniform_int_distribution<> dist(0,42);
 		std::random_device rng;
@@ -243,12 +243,12 @@ auto make_test_ranges()
 	std::string str="Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.";
 	
 	return std::make_tuple(std::move(v),std::move(str)
-#if (BOOST_VERSION != 105800)
+/*#if (BOOST_VERSION != 105800)
 			,std::move(deq)
-#endif
+#endif*/
 			);
 }
-*/
+
 
 /*
  *
@@ -258,7 +258,7 @@ auto make_test_ranges()
  *
  */
 
-/*
+
 template<template<class...>class Range>
 struct exclude_range{
 	template<class... Ts>
@@ -528,11 +528,11 @@ const struct print_check_t{
 		std::cout<<std::endl;
 	}
 }print_check={};
-*/
+
 
 int main()
 {
-/*	const auto tests=std::make_tuple(
+	const auto tests=std::make_tuple(
 			make_tester(
 				[](const auto& x)
 				{
@@ -756,7 +756,7 @@ int main()
 					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it4 = r | srook::adaptors::min_element(std::greater<>());
 				}
 			),
-			make_tester(merge_check),
+			//make_tester(merge_check),
 			make_tester(
 				[](const auto& r)
 				{
@@ -785,7 +785,7 @@ int main()
 				[](auto r)
 				{
 					SROOK_attribute_UNUSED decltype(r) a = 
-						r | srook::adaptors::filterd([](const typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
+						r | srook::adaptors::filterd([](typename decltype(r)::value_type x){return x%2==0;}) | srook::adaptors::moved;
 				}
 			),
 			make_tester(
@@ -806,7 +806,7 @@ int main()
 						r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 				}
 			),
-			make_tester(partition_copy_check),
+			//make_tester(partition_copy_check),
 			make_tester(
 				[](const auto& r)
 				{
@@ -819,5 +819,5 @@ int main()
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
-	ap.play_invoker();*/
+	ap.play_invoker();
 }

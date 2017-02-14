@@ -1,6 +1,7 @@
 #ifndef INCLUDED_FILTERD_ITERATOR_HPP
 #define INCLUDED_FILTERD_ITERATOR_HPP
 #include<iterator>
+#include<srook/utility/lambda_wrapper.hpp>
 
 namespace srook{
 inline namespace v1{
@@ -39,6 +40,13 @@ struct filterd_iterator final{
         skip();
         return tmp;
     }
+	filterd_iterator& operator=(const filterd_iterator& rhs)
+	{
+		pred=rhs.pred;
+		first_=rhs.first_;
+		last_=rhs.last_;
+		return *this;
+	}
 
     reference operator*(){return *first_;}
 	const reference operator*()const{return *first_;}
@@ -46,7 +54,7 @@ struct filterd_iterator final{
     constexpr bool operator!=(const filterd_iterator& rhs)const{return !operator==(rhs);}
 private:
     void skip(){while(first_!=last_ && !pred(*first_))++first_;}
-    const Predicate pred;
+    lambda_wrapper<Predicate> pred;
 	iterator first_,last_;
 };
 template<class Predicate,class Iterator>
