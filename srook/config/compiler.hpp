@@ -3,9 +3,9 @@
 #define INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #ifdef __cplusplus
 #include<cstddef>
-#if __has_include(<boost/config/compiler/gcc.hpp>)
+#if !defined(__clang__) && __has_include(<boost/config/compiler/gcc.hpp>)
 #include<boost/config/compiler/gcc.hpp>
-#elif defined(__GNUC__)
+#elif !defined(__clang__) && defined(__GNUC__)
 #define SROOK_NO_BOOST_COMPILER_GCC
 #define SROOK_GCC_VERSION(__GNUC__*10000+__GNUC_MINOR__*100+__GNUC_PATCHLEVEL__)
 #if !defined(__CUDACC__)
@@ -117,7 +117,7 @@
 #endif
 #endif
 
-#if __has_include(<boost/config/compiler/clang.hpp>)
+#if defined(__clang__) && __has_include(<boost/config/compiler/clang.hpp>)
 #include<boost/config/compiler/clang.hpp>
 #elif defined(__clang__major__)
 #define SROOK_NO_BOOST_COMPILER_CLANG

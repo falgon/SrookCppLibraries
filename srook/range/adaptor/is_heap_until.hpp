@@ -36,7 +36,7 @@ struct is_heap_until_compare_t{
 	explicit constexpr is_heap_until_compare_t(Compare comp):comp_(std::move(comp)){}
 	
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	typename std::decay_t<Range>::iterator operator()(Range&& r)
+	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL

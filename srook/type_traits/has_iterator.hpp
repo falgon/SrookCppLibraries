@@ -3,6 +3,7 @@
 #include<type_traits>
 #include<iterator>
 #include<srook/config/compiler_version.hpp>
+#include<srook/experimental/is_iterator.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -30,9 +31,8 @@ constexpr bool has_iterator_v<
 	T,
 	std::enable_if_t<has_iterator_category_v<T>>
 > = std::conditional<
-		std::is_base_of<
-			std::iterator<typename T::iterator_category,void,void,void,void>,T
-		>::value,
+		std::is_base_of<std::iterator<typename T::iterator_category,void,void,void,void>,T>::value ||
+		experimental::is_iterator_v<T>,
 #ifdef SROOK_GCC_VERSION
 #if SROOK_GCC_VERSION > 619
 		std::false_type,std::true_type
@@ -47,8 +47,9 @@ constexpr bool has_iterator_v<
 		std::true_type,std::false_type // deprecate
 #endif
 
-#elif defined(__APPLE__) // deprecate
-		std::true_type,std::false_type
+#elif !defined(SROOK_CLANG_VERSION) && !defined(SROOK_GCC_VERSION) && defined(__APPLE__) // deprecate
+		//std::true_type,std::false_type
+		std::false_type,std::true_type
 #endif
 >::type::value;
 

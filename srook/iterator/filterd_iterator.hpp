@@ -40,9 +40,10 @@ struct filterd_iterator final{
         skip();
         return tmp;
     }
+	
 	filterd_iterator& operator=(const filterd_iterator& rhs)
 	{
-		pred=rhs.pred;
+		pred.reset(rhs.pred);
 		first_=rhs.first_;
 		last_=rhs.last_;
 		return *this;

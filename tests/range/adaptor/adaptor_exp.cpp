@@ -263,7 +263,7 @@ auto make_test_ranges()
 template<template<class...>class Range>
 struct exclude_range{
 	template<class... Ts>
-	constexpr void operator()(const Range<Ts...>&)const{}
+	constexpr void operator()(Range<Ts...>)const{}
 };
 
 #ifndef TEST_PASSING_THROUGH
@@ -499,10 +499,12 @@ const struct partial_sort_copy_check_t:exclude_range<std::list>{
 }partial_sort_copy_check={};
 
 const struct partition_copy_check_t:exclude_range<std::list>,exclude_range<std::basic_string>{
+	
 	template<class Range>
 	void operator()(const Range& r)const
 	{
-		Range result1(r.size()),result2(r.size());
+		Range result1=r;
+		Range result2=r;
 		const auto pred=[](const typename std::decay_t<Range>::value_type x){return x%2==0;};
 
 		SROOK_attribute_UNUSED const auto p1 = r | srook::adaptors::partition_copy(std::back_inserter(result1),std::back_inserter(result2),pred);

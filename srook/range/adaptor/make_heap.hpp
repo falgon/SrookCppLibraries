@@ -19,14 +19,14 @@ inline namespace v1{
 
 struct make_heap_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	Range&& operator()(Range&& r)
+	auto operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
 		boost::range::make_heap(std::forward<Range>(r));
 #else
 		std::make_heap(r.begin(),r.end());
 #endif
-		return std::forward<Range>(r);
+		return make_range_iterator(r.begin(),r.end());
 	}
 };
 
@@ -36,14 +36,14 @@ struct make_heap_compare_t{
 	explicit constexpr make_heap_compare_t(Compare comp):comp_(std::move(comp)){}
 
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	Range&& operator()(Range&& r)
+	auto operator()(Range&& r)
 	{
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
 		boost::range::make_heap(std::forward<Range>(r),std::move(comp_));
 #else
 		std::make_heap(r.begin(),r.end(),std::move(comp_));
 #endif
-		return std::forward<Range>(r);
+		return make_range_iterator(r.begin(),r.end());
 	}
 private:
 	Compare comp_;
