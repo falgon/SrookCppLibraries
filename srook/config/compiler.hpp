@@ -1,3 +1,4 @@
+#ifndef TEST_PASSING_THROUGH
 #ifndef INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #define INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #ifdef __cplusplus
@@ -233,5 +234,6 @@
 
 #else
 #include<stddef.h>
+#endif
 #endif
 #endif

@@ -1,4 +1,4 @@
-// #define PASSING_THROUGH
+#define TEST_PASSING_THROUGH
 /*
  *
  * This is a test exec code of srook/range/adaptor.
@@ -266,7 +266,7 @@ struct exclude_range{
 	constexpr void operator()(const Range<Ts...>&)const{}
 };
 
-#ifdef PASSING_THROUGH
+#ifndef TEST_PASSING_THROUGH
 
 const struct find_check_t{
 	template<class Range,REQUIRES(!std::is_same<std::decay_t<Range>,std::string>{})>
@@ -536,7 +536,7 @@ const struct print_check_t{
 
 int main()
 {
-#ifdef PASSING_THROUGH
+#ifndef TEST_PASSING_THROUGH
 	const auto tests=std::make_tuple(
 			make_tester(
 				[](const auto& x)
