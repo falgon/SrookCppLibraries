@@ -3,7 +3,9 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/mpl/has_iterator.hpp>
+#include<srook/type_traits/is_callable.hpp>
 #include<algorithm>
+#include<srook/iterator/range_iterator.hpp>
 
 namespace srook{
 namespace adaptors{
