@@ -5,13 +5,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-
-#if __has_include(<boost/range/algorithm/for_each.hpp>)
-#include<boost/range/algorithm/for_each.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +19,7 @@ struct for_each_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	auto operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH
-		return boost::range::for_each(std::forward<Range>(r),std::move(pred_));
-#else
 		return std::for_each(r.begin(),r.end(),std::move(pred_));
-#endif
 	}
 private:
 	Predicate pred_;
@@ -49,7 +39,4 @@ using detail::for_each;
 }// namespace adaptors
 }// namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FOR_EACH
-#endif
 #endif

@@ -5,13 +5,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-
-#if __has_include(<boost/range/algorithm/binary_search.hpp>)
-#define POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
-#include<boost/range/algorithm/binary_search.hpp>
-#else
 #include<algorithm>
-#endif
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -24,11 +18,7 @@ struct binary_search_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	bool operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
-		return boost::range::binary_search(std::forward<Range>(r),std::move(target));
-#else
 		return std::binary_search(r.cbegin(),r.cend(),std::move(target));
-#endif
 	}
 private:
 	Target target;
@@ -49,11 +39,7 @@ struct binary_search_t_compare{
 	template<class Range>
 	bool operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
-		return boost::range::binary_search(std::forward<Range>(r),std::move(target),std::move(cmp));
-#else
 		return std::binary_search(r.cbegin(),r.cend(),std::move(target),std::move(cmp));
-#endif
 	}
 private:
 	Target target;
@@ -72,7 +58,4 @@ using detail::binary_search;
 
 } // namespace adaptors
 } // namespace srook
-#ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
-#undef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
-#endif
 #endif

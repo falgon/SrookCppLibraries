@@ -6,12 +6,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-#if __has_include(<boost/range/algorithm/fill.hpp>)
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL
-#include<boost/range/algorithm/fill.hpp>
-#else
 #include<algorithm>
-#endif
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -25,11 +20,7 @@ struct fill_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL
-		boost::fill(r,std::move(data_));
-#else
 		std::fill(r.begin(),r.end(),std::move(data_));
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -48,9 +39,5 @@ using detail::fill;
 
 } // namespace adaptors
 } // namespace srok
-
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL
-#endif
 
 #endif

@@ -5,12 +5,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
-#if __has_include(<boost/range/algorithm/is_heap_until.hpp>)
-#include<boost/range/algorithm/is_heap_until.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -22,11 +17,7 @@ struct is_heap_until_t{
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
-		boost::range::is_heap_until(std::forward<Range>(r));
-#else
 		std::is_heap_until(r.cbegin(),r.cend());
-#endif
 	}
 };
 
@@ -39,11 +30,7 @@ struct is_heap_until_compare_t{
 	typename std::decay_t<Range>::iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
-		boost::range::is_heap_until(std::forward<Range>(r),std::move(comp_));
-#else
 		std::is_heap_until(r.cbegin(),r.cend(),std::move(comp_));
-#endif
 	}
 private:
 	Compare comp_;
@@ -68,7 +55,4 @@ using detail::is_heap_until;
 } // namespace adaptors
 } // namesapce srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_HEAP_UNTIL
-#endif
 #endif

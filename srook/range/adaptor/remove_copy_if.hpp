@@ -4,12 +4,7 @@
 #include<srook/config/require.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
-#if __has_include(<boost/range/algorithm/remove_copy_if.hpp>)
-#include<boost/range/algorithm/remove_copy_if.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_REMOVE_COPY_IF
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct remove_copy_if_iterator{
 	Iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_REMOVE_COPY_IF
-		boost::remove_copy_if(std::forward<Range>(r),std::move(iter_),std::move(pred_));
-#else
 		std::remove_copy_if(r.begin(),r.end(),std::move(iter_),std::move(pred_));
-#endif
 	}
 private:
 	Iterator iter_;
@@ -62,7 +53,4 @@ using detail::remove_copy_if;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_REMOVE_COPY_IF
-#undef POSSIBLE_TO_INCLUDE_BOOST_REMOVE_COPY_IF
-#endif
 #endif

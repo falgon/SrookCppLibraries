@@ -4,12 +4,7 @@
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
-#if __has_include(<boost/range/algorithm/partition.hpp>)
-#include<boost/range/algorithm/partition.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTITION
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct partition_t{
 	typename std::decay_t<Range>::iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTITION
-		boost::range::partition(std::forward<Range>(r),std::move(pred_));
-#else
-		std::parition(r.begin(),r.end(),std::move(pred_));
-#endif
+		std::partition(r.begin(),r.end(),std::move(pred_));
 	}
 private:
 	Predicate pred_;

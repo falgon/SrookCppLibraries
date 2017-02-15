@@ -48,8 +48,4 @@ using detail::generate_n;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_GENERATE_N
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_GENERATE_N
-#endif
-
 #endif

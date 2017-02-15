@@ -5,12 +5,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
-#if __has_include(<boost/range/algorithm/make_heap.hpp>)
-#include<boost/range/algorithm/make_heap.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -21,11 +16,7 @@ struct make_heap_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
-		boost::range::make_heap(std::forward<Range>(r));
-#else
 		std::make_heap(r.begin(),r.end());
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 };
@@ -38,11 +29,7 @@ struct make_heap_compare_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
-		boost::range::make_heap(std::forward<Range>(r),std::move(comp_));
-#else
 		std::make_heap(r.begin(),r.end(),std::move(comp_));
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -68,7 +55,4 @@ using detail::make_heap;
 } // namespace adaptors
 } // namesapce srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MAKE_HEAP
-#endif
 #endif

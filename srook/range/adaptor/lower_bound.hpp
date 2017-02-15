@@ -5,12 +5,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-#if __has_include(<boost/range/algorithm/lower_bound.hpp>)
-#include<boost/range/algorithm/lower_bound.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct lower_bound_t{
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
-		boost::range::lower_bound(std::forward<Range>(r),std::move(value));
-#else
 		std::lower_bound(r.cbegin(),r.cend(),std::move(value));
-#endif
 	}
 private:
 	T value;
@@ -45,11 +36,7 @@ struct lower_bound_compare_t{
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
-		boost::range::lower_bound(std::forward<Range>(r),std::move(value),std::move(comp_));
-#else
 		std::lower_bound(r.cbegin(),r.cend(),std::move(value),std::move(comp_));
-#endif
 	}
 private:
 	T value;
@@ -76,7 +63,4 @@ using detail::lower_bound;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_LOWER_BOUND
-#endif
 #endif

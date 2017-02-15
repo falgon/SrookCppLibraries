@@ -5,14 +5,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
-
-
-#if __has_include(<boost/range/algorithm/generate.hpp>)
-#include<boost/range/algorithm/generate.hpp>
-#define POSSIBLE_TO_BOOST_RANGE_ALGORITHM_GENERATE
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -26,11 +19,7 @@ struct generate_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_GENERATE
-		boost::range::generate(std::forward<Range>(r),std::move(gen_));
-#else
 		std::generate(r.begin(),r.end(),std::move(gen_));
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -51,7 +40,4 @@ using detail::generate;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_GENERATE
-#undef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_GENERATE
-#endif
 #endif

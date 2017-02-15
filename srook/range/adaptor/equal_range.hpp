@@ -7,13 +7,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-
-#if __has_include(<boost/range/algorithm/equal_range.hpp>)
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
-#include<boost/range/algorithm/equal_range.hpp>
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -27,11 +21,7 @@ struct equal_range_range_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::iterator,typename std::decay_t<R>::iterator> operator()(R&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
-		return boost::range::equal_range(std::forward<R>(r),std::move(value));
-#else
-		return std::equal_range(r.cbegin(),r.cend(),std::move(value));
-#endif
+		return std::equal_range(r.begin(),r.end(),std::move(value));
 	}
 	template<class Key,class Tp>
 	auto operator()(const std::map<Key,Tp>& m)
@@ -50,11 +40,7 @@ struct equal_range_compare_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	std::pair<typename std::decay_t<R>::iterator,typename std::decay_t<R>::iterator> operator()(R&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
-		return boost::range::equal_range(std::forward<R>(r),std::move(value),std::move(comp));
-#else
-		return std::equal_range(r.cbegin(),r.cend(),std::move(value),std::move(comp));
-#endif
+		return std::equal_range(r.begin(),r.end(),std::move(value),std::move(comp));
 	}
 private:
 	T value;
@@ -80,9 +66,5 @@ using detail::equal_range;
 
 } // namespace adaptors
 } // namespace srook
-
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL_RANGE
-#endif
 
 #endif

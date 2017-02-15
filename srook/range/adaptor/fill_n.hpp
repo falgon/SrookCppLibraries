@@ -5,13 +5,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-
-#if __has_include(<boost/range/adaptor/fill_n.hpp>)
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N
-#include<boost/range/adaptor/fill_n.hpp>
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -28,11 +22,7 @@ struct fill_n_t{
 	template<class OutputIterator,REQUIRES(!has_iterator_v<std::decay_t<OutputIterator>>)>
 	std::decay_t<OutputIterator> operator()(OutputIterator&& iter)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N
-		return boost::range::fill_n(std::forward<OutputIterator>(iter),size_,value_);
-#else
 		return std::fill_n(std::forward<OutputIterator>(iter),size_,value_);
-#endif
 	}
 private:
 	std::size_t size_;
@@ -52,7 +42,4 @@ using detail::fill_n;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FILL_N
-#endif
 #endif

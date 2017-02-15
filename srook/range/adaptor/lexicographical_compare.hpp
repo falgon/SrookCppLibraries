@@ -23,11 +23,7 @@ struct lexicographical_compare_range{
 	bool operator()(R&& r)
 	{
 		return 
-#ifdef POSSIBLE_TO_RANGE_ADAPTOR_LEXICOGRAPHICAL_COMPARE
-		boost::range::lexicographical_compare(std::forward<R>(r),r_);
-#else
 		std::lexicographical_compare(r.cbegin(),r.cend(),r_.cbegin(),r_.cend());
-#endif
 	}
 private:
 	const Range& r_;
@@ -58,11 +54,7 @@ struct lexicographical_compare_range_comp{
 	bool operator()(R&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_RANGE_ADAPTOR_LEXICOGRAPHICAL_COMPARE
-		boost::range::lexicographical_compare(std::forward<Range>(r),r_,std::move(comp_));
-#else
 		std::lexicographical_compare(r.cbegin(),r.cend(),r_.cbegin(),r_.cend(),std::move(comp_));
-#endif
 	}
 private:
 	const Range& r_;
@@ -117,7 +109,4 @@ using detail::lexicographical_compare;
 } // namespace adaptors
 } // namesapce srook
 
-#ifdef POSSIBLE_TO_RANGE_ADAPTOR_LEXICOGRAPHICAL_COMPARE
-#undef POSSIBLE_TO_RANGE_ADAPTOR_LEXICOGRAPHICAL_COMPARE
-#endif
 #endif

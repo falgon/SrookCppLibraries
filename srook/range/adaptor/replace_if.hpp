@@ -4,12 +4,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
-#if __has_include(<boost/range/algorithm/replace_if.hpp>)
-#include<boost/range/algorithm/replace_if.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_IF
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct replace_if_t{
 	std::decay_t<Range>& operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_IF
-		boost::range::replace_if(std::forward<Range>(r),std::move(pred_),new_value);
-#else
 		std::replace_if_t(r.begin(),r.end(),std::move(pred_),new_value);
-#endif
 	}
 private:
 	Predicate pred_;
@@ -50,7 +41,4 @@ using detail::replace_if;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_IF
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_IF
-#endif
 #endif

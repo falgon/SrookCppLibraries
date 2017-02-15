@@ -5,12 +5,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-#if __has_include(<boost/range/algorithm/partial_sort.hpp>)
-#include<boost/range/algorithm/partial_sort.hpp>
-#define BOOST_RANGE_ALGORITHM_PARTIAL_SORT_HPP
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct partial_sort_t{
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef BOOST_RANGE_ALGORITHM_PARTIAL_SORT_HPP
-		boost::range::partial_sort(std::forward<Range>(r),std::move(iter_));
-#else
 		std::partial_sort(r.begin(),std::move(iter_),r.end());
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -45,11 +36,7 @@ struct partial_sort_compare_t{
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef BOOST_RANGE_ALGORITHM_PARTIAL_SORT_HPP
-		boost::range::partial_sort(std::forward<Range>(r),std::move(iter_),std::move(comp_));
-#else
 		std::partial_sort(r.begin(),std::move(iter_),r.end(),std::move(comp_));
-#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -76,9 +63,5 @@ using detail::partial_sort;
 
 } // namespace adaptors
 } // namespace srook
-
-#ifdef BOOST_RANGE_ALGORITHM_PARTIAL_SORT_HPP
-#undef BOOST_RANGE_ALGORITHM_PARTIAL_SORT_HPP
-#endif
 
 #endif

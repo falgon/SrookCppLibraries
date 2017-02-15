@@ -4,12 +4,7 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
-#if __has_include(<boost/range/algorithm/remove_if.hpp>)
-#include<boost/range/algorithm/remove_if.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REMOVE_IF
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -24,11 +19,7 @@ struct remove_if_t{
 	typename std::decay_t<Range>::iterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REMOVE_IF
-		boost::range::remove_if(std::forward<Range>(r),std::move(pred_));
-#else
 		std::remove_if(r.begin(),r.end(),std::move(pred_));
-#endif
 	}
 private:
 	Predicate pred_;
@@ -48,7 +39,4 @@ using detail::remove_if;
 } // namespace adaptors
 } // namespace srook 
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REMOVE_IF
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REMOVE_IF
-#endif
 #endif

@@ -5,14 +5,9 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-#if __has_include(<boost/range/algorithm/count.hpp>)
-#define POSSIBLE_TO_BOOST_RANGE_COUNT
-#include<boost/range/algorithm/count.hpp>
-#else
 #include<iterator>
 #include<algorithm>
 #include<type_traits>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -25,11 +20,7 @@ struct count_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::iterator_traits<typename std::decay_t<Range>::iterator>::difference_type operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_RANGE_COUNT
-		return boost::range::count(std::forward<Range>(r),std::move(value));
-#else
 		return std::count(r.cbegin(),r.cend(),std::move(value));
-#endif
 	}
 private:
 	T value;
@@ -47,7 +38,4 @@ using detail::count;
 
 } // namespace adaptors
 } // namespace srook
-#ifdef POSSIBLE_TO_BOOST_RANGE_COUNT
-#undef POSSIBLE_TO_BOOST_RANGE_COUNT
-#endif
 #endif

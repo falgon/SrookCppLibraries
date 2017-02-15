@@ -6,12 +6,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
-#if __has_include(<boost/range/algorithm/equal.hpp>)
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
-#include<boost/range/algorithm/equal.hpp>
-#else
 #include<algorithm>
-#endif
 
 #if __has_include(<optional>)
 #define POSSIBLE_TO_INCLUDE_STD_OPTIONAL
@@ -36,11 +31,7 @@ struct equal_range_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
-		return boost::range::equal(std::forward<R>(r),r_);
-#else
 		return std::equal(r.cbegin(),r.cend(),r_.cbegin(),r_.cend());
-#endif
 	}
 private:
 	const Range& r_;
@@ -89,11 +80,7 @@ struct equal_range_predicate_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& r)
 	{
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
-		return boost::range::equal(std::forward<R>(r),r_,std::move(pred_));
-#else
 		return std::equal(r.cbegin(),r.cend(),r_.cbegin(),r_.cend(),std::move(pred_));
-#endif
 	}
 private:
 	const Range& r_;
@@ -159,9 +146,6 @@ using detail::equal;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_EQUAL
-#endif
 #ifdef POSSIBLE_TO_INCLUDE_STD_OPTIONAL
 #undef POSSIBLE_TO_INCLUDE_STD_OPTIONAL
 #endif

@@ -1,11 +1,6 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_PARTIAL_SORT_COPY
 #define INCLUDED_SROOK_RANGE_ADAPTOR_PARTIAL_SORT_COPY
-#if __has_include(<boost/range/algorithm/partial_sort_copy.hpp>)
-#include<boost/range/algorithm/partial_sort_copy.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTIAL_SORT_COPY
-#else
 #include<algorithm>
-#endif
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/config/require.hpp>
@@ -57,11 +52,7 @@ struct partial_sort_copy_range_t{
 	typename std::decay_t<Range>::iterator operator()(R&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTIAL_SORT_COPY
-		boost::range::partial_sort_copy(std::forward<R>(r),r_);
-#else
 		std::partial_sort_copy(r.begin(),r.end(),r_.begin(),r_.end());
-#endif
 	}
 private:
 	Range& r_;
@@ -76,11 +67,7 @@ struct partial_sort_copy_range_compare_t{
 	typename std::decay_t<Range>::iterator operator()(R&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTIAL_SORT_COPY
-		boost::range::partial_sort_copy(std::forward<R>(r),r_,std::move(comp_));
-#else
 		std::partial_sort_copy(r.begin(),r.end(),r_.begin(),r_.end(),std::move(comp_));
-#endif
 	}
 private:
 	Range& r_;
@@ -125,7 +112,4 @@ using detail::partial_sort_copy;
 } // namespace adaptors
 } // namespace srook
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTIAL_SORT_COPY
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_PARTIAL_SORT_COPY
-#endif
 #endif

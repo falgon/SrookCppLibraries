@@ -7,13 +7,7 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
-#if __has_include(<boost/range/algorithm/copy.hpp>)
-#define POSSIBLE_TO_BOOST_COPY
-#include<boost/range/algorithm/copy.hpp>
-#else
-#define POSSIBLE_TO_STD_COPY
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -29,12 +23,7 @@ struct print_t final{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	range_iterator<typename std::remove_reference_t<Range>::iterator> operator()(Range&& r)
 	{
-#ifdef POSSIBLE_TO_BOOST_COPY
-		boost::copy(r,std::ostream_iterator<typename std::remove_reference_t<Range>::value_type>(outputstream_,delimiter_));
-#endif 
-#ifdef POSSIBLE_TO_STD_COPY
-		std::copy(r.begin(),r.end(),std::otream_iterator<typename std::remove_reference_t<Range>::value_type>(outputstream_,delimiter_));
-#endif
+		std::copy(r.begin(),r.end(),std::ostream_iterator<typename std::remove_reference_t<Range>::value_type>(outputstream_,delimiter_));
 		return make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -55,12 +44,5 @@ using detail::print;
 
 } // namespace adaptors
 } // namespace srook
-
-#ifdef POSSIBLE_TO_BOOST_COPY
-#undef POSSIBLE_TO_BOOST_COPY
-#endif
-#ifdef POSSIBLE_TO_STD_COPY
-#undef POSSIBLE_TO_STD_COPY
-#endif
 
 #endif

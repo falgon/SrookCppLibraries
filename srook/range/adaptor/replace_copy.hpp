@@ -3,12 +3,7 @@
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
-#if __has_include(<boost/range/algorithm/replace_copy.hpp>)
-#include<boost/range/algorithm/replace_copy.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_COPY
-#else
 #include<algorithm>
-#endif
 
 namespace srook{
 namespace adaptors{
@@ -24,11 +19,7 @@ struct replace_copy_t{
 	OutputIterator operator()(Range&& r)
 	{
 		return
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_COPY
-		boost::range::replace_copy(std::forward<Range>(r),std::move(iter_),old_value_,new_value_);
-#else
 		std::replace_copy(r.begin(),r.end(),std::move(iter_),old_value_,new_value_);
-#endif
 	}
 private:
 	OutputIterator iter_;
@@ -63,7 +54,4 @@ using detail::replace_copy;
 } // namespace adaptors
 } // namespace srook 
 
-#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_COPY
-#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_ALGORITHM_REPLACE_COPY
-#endif
 #endif
