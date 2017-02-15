@@ -5,7 +5,12 @@
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/iterator/range_iterator.hpp>
+#if __has_include(<boost/range/algorithm/permutation.hpp>)
+#include<boost/range/algorithm/permutation.hpp>
+#define POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -17,7 +22,11 @@ struct next_permutation_t{
 	bool operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
+		boost::range::next_permutation(std::forward<R>(r));
+#else
 		std::next_permutation(r.begin(),r.end());
+#endif
 	}
 };
 
@@ -30,7 +39,11 @@ struct next_permutation_compare_t{
 	bool operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
+		boost::range::next_permutation(std::forward<R>(r),std::move(comp_));
+#else
 		std::next_permutation(r.begin(),r.end(),std::move(comp_));
+#endif
 	}
 private:
 	Compare comp_;
@@ -55,4 +68,7 @@ using detail::next_permutation;
 } // namesapce adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
+#undef POSSIBLE_TO_RANGE_INCLUDE_PERMUTATION
+#endif
 #endif

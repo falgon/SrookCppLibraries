@@ -3,7 +3,12 @@
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
+#if __has_include(<boost/range/algorithm/remove_copy.hpp>)
+#include<boost/range/algorithm/remove_copy.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_REMOVE_COPY
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -19,7 +24,11 @@ struct remove_copy_iterator_t{
 	OutputIterator operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_REMOVE_COPY		
+		boost::range::remove_copy(std::forward<Range>(r),std::move(iter_),value_);
+#else
 		std::remove_copy(r.begin(),r.end(),std::move(iter_),value_);
+#endif
 	}
 private:
 	OutputIterator iter_;
@@ -35,7 +44,11 @@ struct remove_copy_range_t{
 	typename std::decay_t<Range>::iterator operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_REMOVE_COPY
+		boost::range::remove_copy(std::forward<R>(r),std::move(first_),value_);
+#else
 		std::remove_copy(r.begin(),r.end(),std::move(first_),value_);
+#endif
 	}
 private:
 	typename Range::iterator first_;

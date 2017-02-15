@@ -5,7 +5,12 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/iterator/range_iterator.hpp>
+#if __has_include(<boost/range/adaptor/min_element.hpp>)
+#include<boost/range/adaptor/min_element.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -17,7 +22,11 @@ struct min_element_t{
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
+		boost::range::min_element(std::forward<Range>(r));
+#else
 		std::min_element(r.cbegin(),r.cend());
+#endif
 	}
 };
 
@@ -30,7 +39,11 @@ struct min_element_compare_t{
 	typename std::decay_t<Range>::const_iterator operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
+		boost::range::min_element(std::forward<Range>(r),std::move(comp_));
+#else
 		std::min_element(r.cbegin(),r.cend(),std::move(comp_));
+#endif
 	}
 private:
 	Compare comp_;
@@ -54,4 +67,7 @@ using detail::min_element;
 } // namesapce adaptors
 } // namesapce srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
+#undef POSSIBLE_TO_INCLUDE_BOOST_MIN_ELEMENT
+#endif
 #endif

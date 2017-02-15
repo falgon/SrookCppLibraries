@@ -5,7 +5,12 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#if __has_include(<boost/range/algorithm_ext/is_sorted.hpp>)
+#include<boost/range/algorithm_ext/is_sorted.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_SORTED
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -17,7 +22,11 @@ struct is_sorted_t{
 	bool operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_SORTED
+		boost::range::is_sorted(std::forward<Range>(r));
+#else
 		std::is_sorted(r.cbegin(),r.cend());
+#endif
 	}
 };
 
@@ -32,7 +41,11 @@ struct is_sorted_compare_t{
 	bool operator()(Range&& r)
 	{
 		return 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_SORTED
+		boost::range::is_sorted(std::forward<Range>(r),std::move(comp_));
+#else
 		std::is_sorted(r.cbegin(),r.cend(),std::move(comp_));
+#endif
 	}
 private:
 	Compare comp_;
@@ -57,4 +70,7 @@ using detail::is_sorted;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_SORTED
+#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_IS_SORTED
+#endif
 #endif

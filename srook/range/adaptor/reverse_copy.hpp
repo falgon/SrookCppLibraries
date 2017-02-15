@@ -4,7 +4,12 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<iterator>
+#if __has_include(<boost/range/algorithm/reverse_copy.hpp>)
+#include<boost/range/algorithm/reverse_copy.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_REVERSE_COPY
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -20,7 +25,11 @@ struct reverse_copy_t{
 	Iterator operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_REVERSE_COPY
+		boost::range::reverse_copy(std::forward<Range>(r),std::move(iter_));
+#else
 		std::reverse_copy(r.begin(),r.end(),std::move(iter_));
+#endif
 	}
 private:
 	Iterator iter_;
@@ -46,4 +55,7 @@ using detail::reverse_copy;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_REVERSE_COPY
+#undef POSSIBLE_TO_INCLUDE_BOOST_REVERSE_COPY
+#endif
 #endif

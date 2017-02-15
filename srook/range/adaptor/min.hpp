@@ -7,7 +7,13 @@
 #include<initializer_list>
 #include<type_traits>
 #include<srook/type_traits/is_callable.hpp>
+
+#if __has_include(<boost/range/algorithm/min_element.hpp>)
+#include<boost/range/algorithm/min_element.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -45,14 +51,22 @@ struct min_initializer_list_t{
 	T operator()(std::initializer_list<T> ilist)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+		*boost::range::min_element(std::move(ilist));
+#else
 		*std::min_element(ilist.begin(),ilist.end());
+#endif
 	}
 	
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+		*boost::range::min_element(std::move(r));
+#else
 		*std::min_element(r.cbegin(),r.cend());
+#endif
 	}
 };
 
@@ -65,14 +79,22 @@ struct min_initializer_list_compare_t{
 	T operator()(std::initializer_list<T> ilist)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+		*boost::range::min_element(std::move(ilist),std::move(comp_));
+#else
 		*std::min_element(ilist.begin(),ilist.end(),std::move(comp_));
+#endif
 	}
 	
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	typename std::decay_t<Range>::value_type operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+		*boost::range::min_element(std::move(r),std::move(comp_));
+#else
 		*std::min_element(r.cbegin(),r.cend(),std::move(comp_));
+#endif
 	}
 private:
 	Compare comp_;
@@ -112,4 +134,7 @@ using detail::min;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MIN_ELEMENT
+#endif
 #endif

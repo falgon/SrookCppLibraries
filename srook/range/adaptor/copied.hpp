@@ -3,6 +3,7 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/iterator/range_iterator.hpp>
 #include<type_traits>
+
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -32,7 +33,7 @@ copied_t<std::remove_reference_t<Iterator>> make_copied_t(Iterator&& first,Itera
 {
 	return copied_t<std::remove_reference_t<Iterator>>(std::forward<Iterator>(first),std::forward<Iterator>(last));
 }
-const auto copied=[](auto&& r)noexcept{return make_copied_t(r.begin(),r.end());};
+const auto copied=[](auto&& r)noexcept{return make_copied_t(std::begin(r),std::end(r));};
 
 
 } // inline namespace v1

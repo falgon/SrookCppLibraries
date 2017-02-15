@@ -6,7 +6,12 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
+#if __has_include(<boost/range/algorithm/sort.hpp>)
+#define POSSIBLE_TO_BOOST_RANGE_SORT
+#include<boost/range/algorithm/sort.hpp>
+#else
 #include<algorithm>
+#endif
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -23,7 +28,11 @@ struct sort_t_comp{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
+#ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
+		boost::sort(r,std::move(comp_));
+#else
 		std::sort(r.begin(),r.end(),std::move(comp_));
+#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -39,7 +48,11 @@ struct sort_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
+#ifdef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
+		boost::sort(r);
+#else
 		std::sort(r.begin(),r.end());
+#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 	template<class T>
@@ -61,4 +74,7 @@ using detail::sort;
 
 } // namespace adaptors
 } // namespace srook
+#ifdef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
+#undef POSSIBLE_TO_BOOST_RANGE_BINARY_SEARCH
+#endif
 #endif

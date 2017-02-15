@@ -5,7 +5,12 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
+
 #include<algorithm>
+#if __has_include(<boost/range/algorithm/set_algorithm.hpp>)
+#include<boost/range/algorithm/set_algorithm.hpp>
+#define POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -20,7 +25,11 @@ struct includes_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& range)const
 	{
+#ifdef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
+		return boost::range::includes(std::forward<R>(range),r_);
+#else
 		return std::includes(range.cbegin(),range.cend(),r_.cbegin(),r_.cend());
+#endif
 	}
 private:
 	const Range& r_;
@@ -33,7 +42,11 @@ struct includes_compare_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	bool operator()(R&& range)
 	{
+#ifdef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
+		return boost::range::includes(std::forward<R>(range),r_,std::move(comp_));
+#else
 		return std::includes(range.cbegin(),range.cend(),r_.cbegin(),r_.cend(),std::move(comp_));
+#endif
 	}
 private:
 	const Range& r_;
@@ -97,5 +110,8 @@ using detail::includes;
 
 }// namespace adaptors
 }// namespace srook
+#ifdef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
+#undef POSSIBLE_TO_INCUDE_BOOST_RANGE_SET_ALGORITHM
+#endif
 
 #endif

@@ -11,7 +11,14 @@
 #else
 #include<srook/optional.hpp>
 #endif
+
+
+#if __has_include(<boost/range/algorithm/find.hpp>)
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FIND
+#include<boost/range/algorithm/find.hpp>
+#elif
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -101,7 +108,11 @@ public:
 	template<class Range,std::enable_if_t<!has_mfind_v<std::remove_reference_t<Range>>,std::nullptr_t> =nullptr>
 	auto operator()(Range&& r)
 	{
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FIND
+		return boost::find(std::forward<Range>(r),std::move(target_));
+#elif
 		return std::find(r.cbegin(),r.cend(),std::move(target_));
+#endif
 	}
 };
 
@@ -158,6 +169,9 @@ using detail::find;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef INCLUDED_BOOST_RANGE_FIND
+#undef INCLUDED_BOOST_RANGE_FIND
+#endif
 #ifdef POSSIBLE_TO_INCLUDE_BOOST_OPTIONAL
 #undef POSSIBLE_TO_INCLUDE_BOOST_OPTIONAL
 #endif

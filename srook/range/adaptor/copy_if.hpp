@@ -5,7 +5,13 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
+
+#if __has_include(<boost/range/algorithm/copy_if.hpp>)
+#define POSSIBLE_TO_BOOST_RANGE_COPY_IF
+#include<boost/range/algorithm/copy_if.hpp>
+#else
 #include<algorithm>
+#endif
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -18,7 +24,11 @@ struct copy_if_t{
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	auto operator ()(Range&& r)
 	{
+#ifdef POSSIBLE_TO_BOOST_RANGE_COPY_IF
+		boost::copy_if(r,std::move(iter_),std::move(pred_));
+#else
 		std::copy_if(r.begin(),r.end(),std::move(iter_),std::move(pred_));
+#endif
 		return make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -38,4 +48,7 @@ using detail::copy_if;
 
 } // namespace adaptors
 } // namespace srook
+#ifdef POSSIBLE_TO_BOOST_RANGE_COPY_IF
+#undef POSSIBLE_TO_BOOST_RANGE_COPY_IF
+#endif
 #endif

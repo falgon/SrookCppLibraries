@@ -5,7 +5,13 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/iterator/range_iterator.hpp>
+
+#if __has_include(<boost/range/algorithm/find_end.hpp>)
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_FIND_END
+#include<boost/range/algorithm/find_end.hpp>
+#else
 #include<algorithm>
+#endif
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -32,7 +38,11 @@ struct find_end_range_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FIND_END
+		return boost::range::find_end(std::forward<R>(r),r_);
+#else
 		return std::find_end(r.cbegin(),r.cend(),r_.cbegin(),r_.cend());
+#endif
 	}
 private:
 	const Range& r_;
@@ -62,7 +72,11 @@ struct find_end_range_predicate_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_FIND_END
+		return boost::range::find_end(std::forward<R>(r),r_,pred_);
+#else
 		return std::find_end(r.cbegin(),r.cend(),r_.cbegin(),r_.cend(),pred_);
+#endif
 	}
 private:
 	const Range& r_;

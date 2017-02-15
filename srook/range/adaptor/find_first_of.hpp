@@ -5,7 +5,12 @@
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<type_traits>
+#if __has_include(<boost/range/algorithm/find_first_of.hpp>)
+#define POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
+#include<boost/range/algorithm/find_first_of.hpp>
+#else
 #include<algorithm>
+#endif
 #if __has_include(<optional>)
 #define POSSIBLE_TO_INCLUDE_STD_OPTIONAL
 #include<optional>
@@ -28,7 +33,11 @@ struct find_first_of_range_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
+#ifdef POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
+		return boost::range::find_first_of(std::forward<R>(r),r_);
+#else
 		return std::find_first_of(r.cbegin(),r.cend(),r_.cbegin(),r_.cend());
+#endif
 	}
 private:
 	const Range& r_;
@@ -96,7 +105,11 @@ struct find_first_of_range_predicate_t{
 	template<class R,REQUIRES(has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>
 	typename std::decay_t<R>::const_iterator operator()(R&& r)
 	{
+#ifdef POSSIBLE_TO_INCLUDE_RANGE_FIND_FIRST_OF
+		return boost::range::find_first_of(std::forward<R>(r),r_,pred_);
+#else
 		return std::find_first_of(r.cbegin(),r.cend(),r_.cbegin(),r_.cend(),pred_);
+#endif
 	}
 private:
 	const Range& r_;

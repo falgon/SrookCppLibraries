@@ -1,5 +1,9 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_MISMATCH_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_MISMATCH_HPP
+#if __has_include(<boost/range/algorithm/mismatch.hpp>)
+#include<boost/range/algorithm/mismatch.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_MISMATCH
+#endif
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
@@ -68,7 +72,11 @@ struct mismatch_ranges_t{
 	std::pair<typename std::decay_t<R>::const_iterator,typename Range::const_iterator> operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MISMATCH
+		boost::range::mismatch(std::forward<R>(r),r_);
+#else
 		std::mismatch(r.cbegin(),r.cend(),r_.cbegin(),r_.cend());
+#endif
 	}
 private:
 	const Range& r_;
@@ -100,7 +108,11 @@ struct mismatch_ranges_binarypredicate_t{
 	std::pair<typename std::decay_t<R>::const_iterator,typename Range::const_iterator> operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MISMATCH
+		boost::range::mismatch(std::forward<R>(r),r_,std::move(pred_));
+#else
 		std::mismatch(r.cbegin(),r.cend(),r_.cbegin(),r_.cend(),std::move(pred_));
+#endif
 	}
 private:
 	const Range& r_;

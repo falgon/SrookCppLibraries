@@ -6,6 +6,10 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<algorithm>
 #include<srook/iterator/range_iterator.hpp>
+#if __has_include(<boost/range/algorithm/merge.hpp>)
+#include<boost/range/algorithm/merge.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_RANGE_MERGE
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -21,7 +25,11 @@ struct merge_range_t{
 	OutputIterator operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MERGE
+		boost::range::merge(std::forward<R>(r),r_,std::move(oiter_));
+#else
 		std::merge(r.begin(),r.end(),r_.cbegin(),r_.cend(),std::move(oiter_));
+#endif
 	}
 private:
 	const Range& r_;
@@ -52,7 +60,11 @@ struct merge_range_compare_t{
 	OutputIterator operator()(R&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MERGE
+		boost::range::merge(std::forward<R>(r),r_,std::move(oiter_),std::move(comp_));
+#else
 		std::merge(r.begin(),r.end(),r_.cbegin(),r_.cend(),std::move(oiter_),std::move(comp_));
+#endif
 	}
 private:
 	const Range& r_;
@@ -150,4 +162,7 @@ using detail::merge;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MERGE
+#undef POSSIBLE_TO_INCLUDE_BOOST_RANGE_MERGE
+#endif
 #endif

@@ -4,7 +4,12 @@
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
+#if __has_include(<boost/range/algorithm/replace_copy_if.hpp>)
+#include<boost/range/algorithm/replace_copy_if.hpp>
+#define POSSIBLE_TO_BOOST_RANGE_ALGORITHM_REPLACE_COPY_IF
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -21,7 +26,11 @@ struct replace_copy_if_t{
 	OutputIterator operator()(Range&& r)
 	{
 		return
+#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_REPLACE_COPY_IF
+		boost::range::replace_copy_if(std::forward<Range>(r),std::move(iter_),std::move(pred_),new_value_);
+#else
 		std::replace_copy_if(r.begin(),r.end(),std::move(iter_),std::move(pred_),new_value_);
+#endif
 	}
 private:
 	OutputIterator iter_;

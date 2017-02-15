@@ -1,3 +1,4 @@
+// #define PASSING_THROUGH
 /*
  *
  * This is a test exec code of srook/range/adaptor.
@@ -226,9 +227,9 @@ auto make_applyer(Tuple&& t,Tuple_range&& t_range)
 auto make_test_ranges()
 {
 	std::vector<int> v(range_size);
-/*#if (BOOST_VERSION != 105800)
+#if (BOOST_VERSION != 105800)
 	std::deque<int> deq(range_size);
-#endif*/
+#endif
 	{
 		std::uniform_int_distribution<> dist(0,42);
 		std::random_device rng;
@@ -237,15 +238,15 @@ auto make_test_ranges()
 
 		boost::range::for_each(v,apply_dist);
 #if (BOOST_VERSION != 105800)
-		//boost::range::for_each(deq,apply_dist);
+		boost::range::for_each(deq,apply_dist);
 #endif
 	}
 	std::string str="Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.";
 	
 	return std::make_tuple(std::move(v),std::move(str)
-/*#if (BOOST_VERSION != 105800)
+#if (BOOST_VERSION != 105800)
 			,std::move(deq)
-#endif*/
+#endif
 			);
 }
 
@@ -264,6 +265,8 @@ struct exclude_range{
 	template<class... Ts>
 	constexpr void operator()(const Range<Ts...>&)const{}
 };
+
+#ifdef PASSING_THROUGH
 
 const struct find_check_t{
 	template<class Range,REQUIRES(!std::is_same<std::decay_t<Range>,std::string>{})>
@@ -529,9 +532,11 @@ const struct print_check_t{
 	}
 }print_check={};
 
+#endif
 
 int main()
 {
+#ifdef PASSING_THROUGH
 	const auto tests=std::make_tuple(
 			make_tester(
 				[](const auto& x)
@@ -756,7 +761,7 @@ int main()
 					SROOK_attribute_UNUSED typename std::decay_t<decltype(r)>::const_iterator it4 = r | srook::adaptors::min_element(std::greater<>());
 				}
 			),
-			//make_tester(merge_check),
+			make_tester(merge_check),
 			make_tester(
 				[](const auto& r)
 				{
@@ -806,7 +811,7 @@ int main()
 						r | srook::adaptors::partition([](typename std::decay_t<decltype(r)>::value_type x){return x%2==0;});
 				}
 			),
-			//make_tester(partition_copy_check),
+			make_tester(partition_copy_check),
 			make_tester(
 				[](const auto& r)
 				{
@@ -820,4 +825,9 @@ int main()
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());
 	ap.play_invoker();
+#else
+	auto tester=std::make_tuple(make_tester([](const auto& r){ SROOK_attribute_UNUSED const auto range = r | srook::adaptors::print(); }));
+	auto ap=make_applyer(std::move(tester),make_test_ranges());
+	ap.play_invoker();
+#endif
 }

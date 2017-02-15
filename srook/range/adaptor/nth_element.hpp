@@ -5,7 +5,12 @@
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/iterator/range_iterator.hpp>
+#if __has_include(<boost/range/algorithm/nth_element.hpp>)
+#include<boost/range/algorithm/nth_element.hpp>
+#define POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
+#else
 #include<algorithm>
+#endif
 
 namespace srook{
 namespace adaptors{
@@ -20,7 +25,11 @@ struct nth_element_t{
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
+#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
+		boost::range::nth_element(std::forward<Range>(r),std::move(iter_));
+#else
 		std::nth_element(r.begin(),std::move(iter_),r.end());
+#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -35,7 +44,11 @@ struct nth_element_compare_t{
 	template<class Range,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	srook::range_iterator<typename std::decay_t<Range>::iterator> operator()(Range&& r)
 	{
+#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
+		boost::range::nth_element(std::forward<Range>(r),std::move(iter_),std::move(comp_));
+#else
 		std::nth_element(r.begin(),std::move(iter_),r.end());
+#endif
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 private:
@@ -65,4 +78,7 @@ using detail::nth_element;
 } // namespace adaptors
 } // namespace srook
 
+#ifdef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
+#undef POSSIBLE_TO_BOOST_RANGE_ALGORITHM_NTHELEMENT
+#endif
 #endif
