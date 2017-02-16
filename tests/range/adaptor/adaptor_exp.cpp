@@ -1,4 +1,4 @@
-//#define TEST_PASSING_THROUGH
+#define TEST_PASSING_THROUGH
 /*
  *
  * This is a test exec code of srook/range/adaptor.
