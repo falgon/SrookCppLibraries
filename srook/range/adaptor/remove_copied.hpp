@@ -11,7 +11,7 @@ template<class Iterator,class T>
 struct remove_copied_range_t{
 	template<REQUIRES(!has_iterator_v<Iterator>)>
 	explicit constexpr remove_copied_range_t(Iterator first,Iterator last,const T& t):first_(std::move(first)),last_(std::move(last)),value(t){}
-	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
+	template<class Range/*,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)*/>
 	operator Range()
 	{
 		return Range(make_remove_copied_range_iterator(first_,last_,value),make_remove_copied_range_iterator(last_,last_,value));
@@ -31,10 +31,23 @@ make_remove_copied_range_t(Iterator&& first,Iterator&& last,T&& t)
 template<class T>
 struct remove_copied_t{
 	explicit constexpr remove_copied_t(const T& t):value(t){}
-	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	remove_copied_range_t<typename std::decay_t<Range>::iterator,std::decay_t<T>> operator()(Range&& r)
+	template<
+		class Range,
+		REQUIRES(
+				has_iterator_v<std::remove_cv_t<std::decay_t<Range>>> || 
+				is_range_iterator_v<std::remove_cv_t<std::decay_t<Range>>>
+		)
+	>
+	remove_copied_range_t<
+		typename std::remove_cv_t<std::decay_t<Range>>::const_iterator,
+		std::remove_cv_t<std::decay_t<T>>
+	> operator()(Range&& r)
 	{
-		return remove_copied_range_t<typename std::decay_t<Range>::iterator,std::decay_t<T>>(r.begin(),r.end(),value);
+		return 
+			remove_copied_range_t<
+				typename std::remove_cv_t<std::decay_t<Range>>::const_iterator,
+				std::remove_cv_t<std::decay_t<T>>
+			>(r.cbegin(),r.cend(),value);
 	}
 private:
 	T value;

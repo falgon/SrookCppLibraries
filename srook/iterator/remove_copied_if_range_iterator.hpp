@@ -11,7 +11,7 @@ namespace srook{
 inline namespace v1{
 
 namespace{
-	const auto skipper=[](auto&& first,auto&& last,const auto& pred)
+	const auto remove_copied_if_skipper=[](auto&& first,auto&& last,const auto& pred)
 	{
 		while(pred(*first) && first!=last)++first;
 	};
@@ -23,14 +23,18 @@ struct remove_copied_if_range_iterator:skipping_iterator_functor_core<Iterator,P
 };
 
 template<class Iterator,class T>
-constexpr remove_copied_if_range_iterator<std::decay_t<Iterator>,std::decay_t<T>,decltype(skipper)>
+constexpr remove_copied_if_range_iterator<
+	std::remove_cv_t<std::decay_t<Iterator>>,
+	std::remove_cv_t<std::decay_t<T>>,
+	std::remove_cv_t<decltype(remove_copied_if_skipper)>
+>
 make_remove_copied_if_range_iterator(Iterator&& first,Iterator&& last,T&& t)
 {
 	return remove_copied_if_range_iterator<
-		std::decay_t<Iterator>,
-		std::decay_t<T>,
-		decltype(skipper)
-	>(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<T>(t),std::move(skipper));
+		std::remove_cv_t<std::decay_t<Iterator>>,
+		std::remove_cv_t<std::decay_t<T>>,
+		std::remove_cv_t<decltype(remove_copied_if_skipper)>
+	>(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<T>(t),std::move(remove_copied_if_skipper));
 }
 
 } // inline namespace v1

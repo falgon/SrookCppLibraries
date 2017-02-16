@@ -25,7 +25,7 @@ struct lambda_wrapper{
 	}
 
 	template<class... Args>
-	auto operator()(Args&&... value)
+	auto operator()(Args&&... value)const
 	{
 		return lambda_(std::forward<Args>(value)...);
 	}

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_HPP
-#define INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_HPP
+#ifndef INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
+#define INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
 #include<srook/iterator/remove_copied_if_range_iterator.hpp>
 
 namespace srook{
@@ -10,7 +10,9 @@ inline namespace v1{
 template<class Iterator,class T>
 struct remove_copied_if_range_t{
 	template<REQUIRES(!has_iterator_v<Iterator>)>
-	explicit constexpr remove_copied_if_range_t(Iterator first,Iterator last,const T& t):first_(std::move(first)),last_(std::move(last)),value(t){}
+	explicit constexpr remove_copied_if_range_t(Iterator first,Iterator last,const T& t)
+		:first_(std::move(first)),last_(std::move(last)),value(t){}
+	
 	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
 	operator Range()
 	{
@@ -32,11 +34,39 @@ template<class Predicate>
 struct remove_copied_if_t{
 	template<REQUIRES(is_callable_v<Predicate>)>
 	explicit constexpr remove_copied_if_t(const Predicate& t):pred_(t){}
-	template<class Range,REQUIRES(has_iterator_v<std::decay_t<Range>> || is_range_iterator_v<std::decay_t<Range>>)>
-	remove_copied_if_range_t<typename std::decay_t<Range>::iterator,std::decay_t<Predicate>> operator()(Range&& r)
+	
+	template<
+		class Range,
+		REQUIRES(std::is_const<std::remove_reference_t<Range>>::value)
+	>
+	constexpr remove_copied_if_range_t<
+		typename std::remove_cv_t<std::decay_t<Range>>::const_iterator,
+		std::remove_cv_t<std::decay_t<Predicate>>
+	>
+	operator()(Range&& r)
 	{
-		return remove_copied_if_range_t<typename std::decay_t<Range>::iterator,std::decay_t<Predicate>>(r.begin(),r.end(),std::move(pred_));
+		return remove_copied_if_range_t<
+			typename std::remove_cv_t<std::decay_t<Range>>::const_iterator,
+			std::remove_cv_t<std::decay_t<Predicate>>
+		>(std::begin(r),std::end(r),std::move(pred_));
 	}
+	
+	template<
+		class Range,
+		REQUIRES(!std::is_const<std::remove_reference_t<Range>>::value)
+	>
+	constexpr remove_copied_if_range_t<
+		typename std::remove_cv_t<std::remove_reference_t<Range>>::iterator,
+		std::remove_cv_t<std::remove_reference_t<Predicate>>
+	>
+	operator()(Range&& r)
+	{
+		return remove_copied_if_range_t<
+			typename std::remove_cv_t<std::remove_reference_t<Range>>::iterator,
+			std::remove_cv_t<std::remove_reference_t<Predicate>>
+		>(std::begin(r),std::end(r),std::move(pred_));
+	}
+
 private:
 	Predicate pred_;
 };

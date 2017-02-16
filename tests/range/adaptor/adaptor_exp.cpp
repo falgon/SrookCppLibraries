@@ -1,4 +1,4 @@
-#define TEST_PASSING_THROUGH
+//#define TEST_PASSING_THROUGH
 /*
  *
  * This is a test exec code of srook/range/adaptor.
@@ -67,9 +67,25 @@
 #include<srook/range/adaptor/partition_copy.hpp>
 #include<srook/range/adaptor/partition_point.hpp>
 #include<srook/range/adaptor/pop_heap.hpp>
+#include<srook/range/adaptor/prev_permutation.hpp>
+#include<srook/range/adaptor/print.hpp>
+#include<srook/range/adaptor/push_heap.hpp>
+#include<srook/range/adaptor/remove.hpp>
+#include<srook/range/adaptor/remove_copied.hpp>
+#include<srook/range/adaptor/remove_copied_if.hpp>
+#include<srook/range/adaptor/remove_copy.hpp>
+#include<srook/range/adaptor/remove_copy_if.hpp>
+#include<srook/range/adaptor/remove_if.hpp>
+#include<srook/range/adaptor/replace.hpp>
+#include<srook/range/adaptor/replace_copy.hpp>
+#include<srook/range/adaptor/replace_copy_if.hpp>
+#include<srook/range/adaptor/replace_if.hpp>
+#include<srook/range/adaptor/reverse.hpp>
+#include<srook/range/adaptor/reverse_copy.hpp>
+#include<srook/range/adaptor/reversed_copied.hpp>
 
 #include<srook/range/adaptor/sort.hpp>
-#include<srook/range/adaptor/print.hpp>
+#include<srook/range/adaptor/to_range.hpp>
 
 
 #include<srook/mpl/variadic_player.hpp>
@@ -534,6 +550,16 @@ const struct print_check_t{
 	}
 }print_check={};
 
+const struct push_heap_t:exclude_range<std::list>,exclude_range<std::basic_string>{
+	template<class T>
+	void operator()(T t)const
+	{
+		SROOK_attribute_UNUSED auto iter1 = t | srook::adaptors::make_heap() | srook::adaptors::push_heap();
+		t.push_back(static_cast<typename T::value_type>(42));
+		SROOK_attribute_UNUSED auto iter2= t | srook::adaptors::push_heap(std::greater<>());
+	}
+}push_heap_check={};
+
 #endif
 
 int main()
@@ -822,7 +848,129 @@ int main()
 				}
 			),
 			make_tester(pop_heap_check),
-			make_tester(print_check)
+			make_tester(print_check),
+			make_tester(
+				[](auto r)
+				{
+					SROOK_attribute_UNUSED const bool b1 = r | srook::adaptors::prev_permutation();
+					SROOK_attribute_UNUSED const bool b2 = r | srook::adaptors::prev_permutation(std::greater<>());
+				}
+			),
+			make_tester(push_heap_check),
+			make_tester(
+				[](auto r)
+				{
+					SROOK_attribute_UNUSED const auto iter1 = r | srook::adaptors::remove(static_cast<typename decltype(r)::value_type>(42));
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					SROOK_attribute_UNUSED const std::remove_reference_t<decltype(r)> result = 
+					r | srook::adaptors::remove_copied(static_cast<typename std::decay_t<decltype(r)>::value_type>(42));
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					SROOK_attribute_UNUSED const std::remove_reference_t<decltype(r)> result =
+					r | srook::adaptors::remove_copied_if([](typename std::remove_reference_t<decltype(r)>::value_type x){return x%2==0;});
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					auto result=r;
+					SROOK_attribute_UNUSED const auto iter1 = 
+					r | srook::adaptors::remove_copy(result,static_cast<typename std::remove_reference_t<decltype(r)>::value_type>(42));
+					SROOK_attribute_UNUSED const auto iter2 =
+					r | srook::adaptors::remove_copy(result.begin(),static_cast<typename std::remove_reference_t<decltype(r)>::value_type>(42));
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					const auto f=[](typename std::remove_reference_t<decltype(r)>::value_type x){return x%2==0;};
+					auto result=r;
+					SROOK_attribute_UNUSED const auto iter1 =
+					r | srook::adaptors::remove_copy_if(result,f);
+					SROOK_attribute_UNUSED const auto iter2 =
+					r | srook::adaptors::remove_copy_if(result.begin(),f);
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					const auto f=[](typename std::remove_reference_t<decltype(r)>::value_type x){return x%2==0;};
+					SROOK_attribute_UNUSED const auto iter = r | srook::adaptors::remove_if(f);
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					using value_type=typename std::remove_reference_t<decltype(r)>::value_type;
+					SROOK_attribute_UNUSED const auto range_iter1 = 
+					r | srook::adaptors::replace(static_cast<value_type>(42),static_cast<value_type>(53));
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					using value_type=typename std::remove_reference_t<decltype(r)>::value_type;
+					auto result = r;
+					SROOK_attribute_UNUSED const auto range_iter1 =
+					r | srook::adaptors::replace_copy(result,static_cast<value_type>(42),static_cast<value_type>(42));
+					r | srook::adaptors::replace_copy(result.begin(),static_cast<value_type>(42),static_cast<value_type>(42));
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					using value_type=typename std::remove_reference_t<decltype(r)>::value_type;
+					const auto f=[](typename std::remove_reference_t<decltype(r)>::value_type x){return x%2==0;};
+					auto result = r;
+					SROOK_attribute_UNUSED const auto range_iter1 =
+					r | srook::adaptors::replace_copy_if(result,f,static_cast<value_type>(42));
+					SROOK_attribute_UNUSED const auto range_iter2 =
+					r | srook::adaptors::replace_copy_if(result.begin(),f,static_cast<value_type>(42));
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					using value_type=typename std::remove_reference_t<decltype(r)>::value_type;
+					const auto f=[](value_type x){return x%2==0;};
+					SROOK_attribute_UNUSED const auto range_iter1 =
+					r | srook::adaptors::replace_if(f,static_cast<value_type>(42));
+				}
+			),
+			make_tester(
+				[](auto r)
+				{
+					SROOK_attribute_UNUSED const auto iter = r | srook::adaptors::reverse;
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					auto result = r;
+					SROOK_attribute_UNUSED const auto iter1 = r | srook::adaptors::reverse_copy(result);
+					SROOK_attribute_UNUSED const auto iter2 = r | srook::adaptors::reverse_copy(result.begin());
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					std::remove_reference_t<decltype(r)> result = r | srook::adaptors::reversed_copied;
+				}
+			),
+			make_tester(
+				[](const auto& r)
+				{
+					auto result1 = r | srook::adaptors::to_range<std::vector>();
+					auto result2 = r | srook::adaptors::to_range<std::list>();
+				}
+			)
 	);
 	
 	auto ap=make_applyer(std::move(tests),make_test_ranges());

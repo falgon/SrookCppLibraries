@@ -2,6 +2,10 @@
 #define INCLUDED_FILTERD_ITERATOR_HPP
 #include<iterator>
 #include<srook/utility/lambda_wrapper.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<type_traits>
 
 namespace srook{
 inline namespace v1{
@@ -16,7 +20,7 @@ struct filterd_iterator final{
     using reference=typename std::iterator_traits<Iterator>::reference;
     using pointer=typename std::iterator_traits<Iterator>::pointer;
 
-    explicit filterd_iterator(Predicate& predicate,Iterator first,Iterator last)noexcept
+    explicit filterd_iterator(const Predicate& predicate,Iterator first,Iterator last)noexcept
         :pred(predicate),first_(std::move(first)),last_(std::move(last))
         {
             skip();
@@ -58,11 +62,21 @@ private:
     lambda_wrapper<Predicate> pred;
 	iterator first_,last_;
 };
-template<class Predicate,class Iterator>
-constexpr filterd_iterator<std::remove_reference_t<Predicate>,Iterator>
+template<
+	class Predicate,
+	class Iterator,
+	REQUIRES(
+			is_callable_v<std::remove_cv_t<std::remove_reference_t<Predicate>>> &&
+			!has_iterator_v<std::remove_cv_t<std::remove_reference_t<Iterator>>>)
+>
+constexpr filterd_iterator<
+	std::remove_cv_t<std::remove_reference_t<Predicate>>,
+	std::remove_cv_t<std::remove_reference_t<Iterator>>>
 make_filterd_iterator(Predicate&& pred,Iterator first,Iterator last)
 {
-    return filterd_iterator<Predicate,Iterator>(
+    return filterd_iterator<
+		std::remove_cv_t<std::remove_reference_t<Predicate>>,
+		std::remove_cv_t<std::remove_reference_t<Iterator>>>(
         std::forward<Predicate>(pred),std::move(first),std::move(last)
     );
 }

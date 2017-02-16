@@ -49,13 +49,21 @@ struct skipping_iterator_functor_core{
 		skipper_(first_,last_,pred_);
 		return tmp;
 	}
+	skipping_iterator_functor_core& operator=(const skipping_iterator_functor_core& rhs)
+	{
+		pred_.reset(rhs.pred_);
+		skipper_.reset(rhs.skipper_);
+		first_=rhs.first_;
+		last_=rhs.last_;
+		return *this;
+	}
 
 	void* operator new(std::size_t)=delete;
 	void operator delete(void*)=delete;
 protected:
 	Iterator first_,last_;
 	lambda_wrapper<Predicate> pred_;
-	Skipper skipper_;
+	lambda_wrapper<Skipper> skipper_;
 };
 
 } // inline namespace v1

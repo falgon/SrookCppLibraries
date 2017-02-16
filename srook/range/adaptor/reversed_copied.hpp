@@ -32,10 +32,22 @@ constexpr reversed_copied_range_t<std::decay_t<Iterator>> make_reversed_copied_t
 }
 
 const struct reversed_copied_t{
-	template<class Range>
-	constexpr reversed_copied_range_t<typename std::decay_t<Range>::iterator> operator()(Range&& r)const
+	template<class Range,REQUIRES(std::is_const<std::remove_reference_t<Range>>::value)>
+	constexpr reversed_copied_range_t<typename std::remove_cv_t<std::decay_t<Range>>::const_iterator>
+	operator()(Range&& r)const
 	{
-		return reversed_copied_range_t<typename std::decay_t<Range>::iterator>(r.begin(),r.end());
+		return reversed_copied_range_t<
+			typename std::remove_cv_t<std::decay_t<Range>>::const_iterator
+		>(std::begin(r),std::end(r));
+	}
+
+	template<class Range,REQUIRES(!std::is_const<std::remove_reference_t<Range>>::value)>
+	constexpr reversed_copied_range_t<typename std::remove_cv_t<std::remove_reference_t<Range>>::iterator>
+	operator()(Range&& r)const
+	{
+		return reversed_copied_range_t<
+			typename std::remove_cv_t<std::remove_reference_t<Range>>::iterator
+		>(std::begin(r),std::end(r));
 	}
 }reversed_copied={};
 

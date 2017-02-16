@@ -6,10 +6,11 @@
 namespace srook{
 inline namespace v1{
 
+struct Srook_range_iterator_type_{Srook_range_iterator_type_()=delete;};
+
 template<class Iterator>
 struct range_iterator final{
 private:
-	struct Srook_range_iterator_type_{Srook_range_iterator_type_()=delete;};
 	struct OnlyHeadAndTail_Iterator_Tag{OnlyHeadAndTail_Iterator_Tag()=delete;};
 public:
 	using iterator_category=OnlyHeadAndTail_Iterator_Tag;

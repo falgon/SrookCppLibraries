@@ -2,6 +2,9 @@
 #define INCLUDED_SROOK_ADAPTOR_COPIED_N
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<iterator>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
+
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -29,10 +32,16 @@ copied_n_t<std::decay_t<Iterator>> make_copied_n_t(Iterator&& first,std::size_t 
 struct copied_n{
 	explicit constexpr copied_n(std::size_t n)
 		:n_(std::move(n)){}
-	template<class Range>
-	copied_n_t<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
+	
+	template<class Range,REQUIRES(std::is_const<std::remove_reference_t<Range>>::value)>
+	constexpr copied_n_t<typename std::decay_t<Range>::const_iterator> operator()(Range&& r)
 	{
-		return make_copied_n_t(r.begin(),std::move(n_));
+		return make_copied_n_t(std::begin(r),std::move(n_));
+	}
+	template<class Range,REQUIRES(!std::is_const<std::remove_reference_t<Range>>::value)>
+	constexpr copied_n_t<typename std::decay_t<Range>::iterator> operator()(Range&& r)
+	{
+		return make_copied_n_t(std::begin(r),std::move(n_));
 	}
 private:
 	std::size_t n_;

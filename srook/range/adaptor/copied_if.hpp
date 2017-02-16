@@ -2,6 +2,9 @@
 #define INCLUDED_SROOK_ADAPROT_COPIED_IF_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/range/adaptor/filterd.hpp>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
+
 namespace srook{
 namespace adaptors{
 namespace detail{
@@ -24,30 +27,31 @@ private:
 	Predicate pred_;
 };
 template<class Iterator,class Predicate>
-constexpr copied_if_t<std::decay_t<Iterator>,std::decay_t<Predicate>>
+constexpr copied_if_t<std::remove_cv_t<std::decay_t<Iterator>>,std::remove_cv_t<std::decay_t<Predicate>>>
 make_copied_if_t(Iterator&& first,Iterator&& last,Predicate&& pred)
 {
 	return copied_if_t<
-		std::decay_t<Iterator>,
-		std::decay_t<Predicate>
+		std::remove_cv_t<std::decay_t<Iterator>>,
+		std::remove_cv_t<std::decay_t<Predicate>>
 	>(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<Predicate>(pred));
 }
+
 template<class Predicate>
 struct copied_ifer{
 	explicit constexpr copied_ifer(Predicate pred)
 		:pred_(std::move(pred)){}
 	template<class Range>
-	copied_if_t<typename std::decay_t<Range>::const_iterator,Predicate> operator()(Range&& r)
+	auto operator()(Range&& r)
 	{
-		return make_copied_if_t(r.begin(),r.end(),std::move(pred_));
+		return make_copied_if_t(std::begin(r),std::end(r),std::move(pred_));
 	}
 private:
 	Predicate pred_;
 };
-template<class Predicate>
-constexpr copied_ifer<std::decay_t<Predicate>> copied_if(Predicate&& pred)
+template<class Predicate,REQUIRES(is_callable_v<std::remove_cv_t<std::remove_reference_t<Predicate>>>)>
+constexpr copied_ifer<std::remove_cv_t<std::decay_t<Predicate>>> copied_if(Predicate&& pred)
 {
-	return copied_ifer<std::decay_t<Predicate>>(std::forward<Predicate>(pred));
+	return copied_ifer<std::remove_cv_t<std::decay_t<Predicate>>>(std::forward<Predicate>(pred));
 }
 
 } // inline namespace v1

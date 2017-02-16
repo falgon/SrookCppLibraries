@@ -38,7 +38,7 @@ private:
 
 template<class Iterator,class OutputIterator>
 struct merge_iterator_t{
-	template<REQUIRES( (!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>) && !has_iterator_v<Iterator> )>
+	template<REQUIRES( (!has_iterator_v<Iterator> || is_range_iterator_v<Iterator>) &&  !has_iterator_v<OutputIterator> )>
 	explicit constexpr merge_iterator_t(Iterator first,Iterator last,OutputIterator oiter):first_(std::move(first)),last_(std::move(last)),oiter_(std::move(oiter)){}
 	
 	template<class R,REQUIRES(srook::mpl::has_iterator_v<std::decay_t<R>> || is_range_iterator_v<std::decay_t<R>>)>

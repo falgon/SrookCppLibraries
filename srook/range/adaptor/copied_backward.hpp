@@ -1,6 +1,8 @@
 #ifndef INCLUDED_SROOK_ADAPTORS_COPY_BACKWORD_HPP
 #define INCLUDED_SROOK_ADAPTORS_COPY_BACKWORD_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>
+#include<srook/type_traits/has_iterator.hpp>
+#include<srook/config/require.hpp>
 #include<iterator>
 namespace srook{
 namespace adaptors{
@@ -19,7 +21,10 @@ struct copied_backword_t{
 private:
 	const Iterator first_,last_;
 };
-template<class Iterator>
+template<
+	class Iterator,
+	REQUIRES(!has_iterator_v<std::remove_reference_t<std::remove_cv_t<Iterator>>>)
+>
 copied_backword_t<Iterator> make_copied_backword(Iterator first,Iterator last)
 {
 	return copied_backword_t<Iterator>(std::move(first),std::move(last));

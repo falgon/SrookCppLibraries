@@ -3,7 +3,9 @@
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/iterator/range_iterator.hpp>
 #include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
 #include<iterator>
+#include<srook/utility/lambda_wrapper.hpp>
 
 namespace srook{
 inline namespace v1{
@@ -47,13 +49,21 @@ struct skipping_iterator_value_core{
 		skipper_(first_,last_,value_);
 		return tmp;
 	}
+	skipping_iterator_value_core& operator=(const skipping_iterator_value_core& rhs)
+	{
+		first_=rhs.first_;
+		last_=rhs.last_;
+		value_=rhs.value_;
+		skipper_.reset(rhs.skipper_);
+		return *this;
+	}
 
 	void* operator new(std::size_t)=delete;
 	void operator delete(void*)=delete;
 protected:
 	Iterator first_,last_;
-	const typename std::iterator_traits<Iterator>::value_type& value_;
-	const Skipper skipper_;
+	typename std::iterator_traits<Iterator>::value_type value_;
+	lambda_wrapper<Skipper> skipper_;
 };
 
 
