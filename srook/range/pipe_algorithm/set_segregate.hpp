@@ -13,7 +13,7 @@
 #include<map>
 
 namespace srook{
-namespace adaptors{
+namespace pipealgo{
 namespace detail{
 inline namespace v1{
 
@@ -99,7 +99,7 @@ struct set_segregate_t{
 			if(comp_(*left_it, *right_it)){
 				*iter1_++ = *left_it++;
 			}else{
-				if(!comp_(*right_it, *left_it)){
+            	if(!comp_(*right_it, *left_it)){
 					*iter2_++ = *left_it++;
 					++right_it;
 				}else{
@@ -190,7 +190,7 @@ set_segregate(Outputer1&& o1,Outputer2 o2,Outputer3 o3,Compare&& comp=std::less<
 
 using detail::set_segregate;
 
-} // namespace adaptors
+} // namespace pipealgo
 } // namespace srook
 
 #endif
