@@ -42,7 +42,7 @@ struct skipping_iterator_value_core{
 		skipper_(first_,last_,value_);
 		return *this;
 	}
-	skipping_iterator_value_core& operator++(int)
+	skipping_iterator_value_core operator++(int)
 	{
 		skipping_iterator_value_core tmp=*this;
 		++first_;
