@@ -1,4 +1,4 @@
-#define TEST_PASSING_THROUGH
+//#define TEST_PASSING_THROUGH
 /*
  *
  * This is a test exec code of srook/range/adaptor and srook/range/pipe_algorithm
@@ -83,9 +83,10 @@
 #include<srook/range/pipe_algorithm/reverse.hpp>
 #include<srook/range/pipe_algorithm/reverse_copy.hpp>
 #include<srook/range/adaptor/reversed_copied.hpp>
+#include<srook/range/pipe_algorithm/rotate.hpp>
 
 #include<srook/range/pipe_algorithm/sort.hpp>
-#include<srook/range/adaptor/to_range.hpp>
+//#include<srook/range/adaptor/to_range.hpp>
 
 
 #include<srook/mpl/variadic_player.hpp>
@@ -964,11 +965,17 @@ int main()
 					std::remove_reference_t<decltype(r)> result = r | srook::adaptors::reversed_copied;
 				}
 			),
-			make_tester(
+			/*make_tester(
 				[](const auto& r)
 				{
 					auto result1 = r | srook::adaptors::to_range<std::vector>();
 					auto result2 = r | srook::adaptors::to_range<std::list>();
+				}
+			),*/
+			make_tester(
+				[](auto r)
+				{
+					r | srook::pipealgo::rotate(std::next(r.begin(),r.size()-1));	
 				}
 			)
 	);
