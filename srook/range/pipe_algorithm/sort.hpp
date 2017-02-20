@@ -56,7 +56,7 @@ struct sort_t{
 		return srook::make_range_iterator(r.begin(),r.end());
 	}
 	template<class T>
-	srook::range_iterator<typename std::list<T>::iterator> operator()(const std::list<T>& r)
+	srook::range_iterator<typename std::list<T>::iterator> operator()(std::list<T>& r)
 	{
 		r.sort();
 		return srook::make_range_iterator(r.begin(),r.end());
