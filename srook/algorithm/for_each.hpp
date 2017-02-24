@@ -250,7 +250,7 @@ template<
 >
 auto for_each(counter<Range> cr,Predicate&& pred) -> typename counter<Range>::reference_type
 {
-	for(/*typename remove_ref_cv(decltype(cr))::iterator*/auto iter=std::begin(cr); iter!=std::end(cr); ++iter){
+	for(typename remove_ref_cv(decltype(cr))::iterator iter=std::begin(cr); iter!=std::end(cr); ++iter){
 		pred(*iter,cr.get_counter());
 		++cr.get_counter();
 	}
