@@ -7,7 +7,9 @@
 #include<type_traits>
 #include<algorithm>
 #include<tuple>
+#include<initializer_list>
 
+#include<iostream>
 #define remove_ref_cv(x)\
 	std::remove_reference_t<std::remove_cv_t<x>>
 
@@ -97,7 +99,7 @@ struct lvalue_counter{
 		:r_(r),value_(std::move(value)){}
 	using reference_type=Range&;
 protected:
-	Range& r_;
+	reference_type r_;
 	std::size_t value_;
 };
 template<class Range>
@@ -106,13 +108,12 @@ struct rvalue_counter{
 		:r_(std::move(r)),value_(std::move(value)){}
 	using reference_type=Range&&;
 protected:
-	Range&& r_;
+	reference_type r_;
 	std::size_t value_;
 };
 
 template<class Range>
 using select_ref=typename std::conditional<std::is_lvalue_reference<Range>::value,lvalue_counter<remove_ref_cv(Range)>,rvalue_counter<remove_ref_cv(Range)>>::type;
-
 
 template<class Range>
 struct counter:select_ref<Range>{
@@ -216,6 +217,12 @@ constexpr auto make_counter(Range&& r,std::size_t value=0) -> counter<decltype(s
 	return counter<decltype(std::forward<Range>(r))>(std::forward<Range>(r),std::move(value));
 }
 
+template<class T>
+constexpr auto make_counter(const std::initializer_list<T>& init_list,std::size_t value=0) -> counter<const std::initializer_list<T>&>
+{
+	return counter<const std::initializer_list<T>&>(init_list,std::move(value));
+}
+
 template<class Iterator,REQUIRES(not has_iterator_v<remove_ref_cv(Iterator)>)>
 constexpr auto make_counter(Iterator&& first,Iterator&& last,std::size_t value=0) -> counter_iters<remove_ref_cv(Iterator)>
 {
@@ -243,7 +250,7 @@ template<
 >
 auto for_each(counter<Range> cr,Predicate&& pred) -> typename counter<Range>::reference_type
 {
-	for(typename remove_ref_cv(decltype(cr))::iterator iter=std::begin(cr); iter!=std::end(cr); ++iter){
+	for(/*typename remove_ref_cv(decltype(cr))::iterator*/auto iter=std::begin(cr); iter!=std::end(cr); ++iter){
 		pred(*iter,cr.get_counter());
 		++cr.get_counter();
 	}
@@ -262,6 +269,16 @@ auto for_each(counter_iters<Iterator> cr,Predicate&& pred) -> decltype(std::begi
 		++cr.get_counter();
 	}
 	return std::begin(cr);
+}
+
+template<
+	class T,
+	class Predicate,
+	REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)
+>
+auto for_each(std::initializer_list<T> init_list,Predicate&& pred) -> decltype(std::begin(init_list))
+{
+	return for_each(std::begin(init_list),std::end(init_list),std::forward<Predicate>(pred));
 }
 
 
