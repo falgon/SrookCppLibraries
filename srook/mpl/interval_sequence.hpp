@@ -2,17 +2,14 @@
 #define INCLUDED_SROOK_INTERVAL_SEQUENCE_IMPL
 #include<utility>
 #include<memory>
+#include<srook/mpl/constant_sequence_player.hpp>
+
 namespace srook{
+inline namespace mpl{
 inline namespace v1{
 
-namespace mpl{
 namespace interval_sequence{
 
-template<class Operator,int interval>
-struct Exp{
-	using operator_type=Operator;
-	static constexpr int intervalue=interval;
-};
 struct plus{
 	template<class L,class R>
 	static constexpr decltype(std::declval<L>()+std::declval<R>()) apply(L a,R b)noexcept{return a+b;}
@@ -31,37 +28,24 @@ struct division{
 };
 
 } // namespace interval_sequence
-} // namespace mpl
 
-namespace mpl{
-
-template<class,std::size_t,std::size_t,class>
-struct make_interval_sequence_impl;
-template<class Operator,int interval,std::size_t n,std::size_t apply_value,std::size_t... v>
-struct make_interval_sequence_impl<interval_sequence::Exp<Operator,interval>,n,apply_value,std::integer_sequence<int,v...>>{
+template<class IntervalOperation,std::size_t start_value,std::size_t intervalue,std::size_t size>
+struct make_interval_sequence_impl{
 	using type=
-		typename make_interval_sequence_impl<
-			interval_sequence::Exp<Operator,interval>,
-			n-1,
-			Operator::apply(apply_value,interval),
-			std::integer_sequence<int,v...,apply_value>
-		>::type;
+		::srook::constant_sequence::Concat_t<
+			std::index_sequence<start_value>,
+			typename make_interval_sequence_impl<IntervalOperation,IntervalOperation::apply(start_value,intervalue),intervalue,size-1>::type
+		>;
 };
-template<class Operator,int interval,std::size_t apply_value,std::size_t... v>
-struct make_interval_sequence_impl<mpl::interval_sequence::Exp<Operator,interval>,0,apply_value,std::integer_sequence<int,v...>>{
-	using type=std::integer_sequence<int,v...>;
+template<class IntervalOperation,std::size_t start_value,std::size_t intervalue>
+struct make_interval_sequence_impl<IntervalOperation,start_value,intervalue,0>{
+	using type=std::index_sequence<>;
 };
-template<class Expression,int interval,class Sequence=std::integer_sequence<int>>
-using make_interval_sequence=typename make_interval_sequence_impl<Expression,interval,interval,Sequence>::type;
 
-template<template<class,class>class Range,int... v>
-constexpr Range<int,std::allocator<int>> make_range_from_sequence(std::integer_sequence<int,v...>)
-{
-	return Range<int,std::allocator<int>>{v...};
-}
+template<class IntervalOperation,std::size_t start_value,std::size_t intervalue,std::size_t size>
+using make_interval_sequence=typename make_interval_sequence_impl<IntervalOperation,start_value,intervalue,size>::type;
 
-} // mpl
-
-} // inline namespace
-} // namespace
+} // inline namespace v1
+} // inline namespace mpl
+} // namespace srook
 #endif
