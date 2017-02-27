@@ -206,6 +206,21 @@ struct PopBack<std::index_sequence<tail>>{
 template<class Sequence>
 using PopBack_t=typename PopBack<Sequence>::type;
 
+// insert
+template<class,std::size_t,class,bool>
+struct Insert;
+template<std::size_t... seq,std::size_t index,std::size_t head,std::size_t... tail>
+struct Insert<std::index_sequence<seq...>,index,std::index_sequence<head,tail...>,true>{
+	using type=Concat_t<std::index_sequence<head>,typename Insert<std::index_sequence<seq...>,index-1,std::index_sequence<tail...>,static_cast<bool>(index-1)>::type>;
+};
+template<std::size_t... seq1,std::size_t... seq2>
+struct Insert<std::index_sequence<seq1...>,0,std::index_sequence<seq2...>,false>{
+	using type=std::index_sequence<seq1...,seq2...>;
+};
+template<class Sequence1,std::size_t index,class Sequence2>
+using Insert_t=typename Insert<Sequence1,index,Sequence2,static_cast<bool>(index)>::type;
+
+
 // reverse
 template<class>
 struct Reverse;
@@ -359,6 +374,109 @@ template<std::size_t left_target_index,class Seq1,std::size_t right_target_index
 using SwapAt_Specified_R=typename SwapAt_Specified<left_target_index,Seq1,right_target_index,Seq2>::R_type;
 
 
+// max min
+template<std::size_t L,std::size_t R>
+struct Greater{
+	using type=typename std::conditional<(L > R),std::index_sequence<L>,std::index_sequence<R>>::type;
+};
+template<std::size_t L,std::size_t R>
+struct Less{
+	using type=typename std::conditional<(L < R),std::index_sequence<L>,std::index_sequence<R>>::type;
+};
+
+template<template<std::size_t,std::size_t>class,class>
+struct maxmin_impl;
+template<template<std::size_t,std::size_t>class Comp,std::size_t head1,std::size_t head2,std::size_t... tail>
+struct maxmin_impl<Comp,std::index_sequence<head1,head2,tail...>>{
+	static constexpr std::size_t value=maxmin_impl<Comp,Concat_t<typename Comp<head1,head2>::type,std::index_sequence<tail...>>>::value;
+};
+template<template<std::size_t,std::size_t>class Comp,std::size_t target>
+struct maxmin_impl<Comp,std::index_sequence<target>>{
+	static constexpr std::size_t value=target;
+};
+template<class Sequence>
+constexpr std::size_t max_v=maxmin_impl<Greater,Sequence>::value;
+template<class Sequence>
+constexpr std::size_t min_v=maxmin_impl<Less,Sequence>::value;
+
+// if_append
+/*template<bool,class,class>
+struct if_append;
+template<std::size_t... seq1,std::size_t... seq2>
+struct if_append<true,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
+	using type=std::index_sequence<seq1...,seq2...>;
+};
+template<std::size_t... seq1,std::size_t... seq2>
+struct if_append<false,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
+	using type=std::index_sequence<seq2...>;
+};
+template<bool condition,class Seq1,class Seq2>
+using if_append_t=typename if_append<condition,Seq1,Seq2>::type;*/
+
+// filter
+template<template<std::size_t>class,class>
+struct filter;
+template<template<std::size_t>class Cond,std::size_t head,std::size_t... tail>
+struct filter<Cond,std::index_sequence<head,tail...>>{
+private:
+	template<bool,class,class>
+	struct if_append;
+	template<std::size_t... seq1,std::size_t... seq2>
+	struct if_append<true,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
+		using type=std::index_sequence<seq1...,seq2...>;
+	};
+	template<std::size_t... seq1,std::size_t... seq2>
+	struct if_append<false,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
+		using type=std::index_sequence<seq2...>;
+	};
+	template<bool condition,class Seq1,class Seq2>
+	using if_append_t=typename if_append<condition,Seq1,Seq2>::type;
+
+public:
+	using type=if_append_t<Cond<head>::value,std::index_sequence<head>,typename filter<Cond,std::index_sequence<tail...>>::type>;
+};
+template<template<std::size_t>class Cond>
+struct filter<Cond,std::index_sequence<>>{
+	using type=std::index_sequence<>;
+};
+template<template<std::size_t>class Cond,class Seq>
+using filter_t=typename filter<Cond,Seq>::type;
+
+// quick sort
+template<template<std::size_t,std::size_t>class Comp,class>
+struct quicksort;
+template<template<std::size_t,std::size_t>class Comp,std::size_t pivot,std::size_t... tail>
+struct quicksort<Comp,std::index_sequence<pivot,tail...>>{
+private:
+	template<template<std::size_t>class Comp_,std::size_t T>
+	struct not_{
+		constexpr static bool value=not Comp_<T>::value;
+	};
+	template<std::size_t lhs>
+	using lcomp=Comp<lhs,pivot>;
+	template<std::size_t rhs>
+	using rcomp=not_<lcomp,rhs>;
+public:
+	using type=
+		Concat_t<
+			typename quicksort<Comp,filter_t<lcomp,std::index_sequence<tail...>>>::type,
+			Concat_t<std::index_sequence<pivot>,filter_t<rcomp,std::index_sequence<tail...>>>
+		>;
+};
+
+template<template<std::size_t,std::size_t>class Comp>
+struct quicksort<Comp,std::index_sequence<>>{
+	using type=std::index_sequence<>;
+};
+
+template<std::size_t l,std::size_t r>
+using less=std::integral_constant<bool,(l<r)>;
+template<std::size_t l,std::size_t r>
+using greater=std::integral_constant<bool,(l>r)>;
+
+template<class Sequence,template<std::size_t,std::size_t>class Comp=less>
+using quicksort_t=typename quicksort<Comp,Sequence>::type;
+
 
 // Summation
 template<class,std::size_t>
@@ -371,6 +489,8 @@ struct Summation<std::index_sequence<seq...>,n>{
 };
 template<class Sequence,std::size_t n=Sequence::size()>
 constexpr std::size_t Summation_v=Summation<Sequence,n>::value;
+
+
 
 } // inline namespace v1
 } // namespace constant_sequence
