@@ -399,20 +399,6 @@ constexpr std::size_t max_v=maxmin_impl<Greater,Sequence>::value;
 template<class Sequence>
 constexpr std::size_t min_v=maxmin_impl<Less,Sequence>::value;
 
-// if_append
-/*template<bool,class,class>
-struct if_append;
-template<std::size_t... seq1,std::size_t... seq2>
-struct if_append<true,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
-	using type=std::index_sequence<seq1...,seq2...>;
-};
-template<std::size_t... seq1,std::size_t... seq2>
-struct if_append<false,std::index_sequence<seq1...>,std::index_sequence<seq2...>>{
-	using type=std::index_sequence<seq2...>;
-};
-template<bool condition,class Seq1,class Seq2>
-using if_append_t=typename if_append<condition,Seq1,Seq2>::type;*/
-
 // filter
 template<template<std::size_t>class,class>
 struct filter;
