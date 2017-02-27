@@ -373,16 +373,17 @@ using SwapAt_Specified_L=typename SwapAt_Specified<left_target_index,Seq1,right_
 template<std::size_t left_target_index,class Seq1,std::size_t right_target_index,class Seq2>
 using SwapAt_Specified_R=typename SwapAt_Specified<left_target_index,Seq1,right_target_index,Seq2>::R_type;
 
-
 // max min
+namespace{
 template<std::size_t L,std::size_t R>
-struct Greater{
+struct Greater_minmax{
 	using type=typename std::conditional<(L > R),std::index_sequence<L>,std::index_sequence<R>>::type;
 };
 template<std::size_t L,std::size_t R>
-struct Less{
+struct Less_minmax{
 	using type=typename std::conditional<(L < R),std::index_sequence<L>,std::index_sequence<R>>::type;
 };
+}
 
 template<template<std::size_t,std::size_t>class,class>
 struct maxmin_impl;
@@ -395,9 +396,15 @@ struct maxmin_impl<Comp,std::index_sequence<target>>{
 	static constexpr std::size_t value=target;
 };
 template<class Sequence>
-constexpr std::size_t max_v=maxmin_impl<Greater,Sequence>::value;
+constexpr std::size_t max_v=maxmin_impl<Greater_minmax,Sequence>::value;
 template<class Sequence>
-constexpr std::size_t min_v=maxmin_impl<Less,Sequence>::value;
+constexpr std::size_t min_v=maxmin_impl<Less_minmax,Sequence>::value;
+
+// if_pushback
+
+// if_pushfront
+
+// if_insert
 
 // filter
 template<template<std::size_t>class,class>
