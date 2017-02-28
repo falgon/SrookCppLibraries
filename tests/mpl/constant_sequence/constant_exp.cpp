@@ -26,6 +26,11 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr std::size_t at_result=srook::constant_sequence::at_v<2,geometric_progression>;
 	BOOST_TEST( (at_result == 30) );
 	
+	constexpr bool binary_search_result1=srook::constant_sequence::binary_search_v<30,geometric_progression>;
+	constexpr bool binary_search_result2=srook::constant_sequence::binary_search_v<42,geometric_progression>;
+	BOOST_TEST( binary_search_result1 );
+	BOOST_TEST( !binary_search_result2 );
+
 	using concat_result=srook::constant_sequence::concat_t<geometric_progression,std::index_sequence<42,42>>;
 	static_type_test<concat_result,INDEX_SEQUENCE(10,20,30,40,50,42,42)>();
 
