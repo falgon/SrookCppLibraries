@@ -6,8 +6,13 @@
 #include<srook/mpl/constant_sequence/algorithm/all_of.hpp>
 #include<srook/mpl/constant_sequence/algorithm/any_of.hpp>
 #include<srook/mpl/constant_sequence/algorithm/at.hpp>
-//#include<srook/mpl/constant_sequence/algorithm/binary_search.hpp>
+#include<srook/mpl/constant_sequence/algorithm/binary_search.hpp>
+#include<srook/mpl/constant_sequence/algorithm/bound.hpp>
 #include<srook/mpl/constant_sequence/algorithm/concat.hpp>
+#include<srook/mpl/constant_sequence/algorithm/count.hpp>
+#include<srook/mpl/constant_sequence/algorithm/count_if.hpp>
+#include<srook/mpl/constant_sequence/algorithm/equal.hpp>
+#include<srook/mpl/constant_sequence/algorithm/equal_range.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase_all.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase_duplicate.hpp>
