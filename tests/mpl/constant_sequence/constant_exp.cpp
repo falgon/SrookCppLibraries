@@ -16,6 +16,9 @@ constexpr void static_type_test()
 template<std::size_t v>
 using pred=std::integral_constant<bool,(v%2==0)>;
 
+template<std::size_t v>
+using function=std::integral_constant<std::size_t,(v*2)>;
+
 BOOST_AUTO_TEST_CASE(test_op_reportings)
 {
 	using geometric_progression=srook::make_interval_sequence<srook::interval_sequence::plus,10,10,5>;
@@ -66,8 +69,23 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr int find_result=srook::constant_sequence::find_v<30,geometric_progression>;
 	BOOST_TEST( (find_result==2) );
 
+	constexpr int find_if_result1=srook::constant_sequence::find_if_v<pred,INDEX_SEQUENCE(1,1,1,1,1,2,1)>;
+	constexpr int find_if_result2=srook::constant_sequence::find_if_v<pred,srook::constant_sequence::make_samevalue_sequence<4,1>>;
+	BOOST_TEST( (find_if_result1==5 and find_if_result2==-1) );
+
+	constexpr int find_if_not_result1=srook::constant_sequence::find_if_not_v<pred,INDEX_SEQUENCE(2,2,2,2,1)>;
+	constexpr int find_if_not_result2=srook::constant_sequence::find_if_not_v<pred,geometric_progression>;
+	BOOST_TEST( (find_if_not_result1==4 and find_if_not_result2==-1) );
+
 	constexpr std::size_t first_result=srook::constant_sequence::first_v<geometric_progression>;
 	BOOST_TEST( (first_result==10) );
+
+	using for_each_result=srook::constant_sequence::for_each_t<function,geometric_progression>;
+	static_type_test<for_each_result,INDEX_SEQUENCE(20,40,60,80,100)>();
+
+	constexpr bool includes_result1=srook::constant_sequence::includes_v<geometric_progression,INDEX_SEQUENCE(20,30,40)>;
+	constexpr bool includes_result2=srook::constant_sequence::includes_v<geometric_progression,std::make_index_sequence<3>>;
+	BOOST_TEST( (includes_result1 and !includes_result2) );
 
 	constexpr std::size_t last_result=srook::constant_sequence::last_v<geometric_progression>;
 	BOOST_TEST( (last_result==50) );
@@ -78,6 +96,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr int lower_bound_result1=srook::constant_sequence::lower_bound_v<40,no_geometric_progression>;
 	constexpr int lower_bound_result2=srook::constant_sequence::lower_bound_v<100,no_geometric_progression>;
 	BOOST_TEST( ((lower_bound_result1==2) and (lower_bound_result2==-1)) );
+
+	using inplace_merge_result=srook::constant_sequence::inplace_merge_t<geometric_progression,INDEX_SEQUENCE(1,2,3,10,20)>;
+	static_type_test<inplace_merge_result,INDEX_SEQUENCE(1,2,3,10,10,20,20,30,40,50)>();
 
 	constexpr std::size_t min_result=srook::constant_sequence::min_v<geometric_progression>;
 	BOOST_TEST( (min_result==10) );
