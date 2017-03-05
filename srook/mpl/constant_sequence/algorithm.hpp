@@ -29,6 +29,7 @@
 #include<srook/mpl/constant_sequence/algorithm/inplace_merge.hpp>
 #include<srook/mpl/constant_sequence/algorithm/is_all_comp.hpp>
 #include<srook/mpl/constant_sequence/algorithm/is_heap.hpp>
+#include<srook/mpl/constant_sequence/algorithm/is_partitioned.hpp>
 #include<srook/mpl/constant_sequence/algorithm/last.hpp>
 #include<srook/mpl/constant_sequence/algorithm/length.hpp>
 #include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>

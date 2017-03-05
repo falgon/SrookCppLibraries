@@ -104,6 +104,10 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr bool is_heap_result2=srook::constant_sequence::is_heap_v<INDEX_SEQUENCE(1,2,3,17,19,36,7,25,100),srook::constant_sequence::less>;
 	BOOST_TEST( (is_heap_result1 and is_heap_result2) );
 
+	constexpr bool is_partitioned_result1=srook::constant_sequence::is_partitioned_v<pred,INDEX_SEQUENCE(1,3,5,7,9,2,4,6)>;
+	constexpr bool is_partitioned_result2=srook::constant_sequence::is_partitioned_v<pred,INDEX_SEQUENCE(1,2,3)>;
+	BOOST_TEST( (is_partitioned_result1 and !is_partitioned_result2) );
+
 	constexpr std::size_t last_result=srook::constant_sequence::last_v<geometric_progression>;
 	BOOST_TEST( (last_result==50) );
 
