@@ -15,6 +15,8 @@
 #include<srook/mpl/constant_sequence/algorithm/equal_range.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase_all.hpp>
+#include<srook/mpl/constant_sequence/algorithm/erase_if.hpp>
+#include<srook/mpl/constant_sequence/algorithm/erase_n.hpp>
 #include<srook/mpl/constant_sequence/algorithm/erase_duplicate.hpp>
 #include<srook/mpl/constant_sequence/algorithm/filter.hpp>
 #include<srook/mpl/constant_sequence/algorithm/find.hpp>
@@ -24,9 +26,12 @@
 #include<srook/mpl/constant_sequence/algorithm/for_each.hpp>
 #include<srook/mpl/constant_sequence/algorithm/includes.hpp>
 #include<srook/mpl/constant_sequence/algorithm/insert.hpp>
+#include<srook/mpl/constant_sequence/algorithm/inplace_merge.hpp>
+#include<srook/mpl/constant_sequence/algorithm/is_all_comp.hpp>
+#include<srook/mpl/constant_sequence/algorithm/is_heap.hpp>
 #include<srook/mpl/constant_sequence/algorithm/last.hpp>
 #include<srook/mpl/constant_sequence/algorithm/length.hpp>
-#include<srook/mpl/constant_sequence/algorithm/inplace_merge.hpp>
+#include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>
 #include<srook/mpl/constant_sequence/algorithm/minmax.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_head.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_tail.hpp>
