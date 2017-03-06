@@ -108,6 +108,14 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr bool is_partitioned_result2=srook::constant_sequence::is_partitioned_v<pred,INDEX_SEQUENCE(1,2,3)>;
 	BOOST_TEST( (is_partitioned_result1 and !is_partitioned_result2) );
 
+	constexpr bool is_sorted_result1=srook::constant_sequence::is_sorted_v<geometric_progression>;
+	constexpr bool is_sorted_result2=srook::constant_sequence::is_sorted_v<srook::constant_sequence::reverse_t<geometric_progression>,srook::constant_sequence::greater>;
+	BOOST_TEST( (is_sorted_result1 and is_sorted_result2) );
+
+	constexpr std::size_t is_sorted_until_result1=srook::constant_sequence::is_sorted_until_v<INDEX_SEQUENCE(2,3,4,1,5,6,7),srook::constant_sequence::less>;
+	constexpr std::size_t is_sorted_until_result2=srook::constant_sequence::is_sorted_until_v<INDEX_SEQUENCE(6,5,4,7),srook::constant_sequence::greater>;
+	BOOST_TEST( (is_sorted_until_result1==3 and is_sorted_until_result2==3) );
+
 	constexpr std::size_t last_result=srook::constant_sequence::last_v<geometric_progression>;
 	BOOST_TEST( (last_result==50) );
 
@@ -130,6 +138,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	using partial_tail_result=srook::constant_sequence::partial_tail_t<geometric_progression::size()/2,geometric_progression>;
 	static_type_test<partial_tail_result,INDEX_SEQUENCE(30,40,50)>();
 
+	using prev_rotate_result=srook::constant_sequence::prev_rotate_t<geometric_progression>;
+	static_type_test<prev_rotate_result,INDEX_SEQUENCE(20,30,40,50,10)>();
+
 	using pop_back_result=srook::constant_sequence::pop_back_t<geometric_progression>;
 	static_type_test<pop_back_result,INDEX_SEQUENCE(10,20,30,40)>();
 
@@ -144,6 +155,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 
 	using reverse_result=srook::constant_sequence::reverse_t<geometric_progression>;
 	static_type_test<reverse_result,INDEX_SEQUENCE(50,40,30,20,10)>();
+
+	using rotate_result=srook::constant_sequence::rotate_t<geometric_progression>;
+	static_type_test<rotate_result,INDEX_SEQUENCE(50,10,20,30,40)>();
 
 	constexpr std::size_t size_result=srook::constant_sequence::size<geometric_progression>;
 	BOOST_TEST( (size_result==srook::constant_sequence::length_v<geometric_progression>) );

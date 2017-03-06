@@ -39,7 +39,11 @@ struct sort<Comp,std::index_sequence<>>{
 template<std::size_t l,std::size_t r>
 using less=std::integral_constant<bool,(l<r)>;
 template<std::size_t l,std::size_t r>
-using greater=std::integral_constant<bool,(l>r)>;
+using greater=std::integral_constant<bool,!less<l,r>::value>;
+template<std::size_t l,std::size_t r>
+using less_or_equal=std::integral_constant<bool,(l<=r)>;
+template<std::size_t l,std::size_t r>
+using greater_or_equal=std::integral_constant<bool,(l>=r)>;
 
 template<class Sequence,template<std::size_t,std::size_t>class Comp=less>
 using sort_t=typename sort<Comp,Sequence>::type;
