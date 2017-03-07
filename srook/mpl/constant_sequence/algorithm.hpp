@@ -32,6 +32,7 @@
 #include<srook/mpl/constant_sequence/algorithm/is_partitioned.hpp>
 #include<srook/mpl/constant_sequence/algorithm/is_sorted.hpp>
 #include<srook/mpl/constant_sequence/algorithm/is_sorted_until.hpp>
+#include<srook/mpl/constant_sequence/algorithm/iter_swap.hpp>
 #include<srook/mpl/constant_sequence/algorithm/last.hpp>
 #include<srook/mpl/constant_sequence/algorithm/length.hpp>
 #include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>

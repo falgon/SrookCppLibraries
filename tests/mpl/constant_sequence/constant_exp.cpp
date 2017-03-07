@@ -6,6 +6,9 @@
 #include<srook/mpl/constant_sequence/algorithm.hpp>
 #include<srook/mpl/constant_sequence/interval_sequence.hpp>
 #include<srook/mpl/constant_sequence/samevalue_sequence.hpp>
+#include<srook/mpl/constant_sequence/equ_sequence.hpp>
+#include<srook/mpl/constant_sequence/iterator/index_sequence_iterator.hpp>
+
 #define INDEX_SEQUENCE(...) std::index_sequence<__VA_ARGS__>
 template<class L,class R>
 constexpr void static_type_test()
@@ -21,6 +24,7 @@ using function=std::integral_constant<std::size_t,(v*2)>;
 
 BOOST_AUTO_TEST_CASE(test_op_reportings)
 {
+	// generating sequence
 	using geometric_progression=srook::make_interval_sequence<srook::interval_sequence::plus,10,10,5>;
 	static_type_test<geometric_progression,INDEX_SEQUENCE(10,20,30,40,50)>();
 
@@ -30,6 +34,29 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	using samevalue_sequence=srook::constant_sequence::make_samevalue_sequence<4,42>;
 	static_type_test<samevalue_sequence,INDEX_SEQUENCE(42,42,42,42)>();
 
+	using equ_sequence=srook::constant_sequence::make_equ_sequence<5>;
+	static_type_test<equ_sequence,INDEX_SEQUENCE(0,1,2,2,3,3,3,4,4,4,4,5,5,5,5,5)>();
+
+	// constant sequence iterator
+	using constant_sequence_iterator=
+		srook::index_sequence_iterator::index_sequence_iterator<geometric_progression>;
+	BOOST_TEST( (constant_sequence_iterator::value==10) );
+
+	using one_increment=srook::index_sequence_iterator::increment<constant_sequence_iterator>;
+	BOOST_TEST( (one_increment::value==20) );
+
+	using one_decrement=srook::index_sequence_iterator::decrement<one_increment>;
+	BOOST_TEST( (one_decrement::value==10) );
+
+	static_type_test<
+		srook::constant_sequence::iter_swap_L<
+			srook::index_sequence_iterator::increment<one_increment>,
+			srook::index_sequence_iterator::increment<constant_sequence_iterator>
+		>,
+		INDEX_SEQUENCE(10,20,20,40,50)
+	>();
+
+	// algorithms
 	constexpr std::size_t at_result=srook::constant_sequence::at_v<2,geometric_progression>;
 	BOOST_TEST( (at_result==30) );
 	
