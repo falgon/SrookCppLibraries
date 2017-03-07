@@ -20,6 +20,9 @@ struct transfer<Range,std::index_sequence<seq...>>{
 template<template<class...>class Range,std::size_t... seq>
 Range<decltype(first_v<std::index_sequence<seq...>>)> transfer<Range,std::index_sequence<seq...>>::value={{seq...}};
 
+template<template<class...>class Range,class Seq>
+Range<decltype(first_v<Seq>)> transfer_v=transfer<Range,Seq>::value;
+
 } // inline namespace v1
 } // namespace constant_sequence
 } // namespace mpl

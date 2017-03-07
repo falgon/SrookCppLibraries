@@ -22,6 +22,9 @@ template<std::size_t... seq>
 std::array<decltype(first_v<std::index_sequence<seq...>>),std::index_sequence<seq...>::size()>
 transfer_array<std::index_sequence<seq...>>::value={{seq...}};
 
+template<class Seq>
+std::array<decltype(first_v<Seq>),Seq::size()> transfer_array_v=transfer_array<Seq>::value;
+
 } // inline namespace v1
 } // namespace constant_sequence
 } // namespace mpl
