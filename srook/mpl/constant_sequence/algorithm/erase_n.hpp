@@ -20,6 +20,11 @@ struct erase_n<0,std::index_sequence<head,tail...>>{
 	using type=std::index_sequence<tail...>;
 };
 
+template<std::size_t target_index>
+struct erase_n<target_index,std::index_sequence<>>{
+	using type=std::index_sequence<>;
+};
+
 
 template<std::size_t target_index,class Seq>
 using erase_n_t=typename erase_n<target_index,Seq>::type;
