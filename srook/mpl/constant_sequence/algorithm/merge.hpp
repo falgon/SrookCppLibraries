@@ -75,16 +75,6 @@ struct merge<false,std::index_sequence<last1>,std::index_sequence<prev_last,prev
 		>;
 };
 
-/*template<std::size_t last1,std::size_t last2,template<std::size_t,std::size_t>class comp>
-struct merge<true,std::index_sequence<last1>,std::index_sequence<last2>,comp>{
-	using type=std::index_sequence<last1,last2>;
-};
-
-template<std::size_t last1,std::size_t last2,template<std::size_t,std::size_t>class comp>
-struct merge<false,std::index_sequence<last1>,std::index_sequence<last2>,comp>{
-	using type=std::index_sequence<last2,last1>;
-};*/
-
 template<bool b,std::size_t last,template<std::size_t,std::size_t>class comp>
 struct merge<b,std::index_sequence<last>,std::index_sequence<>,comp>{
 	using type=std::index_sequence<last>;
