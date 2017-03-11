@@ -208,6 +208,10 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	using merge_result=srook::constant_sequence::merge_t<geometric_progression,INDEX_SEQUENCE(30,40,50,70)>;
 	static_type_test<merge_result,INDEX_SEQUENCE(10,20,30,30,40,40,50,50,70)>();
 
+	constexpr int mismatch_result1=srook::constant_sequence::mismatch_v<geometric_progression,INDEX_SEQUENCE(10,20,30,60)>;
+	constexpr int mismatch_result2=srook::constant_sequence::mismatch_v<geometric_progression,geometric_progression>;
+	BOOST_TEST( (mismatch_result1==3 and mismatch_result2==-1) );
+
 	using partial_head_result=srook::constant_sequence::partial_head_t<geometric_progression::size()/2,geometric_progression>;
 	static_type_test<partial_head_result,INDEX_SEQUENCE(10,20)>();
 

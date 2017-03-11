@@ -45,6 +45,7 @@
 #include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>
 #include<srook/mpl/constant_sequence/algorithm/merge.hpp>
 #include<srook/mpl/constant_sequence/algorithm/minmax.hpp>
+#include<srook/mpl/constant_sequence/algorithm/mismatch.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_head.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_tail.hpp>
 #include<srook/mpl/constant_sequence/algorithm/prev_rotate.hpp>
