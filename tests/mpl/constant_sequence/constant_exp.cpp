@@ -8,6 +8,8 @@
 #include<srook/mpl/constant_sequence/samevalue_sequence.hpp>
 #include<srook/mpl/constant_sequence/equ_sequence.hpp>
 #include<srook/mpl/constant_sequence/iterator/index_sequence_iterator.hpp>
+#include<srook/mpl/constant_sequence/iterator/distance.hpp>
+#include<srook/mpl/constant_sequence/iterator/make_index_sequence_iterator_range.hpp>
 
 #define INDEX_SEQUENCE(...) std::index_sequence<__VA_ARGS__>
 template<class L,class R>
@@ -55,6 +57,19 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 		>,
 		INDEX_SEQUENCE(10,20,20,40,50)
 	>();
+
+	constexpr std::size_t distance_result=
+		srook::index_sequence_iterator::distance_v<one_increment,srook::index_sequence_iterator::increment<one_increment>>;
+	BOOST_TEST((distance_result==1));
+
+	using make_index_sequence_iterator_range_result=
+		srook::index_sequence_iterator::make_index_sequence_iterator_range_t<
+			one_increment,
+			srook::index_sequence_iterator::increment<one_increment>
+		>;
+	static_type_test<make_index_sequence_iterator_range_result,INDEX_SEQUENCE(20,30)>();
+
+
 
 	// algorithms
 	constexpr std::size_t at_result=srook::constant_sequence::at_v<2,geometric_progression>;
