@@ -43,6 +43,7 @@
 #include<srook/mpl/constant_sequence/algorithm/nth_max.hpp>
 #include<srook/mpl/constant_sequence/algorithm/nth_min.hpp>
 #include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>
+#include<srook/mpl/constant_sequence/algorithm/merge.hpp>
 #include<srook/mpl/constant_sequence/algorithm/minmax.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_head.hpp>
 #include<srook/mpl/constant_sequence/algorithm/partial_tail.hpp>

@@ -205,6 +205,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr std::size_t max_result=srook::constant_sequence::max_v<geometric_progression>;
 	BOOST_TEST( (max_result==50) );
 
+	using merge_result=srook::constant_sequence::merge_t<geometric_progression,INDEX_SEQUENCE(30,40,50,70)>;
+	static_type_test<merge_result,INDEX_SEQUENCE(10,20,30,30,40,40,50,50,70)>();
+
 	using partial_head_result=srook::constant_sequence::partial_head_t<geometric_progression::size()/2,geometric_progression>;
 	static_type_test<partial_head_result,INDEX_SEQUENCE(10,20)>();
 
