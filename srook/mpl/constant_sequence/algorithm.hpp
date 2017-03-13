@@ -21,6 +21,7 @@
 #include<srook/mpl/constant_sequence/algorithm/erase_duplicate.hpp>
 #include<srook/mpl/constant_sequence/algorithm/filter.hpp>
 #include<srook/mpl/constant_sequence/algorithm/find.hpp>
+#include<srook/mpl/constant_sequence/algorithm/find_end.hpp>
 #include<srook/mpl/constant_sequence/algorithm/find_if.hpp>
 #include<srook/mpl/constant_sequence/algorithm/find_if_not.hpp>
 #include<srook/mpl/constant_sequence/algorithm/find_index.hpp>
@@ -42,6 +43,7 @@
 #include<srook/mpl/constant_sequence/algorithm/nth_element.hpp>
 #include<srook/mpl/constant_sequence/algorithm/nth_max.hpp>
 #include<srook/mpl/constant_sequence/algorithm/nth_min.hpp>
+#include<srook/mpl/constant_sequence/algorithm/none_of.hpp>
 #include<srook/mpl/constant_sequence/algorithm/make_heap.hpp>
 #include<srook/mpl/constant_sequence/algorithm/merge.hpp>
 #include<srook/mpl/constant_sequence/algorithm/minmax.hpp>
@@ -55,6 +57,10 @@
 #include<srook/mpl/constant_sequence/algorithm/replace_all.hpp>
 #include<srook/mpl/constant_sequence/algorithm/reverse.hpp>
 #include<srook/mpl/constant_sequence/algorithm/rotate.hpp>
+#include<srook/mpl/constant_sequence/algorithm/search.hpp>
+#include<srook/mpl/constant_sequence/algorithm/search_n.hpp>
+#include<srook/mpl/constant_sequence/algorithm/set_difference.hpp>
+#include<srook/mpl/constant_sequence/algorithm/set_intersection.hpp>
 #include<srook/mpl/constant_sequence/algorithm/size.hpp>
 #include<srook/mpl/constant_sequence/algorithm/sort.hpp>
 #include<srook/mpl/constant_sequence/algorithm/summation.hpp>

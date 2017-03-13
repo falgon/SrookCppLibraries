@@ -120,6 +120,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr int find_result=srook::constant_sequence::find_v<30,geometric_progression>;
 	BOOST_TEST( (find_result==2) );
 
+	constexpr int find_end_result=srook::constant_sequence::find_end_v<INDEX_SEQUENCE(5,6),INDEX_SEQUENCE(1,2,3,4,5,6,7,8,5,6,9)>;
+	BOOST_TEST( (find_end_result==8) );
+
 	constexpr int find_if_result1=srook::constant_sequence::find_if_v<pred,INDEX_SEQUENCE(1,1,1,1,1,2,1)>;
 	constexpr int find_if_result2=srook::constant_sequence::find_if_v<pred,srook::constant_sequence::make_samevalue_sequence<4,1>>;
 	BOOST_TEST( (find_if_result1==5 and find_if_result2==-1) );
@@ -162,6 +165,12 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr bool is_permutation_result=srook::constant_sequence::is_permutation_v<INDEX_SEQUENCE(10,20,30),INDEX_SEQUENCE(20,10,30)>;
 	BOOST_TEST( (is_permutation_result) );
 
+	constexpr int search_result=srook::constant_sequence::search_v<INDEX_SEQUENCE(40,50),geometric_progression>;
+	BOOST_TEST( (search_result==3) );
+
+	constexpr int search_n_result=srook::constant_sequence::search_n_v<INDEX_SEQUENCE(1,2,3,2,2,3,1,2,3,3,3,4,1,2,3),3,3>;
+	BOOST_TEST( (search_n_result==8) );
+
 	constexpr bool is_sorted_result1=srook::constant_sequence::is_sorted_v<geometric_progression>;
 	constexpr bool is_sorted_result2=srook::constant_sequence::is_sorted_v<srook::constant_sequence::reverse_t<geometric_progression>,srook::constant_sequence::greater>;
 	BOOST_TEST( (is_sorted_result1 and is_sorted_result2) );
@@ -198,6 +207,9 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 	constexpr std::size_t nth_max_result=srook::constant_sequence::nth_max_v<3,geometric_progression>;
 	constexpr std::size_t nth_min_result=srook::constant_sequence::nth_min_v<3,geometric_progression>;
 	BOOST_TEST( (nth_max_result==30 and nth_min_result==30) );
+
+	constexpr bool none_of_result=srook::constant_sequence::none_of_v<pred,INDEX_SEQUENCE(1,3,5,7)>;
+	BOOST_TEST( none_of_result );
 
 	constexpr std::size_t min_result=srook::constant_sequence::min_v<geometric_progression>;
 	BOOST_TEST( (min_result==10) );
@@ -238,6 +250,12 @@ BOOST_AUTO_TEST_CASE(test_op_reportings)
 
 	using rotate_result=srook::constant_sequence::rotate_t<geometric_progression>;
 	static_type_test<rotate_result,INDEX_SEQUENCE(50,10,20,30,40)>();
+
+	using set_difference_result=srook::constant_sequence::set_difference_t<INDEX_SEQUENCE(1,2,3,4,5),INDEX_SEQUENCE(1,2,5,6,7)>;
+	static_type_test<set_difference_result,INDEX_SEQUENCE(3,4,6,7)>();
+
+	using set_intersection_result=srook::constant_sequence::set_intersection_t<INDEX_SEQUENCE(1,2,3,4,5),INDEX_SEQUENCE(1,2,5,6,7)>;
+	static_type_test<set_intersection_result,INDEX_SEQUENCE(1,2,5)>();
 
 	constexpr std::size_t size_result=srook::constant_sequence::size<geometric_progression>;
 	BOOST_TEST( (size_result==srook::constant_sequence::length_v<geometric_progression>) );

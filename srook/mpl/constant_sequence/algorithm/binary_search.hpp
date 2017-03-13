@@ -21,7 +21,7 @@ struct binary_search<true,target,std::index_sequence<seq...>,false>{
 			(at_v<
 				partial_tail_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>::size()/2,
 				partial_tail_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>
-			> < target),
+			> <= target),
 			target,
 			partial_tail_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>,
 			false
@@ -35,7 +35,7 @@ struct binary_search<false,target,std::index_sequence<seq...>,false>{
 			(at_v<
 				partial_head_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>::size()/2,
 				partial_head_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>
-			> < target),
+			> <= target),
 			target,
 			partial_head_t<std::index_sequence<seq...>::size()/2,std::index_sequence<seq...>>,
 			false
