@@ -3,13 +3,13 @@
 #ifndef INCLUDED_SROOK_MEMORY_SHARED_PTR
 #define INCLUDED_SROOK_MEMORY_SHARED_PTR
 
-//#if __has_include(<memory>)
-//#include<memory>
-//#define POSSIBLE_TO_INCLUDE_STD_MEMORY
-//#elif __has_include(<boost/shared_ptr.hpp>)
-//#include<boost/shared_ptr.hpp>
-//#define POSSIBLE_TO_INCLUDE_BOOST_SHARED_PTR
-//#else
+#if __has_include(<memory>)
+#include<memory>
+#define POSSIBLE_TO_INCLUDE_STD_MEMORY
+#elif __has_include(<boost/shared_ptr.hpp>)
+#include<boost/shared_ptr.hpp>
+#define POSSIBLE_TO_INCLUDE_BOOST_SHARED_PTR
+#else
 
 // then,C++03 or other code ...
 
@@ -151,4 +151,4 @@ public:
 
 } // namespace srook
 #endif
-//#endif
+#endif
