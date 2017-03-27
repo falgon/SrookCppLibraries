@@ -1,5 +1,3 @@
-#include<iostream>
-
 #ifndef INCLUDED_SROOK_MEMORY_SHARED_PTR
 #define INCLUDED_SROOK_MEMORY_SHARED_PTR
 
@@ -11,7 +9,7 @@
 #define POSSIBLE_TO_INCLUDE_BOOST_SHARED_PTR
 #else
 
-// then,C++03 or other code ...
+// C++03 or other code ...
 
 #include<srook/config/require.hpp>
 #include<srook/type_traits/add_pointer.hpp>
@@ -55,17 +53,76 @@ public:
 	typedef typename shared_ptr_core<T>::reference_count_type reference_count_type;
 private:
 	pointer_type data_;
-	reference_count_type* reference_count;
+
+	struct UInt_Constructor{
+		void swap(UInt_Constructor& other)throw()
+		{
+			std::swap(counter,other.counter);
+		}
+		
+		reference_count_type& operator*()throw()
+		{
+			return counter;
+		}
+		
+		UInt_Constructor& operator++()throw()
+		{
+			++counter;
+			return *this;
+		}
+		
+		UInt_Constructor& operator++(int)throw()
+		{
+			UInt_Constructor tmp=*this;
+			++counter;
+			return tmp;
+		}
+
+		UInt_Constructor& operator--()throw()
+		{
+			--counter;
+			return *this;
+		}
+
+		UInt_Constructor& operator--(int)throw()
+		{
+			UInt_Constructor tmp=*this;
+			--counter;
+			return *this;
+		}
+
+		UInt_Constructor* operator&()
+		{
+			return this;
+		}
+
+		operator bool()
+		{
+			return static_cast<bool>(counter);
+		}
+
+		static UInt_Constructor* instance(std::size_t x)
+		{
+			return new UInt_Constructor(x);
+		}
+
+		void destroy()throw()
+		{
+			delete this;
+		}
+	private:
+		explicit UInt_Constructor(reference_count_type counter):counter(counter){}
+
+		reference_count_type counter;
+	}* reference_count;
+
 public:
 	shared_ptr()throw():data_(NULLPTR),reference_count(NULLPTR){}
 	shared_ptr(std::nullptr_t)throw():data_(NULLPTR),reference_count(NULLPTR){}
 	
 	shared_ptr(pointer_type ptr)
-		:data_(std::move(ptr))
-	{
-		static reference_count_type counter=1;
-		reference_count=&counter;
-	}
+		:data_(std::move(ptr)),reference_count(UInt_Constructor::instance(1))
+	{}
 
 	template<class U>
 	shared_ptr(shared_ptr<U>& other)
@@ -90,8 +147,10 @@ public:
 
 	~shared_ptr()throw()
 	{
-		if(!--*(reference_count))
+		if(!--(*reference_count)){
 			delete data_;
+			reference_count->destroy();
+		}
 	}
 
 	T& operator*()
@@ -111,7 +170,7 @@ public:
 
 	const reference_count_type& use_count()const throw()
 	{
-		return *reference_count;
+		return **reference_count;
 	}
 
 	bool unique()const throw()
@@ -129,10 +188,10 @@ public:
 	void swap(shared_ptr& other)throw()
 	{
 		std::swap(other.data_,data_);
-		std::swap(other.reference_count,reference_count);
+		reference_count->swap(*other.reference_count);
 	}
 
-	void reset()
+	void reset()throw()
 	{
 		data_=NULLPTR;
 		--(*reference_count);
@@ -142,9 +201,19 @@ public:
 	void reset(U* ptr)
 	{
 		data_=ptr;
-		--(*reference_count);
-		static reference_count_type counter=1;
-		reference_count=&counter;
+		if(!--(*reference_count))reference_count->destroy();;
+		reference_count=UInt_Constructor::instance(1);
+	}
+
+	template<class L,class R>
+	friend bool operator==(const shared_ptr<L>& lhs,const shared_ptr<R>& rhs)throw()
+	{
+		return lhs.data_==rhs.data_;
+	}
+	template<class L,class R>
+	friend bool operator!=(const shared_ptr<L>& lhs,const shared_ptr<R>& rhs)throw()
+	{
+		return !operator==(lhs,rhs);
 	}
 };
 
