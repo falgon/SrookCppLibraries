@@ -17,8 +17,10 @@
 
 #ifdef POSSIBLE_TO_USE_STD_NULLPTR
 #define NULLPTR nullptr
+#define NULLPTR_T std::nullptr_t
 #else
 #define NULLPTR srook::nullptr
+#define NULLPTR_T srook::nullptr_t
 #endif
 
 namespace srook{
@@ -118,10 +120,10 @@ private:
 
 public:
 	shared_ptr()throw():data_(NULLPTR),reference_count(NULLPTR){}
-	shared_ptr(std::nullptr_t)throw():data_(NULLPTR),reference_count(NULLPTR){}
+	shared_ptr(NULLPTR_T)throw():data_(NULLPTR),reference_count(NULLPTR){}
 	
 	shared_ptr(pointer_type ptr)
-		:data_(std::move(ptr)),reference_count(UInt_Constructor::instance(1))
+		:data_(ptr),reference_count(UInt_Constructor::instance(1))
 	{}
 
 	template<class U>
