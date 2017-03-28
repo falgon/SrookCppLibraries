@@ -402,6 +402,6 @@ constexpr optional<T> make_optional(std::initializer_list<U> ilist,Args&&... arg
 	return optional<T>(in_place,std::move(ilist),std::forward<Args>(args)...);
 }
 } // namespace detail
-using namespace detail;
+using detail::optional;
 } // namespace srook
 #endif
