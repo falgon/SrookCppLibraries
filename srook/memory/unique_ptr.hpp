@@ -257,13 +257,15 @@ public:
 
 template<class T>
 class unique_ptr<T[]>:public unique_ptr<T>{
+	unique_ptr(const unique_ptr&);
+	unique_ptr& operator=(const unique_ptr&);
 public:
 	typedef typename unique_ptr<T>::element_type element_type;
 	typedef typename unique_ptr<T>::pointer_type pointer_type;
 	typedef typename unique_ptr<T>::pointer pointer;
 	typedef typename unique_ptr<T>::reference_type reference_type;
 	
-	explicit unique_ptr(pointer_type ptr):unique_ptr<T>::unique_ptr(ptr,true){}
+	explicit unique_ptr(pointer_type ptr=pointer_type()):unique_ptr<T>::unique_ptr(ptr,true){}
 
 	reference_type operator[](std::size_t index)throw()
 	{
