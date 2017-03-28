@@ -206,16 +206,101 @@ public:
 		if(!--(*reference_count))reference_count->destroy();;
 		reference_count=UInt_Constructor::instance(1);
 	}
-
-	template<class L,class R>
-	friend bool operator==(const shared_ptr<L>& lhs,const shared_ptr<R>& rhs)throw()
+	
+	template<class L>
+	friend bool operator==(const shared_ptr<L>& l,NULLPTR_T)throw()
 	{
-		return lhs.data_==rhs.data_;
+		return l.data_==NULLPTR;
+	}
+	template<class R>
+	friend bool operator==(NULLPTR_T,const shared_ptr<R>& r)throw()
+	{
+		return operator==(r,NULLPTR);
 	}
 	template<class L,class R>
-	friend bool operator!=(const shared_ptr<L>& lhs,const shared_ptr<R>& rhs)throw()
+	friend bool operator==(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
 	{
-		return !operator==(lhs,rhs);
+		return l.data_==r.data_;
+	}
+	
+	template<class L>
+	friend bool operator!=(const shared_ptr<L>& l,NULLPTR_T)throw()
+	{
+		return !operator==(l,NULLPTR);
+	}
+	template<class R>
+	friend bool operator!=(NULLPTR_T,const shared_ptr<R>& r)throw()
+	{
+		return !operator==(r,NULLPTR);
+	}
+	template<class L,class R>
+	friend bool operator!=(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
+	{
+		return !operator==(l,r);
+	}
+
+	template<class L>
+	friend bool operator<(const shared_ptr<L>&,NULLPTR_T)throw()
+	{
+		return false;
+	}
+	template<class R>
+	friend bool operator<(NULLPTR_T,const shared_ptr<R>&)throw()
+	{
+		return true;
+	}
+	template<class L,class R>
+	friend bool operator<(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
+	{
+		return l.data_<r.data_;
+	}
+	
+	template<class L>
+	friend bool operator>(const shared_ptr<L>&,NULLPTR_T)throw()
+	{
+		return true;
+	}
+	template<class R>
+	friend bool operator>(NULLPTR_T,const shared_ptr<R>&)throw()
+	{
+		return false;
+	}
+	template<class L,class R>
+	friend bool operator>(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
+	{
+		return !operator<(l,r);
+	}
+	
+	template<class L>
+	friend bool operator<=(const shared_ptr<L>& l,NULLPTR_T)throw()
+	{
+		return !l.data_;
+	}
+	template<class R>
+	friend bool operator<=(NULLPTR_T,const shared_ptr<R>&)throw()
+	{
+		return true;
+	}
+	template<class L,class R>
+	friend bool operator<=(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
+	{
+		return operator<(l,r) or l.data_==r.data_;
+	}
+	
+	template<class L>
+	friend bool operator>=(const shared_ptr<L>&,NULLPTR_T)throw()
+	{
+		return true;
+	}
+	template<class R>
+	friend bool operator>=(NULLPTR_T,const shared_ptr<R>& r)throw()
+	{
+		return !r.data_;
+	}
+	template<class L,class R>
+	friend bool operator>=(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
+	{
+		return operator>(l,r) or l.data_==r.data_;
 	}
 };
 
