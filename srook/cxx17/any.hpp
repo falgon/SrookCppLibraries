@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SROOK_ANY_HPP
-#define INCLUDED_SROOK_ANY_HPP
+#ifndef INCLUDED_SROOK_CXX17_ANY_HPP
+#define INCLUDED_SROOK_CXX17_ANY_HPP
 #include<memory>
 #include<srook/config/require.hpp>
 #include<srook/mpl/variadic_player.hpp>
