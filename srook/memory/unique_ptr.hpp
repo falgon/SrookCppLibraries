@@ -9,6 +9,7 @@
 #else
 // C++03 or etc ...
 
+#include<ostream>
 #include<srook/config/nullptr.hpp>
 #ifdef POSSIBLE_TO_USE_STD_NULLPTR
 #define NULLPTR nullptr
@@ -110,6 +111,11 @@ public:
 		return *this;
 	}
 
+	reference_type operator*()const throw()
+	{
+		return *data_;
+	}
+
 	reference_type operator*()throw()
 	{
 		return *data_;
@@ -129,7 +135,7 @@ public:
 
 	pointer_type get()const throw()
 	{
-		return data_;;
+		return data_;
 	}
 
 	void reset(pointer_type ptr=pointer_type())throw()
@@ -252,6 +258,13 @@ public:
 	friend bool operator>=(const unique_ptr<L>& l,const unique_ptr<R>& r)throw()
 	{
 		return operator>(l,r) or l.data_==r.data_;
+	}
+	
+
+	template<class R>
+	friend std::ostream& operator<<(std::ostream& os,const unique_ptr<T>& ptr)
+	{
+		return os<<ptr.get();
 	}
 };
 
