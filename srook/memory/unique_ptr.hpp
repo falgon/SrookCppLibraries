@@ -111,17 +111,12 @@ public:
 		return *this;
 	}
 
-	reference_type operator*()const throw()
+	reference_type operator*()const
 	{
 		return *data_;
 	}
 
-	reference_type operator*()throw()
-	{
-		return *data_;
-	}
-
-	pointer_type operator->()throw()
+	pointer_type operator->()const throw()
 	{
 		return data_;
 	}

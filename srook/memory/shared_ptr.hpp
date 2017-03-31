@@ -62,7 +62,7 @@ private:
 			std::swap(counter,other.counter);
 		}
 		
-		reference_count_type& operator*()throw()
+		reference_count_type& operator*()const throw()
 		{
 			return counter;
 		}
@@ -155,17 +155,12 @@ public:
 		}
 	}
 
-	T& operator*()
+	T& operator*()const
 	{
 		return *data_;
 	}
 
-	T* operator->()
-	{
-		return data_;
-	}
-
-	T* get()
+	T* operator->()const throw()
 	{
 		return data_;
 	}
