@@ -170,6 +170,11 @@ public:
 		return data_;
 	}
 
+	T* get()const
+	{
+		return data_;
+	}
+
 	const reference_count_type& use_count()const throw()
 	{
 		return **reference_count;
@@ -301,6 +306,12 @@ public:
 	friend bool operator>=(const shared_ptr<L>& l,const shared_ptr<R>& r)throw()
 	{
 		return operator>(l,r) or l.data_==r.data_;
+	}
+
+	template<class R>
+	friend std::ostream& operator<<(std::ostream& os,const shared_ptr<R>& ptr)
+	{
+		return os<<ptr.get();
 	}
 };
 
