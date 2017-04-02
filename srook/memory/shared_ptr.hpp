@@ -2,11 +2,11 @@
 #define INCLUDED_SROOK_MEMORY_SHARED_PTR
 
 #if __has_include(<memory>)
-#include<memory>
-#define POSSIBLE_TO_INCLUDE_STD_MEMORY
+#	include<memory>
+#	define POSSIBLE_TO_USE_STD_SHARED_PTR
 #elif __has_include(<boost/shared_ptr.hpp>)
-#include<boost/shared_ptr.hpp>
-#define POSSIBLE_TO_INCLUDE_BOOST_SHARED_PTR
+#	include<boost/shared_ptr.hpp>
+#	define POSSIBLE_TO_USE_BOOST_SHARED_PTR
 #else
 
 // C++03 or other code ...

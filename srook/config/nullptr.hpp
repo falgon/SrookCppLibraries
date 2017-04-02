@@ -33,4 +33,13 @@ namespace srook{
 #include<cstddef>
 #define POSSIBLE_TO_USE_STD_NULLPTR
 #endif
+
+#ifdef POSSIBLE_TO_USE_STD_NULLPTR
+#	define NULLPTR nullptr
+#	define NULLPTR_T std::nullptr_t
+#else
+#	define NULLPTR srook::nullptr
+#	define NULLPTR_T srook::nullptr_t
+#endif
+
 #endif
