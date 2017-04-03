@@ -286,7 +286,7 @@ constexpr bool operator!=(nullopt_t,const optional<T>& opt)noexcept
 	return bool(opt);
 }
 template<class T>
-constexpr bool operator<(const optional<T>& opt,nullopt_t)noexcept
+constexpr bool operator<(const optional<T>&,nullopt_t)noexcept
 {
 	return false;
 }
@@ -301,7 +301,7 @@ constexpr bool operator>(const optional<T>& opt,nullopt_t)noexcept
 	return bool(opt);
 }
 template<class T>
-constexpr bool operator>(nullopt_t,const optional<T>& opt)noexcept
+constexpr bool operator>(nullopt_t,const optional<T>&)noexcept
 {
 	return false;
 }
@@ -311,12 +311,12 @@ constexpr bool operator<=(const optional<T>& opt,nullopt_t)noexcept
 	return !opt;
 }
 template<class T>
-constexpr bool operator<=(nullopt_t,const optional<T>& opt)noexcept
+constexpr bool operator<=(nullopt_t,const optional<T>&)noexcept
 {
 	return true;
 }
 template<class T>
-constexpr bool operator>=(const optional<T>& opt,nullopt_t)noexcept
+constexpr bool operator>=(const optional<T>&,nullopt_t)noexcept
 {
 	return true;
 }
@@ -402,6 +402,10 @@ constexpr optional<T> make_optional(std::initializer_list<U> ilist,Args&&... arg
 	return optional<T>(in_place,std::move(ilist),std::forward<Args>(args)...);
 }
 } // namespace detail
+
 using detail::optional;
+using detail::nullopt_t;
+using detail::nullopt;
+
 } // namespace srook
 #endif
