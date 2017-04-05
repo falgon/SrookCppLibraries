@@ -5,4 +5,5 @@
 #include<srook/type_traits/remove_all_reference.hpp>
 #include<srook/type_traits/add_pointer.hpp>
 #include<srook/type_traits/is_class.hpp>
+#include<srook/type_traits/result_of.hpp>
 #endif
