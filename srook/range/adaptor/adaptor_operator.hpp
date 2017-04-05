@@ -9,7 +9,7 @@ inline namespace v1{
 template<class Range,class Function>
 auto operator|(Range&& r,Function&& f)
 {
-	return f(std::forward<Range>(r));
+	return std::forward<Function>(f)(std::forward<Range>(r));
 }
 
 } // inline namespace
@@ -23,7 +23,7 @@ inline namespace v1{
 template<class Range,class Function>
 auto operator|(Range&& r,Function&& f)
 {
-	return f(std::forward<Range>(r));
+	return std::forward<Function>(f)(std::forward<Range>(r));
 }
 
 } // inline namespace v1
