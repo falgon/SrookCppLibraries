@@ -42,7 +42,7 @@ inline auto INVOKE(PMF&& pmf,Pointer&& ptr,Args&&... args)
 }
 
 } // namespace detail
-#if __cplusplus == 201103L
+#if __cplusplus >= 201103L and __cplusplus < 201402L
 
 template<class>
 struct resulf_of;
@@ -52,7 +52,7 @@ struct resulf_of<F(Param...)>{
 	using type=decltype(detail::INVOKE(std::declval<F>(),std::declval<Param>()...));
 };
 
-#elif __cplusplus == 201403L or __cplusplus == 201703L
+#elif __cplusplus <= 201402L
 
 namespace detail{
 
@@ -68,7 +68,7 @@ struct invoke_result<decltype(void(detail::INVOKE(std::declval<F>(),std::declval
 
 template<class>
 struct 
-#	if __cplusplus == 201703L
+#	if __cplusplus <= 201703L
 [[deprecated]]
 #endif
 result_of;
