@@ -18,77 +18,87 @@ inline namespace v1{
 
 template<
 	class Iterator,
-	class Predicate,
+	class Functor,
 	REQUIRES(
 			!has_iterator_v<remove_ref_cv(Iterator)> and
-			is_callable_v<remove_ref_cv(Predicate)>
+			is_callable_v<remove_ref_cv(Functor)>
 	)
 >
-auto for_each(Iterator&& first,Iterator&& last,Predicate&& pred) -> decltype(std::forward<Iterator>(first))
+auto for_each(Iterator&& first,Iterator&& last,Functor&& functor) -> decltype(std::forward<Iterator>(first))
 {
-	std::for_each(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<Predicate>(pred));
+	std::for_each(std::forward<Iterator>(first),std::forward<Iterator>(last),std::forward<Functor>(functor));
 	return std::forward<Iterator>(first);
 }
 
 template<
 	class Range,
-	class Predicate,
+	class Functor,
 	REQUIRES(
 			(has_iterator_v<remove_ref_cv(Range)> or is_range_iterator_v<remove_ref_cv(Range)>) and
-			is_callable_v<remove_ref_cv(Predicate)>
+			is_callable_v<remove_ref_cv(Functor)>
 	)
 >
-auto for_each(Range&& r,Predicate&& pred) -> decltype(std::forward<Range>(r))
+auto for_each(Range&& r,Functor&& functor) -> decltype(std::forward<Range>(r))
 {
-	std::for_each(std::begin(r),std::end(r),std::forward<Predicate>(pred));
+	std::for_each(std::begin(r),std::end(r),std::forward<Functor>(functor));
 	return std::forward<Range>(r);
 }
 
 namespace{
 
-template<class Predicate>
-void tuple_for_eacher(Predicate&&){}
-template<class Predicate,class Head,class... Tail,REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)>
-void tuple_for_eacher(Predicate&& pred,Head&& head,Tail&&... tail)
+template<class Functor>
+void tuple_for_eacher(Functor&&){}
+template<class Functor,class Head,class... Tail,REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
+void tuple_for_eacher(Functor&& functor,Head&& head,Tail&&... tail)
 {
-	pred(std::forward<Head>(head));
-	tuple_for_eacher(std::forward<Predicate>(pred),std::forward<Tail>(tail)...);
+	functor(std::forward<Head>(head));
+	tuple_for_eacher(std::forward<Functor>(functor),std::forward<Tail>(tail)...);
 }
 
-template<class... Ts,class Predicate,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)>
-std::tuple<Ts...>& tuple_for_eacher(std::tuple<Ts...>& t,Predicate&& pred,const std::index_sequence<I...>&&)
+template<class... Ts,class Functor,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
+std::tuple<Ts...>& tuple_for_eacher(std::tuple<Ts...>& t,Functor&& functor,const std::index_sequence<I...>&&)
 {
-	tuple_for_eacher(std::forward<Predicate>(pred),std::get<I>(t)...);
+	tuple_for_eacher(std::forward<Functor>(functor),std::get<I>(t)...);
 	return t;
 }
 
-template<class... Ts,class Predicate,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)>
-std::tuple<Ts...>&& tuple_for_eacher(std::tuple<Ts...>&& t,Predicate&& pred,const std::index_sequence<I...>&&)
+template<class... Ts,class Functor,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
+const std::tuple<Ts...>& tuple_for_eacher(const std::tuple<Ts...>& t,Functor&& functor,const std::index_sequence<I...>&&)
 {
-	tuple_for_eacher(std::forward<Predicate>(pred),std::get<I>(t)...);
-	return std::move(t);
+	tuple_for_eacher(std::forward<Functor>(functor),std::get<I>(t)...);
+	return t;
 }
 
 } // anonymouse namespace
 
 template<
-	class... Ts,
-	class Predicate,
-	REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)
+	class Tuple,
+	class Functor,
+	REQUIRES(
+			is_callable_v<remove_ref_cv(Functor)> 
+			and
+			!std::is_const<Tuple>::value
+			and 
+			(std::tuple_size<std::remove_reference_t<Tuple>>::value or !std::tuple_size<std::remove_reference_t<Tuple>>::value)
+	)
 >
-auto for_each(std::tuple<Ts...>& t,Predicate&& pred) -> std::tuple<Ts...>&
+auto for_each(Tuple&& t,Functor&& functor)
+noexcept(noexcept(tuple_for_eacher(std::declval<decltype(static_cast<Tuple&&>(t))>(),std::declval<decltype(static_cast<Functor&&>(functor))>(),std::declval<std::make_index_sequence<std::tuple_size<std::decay_t<Tuple>>::value>>())))
+-> decltype(tuple_for_eacher(std::forward<Tuple>(t),std::forward<Functor>(functor),std::make_index_sequence<std::tuple_size<std::decay_t<Tuple>>::value>()))
 {
-	return tuple_for_eacher(t,std::forward<Predicate>(pred),std::make_index_sequence<std::tuple_size<std::tuple<Ts...>>::value>());
+	return tuple_for_eacher(std::forward<Tuple>(t),std::forward<Functor>(functor),std::make_index_sequence<std::tuple_size<std::decay_t<Tuple>>::value>());
 }
 
 template<
 	class... Ts,
-	class Predicate,
-	REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)
+	class Functor,
+	REQUIRES(is_callable_v<remove_ref_cv(Functor)>)
 >
-auto for_each(std::tuple<Ts...>&& t,Predicate&& pred) -> std::tuple<Ts...>&&
+auto for_each(const std::tuple<Ts...>& t,Functor&& functor)
+noexcept(noexcept(tuple_for_eacher(t,std::declval<decltype(std::forward<Functor>(functor))>(),std::declval<std::make_index_sequence<std::tuple_size<std::tuple<Ts...>>::value>>())))
+-> const std::tuple<Ts...>&
 {
-	return tuple_for_eacher(std::move(t),std::forward<Predicate>(pred),std::make_index_sequence<std::tuple_size<std::tuple<Ts...>>::value>());
+	return tuple_for_eacher(t,std::forward<Functor>(functor),std::make_index_sequence<std::tuple_size<std::tuple<Ts...>>::value>());
 }
 
 namespace{
@@ -182,20 +192,20 @@ private:
 	std::size_t value_;
 };
 
-template<class Predicate>
-void counting_for_eacher(std::size_t&,Predicate&&){}
+template<class Functor>
+void counting_for_eacher(std::size_t&,Functor&&){}
 
-template<class Predicate,class Head,class... Tail,REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)>
-void counting_for_eacher(std::size_t& counter,Predicate&& pred_,Head&& head,Tail&&... tail)
+template<class Functor,class Head,class... Tail,REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
+void counting_for_eacher(std::size_t& counter,Functor&& functor_,Head&& head,Tail&&... tail)
 {
-	pred_(std::forward<Head>(head),counter);
-	counting_for_eacher(++counter,std::forward<Predicate>(pred_),std::forward<Tail>(tail)...);
+	functor_(std::forward<Head>(head),counter);
+	counting_for_eacher(++counter,std::forward<Functor>(functor_),std::forward<Tail>(tail)...);
 }
 
-template<class Tuple,class Predicate,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)>
-auto counting_for_eacher(Tuple&& t,std::size_t& counter,Predicate&& pred,const std::index_sequence<I...>&&) -> decltype(std::forward<Tuple>(t))
+template<class Tuple,class Functor,std::size_t... I,REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
+auto counting_for_eacher(Tuple&& t,std::size_t& counter,Functor&& functor,const std::index_sequence<I...>&&) -> decltype(std::forward<Tuple>(t))
 {
-	counting_for_eacher(counter,std::forward<Predicate>(pred),std::get<I>(t)...);
+	counting_for_eacher(counter,std::forward<Functor>(functor),std::get<I>(t)...);
 	return std::forward<Tuple>(t);
 }
 
@@ -232,26 +242,26 @@ constexpr auto make_counter(Iterator&& first,Iterator&& last,std::size_t value=0
 template<
 	bool b,
 	class Tuple,
-	class Predicate,
-	REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)
+	class Functor,
+	REQUIRES(is_callable_v<remove_ref_cv(Functor)>)
 >
-constexpr auto for_each(counter_tuple<b,Tuple> t,Predicate&& pred) -> typename counter_tuple<b,Tuple>::reference_type
+constexpr auto for_each(counter_tuple<b,Tuple> t,Functor&& functor) -> typename counter_tuple<b,Tuple>::reference_type
 {
-	return counting_for_eacher(std::forward<Tuple>(*t),t.get_counter(),std::forward<Predicate>(pred),std::make_index_sequence<std::tuple_size<remove_ref_cv(Tuple)>::value>());
+	return counting_for_eacher(std::forward<Tuple>(*t),t.get_counter(),std::forward<Functor>(functor),std::make_index_sequence<std::tuple_size<remove_ref_cv(Tuple)>::value>());
 }
 
 template<
 	class Range,
-	class Predicate,
+	class Functor,
 	REQUIRES(
 			(has_iterator_v<remove_ref_cv(Range)> or is_range_iterator_v<remove_ref_cv(Range)>) and 
-			is_callable_v<remove_ref_cv(Predicate)>
+			is_callable_v<remove_ref_cv(Functor)>
 	)
 >
-auto for_each(counter<Range> cr,Predicate&& pred) -> typename counter<Range>::reference_type
+auto for_each(counter<Range> cr,Functor&& functor) -> typename counter<Range>::reference_type
 {
 	for(typename remove_ref_cv(decltype(cr))::iterator iter=std::begin(cr); iter!=std::end(cr); ++iter){
-		pred(*iter,cr.get_counter());
+		functor(*iter,cr.get_counter());
 		++cr.get_counter();
 	}
 	return *cr;
@@ -259,13 +269,13 @@ auto for_each(counter<Range> cr,Predicate&& pred) -> typename counter<Range>::re
 
 template<
 	class Iterator,
-	class Predicate,
-	REQUIRES(!has_iterator_v<remove_ref_cv(Iterator)> and is_callable_v<remove_ref_cv(Predicate)>)
+	class Functor,
+	REQUIRES(!has_iterator_v<remove_ref_cv(Iterator)> and is_callable_v<remove_ref_cv(Functor)>)
 >
-auto for_each(counter_iters<Iterator> cr,Predicate&& pred) -> decltype(std::begin(cr))
+auto for_each(counter_iters<Iterator> cr,Functor&& functor) -> decltype(std::begin(cr))
 {
 	for(typename counter_iters<Iterator>::iterator iter=std::begin(cr); iter!=std::end(cr); ++iter){
-		pred(*iter,cr.get_counter());
+		functor(*iter,cr.get_counter());
 		++cr.get_counter();
 	}
 	return std::begin(cr);
@@ -273,12 +283,12 @@ auto for_each(counter_iters<Iterator> cr,Predicate&& pred) -> decltype(std::begi
 
 template<
 	class T,
-	class Predicate,
-	REQUIRES(is_callable_v<remove_ref_cv(Predicate)>)
+	class Functor,
+	REQUIRES(is_callable_v<remove_ref_cv(Functor)>)
 >
-auto for_each(std::initializer_list<T> init_list,Predicate&& pred) -> decltype(std::begin(init_list))
+auto for_each(std::initializer_list<T> init_list,Functor&& functor) -> decltype(std::begin(init_list))
 {
-	return for_each(std::begin(init_list),std::end(init_list),std::forward<Predicate>(pred));
+	return for_each(std::begin(init_list),std::end(init_list),std::forward<Functor>(functor));
 }
 
 
