@@ -1,6 +1,8 @@
 #ifndef SROOK_INCLUDE_VARIADIC_PLAYER_HPP
 #define SROOK_INCLUDE_VARIADIC_PLAYER_HPP
 #include<srook/mpl/variadic_tmp_player.hpp>
+#include<type_traits>
+
 namespace srook{
 inline namespace mpl{
 inline namespace v1{
@@ -93,6 +95,46 @@ struct make_someting_pack_impl<pack<>>{
 };
 template<class... PackSetting>
 using make_some_pack=typename make_someting_pack_impl<PackSetting...>::type;
+
+// erase_at
+template<std::size_t,class...>
+struct Erase_At;
+
+template<std::size_t target,class Head,class... Tail>
+struct Erase_At<target,Head,Tail...>{
+	using type=Concat_t<Head,typename Erase_At<target-1,Tail...>::type>;
+};
+
+template<class Head,class... Tail>
+struct Erase_At<0,Head,Tail...>{
+	using type=pack<Tail...>;
+};
+
+template<std::size_t target,class... Args>
+struct Erase_At<target,pack<Args...>>:Erase_At<target,Args...>{};
+
+template<std::size_t n,class... Args>
+using Erase_At_t=typename Erase_At<n,Args...>::type;
+
+// erase_if
+template<template<class>class,class...>
+struct Erase_if;
+
+template<template<class>class Pred,class Head,class... Tail>
+struct Erase_if<Pred,Head,Tail...>{
+	using type=Concat_t<std::conditional_t<Pred<Head>::value,Head,pack<>>,typename Erase_if<Pred,Tail...>::type>;
+};
+
+template<template<class>class Pred>
+struct Erase_if<Pred>{
+	using type=pack<>;
+};
+
+template<template<class>class Pred,class... Args>
+struct Erase_if<Pred,pack<Args...>>:Erase_if<Pred,Args...>{};
+
+template<template<class>class Pred,class... Args>
+using Erase_if_t=typename Erase_if<Pred,Args...>::type;
 
 } // namespace v1
 } // namespace mpl
