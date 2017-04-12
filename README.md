@@ -8,6 +8,7 @@
 [mikoCppLibraries](https://github.com/falgon/mikoCppLibraries)の後継。無駄な記述をしないための無駄なUselessライブラリ。全体的に開発段階のため不安定である。
 
 ## Recommendation
+### Operating System
 * Ubuntu 16.04 or later
 * Mac OS Sierra or later
 
@@ -16,7 +17,7 @@
 * GCC 6.3.0 or later
 * Apple LLVM Clang 800.0.42.1 or later
 
-## Recommendation
+### Libraries
 Boost C++ Libraries version 1.5.8 or later
 (This library often uses boost-c++, but works without it.)
 
