@@ -48,12 +48,7 @@ template<class... Ts,std::size_t v,bool b,class... Args>
 static constexpr Transfer_t<std::tuple,Concat_t<Last_t<Ts...>,PopBack_t<Ts...>>>
 apply(const std::tuple<Ts...>& t,std::integral_constant<std::size_t,v> ic,std::integral_constant<bool,b> ib,Args&&... args)
 {
-	return 
-		std::conditional_t<
-			sizeof...(args)==std::tuple_size<std::tuple<Ts...>>::value,
-			invoker,
-			unpacker
-		>::apply(t,std::move(ic),std::move(ib),std::forward<Args>(args)...);
+	return std::conditional_t<sizeof...(args)==std::tuple_size<std::tuple<Ts...>>::value,invoker,unpacker>::apply(t,std::move(ic),std::move(ib),std::forward<Args>(args)...);
 }
 
 };
