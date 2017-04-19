@@ -2,6 +2,8 @@
 #define INCLUDED_SROOK_ALGORITHM_COUNT_HPP
 #include<srook/tuple/tuple_filter_type.hpp>
 #include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
 #include<algorithm>
 
 namespace srook{
