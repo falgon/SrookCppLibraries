@@ -8,7 +8,7 @@ namespace srook{
 
 namespace detail{
 
-struct Applyer{
+struct Apply_Filter_Type{
 	struct invoker{
 		template<template<class>class Pred,class... Ts,std::size_t n,class... Args>
 		static constexpr auto apply(const std::tuple<Ts...>&,const std::integral_constant<std::size_t,n>&,Args&&... args)
@@ -23,14 +23,14 @@ struct Applyer{
 		static constexpr auto apply(const std::tuple<Ts...>& tpl,const std::integral_constant<std::size_t,n>&,Args&&... args)
 		-> std::enable_if_t<Pred<std::decay_t<decltype(std::get<n>(tpl))>>::value,Transfer_t<std::tuple,Erase_if_t<Pred,Ts...>>>
 		{
-			return Applyer::template apply<Pred>(tpl,std::integral_constant<std::size_t,n-1>(),std::get<n>(tpl),std::forward<Args>(args)...);
+			return Apply_Filter_Type::template apply<Pred>(tpl,std::integral_constant<std::size_t,n-1>(),std::get<n>(tpl),std::forward<Args>(args)...);
 		}
 		
 		template<template<class>class Pred,class... Ts,std::size_t n,class... Args>
 		static constexpr auto apply(const std::tuple<Ts...>& tpl,const std::integral_constant<std::size_t,n>&,Args&&... args)
 		-> std::enable_if_t<!Pred<std::decay_t<decltype(std::get<n>(tpl))>>::value,Transfer_t<std::tuple,Erase_if_t<Pred,Ts...>>>
 		{
-			return Applyer::template apply<Pred>(tpl,std::integral_constant<std::size_t,n-1>(),std::forward<Args>(args)...);
+			return Apply_Filter_Type::template apply<Pred>(tpl,std::integral_constant<std::size_t,n-1>(),std::forward<Args>(args)...);
 		}
 	};
 
@@ -47,7 +47,7 @@ struct Applyer{
 template<template<class>class Pred,class... Args>
 constexpr Transfer_t<std::tuple,Erase_if_t<Pred,Args...>> tuple_filter_type(const std::tuple<Args...>& tpl)
 {
-	return detail::Applyer::apply<Pred>(tpl,std::integral_constant<std::size_t,std::tuple_size<std::tuple<Args...>>::value-1>());
+	return detail::Apply_Filter_Type::apply<Pred>(tpl,std::integral_constant<std::size_t,std::tuple_size<std::tuple<Args...>>::value-1>());
 }
 
 

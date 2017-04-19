@@ -15,7 +15,7 @@ noexcept(noexcept(std::make_tuple(std::get<v>(tp)...)))
 	return std::make_tuple(std::get<v>(tp)...);
 }
 
-struct Applyer{
+struct Apply_Split{
 	struct invoker{
 		template<class... Ts,std::size_t n,std::size_t index,class... Args>
 		static constexpr auto
@@ -30,7 +30,7 @@ struct Applyer{
 		static constexpr auto
 		apply(const std::tuple<Ts...>& t,std::integral_constant<std::size_t,n>,std::integral_constant<std::size_t,index>,Args&&... args)
 		{
-			return Applyer::apply(t,std::integral_constant<std::size_t,n-1>(),std::integral_constant<std::size_t,index-1>(),std::get<index>(t),std::forward<Args>(args)...);
+			return Apply_Split::apply(t,std::integral_constant<std::size_t,n-1>(),std::integral_constant<std::size_t,index-1>(),std::get<index>(t),std::forward<Args>(args)...);
 		}
 	};
 
@@ -48,11 +48,11 @@ struct Applyer{
 
 template<std::size_t index,class... Tpl>
 constexpr auto split_last_impl(const std::tuple<Tpl...>& tpl)
-noexcept(noexcept(Applyer::apply(tpl,std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-index>>(),std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-1>>())))
-->decltype(Applyer::apply(tpl,std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-index>>(),std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-1>>()))
+noexcept(noexcept(Apply_Split::apply(tpl,std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-index>>(),std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-1>>())))
+->decltype(Apply_Split::apply(tpl,std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-index>>(),std::declval<std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-1>>()))
 {
 	return 
-		Applyer::apply(
+		Apply_Split::apply(
 			tpl,
 			std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-index>(),
 			std::integral_constant<std::size_t,std::tuple_size<std::tuple<Tpl...>>::value-1>()

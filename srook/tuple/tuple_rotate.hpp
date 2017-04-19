@@ -7,7 +7,7 @@ namespace srook{
 
 namespace detail{
 
-struct Applyer{
+struct Applyer_Rotate{
 
 struct invoker{
 	template<class... Ts,std::size_t v,bool b,class... Args>
@@ -24,7 +24,7 @@ struct unpacker{
 		static constexpr Transfer_t<std::tuple,Concat_t<Last_t<Ts...>,PopBack_t<Ts...>>>
 		apply(const std::tuple<Ts...>& t,std::integral_constant<std::size_t,v> inc,std::integral_constant<bool,b>,Args&&... args)
 		{
-			return Applyer::apply(t,std::move(inc),std::integral_constant<bool,false>(),std::get<std::tuple_size<std::tuple<Ts...>>::value-1>(t),std::forward<Args>(args)...);
+			return Applyer_Rotate::apply(t,std::move(inc),std::integral_constant<bool,false>(),std::get<std::tuple_size<std::tuple<Ts...>>::value-1>(t),std::forward<Args>(args)...);
 		}
 	};
 	struct not_first{
@@ -32,7 +32,7 @@ struct unpacker{
 		static constexpr Transfer_t<std::tuple,Concat_t<Last_t<Ts...>,PopBack_t<Ts...>>>
 		apply(const std::tuple<Ts...>& t,std::integral_constant<std::size_t,v>,std::integral_constant<bool,b> ib,Args&&... args)
 		{
-			return Applyer::apply(t,std::integral_constant<std::size_t,v+1>(),std::move(ib),std::forward<Args>(args)...,std::get<v>(t));
+			return Applyer_Rotate::apply(t,std::integral_constant<std::size_t,v+1>(),std::move(ib),std::forward<Args>(args)...,std::get<v>(t));
 		}
 	};
 
@@ -59,7 +59,7 @@ template<class... Ts>
 constexpr Transfer_t<std::tuple,Concat_t<Last_t<Ts...>,PopBack_t<Ts...>>>
 tuple_rotate(const std::tuple<Ts...>& t)
 {
-	return detail::Applyer::apply(t,std::integral_constant<std::size_t,0>(),std::integral_constant<bool,true>());
+	return detail::Applyer_Rotate::apply(t,std::integral_constant<std::size_t,0>(),std::integral_constant<bool,true>());
 }
 
 } // namespace srook
