@@ -6,4 +6,5 @@
 #include<srook/tuple/tuple_filter_type.hpp>
 #include<srook/tuple/tuple_reverse.hpp>
 #include<srook/tuple/tuple_rotate.hpp>
+#include<srook/tuple/tuple_vector_operation.hpp>
 #endif
