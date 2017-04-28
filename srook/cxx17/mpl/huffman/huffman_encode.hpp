@@ -208,9 +208,9 @@ struct value_to_huffman_impl<target,node<pack<target,bv>,branch,Tail>,nullptrer>
 template<auto target_value,class huffman_tree>
 using value_to_huffman=typename value_to_huffman_impl<target_value,huffman_tree,nullptr>::type;
 
-template<class,class> struct huffman_decode_impl;
+template<class,class> struct huffman_encode_impl;
 template<class All,auto head,auto... tail>
-struct huffman_decode_impl<All,pack<head,tail...>>{
+struct huffman_encode_impl<All,pack<head,tail...>>{
 public:
     using type=
         concat_t<
@@ -218,17 +218,17 @@ public:
                 head,
                 make_huffman_tree<priority_pack_sort<All>>
             >,
-        typename huffman_decode_impl<All,pack<tail...>>::type>;
+        typename huffman_encode_impl<All,pack<tail...>>::type>;
 };
 template<class All>
-struct huffman_decode_impl<All,pack<>>{
+struct huffman_encode_impl<All,pack<>>{
     using type=pack<>;
 };
 
 } // namespace anonymouse
 
 template<class Pack>
-using huffman_decode=typename huffman_decode_impl<Pack,Pack>::type;
+using huffman_encode=typename huffman_encode_impl<Pack,Pack>::type;
 
 } // namespace huffman_coding
 } // namespace srook
