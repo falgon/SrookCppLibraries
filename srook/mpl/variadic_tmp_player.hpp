@@ -1,6 +1,16 @@
 #ifndef INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
 #define INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
 #include<cstddef>
+#if __has_include(<optional>)
+#	include<optional>
+#	define NULLOPT std::nullopt
+#	define NULLOPT_T std::nullopt_t
+#elif __has_include(<boost/optional.hpp>)
+#	include<boost/optional.hpp>
+#	define NULLOPT boost::none
+#	define NULLOPT_T boost::none_t;
+#endif
+
 namespace srook{
 inline namespace mpl{
 inline namespace v1{
@@ -173,6 +183,10 @@ template<class Head,class... Tail>
 struct First<Head,Tail...>{
 	using type=Head;
 };
+template<>
+struct First<>{
+	using type=NULLOPT_T;
+};
 template<class Head,class... Tail>
 struct First<pack<Head,Tail...>>:First<Head>{};
 template<class... Pack>
@@ -184,6 +198,10 @@ struct Last;
 template<class Head,class... Tail>
 struct Last<Head,Tail...>{
 	using type=typename Last<Tail...>::type;
+};
+template<>
+struct Last<>{
+	using type=NULLOPT_T;
 };
 template<class Tail>
 struct Last<Tail>{
