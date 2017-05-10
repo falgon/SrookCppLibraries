@@ -12,6 +12,9 @@
 namespace srook{
 namespace huffman_coding{
 
+template<auto...>
+struct pack{};
+
 namespace{
 
 template<class... Tp>
@@ -50,8 +53,6 @@ struct first_type<type_pack<Head,Tail...>>:first_type<Head,Tail...>{};
 template<class... Pack>
 using first_type_t=typename first_type<Pack...>::type;
 
-template<auto...>
-struct pack{};
 
 template<auto,class> struct count;
 template<auto target,auto head,auto... tail>
