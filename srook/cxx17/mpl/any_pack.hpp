@@ -494,4 +494,7 @@ decltype(detail::transfer<Range,v...>::value) any_pack<v...>::range{detail::tran
 #ifdef NULLOPT
 #undef NULLOPT
 #endif
+#ifdef NULLOPT_T
+#undef NULLOPT_T
+#endif
 #endif
