@@ -303,11 +303,15 @@ template<std::size_t,class>
 struct partial_head;
 template<std::size_t target,auto head,auto... tail>
 struct partial_head<target,any_pack<head,tail...>>{
-	    using type=concat_t<any_pack<head>,typename partial_head<target-1,any_pack<tail...>>::type>;
+	using type=concat_t<any_pack<head>,typename partial_head<target-1,any_pack<tail...>>::type>;
 };
 template<auto tail,auto... args>
 struct partial_head<1,any_pack<tail,args...>>{
-	    using type=any_pack<tail>;
+	using type=any_pack<tail>;
+};
+template<std::size_t target>
+struct partial_head<target,any_pack<>>{
+	using type=any_pack<>;
 };
 template<std::size_t target,auto... v>
 using partial_head_t=typename partial_head<target,any_pack<v...>>::type;
@@ -321,6 +325,10 @@ struct partial_tail<target,any_pack<head,tail...>>{
 template<auto head,auto... t>
 struct partial_tail<0,any_pack<head,t...>>{
 	using type=any_pack<head,t...>;
+};
+template<std::size_t target>
+struct partial_tail<target,any_pack<>>{
+	using type=any_pack<>;
 };
 template<std::size_t index,auto... v>
 using partial_tail_t=typename partial_tail<index,any_pack<v...>>::type;
@@ -493,8 +501,5 @@ decltype(detail::transfer<Range,v...>::value) any_pack<v...>::range{detail::tran
 
 #ifdef NULLOPT
 #undef NULLOPT
-#endif
-#ifdef NULLOPT_T
-#undef NULLOPT_T
 #endif
 #endif
