@@ -39,13 +39,7 @@ public:
 	using type=
 		detail::concat_t<
 			std::conditional_t<(length_value>1),length_type,any_pack<head>>,
-			typename run_length_impl< 
-				std::conditional_t<
-					(length_value>1),
-					typename any_pack<head,tail...>::template partial_tail_type<length_value>,
-					any_pack<tail...>
-				>
-			>::type
+			typename run_length_impl< std::conditional_t<(length_value>1),typename any_pack<head,tail...>::template partial_tail_type<length_value>,any_pack<tail...>>>::type
 		>;
 };
 template<>
