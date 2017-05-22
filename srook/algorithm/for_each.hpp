@@ -131,10 +131,10 @@ struct counter:select_ref<Range>{
 	using iterator=typename remove_ref_cv(Range)::iterator;
 	using const_iterator=typename remove_ref_cv(Range)::const_iterator;
 
-	iterator begin()const{return this->r_.begin();}
-	iterator end()const{return this->r_.begin();}
-	iterator begin(){return this->r_.begin();}
-	iterator end(){return this->r_.end();}
+	auto begin()const{return std::begin(this->r_);}
+	auto end()const{return std::end(this->r_);}
+	auto begin(){return std::begin(this->r_);}
+	auto end(){return std::end(this->r_);}
 	const_iterator cbegin()const{return this->r_.cbegin();}
 	const_iterator cend()const{return this->r_.cend();}
 
@@ -260,7 +260,7 @@ template<
 >
 auto for_each(counter<Range> cr,Functor&& functor) -> typename counter<Range>::reference_type
 {
-	for(typename remove_ref_cv(decltype(cr))::iterator iter=std::begin(cr); iter!=std::end(cr); ++iter){
+	for(decltype(std::begin(cr)) iter=std::begin(cr); iter!=std::end(cr); ++iter){
 		functor(*iter,cr.get_counter());
 		++cr.get_counter();
 	}
