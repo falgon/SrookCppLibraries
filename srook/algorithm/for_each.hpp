@@ -211,10 +211,9 @@ auto counting_for_eacher(Tuple&& t,std::size_t& counter,Functor&& functor,const 
 
 } // anonymouse namespace
 
-template<class Tuple>
+template<class Tuple,REQUIRES(std::conditional_t<std::get<0>(remove_ref_cv(Tuple)()),std::true_type,std::true_type>::value)>
 constexpr auto make_counter(Tuple&& t,std::size_t value=0)
 -> decltype(
-		std::tuple_size<remove_ref_cv(Tuple)>::value,
 		counter_tuple<std::is_lvalue_reference<Tuple>::value,Tuple>(std::forward<Tuple>(t),std::move(value))
 )
 {
