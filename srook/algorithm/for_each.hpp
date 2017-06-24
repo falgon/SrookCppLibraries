@@ -211,11 +211,23 @@ auto counting_for_eacher(Tuple&& t,std::size_t& counter,Functor&& functor,const 
 
 } // anonymouse namespace
 
-template<class Tuple,REQUIRES(std::conditional_t<std::get<0>(remove_ref_cv(Tuple)()),std::true_type,std::true_type>::value)>
+template<class T,std::size_t s>
+constexpr auto make_counter(const std::array<T,s>& ar,std::size_t value=0)
+-> counter<decltype(ar)>
+{
+	return counter<decltype(ar)>(ar,std::move(value));
+}
+
+template<class T,std::size_t s>
+constexpr auto make_counter(std::array<T,s>& ar,std::size_t value=0)
+-> counter<decltype(ar)>
+{
+	return counter<decltype(ar)>(ar,std::move(value));
+}
+
+template<class Tuple>
 constexpr auto make_counter(Tuple&& t,std::size_t value=0)
--> decltype(
-		counter_tuple<std::is_lvalue_reference<Tuple>::value,Tuple>(std::forward<Tuple>(t),std::move(value))
-)
+-> std::enable_if_t<!has_iterator_v<remove_ref_cv(Tuple)> or !is_range_iterator_v<remove_ref_cv(Tuple)>,counter_tuple<std::is_lvalue_reference<Tuple>::value,Tuple>>
 {
 	return counter_tuple<std::is_lvalue_reference<Tuple>::value,Tuple>(std::forward<Tuple>(t),std::move(value));
 }
