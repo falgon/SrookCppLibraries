@@ -482,16 +482,32 @@ struct any_pack{
 	template<auto target>
 	static constexpr bool binary_search=detail::binary_search_v<target,v...>;
 
+
+	struct Nothing{
+		explicit constexpr Nothing()=default;
+
+		template<class T>
+		constexpr T& operator()(T&& t)noexcept
+		{
+			return t;
+		}
+	};
+
 	template<template<class...>class Range>
 	static decltype(detail::transfer<Range,v...>::value) range;
 
-	template<template<class...>class ConstantRange>
-	static constexpr decltype(detail::transfer<ConstantRange,v...>::value) constant_range{v...};
+	template<template<class...>class ConstantRange,class Transformer = Nothing>
+	static constexpr std::enable_if_t<
+		std::is_invocable_v<Transformer,First_t<decltype(v)...>>,
+		ConstantRange<decltype(Transformer()(v))...>
+	> constant_range{Transformer()(v)...};
 
 	template<class AnyPack>
 	static constexpr bool equal_pack=detail::equal_v<any_pack<v...>,AnyPack>;
 	template<auto... other>
 	static constexpr bool equal_value=detail::equal_v<any_pack<v...>,any_pack<other...>>;
+
+	using pack_type = srook::pack<decltype(v)...>;
 };
 template<auto... v>
 template<template<class...>class Range>
