@@ -485,6 +485,9 @@ struct any_pack{
 	template<template<class...>class Range>
 	static decltype(detail::transfer<Range,v...>::value) range;
 
+	template<template<class...>class ConstantRange>
+	static constexpr decltype(detail::transfer<ConstantRange,v...>::value) constant_range{v...};
+
 	template<class AnyPack>
 	static constexpr bool equal_pack=detail::equal_v<any_pack<v...>,AnyPack>;
 	template<auto... other>
