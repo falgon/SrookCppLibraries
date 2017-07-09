@@ -525,7 +525,7 @@ struct any_pack{
 	template<template<class...>class ConstantRange,class Transformer = Nothing>
 	static constexpr std::enable_if_t<
 		std::is_invocable_v<Transformer,First_t<decltype(v)...>>,
-		ConstantRange<decltype(Transformer()(v))...>
+		ConstantRange<std::decay_t<decltype(Transformer()(v))>...>
 	> constant_range{Transformer()(v)...};
 
 	template<class AnyPack>
