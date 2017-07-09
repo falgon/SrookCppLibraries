@@ -2,7 +2,7 @@
 #define INCLUDED_SROOK_CXX17_MATH_MAKE_COSINE_TABLE_HPP
 
 #include<srook/math/constants/algorithm/math.hpp>
-#include<srook/cxx17/mpl/any_pack.hpp>
+#include<srook/cxx17/mpl/any_pack/any_pack.hpp>
 #include<srook/mpl/make_same_type_sequence.hpp>
 #include<srook/mpl/variadic_player.hpp>
 
