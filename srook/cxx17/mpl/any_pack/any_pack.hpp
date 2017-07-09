@@ -435,20 +435,71 @@ struct make_any_pack<0,init_value,any_pack<v...>>{
 template<std::size_t size,auto init_value,class Seq=any_pack<>>
 using make_any_pack_t = typename make_any_pack<size,init_value,Seq>::type;
 
-template<std::size_t,std::size_t,template<std::size_t,class>class,class> struct for_;
-template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,auto... v>
-struct for_<begin,end,Invokable,any_pack<v...>>{
-	using type =
-		typename any_pack< Invokable<begin,any_pack<v...>>::value >::template concat_type<typename for_<begin+1,end,Invokable,any_pack<v...>>::type>;
+
+struct Increment{
+	explicit Increment() = default;
+	template<class T>
+	constexpr T operator()(T&& v)const noexcept{return v + 1;}
 };
-template<std::size_t begin,template<std::size_t,class>class Invokable,auto... v>
-struct for_<begin,begin,Invokable,any_pack<v...>>{
+
+struct Decrement{
+	explicit Decrement() = default;
+	template<class T>
+	constexpr T operator()(T&& v)const noexcept{return v - 1;}
+};
+
+struct Less{
+	explicit constexpr Less() = default;
+	template<class T>
+	constexpr bool operator()(T&& l,T&& r)const noexcept{return l < r;}
+};
+struct Greater{
+	explicit constexpr Greater() = default;
+	template<class T>
+	constexpr bool operator()(T&& l,T&& r)const noexcept{return l > r;}
+};
+struct Less_or_equal{
+	explicit constexpr Less_or_equal() = default;
+	template<class T>
+	constexpr bool operator()(T&& l,T&& r)const noexcept{return l <= r;}
+};
+struct Greater_or_equal{
+	explicit constexpr Greater_or_equal() = default;
+	template<class T>
+	constexpr bool operator()(T&& l,T&& r)const noexcept{return l >= r;}
+};
+
+template<std::size_t,std::size_t,template<std::size_t,class>class,class,class,class,class = std::nullptr_t> struct for_;
+
+template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Crease,class Pred,auto... v>
+struct for_<begin,end,Invokable,Crease,Pred,any_pack<v...>,std::enable_if_t<Pred()(begin,end),std::nullptr_t>>{
+	using type =
+		typename any_pack< Invokable<begin,any_pack<v...>>::value >::template concat_type<typename for_<Crease()(begin),end,Invokable,Crease,Pred,any_pack<v...>>::type>;
+};
+template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Crease,class Pred,auto... v>
+struct for_<begin,end,Invokable,Crease,Pred,any_pack<v...>,std::enable_if_t<!Pred()(begin,end),std::nullptr_t>>{
 	using type = any_pack<>;
 };
-template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Seq=any_pack<>>
-using for_to_t = typename for_<begin,end,Invokable,Seq>::type;
-template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Seq=any_pack<>>
-using for_until_t = typename for_<begin,end+1,Invokable,Seq>::type;
+
+template<
+	std::size_t begin,
+	std::size_t end,
+	template<std::size_t,class>class Invokable,
+	class Crease = std::conditional_t<(begin < end),Increment,Decrement>,
+	class Seq = any_pack<>,
+	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+>
+using for_to_t = typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Seq>::type;
+
+template<
+	std::size_t begin,
+	std::size_t end,
+	template<std::size_t,class>class Invokable,
+	class Crease = std::conditional_t<(begin < end),Increment,Decrement>,
+	class Seq = any_pack<>,
+	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+>
+using for_until_t = typename for_<begin,end + 1,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Seq>::type;
 
 } // namespace detail
 
@@ -538,11 +589,11 @@ struct any_pack{
 	template<std::size_t size,auto init_value>
 	using make_any_pack = detail::make_any_pack_t<size,init_value,any_pack<v...>>;
 
-	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer>
-	using for_to = detail::for_to_t<begin,end,Applyer,any_pack<v...>>;
+	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>>
+	using for_to = detail::for_to_t<begin,end,Applyer,Crease,any_pack<v...>>;
 
-	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer>
-	using for_until = detail::for_until_t<begin,end,Applyer>;
+	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>>
+	using for_until = detail::for_until_t<begin,end,Applyer,Crease,any_pack<v...>>;
 };
 template<auto... v>
 template<template<class...>class Range>
