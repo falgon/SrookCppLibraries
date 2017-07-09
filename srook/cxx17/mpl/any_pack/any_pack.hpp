@@ -501,6 +501,18 @@ template<
 >
 using for_until_t = typename for_<begin,end + 1,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Seq>::type;
 
+template<std::size_t,class> struct make_index_sequence_impl;
+template<std::size_t n,std::size_t... v>
+struct make_index_sequence_impl<n,any_pack<v...>>{
+	using type = typename make_index_sequence_impl<n-1,any_pack<n-1,v...>>::type;
+};
+template<std::size_t... v>
+struct make_index_sequence_impl<0,any_pack<v...>>{
+	using type = any_pack<v...>;
+};
+template<std::size_t n,class Seq = any_pack<>>
+using make_index_sequence = typename make_index_sequence_impl<n,Seq>::type;
+
 } // namespace detail
 
 template<auto l,auto r> using less=std::integral_constant<bool,(l<r)>;
@@ -588,6 +600,9 @@ struct any_pack{
 
 	template<std::size_t size,auto init_value>
 	using make_any_pack = detail::make_any_pack_t<size,init_value,any_pack<v...>>;
+
+	template<std::size_t n>
+	using make_index_sequence = detail::make_index_sequence<n,any_pack<v...>>;
 
 	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>>
 	using for_to = detail::for_to_t<begin,end,Applyer,Crease,any_pack<v...>>;
