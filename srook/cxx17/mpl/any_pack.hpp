@@ -423,6 +423,32 @@ struct count_if<Predicate>{
 template<template<auto>class Predicate,auto... v>
 constexpr std::size_t count_if_v=count_if<Predicate,v...>::value;
 
+template<std::size_t,auto,class> struct make_any_pack;
+template<std::size_t size,auto init_value,auto... v>
+struct make_any_pack<size,init_value,any_pack<v...>>{
+	using type = typename make_any_pack<size-1,init_value,any_pack<v...,init_value>>::type;
+};
+template<auto init_value,auto... v>
+struct make_any_pack<0,init_value,any_pack<v...>>{
+	using type = any_pack<v...>;
+};
+template<std::size_t size,auto init_value,class Seq=any_pack<>>
+using make_any_pack_t = typename make_any_pack<size,init_value,Seq>::type;
+
+template<std::size_t,std::size_t,template<std::size_t,class>class,class> struct for_;
+template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,auto... v>
+struct for_<begin,end,Invokable,any_pack<v...>>{
+	using type =
+		typename any_pack< Invokable<begin,any_pack<v...>>::value >::template concat_type<typename for_<begin+1,end,Invokable,any_pack<v...>>::type>;
+};
+template<std::size_t begin,template<std::size_t,class>class Invokable,auto... v>
+struct for_<begin,begin,Invokable,any_pack<v...>>{
+	using type = any_pack<>;
+};
+template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Seq=any_pack<>>
+using for_to_t = typename for_<begin,end,Invokable,Seq>::type;
+template<std::size_t begin,std::size_t end,template<std::size_t,class>class Invokable,class Seq=any_pack<>>
+using for_until_t = typename for_<begin,end+1,Invokable,Seq>::type;
 
 } // namespace detail
 
@@ -463,7 +489,7 @@ struct any_pack{
 	using sort_type=detail::sort_t<any_pack<v...>,Comp>;
 	using unique_type=detail::unique_t<v...>;
 	template<auto replace_element,auto target>
-	using replace_elements_type=detail::replace_elements_t<replace_element,target,v...>;
+	using replace_elements_type=detail::replace_elements_t<replace_element,target+1,v...>;
 	template<std::size_t index>
 	using partial_head_type=detail::partial_head_t<index,v...>;
 	template<std::size_t index>
@@ -508,6 +534,15 @@ struct any_pack{
 	static constexpr bool equal_value=detail::equal_v<any_pack<v...>,any_pack<other...>>;
 
 	using pack_type = srook::pack<decltype(v)...>;
+
+	template<std::size_t size,auto init_value>
+	using make_any_pack = detail::make_any_pack_t<size,init_value,any_pack<v...>>;
+
+	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer>
+	using for_to = detail::for_to_t<begin,end,Applyer,any_pack<v...>>;
+
+	template<std::size_t begin,std::size_t end,template<std::size_t,class>class Applyer>
+	using for_until = detail::for_until_t<begin,end,Applyer>;
 };
 template<auto... v>
 template<template<class...>class Range>
