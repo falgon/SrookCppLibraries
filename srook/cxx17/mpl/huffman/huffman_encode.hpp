@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MPL_HUFFMAN_CODING_HPP
 #define INCLUDED_SROOK_MPL_HUFFMAN_CODING_HPP
 #include<type_traits>

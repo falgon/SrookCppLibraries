@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_SORT_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_SORT_HPP
 #include<type_traits>

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_UTILITY_VOID_T_HPP
 #define INCLUDED_SROOK_UTILITY_VOID_T_HPP
 #include<cstddef>

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_TUPLE_FILTER_TYPE_HPP
 #define INCLUDED_SROOK_TUPLE_FILTER_TYPE_HPP
 #include<srook/mpl/variadic_player.hpp>

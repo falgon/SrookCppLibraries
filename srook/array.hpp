@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_ALL_SAME_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_ALL_SAME_HPP
 #include<array>

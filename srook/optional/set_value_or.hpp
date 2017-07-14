@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_OPIONAL_SETTER_HPP
 #define INCLUDED_SROOK_OPIONAL_SETTER_HPP
 #if __has_include(<optional>)

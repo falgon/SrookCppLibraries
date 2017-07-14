@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_ADAPTORS_COPY_BACKWORD_HPP
 #define INCLUDED_SROOK_ADAPTORS_COPY_BACKWORD_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

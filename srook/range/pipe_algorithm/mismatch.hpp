@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_MISMATCH_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_MISMATCH_HPP
 #if __has_include(<boost/range/algorithm/mismatch.hpp>)

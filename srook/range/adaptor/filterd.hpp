@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_ADAPTOR_FILTERD_HPP
 #define INCLUDED_ADAPTOR_FILTERD_HPP
 #include<srook/iterator/range_iterator.hpp>

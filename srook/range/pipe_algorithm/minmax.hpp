@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_MINMAX_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_MINMAX_HPP
 #include<algorithm>

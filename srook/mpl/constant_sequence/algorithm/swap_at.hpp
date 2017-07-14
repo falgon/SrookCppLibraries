@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CONSTANT_SWAP_AT_HPP
 #define INCLUDED_SROOK_CONSTANT_SWAP_AT_HPP
 #include<type_traits>

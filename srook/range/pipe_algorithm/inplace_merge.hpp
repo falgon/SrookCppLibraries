@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDE_SROOK_RANGE_ADAPTOR_INPLACE_MERGE_HPP
 #define INCLUDE_SROOK_RANGE_ADAPTOR_INPLACE_MERGE_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

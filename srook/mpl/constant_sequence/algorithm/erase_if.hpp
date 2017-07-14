@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ERASE_IF_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ERASE_IF_HPP
 #include<srook/mpl/constant_sequence/algorithm/concat.hpp>

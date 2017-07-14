@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 #define INCLUDED_SROOK_ADAPTOR_BINARY_SEARCH_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

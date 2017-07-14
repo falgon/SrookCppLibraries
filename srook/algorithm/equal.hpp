@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_ALGORITHM_EQUAL_HPP
 #define INCLUDED_SROOK_ALGORITHM_EQUAL_HPP
 #include<srook/config/require.hpp>

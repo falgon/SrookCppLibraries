@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifdef __cplusplus
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_ENABLE_IF
 #define INCLUDED_SROOK_TYPE_TRAITS_ENABLE_IF

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_DIGITS_VALUES
 #define INCLUDED_SROOK_DIGITS_VALUES
 

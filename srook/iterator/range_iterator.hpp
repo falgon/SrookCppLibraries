@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef SROOK_INCLUDED_RANGE_ITERATOR
 #define SROOK_INCLUDED_RANGE_ITERATOR
 #include<iterator>

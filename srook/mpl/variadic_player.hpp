@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef SROOK_INCLUDE_VARIADIC_PLAYER_HPP
 #define SROOK_INCLUDE_VARIADIC_PLAYER_HPP
 #include<srook/mpl/variadic_tmp_player.hpp>

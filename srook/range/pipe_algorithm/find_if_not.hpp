@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_FIND_IF_NOT
 #define INCLUDED_SROOK_FIND_IF_NOT
 #include<srook/range/adaptor/adaptor_operator.hpp>

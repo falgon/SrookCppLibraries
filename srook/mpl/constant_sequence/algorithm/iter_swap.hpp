@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ITER_SWAP_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ITER_SWAP_HPP
 #include<srook/mpl/constant_sequence/iterator/index_sequence_iterator.hpp>

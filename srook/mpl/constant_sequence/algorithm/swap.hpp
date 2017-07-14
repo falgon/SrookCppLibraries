@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_SWAP_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_SWAP_HPP
 #include<type_traits>

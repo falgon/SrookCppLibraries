@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_FILTERD_ITERATOR_HPP
 #define INCLUDED_FILTERD_ITERATOR_HPP
 #include<iterator>

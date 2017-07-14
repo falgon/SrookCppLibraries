@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CONFIG_NULLPTR_T
 #define INCLUDED_SROOK_CONFIG_NULLPTR_T
 #if !__has_include(<type_traits>)

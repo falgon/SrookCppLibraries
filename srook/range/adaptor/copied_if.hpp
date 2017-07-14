@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_ADAPROT_COPIED_IF_HPP
 #define INCLUDED_SROOK_ADAPROT_COPIED_IF_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

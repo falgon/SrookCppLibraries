@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ITERATOR_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ITERATOR_HPP
 #include<srook/mpl/constant_sequence/algorithm/at.hpp>

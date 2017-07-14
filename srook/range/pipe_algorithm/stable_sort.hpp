@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_STABLE_SORT_HPP
 #define INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_STABLE_SORT_HPP
 #include<srook/type_traits/has_iterator.hpp>

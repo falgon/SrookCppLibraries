@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
 #include<type_traits>

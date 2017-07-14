@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_REMOVE_COPIED_RANGE_ITERATOR_HPP
 #define INCLUDED_SROOK_REMOVE_COPIED_RANGE_ITERATOR_HPP
 #include<srook/type_traits/has_iterator.hpp>

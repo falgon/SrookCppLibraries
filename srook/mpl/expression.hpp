@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MPL_EXPRESSION
 #define INCLUDED_SROOK_MPL_EXPRESSION
 #include<utility>

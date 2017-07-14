@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef TEST_PASSING_THROUGH
 #ifdef __cplusplus
 #ifndef INCLUDED_SROOK_CONFIG_HPP

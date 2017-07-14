@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_MAX_ELEMENT_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_MAX_ELEMENT_HPP
 #include<srook/mpl/has_iterator.hpp>

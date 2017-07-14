@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_ALGORITHM_COUNT_HPP
 #define INCLUDED_SROOK_ALGORITHM_COUNT_HPP
 #include<srook/tuple/tuple_filter_type.hpp>

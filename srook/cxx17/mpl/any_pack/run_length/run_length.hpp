@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_RUN_LENGTH_HPP
 #define INCLUDED_SROOK_CXX17_MPL_RUN_LENGTH_HPP
 #include<srook/cxx17/mpl/any_pack.hpp>

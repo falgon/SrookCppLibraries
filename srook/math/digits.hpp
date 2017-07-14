@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_DIGITS_HPP
 #define INCLUDED_DIGITS_HPP
 #include<vector>

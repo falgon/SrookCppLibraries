@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CXX17_ANY_HPP
 #define INCLUDED_SROOK_CXX17_ANY_HPP
 #include<memory>

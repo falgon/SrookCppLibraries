@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_UTILITY_IN_PLACE_HPP
 #define INCLUDED_SROOK_UTILITY_IN_PLACE_HPP
 #include<cstddef>

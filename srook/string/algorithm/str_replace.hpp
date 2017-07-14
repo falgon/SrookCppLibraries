@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_STRING_REPLACE
 #define INLCUDED_STRING_REPLACE
 #include<string>

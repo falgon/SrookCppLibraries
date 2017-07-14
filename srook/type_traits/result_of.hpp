@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_RESULT_OF_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_RESULT_OF_HPP
 #if __cplusplus >= 201103L

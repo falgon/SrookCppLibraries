@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
 #include<srook/iterator/remove_copied_if_range_iterator.hpp>

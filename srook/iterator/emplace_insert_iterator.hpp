@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_EMPLACE_INSERT_ITERATOR
 #define INCLUDED_EMPLACE_INSERT_ITERATOR
 #include<iterator>

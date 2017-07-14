@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_HPP
 #include<srook/mpl/variadic_player.hpp>

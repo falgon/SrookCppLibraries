@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_MATH_PI_HPP
 #define INCLUDED_SROOK_MATH_PI_HPP
 #include<type_traits>

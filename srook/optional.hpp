@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_EXT_OPTIONAL
 #define INCLUDED_SROOK_EXT_OPTIONAL
 #include<exception>

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
 #include<type_traits>

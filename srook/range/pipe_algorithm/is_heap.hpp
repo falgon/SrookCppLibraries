@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef SROOK_INCLUDED_RANGE_ADAPTOR_IS_HEAP
 #define SROOK_INCLUDED_RANGE_ADAPTOR_IS_HEAP
 #include<srook/range/adaptor/adaptor_operator.hpp>

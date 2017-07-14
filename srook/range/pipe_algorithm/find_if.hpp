@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INLCLUDED_SROOK_RANGE_ADAPTOR_FIND_IF_HPP
 #define INLCLUDED_SROOK_RANGE_ADAPTOR_FIND_IF_HPP
 #include<utility>

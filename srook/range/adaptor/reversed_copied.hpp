@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_SROOK_RANGE_ALGORITHM_REVERSED_COPIED_HPP
 #define INCLUDED_SROOK_RANGE_ALGORITHM_REVERSED_COPIED_HPP
 #include<srook/iterator/range_iterator.hpp>

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #ifndef INCLUDED_EMPLACE_BACK_HPP
 #define INCLUDED_EMPLACE_BACK_HPP
 
