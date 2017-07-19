@@ -9,7 +9,7 @@
 #elif __has_include(<boost/optional.hpp>)
 #	include<boost/optional.hpp>
 #	define NULLOPT boost::none
-#	define NULLOPT_T boost::none_t;
+#	define NULLOPT_T boost::none_t
 #endif
 
 namespace srook{
