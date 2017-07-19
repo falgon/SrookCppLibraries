@@ -4,4 +4,5 @@
 #include<srook/iterator/emplace_back_insert_iterator.hpp>
 #include<srook/iterator/emplace_front_insert_iterator.hpp>
 #include<srook/iterator/emplace_insert_iterator.hpp>
+#include<srook/iterator/ostream_joiner.hpp>
 #endif
