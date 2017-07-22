@@ -4,9 +4,9 @@
 #include<tuple>
 #include<iostream>
 
-template<std::size_t,class,class> struct FizzBuzz;
+template<std::size_t,class,class,class> struct FizzBuzz;
 template<std::size_t i>
-struct FizzBuzz<i,srook::any_pack<>,srook::any_pack<>> 
+struct FizzBuzz<i,srook::any_pack<>,srook::any_pack<>,srook::pack<>> 
 	: srook::type_constant<
 		std::conditional_t<
 			i % 15 == 0,
