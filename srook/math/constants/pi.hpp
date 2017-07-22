@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_PI_HPP
 #define INCLUDED_SROOK_MATH_PI_HPP
 #include<type_traits>
@@ -13,7 +13,7 @@ template<class T>
 struct PI_{
 	static constexpr T value()
 	{
-		static_assert(std::is_arithmetic_v<T>,"This type is not supported");
+		static_assert(std::is_arithmetic<T>::value,"This type is not supported");
 		return T(M_PI);
 	}
 };

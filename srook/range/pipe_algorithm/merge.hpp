@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef SROOK_INCLUDED_RANGE_ADAPTOR_MERGE_HPP
 #define SROOK_INCLUDED_RANGE_ADAPTOR_MERGE_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

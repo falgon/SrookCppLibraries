@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MEMORY_UNIQUE_PTR_HPP
 #define INCLUDED_SROOK_MEMORY_UNIQUE_PTR_HPP
 #if __has_include(<memory>)

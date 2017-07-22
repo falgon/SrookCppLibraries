@@ -1,5 +1,4 @@
-// Copyright (C) 2017 Roki
-#ifndef TEST_PASSING_THROUGH
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #define INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #ifdef __cplusplus
@@ -235,6 +234,5 @@
 
 #else
 #include<stddef.h>
-#endif
 #endif
 #endif

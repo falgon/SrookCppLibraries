@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTORS_PARTIALSORT_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTORS_PARTIALSORT_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_SWAP_RANGES_HPP
 #define INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_SWAP_RANGES_HPP
 #include<srook/type_traits/has_iterator.hpp>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_HPP
 #include<srook/config/require.hpp>

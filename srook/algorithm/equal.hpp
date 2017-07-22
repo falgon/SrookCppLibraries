@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_ALGORITHM_EQUAL_HPP
 #define INCLUDED_SROOK_ALGORITHM_EQUAL_HPP
 #include<srook/config/require.hpp>
@@ -9,15 +9,17 @@
 #include<type_traits>
 #include<tuple>
 
+#include<iostream>
+
 namespace srook{
 
 namespace detail{
 
 template<bool,class>
-struct Apply;
+struct Apply_Equal;
 
 template<class... Pack>
-struct Apply<false,pack<Pack...>>{
+struct Apply_Equal<false,pack<Pack...>>{
 	template<class... LTs,class... RTs,class BinaryPred>
 	constexpr static bool apply(const std::tuple<LTs...>&,const std::tuple<RTs...>&,BinaryPred&&)
 	{
@@ -26,7 +28,7 @@ struct Apply<false,pack<Pack...>>{
 };
 
 template<class Head,class Second,class... Tail>
-struct Apply<true,pack<Head,Second,Tail...>>{
+struct Apply_Equal<true,pack<Head,Second,Tail...>>{
 	template<class T>
 	using is_same=std::is_same<T,Head>;
 
@@ -36,7 +38,7 @@ struct Apply<true,pack<Head,Second,Tail...>>{
 			constexpr static bool
 			apply(const std::tuple<LTs...>&,const std::tuple<RTs...>&,const std::tuple<SL...>& sl,const std::tuple<SR...>& sr,std::integral_constant<std::size_t,n>,BinaryPred&& pred)
 			{
-				return Apply<true,pack<Second,Tail...>>::apply(sl,sr,std::forward<BinaryPred>(pred));
+				return Apply_Equal<true,pack<Second,Tail...>>::apply(sl,sr,std::forward<BinaryPred>(pred));
 			}
 		};
 		struct unpacker{
@@ -47,7 +49,7 @@ struct Apply<true,pack<Head,Second,Tail...>>{
 				if(!std::forward<BinaryPred>(pred)(std::get<n>(l),std::get<n>(r))){
 					return false;
 				}else{
-					return Apply<
+					return Apply_Equal<
 						true,
 						pack<Head,Second,Tail...>
 					>::Judger::apply(l,r,sl,sr,std::integral_constant<std::size_t,n-1>(),std::forward<BinaryPred>(pred));
@@ -78,7 +80,7 @@ struct Apply<true,pack<Head,Second,Tail...>>{
 };
 
 template<class Tail>
-struct Apply<true,pack<Tail>>{
+struct Apply_Equal<true,pack<Tail>>{
 	template<class T>
 	using is_same=std::is_same<T,Tail>;
 
@@ -100,7 +102,7 @@ struct Apply<true,pack<Tail>>{
 				if(!std::forward<BinaryPred>(pred)(std::get<n>(l),std::get<n>(r))){
 					return false;
 				}else{
-					return Apply<true,pack<Tail>>::Judger::apply(l,r,std::integral_constant<std::size_t,n-1>(),std::forward<BinaryPred>(pred));
+					return Apply_Equal<true,pack<Tail>>::Judger::apply(l,r,std::integral_constant<std::size_t,n-1>(),std::forward<BinaryPred>(pred));
 				}
 			}
 		};
@@ -163,7 +165,7 @@ template<class... LTs,class... RTs,class BinaryPred=decltype(detail::same_pred)>
 constexpr bool equal(const std::tuple<LTs...>& l,const std::tuple<RTs...>& r,const BinaryPred& pred=detail::same_pred)
 {
 	return 
-		detail::Apply<
+		detail::Apply_Equal<
 			std::tuple_size<std::tuple<LTs...>>::value==std::tuple_size<std::tuple<RTs...>>::value
 			and
 			detail::sequence_same_v<pack<LTs...>,pack<RTs...>>,

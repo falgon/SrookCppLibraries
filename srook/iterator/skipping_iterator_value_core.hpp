@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_SKIPPING_ITERATOR_VALUE_CORE_HPP
 #define INCLUDED_SROOK_SKIPPING_ITERATOR_VALUE_CORE_HPP
 #include<srook/type_traits/has_iterator.hpp>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ERASE_INDEX_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ERASE_INDEX_HPP
 #include<srook/mpl/constant_sequence/algorithm/erase_all.hpp>

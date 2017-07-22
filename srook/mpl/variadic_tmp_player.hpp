@@ -1,16 +1,8 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
 #define INCLUDED_SROOK_MPL_VARIADIC_TMP_PLAYER_HPP
 #include<cstddef>
-#if __has_include(<optional>)
-#	include<optional>
-#	define NULLOPT std::nullopt
-#	define NULLOPT_T std::nullopt_t
-#elif __has_include(<boost/optional.hpp>)
-#	include<boost/optional.hpp>
-#	define NULLOPT boost::none
-#	define NULLOPT_T boost::none_t
-#endif
+#include<srook/config/libraries/optional.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -314,10 +306,6 @@ template<class Target,class... Tail>
 struct At<0,Target,Tail...>{
 	using type=Target;
 };
-/*template<class Target>
-struct At<0,pack<Target>>{
-	using type=Target;
-};*/
 template<std::size_t index,class Head,class... Tail>
 struct At<index,pack<Head,Tail...>>:At<index,Head,Tail...>{};
 template<std::size_t index,class... Pack>

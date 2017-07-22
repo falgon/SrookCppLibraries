@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_SORT_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_SORT_HPP
 #include<type_traits>
@@ -40,7 +40,7 @@ struct sort<Comp,std::index_sequence<>>{
 template<std::size_t l,std::size_t r>
 using less=std::integral_constant<bool,(l<r)>;
 template<std::size_t l,std::size_t r>
-using greater=std::integral_constant<bool,!less<l,r>::value>;
+using greater=std::integral_constant<bool,(l>r)>;
 template<std::size_t l,std::size_t r>
 using less_or_equal=std::integral_constant<bool,(l<=r)>;
 template<std::size_t l,std::size_t r>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_TYPETRAITS_ADD_POINTER_HPP
 #define INCLUDED_SROOK_MPL_TYPETRAITS_ADD_POINTER_HPP
 #include<srook/config/compiler.hpp>

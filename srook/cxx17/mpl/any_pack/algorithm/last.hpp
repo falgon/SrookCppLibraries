@@ -2,7 +2,6 @@
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_LAST_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_LAST_HPP
 #include<srook/mpl/variadic_player.hpp>
-#include<optional>
 
 namespace srook{
 inline namespace mpl{
@@ -22,11 +21,11 @@ struct last<tail>{
 };
 template<>
 struct last<>{
-	static constexpr std::nullopt_t value = std::nullopt;
+	static constexpr NULLOPT_T value = NULLOPT;
 };
 
 template<auto... v>
-constexpr std::conditional_t<!sizeof...(v),std::nullopt_t,Last_t<decltype(v)...>> last_v = last<v...>::value;
+constexpr std::conditional_t<!sizeof...(v),NULLOPT_T,Last_t<decltype(v)...>> last_v = last<v...>::value;
 
 } // namespace detail
 } // inline namespace v1

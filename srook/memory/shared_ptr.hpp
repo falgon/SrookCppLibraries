@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MEMORY_SHARED_PTR
 #define INCLUDED_SROOK_MEMORY_SHARED_PTR
 

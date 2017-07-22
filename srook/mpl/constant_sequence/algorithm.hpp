@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_ALGORITHM_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_ALGORITHM_HPP
 #include<type_traits>

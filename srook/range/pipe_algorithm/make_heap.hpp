@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_ADAPTOR_MAKE_HEAP
 #define INCLUDED_SROOK_ADAPTOR_MAKE_HEAP
 #include<srook/range/adaptor/adaptor_operator.hpp>

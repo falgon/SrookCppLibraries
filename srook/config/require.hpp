@@ -1,5 +1,4 @@
-// Copyright (C) 2017 Roki
-#ifndef TEST_PASSING_THROUGH
+// Copyright (C) 2017 roki
 #ifdef __cplusplus
 #ifndef INCLUDED_SROOK_CONFIG_HPP
 #define INCLUDED_SROOK_CONFIG_HPP
@@ -35,8 +34,4 @@
 #endif
 
 #endif
-#endif
-#else
-#define VARIADIC_REQUIRES(...) typename std::enable_if<static_cast<bool>((__VA_ARGS__ + ...)),std::nullptr_t>::type =nullptr
-#define REQUIRES(...) typename std::enable_if<__VA_ARGS__,std::nullptr_t>::type =nullptr
 #endif

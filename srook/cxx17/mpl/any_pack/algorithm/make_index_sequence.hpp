@@ -25,7 +25,4 @@ using make_index_sequence = typename make_index_sequence_impl<n,Seq>::type;
 } // inlnie namespace mpl 
 } // namespace srook
 
-#ifdef NULLOPT
-#undef NULLOPT
-#endif
 #endif

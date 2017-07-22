@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_POP_HEAP_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_POP_HEAP_HPP
 #if __has_include(<boost/range/algorithm/heap_algorithm.hpp>)

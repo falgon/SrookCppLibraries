@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TUPLE_REVERSE_HPP
 #define INCLUDED_SROOK_TUPLE_REVERSE_HPP
 #include<srook/mpl/variadic_player.hpp>

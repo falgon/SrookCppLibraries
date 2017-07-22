@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_PARTIAL_HEAD_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_PARTIAL_HEAD_HPP
 #include<type_traits>
@@ -20,6 +20,7 @@ template<std::size_t tail,std::size_t... args>
 struct partial_head<1,std::index_sequence<tail,args...>>{
 	using type=std::index_sequence<tail>;
 };
+
 template<std::size_t target,class Sequence>
 using partial_head_t=typename partial_head<target,Sequence>::type;
 

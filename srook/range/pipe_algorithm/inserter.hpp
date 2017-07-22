@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef SROOK_INCLUDED_ADAPTOR_INSERT
 #define SROOK_INCLUDED_ADAPTOR_INSERT
 #include<tuple>

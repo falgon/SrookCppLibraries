@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_STRING_HPP
 #define INCLUDED_STRING_HPP
 #include<srook/string/make_elements_string.hpp>

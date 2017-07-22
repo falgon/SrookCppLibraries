@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_CONCAT_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_CONCAT_HPP
 #include<type_traits>

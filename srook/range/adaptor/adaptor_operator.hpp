@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef SROOK_INCLUDED_ADAPTOR_OPERATOR
 #define SROOK_INCLUDED_ADAPTOR_OPERATOR
 #include<utility>

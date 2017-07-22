@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_ALGORITHM_BINARY_SEARCH_HPP
 #define INCLUDED_SROOK_MPL_ALGORITHM_BINARY_SEARCH_HPP
 #include<utility>

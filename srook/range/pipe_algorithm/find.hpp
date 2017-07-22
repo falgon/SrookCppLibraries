@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_ADAPTOR_FIND
 #define INCLUDED_ADAPTOR_FIND
 #include<srook/range/adaptor/adaptor_operator.hpp>

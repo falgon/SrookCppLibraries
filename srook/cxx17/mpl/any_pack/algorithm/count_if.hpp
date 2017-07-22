@@ -21,7 +21,4 @@ constexpr std::size_t count_if_v = count_if<Predicate,v...>::value;
 } // inlnie namespace mpl 
 } // namespace srook
 
-#ifdef NULLOPT
-#undef NULLOPT
-#endif
 #endif

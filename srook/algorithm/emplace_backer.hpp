@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_EMPLACE_BACKER_HPP
 #define INCLUDED_EMPLACE_BACKER_HPP
 #include<utility>

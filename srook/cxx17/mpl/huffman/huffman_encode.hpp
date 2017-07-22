@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_HUFFMAN_CODING_HPP
 #define INCLUDED_SROOK_MPL_HUFFMAN_CODING_HPP
 #include<type_traits>
@@ -12,9 +12,6 @@
 
 namespace srook{
 namespace huffman_coding{
-
-template<auto...>
-struct pack{};
 
 namespace{
 
@@ -54,6 +51,8 @@ struct first_type<type_pack<Head,Tail...>>:first_type<Head,Tail...>{};
 template<class... Pack>
 using first_type_t=typename first_type<Pack...>::type;
 
+template<auto...>
+struct pack{};
 
 template<auto,class> struct count;
 template<auto target,auto head,auto... tail>

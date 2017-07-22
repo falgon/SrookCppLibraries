@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_MAKE_ELEMENtS_STRING_HPP
 #define INCLUDED_MAKE_ELEMENtS_STRING_HPP
 

@@ -2,7 +2,6 @@
 #ifndef INCLUDED_ANY_PACK_TEST_HPP
 #define INCLUDED_ANY_PACK_TEST_HPP
 
-#include<optional>
 #include<srook/mpl/variadic_player.hpp>
 #include<srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 #include<srook/cxx17/mpl/any_pack/algorithm/at.hpp>

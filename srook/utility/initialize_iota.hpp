@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_INIT_IOTA
 #define INCLUDED_INIT_IOTA
 #include<boost/preprocessor/repetition/repeat_from_to.hpp>

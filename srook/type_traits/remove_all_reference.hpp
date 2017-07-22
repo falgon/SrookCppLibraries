@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_REMOVE_ALL_REFERENCES
 #define INCLUDED_SROOK_TYPE_TRAITS_REMOVE_ALL_REFERENCES
 #include<srook/mpl/variadic_player.hpp>

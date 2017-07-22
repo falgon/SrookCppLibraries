@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ITERATOR_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ITERATOR_HPP
 #include<srook/mpl/constant_sequence/algorithm/at.hpp>
@@ -17,6 +17,7 @@ template<std::size_t head,std::size_t... tail>
 struct index_sequence_iterator<std::index_sequence<head,tail...>>{
 	static constexpr std::size_t value=head;
 	static constexpr std::size_t index=0;
+	using type=std::index_sequence<head,tail...>;
 };
 
 template<class>

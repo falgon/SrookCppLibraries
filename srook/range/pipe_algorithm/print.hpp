@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_ADAPTOR_PRINT_HPP
 #define INCLUDED_ADAPTOR_PRINT_HPP
 #include<iterator>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_CONJUNCTION_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_CONJUNCTION_HPP
 #include<type_traits>

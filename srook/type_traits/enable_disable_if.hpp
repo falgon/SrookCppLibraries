@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifdef __cplusplus
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_ENABLE_IF
 #define INCLUDED_SROOK_TYPE_TRAITS_ENABLE_IF
@@ -12,9 +12,8 @@
 #include<boost/utility/disable_if.hpp>
 #else
 namespace srook{
-#if __cplusplus > 201103L
 inline namespace v1{
-#endif
+
 #ifdef SROOK_NO_CXX11_NULLPTR
 template<bool B,class T=void>
 #else
@@ -46,9 +45,7 @@ template<bool B,class T=std::nullptr_t>
 using disable_if_t=typename disable_if<B,T>::type;
 #endif
 
-#if __cplusplus > 201103L
 } // inline namespace v1
-#endif
 } // namespace srook
 #endif
 #endif

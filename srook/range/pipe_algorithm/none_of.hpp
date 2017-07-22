@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_NONE_OF_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_NONE_OF_HPP
 #include<algorithm>

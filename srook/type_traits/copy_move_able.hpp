@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_TYPE_TRAITS_COPY_MOVE_ABLE
 #define INCLUDED_TYPE_TRAITS_COPY_MOVE_ABLE
 #include<type_traits>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_ROTATE_COPY_HPP
 #define INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_ROTATE_COPY_HPP
 #include<srook/config/require.hpp>
