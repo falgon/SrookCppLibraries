@@ -16,12 +16,12 @@ struct Empty_type{
 template<class... Ts>
 struct void_t_impl:Empty_type<void,Ts...>{};
 
-}; // inline namespace v1
-}; // namespace detail
+} // inline namespace v1
+} // namespace detail
 
 template<class... Ts>
 using void_t=typename detail::void_t_impl<Ts...>::type;
 
-}; // namespace srook
+} // namespace srook
 
 #endif

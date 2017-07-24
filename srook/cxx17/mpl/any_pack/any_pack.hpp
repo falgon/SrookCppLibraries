@@ -33,6 +33,7 @@
 #include<srook/cxx17/mpl/any_pack/algorithm/sort.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/transfer.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/unique.hpp>
+#include<srook/cxx17/mpl/any_pack/random/make_random_sequence.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -97,6 +98,8 @@ inline namespace v1{
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_until = detail::for_type_until_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_cut_to = detail::for_type_cut_to_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_cut_until = detail::for_type_cut_until_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
+
+		template<std::size_t N,class RandomEngine> using make_random_sequence = srook::random::make_random_sequence<N,RandomEngine,any_pack<v...>>;	
   	};
 
   	template<auto... v>

@@ -7,7 +7,7 @@
 #	define SROOK_TRUE_TYPE std::true_type
 #	define SROOK_FALSE_TYPE std::false_type
 #elif __has_include(<boost/type_traits.hpp>)
-#include<boost/type_traits.hpp>
+#	include<boost/type_traits.hpp>
 #	define SROOK_TRUE_TYPE boost::true_type
 #	define SROOK_FALSE_TYPE boost::false_type
 #else
@@ -28,4 +28,5 @@ struct false_type{
 #	define SROOK_TRUE_TYPE srook::true_type
 #	define SROOK_FALSE_TYPE srook::false_type
 
+#endif
 #endif
