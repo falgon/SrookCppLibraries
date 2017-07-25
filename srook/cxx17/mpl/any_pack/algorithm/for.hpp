@@ -3,6 +3,8 @@
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_FOR_HPP
 #include<srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 #include<srook/cxx17/mpl/any_pack/algorithm/concat.hpp>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -64,7 +66,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_to_t = 
 	std::conditional_t<
@@ -90,7 +92,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_until_t = 
 	std::conditional_t<
@@ -115,7 +117,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_cut_to_t = typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type;
 
@@ -127,7 +129,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_cut_until_t = typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type;
 

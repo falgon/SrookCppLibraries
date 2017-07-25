@@ -32,7 +32,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_type_to_t = 
 	std::conditional_t<
@@ -58,7 +58,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_type_until_t = 
 	std::conditional_t<
@@ -83,7 +83,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_type_cut_to_t = typename for_type_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type;
 
@@ -95,7 +95,7 @@ template<
 	class Parameter = any_pack<>,
 	class Seq = any_pack<>,
 	class TPack = pack<>,
-	std::enable_if_t<std::is_invocable_v<Crease,std::size_t>,std::nullptr_t> = nullptr
+	REQUIRES(std::is_nothrow_constructible_v<Crease> and is_callable_v<Crease>)
 >
 using for_type_cut_until_t = typename for_type_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type;
 
