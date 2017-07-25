@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_ANY_PACK_RANDOM_UNIFORM_INT_DISTRIBUTION_HPP
 #define INCLUDED_SROOK_CXX17_ANY_PACK_RANDOM_UNIFORM_INT_DISTRIBUTION_HPP
 #include<srook/cxx17/mpl/any_pack/random/engines/linear_congruential.hpp>

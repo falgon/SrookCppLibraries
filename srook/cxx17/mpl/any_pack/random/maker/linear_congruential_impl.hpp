@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_RANDOM_MAKER_LINEAR_CONGRUENTIAL_IMPL_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_RANDOM_MAKER_LINEAR_CONGRUENTIAL_IMPL_HPP
 #include<srook/cxx17/mpl/any_pack/random/maker/core/make_random_sequence_declare.h>

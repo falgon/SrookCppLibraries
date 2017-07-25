@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_RANDOM_XOR_SHIFT_HPP
 #define INCLUDED_SROOK_CXX17_MPL_RANDOM_XOR_SHIFT_HPP
 #include<cstdint>
