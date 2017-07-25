@@ -21,6 +21,8 @@
 #include<srook/cxx17/mpl/any_pack/algorithm/first.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/for.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/for_type.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/for_conditional.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/for_type_conditional.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/last.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/make_any_pack.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/make_index_sequence.hpp>
@@ -98,6 +100,11 @@ inline namespace v1{
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_until = detail::for_type_until_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_cut_to = detail::for_type_cut_to_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
   		template<std::size_t begin,std::size_t end,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = std::conditional_t<(begin < end),detail::Increment,detail::Decrement>> using for_type_cut_until = detail::for_type_cut_until_t<begin,end,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
+		
+		template<std::size_t begin,class conditional_End,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = detail::Increment> using for_conditional = detail::for_conditional_t<begin,conditional_End,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
+		template<std::size_t begin,class conditional_End,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = detail::Increment> using for_conditional_cut = detail::for_conditional_cut_t<begin,conditional_End,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
+		template<std::size_t begin,class conditional_End,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = detail::Increment> using for_type_conditional = detail::for_type_conditional_t<begin,conditional_End,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
+		template<std::size_t begin,class conditional_End,template<std::size_t,class,class,class>class Applyer,class Parameter = any_pack<>,class TypePack = pack<>,class Crease = detail::Increment> using for_type_conditional_cut = detail::for_type_conditional_cut_t<begin,conditional_End,Applyer,Crease,Parameter,any_pack<v...>,TypePack>;
 
 		template<std::size_t N,class RandomEngine> using make_random_sequence = srook::random::make_random_sequence<N,RandomEngine,any_pack<v...>>;	
   	};
