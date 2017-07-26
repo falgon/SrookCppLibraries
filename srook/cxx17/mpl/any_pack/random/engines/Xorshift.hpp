@@ -21,6 +21,7 @@ public:
 	static constexpr result_type min(){return 0;}
 	static constexpr result_type max(){return std::numeric_limits<UIntType>::max();}
 	static constexpr result_type result = inner2 ^ (inner2 << 5);
+	using next_type = Xorshift32<UIntType,result>;
 };
 
 template<class UIntType = std::uint_fast64_t,UIntType Y = 88172645463325252ULL>
@@ -34,6 +35,7 @@ public:
 	static constexpr result_type min(){return 0;}
 	static constexpr result_type max(){return std::numeric_limits<UIntType>::max();}
 	static constexpr result_type result = inner2 ^ (inner2 << 17);
+	using next_type = Xorshift64<UIntType,result>;
 };
 
 template<class UIntType = std::uint_fast32_t,UIntType X = 123456789,UIntType Y = 362436069,UIntType Z = 521288629>
@@ -47,6 +49,7 @@ public:
 	static constexpr result_type result = (X ^ (X << 3)) ^ (Y ^ (Y >> 19)) ^ (Z ^ (Z << 6));
 	static constexpr result_type min(){return 0;}
 	static constexpr result_type max(){return std::numeric_limits<UIntType>::max();}
+	using next_type = Xorshift96<UIntType,x,y,result>;
 };
 
 template<class UIntType = std::uint_fast32_t,UIntType X = 123456789,UIntType Y = 362436069,UIntType Z = 521288629,UIntType W = 88675123>
@@ -62,6 +65,7 @@ public:
 	static constexpr result_type result = (W ^ (W >> 19)) ^ (t ^ (t >> 8));
 	static constexpr result_type min(){return 0;}
 	static constexpr result_type max(){return std::numeric_limits<UIntType>::max();}
+	using next_type = Xorshift128<UIntType,x,y,z,result>;
 };
 
 } // inline namespace v1

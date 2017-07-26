@@ -23,6 +23,7 @@ public:
 	static constexpr result_type min(){return C == 0u ? 1u : 0u;}
 	static constexpr result_type max(){return M - 1u;}
 	static constexpr result_type result = (seed * A + C) & M;
+	using next_type = linear_congruential<UIntType,result,A,C,M>;
 };
 
 template<std::uint_fast32_t seed = 1>

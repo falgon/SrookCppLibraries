@@ -32,10 +32,11 @@
 #include<srook/cxx17/mpl/any_pack/algorithm/pop_front.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/replace_elements.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/reverse.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/size.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/sort.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/transfer.hpp>
 #include<srook/cxx17/mpl/any_pack/algorithm/unique.hpp>
-#include<srook/cxx17/mpl/any_pack/random/make_random_sequence.hpp>
+#include<srook/cxx17/mpl/any_pack/random/random.hpp>
 
 namespace srook{
 inline namespace mpl{

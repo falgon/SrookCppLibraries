@@ -1,7 +1,6 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_ANY_PACK_RANDOM_UNIFORM_INT_DISTRIBUTION_HPP
 #define INCLUDED_SROOK_CXX17_ANY_PACK_RANDOM_UNIFORM_INT_DISTRIBUTION_HPP
-#include<srook/cxx17/mpl/any_pack/random/engines/linear_congruential.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -15,6 +14,7 @@ struct uniform_int_distribution{
 	static_assert(min < RandomEngine::max());
 	static_assert(min <= max);
 	using result_type = typename RandomEngine::result_type;
+	using next_type = uniform_int_distribution<typename RandomEngine::next_type,min,max>;
 private:
 	static constexpr result_type r = RandomEngine::result;
 public:

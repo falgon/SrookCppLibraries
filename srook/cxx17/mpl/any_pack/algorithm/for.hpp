@@ -3,6 +3,9 @@
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_FOR_HPP
 #include<srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 #include<srook/cxx17/mpl/any_pack/algorithm/concat.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/size.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/through_anypack/partial_head.hpp>
+#include<srook/cxx17/mpl/any_pack/algorithm/through_anypack/partial_tail.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
 
@@ -70,15 +73,17 @@ template<
 >
 using for_to_t = 
 	std::conditional_t<
-		(for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::size() == Seq::size()),
+		(detail::size<typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::size()> == detail::size<Seq>),
 		typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type,
 		std::conditional_t<
 			(begin < end),
-			typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::template concat_type<
-				typename Seq::template partial_tail_type<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::size()>
+			detail::concat_t<
+				typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type,
+				through::partial_tail_t<size<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type>,Seq>
 			>,
-			typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::template concat_type<
-				typename Seq::template partial_head_type<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type::size()>
+			detail::concat_t<
+				typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type,
+				through::partial_head_t<size<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less_or_equal,Greater_or_equal>,Parameter,Seq,TPack>::type>,Seq>
 			>
 		>
 	>;
@@ -96,15 +101,23 @@ template<
 >
 using for_until_t = 
 	std::conditional_t<
-		(for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type::size() == Seq::size()),
+		(detail::size<typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type> == detail::size<Seq>),
 		typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type,
 		std::conditional_t<
 			(begin < end),
-			typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type::template concat_type<
-				typename Seq::template partial_tail_type<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type::size()>
+			detail::concat_t<
+				typename detail::for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type,
+				through::partial_tail_t<
+					detail::size<typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type>,
+					Seq
+				>
 			>,
-			typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type::template concat_type<
-				typename Seq::template partial_head_type<for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type::size()>
+			detail::concat_t<
+				typename detail::for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type,
+				through::partial_head_t<
+					detail::size<typename for_<begin,end,Invokable,Crease,std::conditional_t<(begin < end),Less,Greater>,Parameter,Seq,TPack>::type>,
+					Seq
+				>
 			>
 		>
 	>;
