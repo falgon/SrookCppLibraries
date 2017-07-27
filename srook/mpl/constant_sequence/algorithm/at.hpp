@@ -9,18 +9,19 @@ inline namespace mpl{
 namespace constant_sequence{
 inline namespace v1{
 
-template<std::size_t,class>
+template<class,std::size_t,class>
 struct at;
-template<std::size_t index,std::size_t head,std::size_t... tail>
-struct at<index,std::index_sequence<head,tail...>>{
-	static constexpr std::size_t value=at<index-1,std::index_sequence<tail...>>::value;
+
+template<class T,std::size_t index,T head,T... tail>
+struct at<T,index,std::integer_sequence<T,head,tail...>>{
+	static constexpr T value = at<T,index-1,std::integer_sequence<T,tail...>>::value;
 };
-template<std::size_t head,std::size_t... tail>
-struct at<0,std::index_sequence<head,tail...>>{
-	static constexpr std::size_t value=head;
+template<class T,T head,T... tail>
+struct at<T,0,std::integer_sequence<T,head,tail...>>{
+	static constexpr T value = head;
 };
-template<std::size_t index,class Sequence>
-static constexpr std::size_t at_v=at<index,Sequence>::value;
+template<std::size_t index,class Sequence,class T = std::size_t>
+static constexpr T at_v = at<T,index,Sequence>::value;
 
 } // inline namespace v1
 } // namespace constant_sequence

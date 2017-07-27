@@ -306,6 +306,10 @@ template<class Target,class... Tail>
 struct At<0,Target,Tail...>{
 	using type=Target;
 };
+template<std::size_t index>
+struct At<index>{
+	using type=NULLOPT_T;
+};
 template<std::size_t index,class Head,class... Tail>
 struct At<index,pack<Head,Tail...>>:At<index,Head,Tail...>{};
 template<std::size_t index,class... Pack>

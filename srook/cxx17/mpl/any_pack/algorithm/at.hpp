@@ -1,7 +1,7 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_AT_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_AT_HPP
-#include<srook/mpl/variadic_player.hpp>
+#include<srook/config/libraries/optional.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -25,7 +25,7 @@ struct at<target>{
 };
 
 template<std::size_t n,auto... v>
-constexpr std::conditional_t<!sizeof...(v),NULLOPT_T,At_t<n,decltype(v)...>> at_v = at<n,v...>::value;
+constexpr decltype(auto) at_v = at<n,v...>::value;
 
 } // namespace detail
 } // inline namespace v1

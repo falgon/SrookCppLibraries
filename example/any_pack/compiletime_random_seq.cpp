@@ -53,9 +53,34 @@ void xorshift(F&& disp) noexcept
 	std::cout << Xor64_next_result << std::endl;
 }
 
+template<class F>
+void mersenne_twister(F&& disp) noexcept
+{
+	using mt11213b_type = srook::any_pack<>::make_random_sequence<25,srook::random::mt11213b<>>;
+	srook::for_each(mt11213b_type::template constant_range<std::tuple>,disp); std::cout << std::endl;
+	
+	using mt19937_type = srook::any_pack<>::make_random_sequence<25,srook::random::mt19937<>>;
+	srook::for_each(mt19937_type::template constant_range<std::tuple>,disp); std::cout << std::endl;
+
+	using mt19937_64_type = srook::any_pack<>::make_random_sequence<25,srook::random::mt19937_64<>>;
+	srook::for_each(mt19937_64_type::template constant_range<std::tuple>,disp); std::cout << std::endl;
+
+	// uniform int distribution
+	using between_0_to_100_random_10seq_mt = srook::any_pack<>::make_random_sequence<10,srook::random::uniform_int_distribution<srook::random::mt19937<>,0,10>>;
+	srook::for_each(between_0_to_100_random_10seq_mt::template constant_range<std::tuple>,disp); std::cout << std::endl;
+
+	// independence call
+	static constexpr std::uint_fast32_t mt_result = srook::random::mt19937<>::result;
+	using next = srook::random::mt19937<>::next_type;
+	static constexpr std::uint_fast32_t mt_next_result = next::result;
+	std::cout << mt_result << std::endl;
+	std::cout << mt_next_result << std::endl;
+}
+
 int main()
 {
 	constexpr auto disp = [](const auto& x){std::cout << x << " ";};
 	linear(disp);
-	//xorshift(disp);
+	xorshift(disp);
+	mersenne_twister(disp);
 }

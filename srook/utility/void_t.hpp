@@ -4,6 +4,7 @@
 #include<cstddef>
 
 namespace srook{
+namespace utility{
 namespace detail{
 inline namespace v1{
 
@@ -18,9 +19,10 @@ struct void_t_impl:Empty_type<void,Ts...>{};
 
 } // inline namespace v1
 } // namespace detail
+} // namespace utility
 
 template<class... Ts>
-using void_t=typename detail::void_t_impl<Ts...>::type;
+using void_t=typename utility::detail::void_t_impl<Ts...>::type;
 
 } // namespace srook
 
