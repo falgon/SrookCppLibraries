@@ -7,4 +7,15 @@
 #include<srook/cxx17/mpl/any_pack/random/engines/mersenne_twister.hpp>
 #include<srook/cxx17/mpl/any_pack/random/uniform_distribution/uniform_int_distribution.hpp>
 
+namespace srook{
+inline namespace mpl{
+namespace random{
+inline namespace v1{
+
+typedef minstd_rand0<> default_random_engine;
+
+} // inline namespace v1
+} // namespace random 
+} // inline namespace mpl
+} // namespace srook
 #endif

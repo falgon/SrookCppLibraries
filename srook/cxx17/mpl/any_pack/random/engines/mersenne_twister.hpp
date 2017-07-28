@@ -52,7 +52,14 @@ template<
 >
 struct mersenne_twister{
 private:
-	static_assert(std::is_unsigned_v<UIntType>);
+	static_assert(std::is_unsigned_v<UIntType>,"result_type must be an unsigned integral type");
+	static_assert(1u <= m && m <= n,"template argument substituting m out of bounds");
+	static_assert(r <= w, "template argument substituting r out of bound");
+	static_assert(u <= w, "template argument substituting u out of bound");
+	static_assert(s <= w, "template argument substituting s out of bound");
+	static_assert(t <= w, "template argument substituting t out of bound");
+	static_assert(l <= w, "template argument substituting l out of bound");
+	static_assert(w <= std::numeric_limits<UIntType>::digits,"template argument substituting w out of bound");
 public:
 	using result_type = UIntType;
 	static constexpr std::size_t word_size = w;
@@ -131,7 +138,7 @@ using mt11213b =
 		seed,
 		32,351,175,19,
 		0xccab8ee7,11,0xffffffff,7,
-		0x31b6ab00,15,0xffe50000,17,1812433253
+		0x31b6ab00,15,0xffe50000,17,1812433253UL
 	>;
 
 template<auto seed = 5489u>
@@ -140,8 +147,8 @@ using mt19937 =
 		std::uint_fast32_t,
 		seed,
 		32,624,397,31,
-		0x9908b0df,11,0xffffffff,7,
-		0x9d2c5680,15,0xefc60000,18,1812433253
+		0x9908b0dfUL,11,0xffffffffUL,7,
+		0x9d2c5680UL,15,0xefc60000UL,18,1812433253UL
 	>;
 
 template<auto seed = 5489u>
@@ -150,8 +157,8 @@ using mt19937_64 =
 		std::uint_fast64_t,
 		seed,
 		64,312,156,31,
-		0xb5026f5aa96619e9,29,0x5555555555555555,17,
-		0x71d67fffeda60000,37,0xfff7eee000000000,43,6364136223846793005
+		0xb5026f5aa96619e9ULL,29,0x5555555555555555ULL,17,
+		0x71d67fffeda60000ULL,37,0xfff7eee000000000ULL,43,6364136223846793005ULL
 	>;	
 
 } // inline namespace v1
