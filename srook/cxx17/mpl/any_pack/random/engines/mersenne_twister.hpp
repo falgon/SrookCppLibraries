@@ -5,6 +5,7 @@
 #include<type_traits>
 #include<utility>
 #include<srook/mpl/constant_sequence/algorithm/at.hpp>
+#include<srook/cxx17/mpl/any_pack/random/engines/algorithm/discard.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -101,6 +102,21 @@ public:
 			tempering_c,tempering_l,
 			initialization_multiplier,
 			i + 1
+		>;
+
+	template<unsigned long long z>
+	using discard_type = 
+		discard_t<
+			z,
+			mersenne_twister<
+				result_type,seed,
+				word_size,state_size,shift_size,mask_bits,
+				xor_mask,tempering_u,tempering_d,tempering_s,
+				tempering_b,tempering_t,
+				tempering_c,tempering_l,
+				initialization_multiplier,
+				next_index
+			>
 		>;
 };
 

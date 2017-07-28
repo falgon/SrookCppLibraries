@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_CXX17_MPL_RANDOM_LINEAR_CONGRUENTIAL_HPP
 #include<cstdint>
 #include<type_traits>
+#include<srook/cxx17/mpl/any_pack/random/engines/algorithm/discard.hpp>
 
 namespace srook{
 inline namespace mpl{
@@ -24,6 +25,8 @@ public:
 	static constexpr result_type max(){return M - 1u;}
 	static constexpr result_type result = (seed * A + C) & M;
 	using next_type = linear_congruential<UIntType,result,A,C,M>;
+	template<unsigned long long z>
+	using discard_type = discard_t<z,linear_congruential<UIntType,seed,A,C,M>>;
 };
 
 template<std::uint_fast32_t seed = 1>

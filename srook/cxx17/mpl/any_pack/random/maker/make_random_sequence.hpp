@@ -24,7 +24,7 @@ struct make_random_sequence_impl<N,RandomEngine,any_pack<v...>>{
 
 template<class RandomEngine,auto... v>
 struct make_random_sequence_impl<0,RandomEngine,any_pack<v...>>{
-	using type = any_pack<v...>;
+	using type = any_pack<v...,RandomEngine::result>;
 };
 
 template<std::size_t N,class RandomEngine,class AnyPack>
