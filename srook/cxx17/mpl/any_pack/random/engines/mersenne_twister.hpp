@@ -14,26 +14,30 @@ inline namespace v1{
 
 namespace detail{
 
-template<class,std::size_t,std::size_t,class,class,class = std::nullptr_t> struct initialize;
+template<class,std::size_t,std::size_t,class,class,std::size_t,class = std::nullptr_t> struct initialize;
 
-template<class UIntType,std::size_t i,std::size_t until_max,UIntType... v,UIntType initialization_multiplier,UIntType seed>
-struct initialize<UIntType,i,until_max,std::integer_sequence<UIntType,v...>,std::integer_sequence<UIntType,initialization_multiplier,seed>,std::enable_if_t<(i < until_max),std::nullptr_t>>{
+template<class UIntType,std::size_t i,std::size_t until_max,UIntType... v,UIntType initialization_multiplier,UIntType seed,std::size_t word_size>
+struct initialize<UIntType,i,until_max,std::integer_sequence<UIntType,v...>,std::integer_sequence<UIntType,initialization_multiplier,seed>,word_size,std::enable_if_t<(i < until_max),std::nullptr_t>>{
+private:
+	static constexpr UIntType value = (!i) ? seed : (initialization_multiplier * (seed ^ (seed >> (word_size - 2))) + i);
+public:
 	using type = 
 		typename initialize<
 			UIntType,
 			i + 1,until_max,
-			std::integer_sequence<UIntType,v...,(!i) ? seed : (initialization_multiplier * (seed ^ (seed >> 30)) + i)>,
-			std::integer_sequence<UIntType,initialization_multiplier,(!i) ? seed : (initialization_multiplier * (seed ^ (seed >> 30)) + i)>
+			std::integer_sequence<UIntType,v...,value>,
+			std::integer_sequence<UIntType,initialization_multiplier,value>,
+			word_size
 		>::type;
 };
 
-template<class UIntType,std::size_t i,std::size_t until_max,UIntType... v,UIntType initialization_multiplier,UIntType seed>
-struct initialize<UIntType,i,until_max,std::integer_sequence<UIntType,v...>,std::integer_sequence<UIntType,initialization_multiplier,seed>,std::enable_if_t<!(i < until_max),std::nullptr_t>>{
+template<class UIntType,std::size_t i,std::size_t until_max,UIntType... v,UIntType initialization_multiplier,UIntType seed,std::size_t word_size>
+struct initialize<UIntType,i,until_max,std::integer_sequence<UIntType,v...>,std::integer_sequence<UIntType,initialization_multiplier,seed>,word_size,std::enable_if_t<!(i < until_max),std::nullptr_t>>{
 	using type = std::integer_sequence<UIntType,v...>;
 };
 
-template<class UIntType,std::size_t begin,std::size_t end,class Anypack,class arg = std::integer_sequence<UIntType>>
-using initialize_t = typename initialize<UIntType,begin,end,arg,Anypack>::type;
+template<class UIntType,std::size_t begin,std::size_t end,class Anypack,std::size_t word_size,class arg = std::integer_sequence<UIntType>>
+using initialize_t = typename initialize<UIntType,begin,end,arg,Anypack,word_size>::type;
 
 } // namespace detail
 
@@ -55,24 +59,24 @@ public:
 	static constexpr std::size_t state_size = n;
 	static constexpr std::size_t shift_size = m;
 	static constexpr std::size_t mask_bits = r;
-	static constexpr UIntType xor_mask = a;
+	static constexpr result_type xor_mask = a;
 	static constexpr std::size_t tempering_u = u;
-	static constexpr UIntType tempering_d = d;
+	static constexpr result_type tempering_d = d;
 	static constexpr std::size_t tempering_s = s;
-	static constexpr UIntType tempering_b = b;
+	static constexpr result_type tempering_b = b;
 	static constexpr std::size_t tempering_t = t;
-	static constexpr UIntType tempering_c = c;
+	static constexpr result_type tempering_c = c;
 	static constexpr std::size_t tempering_l = l;
-	static constexpr UIntType initialization_multiplier = f;
+	static constexpr result_type initialization_multiplier = f;
 
 	static constexpr result_type min(){return 0;}
 	static constexpr result_type max(){return (2 ^ word_size) - 1;}
 private:
-	static constexpr UIntType mask_lower = (static_cast<UIntType>(1) << mask_bits) - 1;
-	static constexpr UIntType mask_upper = (static_cast<UIntType>(1) << mask_bits);
-	static constexpr std::size_t i = next_index;
+	static constexpr result_type mask_lower = (static_cast<UIntType>(1) << mask_bits) - 1;
+	static constexpr result_type mask_upper = ~mask_lower;
+	static constexpr result_type i = next_index;
 
-	using init_array = detail::initialize_t<result_type,0,state_size,std::integer_sequence<result_type,initialization_multiplier,seed>>;
+	using init_array = detail::initialize_t<result_type,0,state_size,std::integer_sequence<result_type,initialization_multiplier,seed>,word_size>;
 
 	template<std::size_t x_>
 	static constexpr result_type mt = srook::constant_sequence::at_v<x_,init_array,result_type>;
@@ -88,14 +92,14 @@ private:
 	// extract
 	static constexpr result_type y = twist::mt_0;
 	static constexpr result_type next_value = mt<i + 1>;
-	static constexpr result_type y1 = y ^ (twist::mt_0 >> tempering_u);
+	static constexpr result_type y1 = y ^ (twist::mt_0 >> tempering_u) & tempering_d;
 	static constexpr result_type y2 = y1 ^ (y1 << tempering_s) & tempering_b;
 	static constexpr result_type y3 = y2 ^ (y2 << tempering_t) & tempering_c;
 public:
 	static constexpr result_type result = y3 ^ (y3 >> tempering_l);
 	using next_type = 
 		mersenne_twister<
-			UIntType,seed,
+			result_type,seed,
 			word_size,state_size,shift_size,mask_bits,
 			xor_mask,tempering_u,tempering_d,tempering_s,
 			tempering_b,tempering_t,
