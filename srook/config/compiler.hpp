@@ -3,6 +3,15 @@
 #define INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #ifdef __cplusplus
 #include<cstddef>
+
+#if __cplusplus <= 201103L
+#	define SROOK_IS_CXX11_EARLIER
+#elif __cplusplus == 201403L
+#	define SROOK_IS_CXX14
+#elif __cplusplus == 201703L
+#	define SROOK_IS_CXX17
+#endif
+
 #if !defined(__clang__) && __has_include(<boost/config/compiler/gcc.hpp>)
 #include<boost/config/compiler/gcc.hpp>
 #elif !defined(__clang__) && defined(__GNUC__)
