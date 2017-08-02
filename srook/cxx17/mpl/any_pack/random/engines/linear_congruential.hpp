@@ -63,8 +63,6 @@ using minstd_rand0 = linear_congruential<std::uint_fast32_t,seed,16807UL,0UL,214
 template<std::uint_fast32_t seed = 1>
 using minstd_rand = linear_congruential<std::uint_fast32_t,seed,48271UL,0UL,2147483647UL>;
 
-template<std::uint_fast32_t seed = 1>
-using mrand48 = linear_congruential<std::uint_fast32_t,seed,25214903917UL,11UL,0x5deece66dUL>;
 
 } // inline namespace v1
 } // namespace random
