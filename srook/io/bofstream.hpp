@@ -1,7 +1,7 @@
-#ifndef INCLUDED_SROOK_NOEXCEPTOFSTREAM_BIT_HPP
-#define INCLUDED_SROOK_NOEXCEPTOFSTREAM_BIT_HPP
+#ifndef INCLUDED_SROOK_IOS_BOFSTREAM_BIT_HPP
+#define INCLUDED_SROOK_IOS_BOFSTREAM_BIT_HPP
 #include<srook/config/noexcept_detection.hpp>
-#include<srook/config/libraries/byte.hpp>
+#include<srook/cstddef/byte.hpp>
 #include<fstream>
 #include<string_view>
 #include<type_traits>
@@ -17,7 +17,7 @@ struct bofstream final : std::ofstream{
 
 	explicit bofstream(std::size_t buffer_size,const char* filename,const std::ios_base::openmode& open_mode)
 		:std::ofstream(filename,open_mode),
-		buffer(std::make_unique<SROOK_BYTE[]>(buffer_size)),
+		buffer(std::make_unique<srook::byte[]>(buffer_size)),
 		first(buffer.get()),last(buffer.get()+buffer_size),
 		forward_iter(buffer.get())
 	{}
@@ -26,7 +26,7 @@ struct bofstream final : std::ofstream{
 	std::size_t wrote_size()const noexcept{return forward_iter - first;}
 	
 	void output_file()
-	SROOK_NOEXCEPT(write(reinterpret_cast<const char*>(std::declval<SROOK_BYTE>()),wrote_size()))
+	SROOK_NOEXCEPT(write(reinterpret_cast<const char*>(std::declval<srook::byte>()),wrote_size()))
 	{
 		write(reinterpret_cast<const char*>(first),wrote_size());
 	}
@@ -47,12 +47,12 @@ public:
 		using tag_argument::tag_argument;
 	};
 private:
-	std::unique_ptr<SROOK_BYTE[]> buffer;
-	const SROOK_BYTE* first,*last;
-	SROOK_BYTE* forward_iter;
+	std::unique_ptr<srook::byte[]> buffer;
+	const srook::byte* first,*last;
+	srook::byte* forward_iter;
 
 	int bit_position = 7u;
-	const std::array<SROOK_BYTE,8> bit_fullmask{SROOK_BYTE(0x01),SROOK_BYTE(0x03),SROOK_BYTE(0x07),SROOK_BYTE(0x0f),SROOK_BYTE(0x1f),SROOK_BYTE(0x3f),SROOK_BYTE(0x7f),SROOK_BYTE(0xff)};
+	const std::array<srook::byte,8> bit_fullmask{srook::byte(0x01),srook::byte(0x03),srook::byte(0x07),srook::byte(0x0f),srook::byte(0x1f),srook::byte(0x3f),srook::byte(0x7f),srook::byte(0xff)};
 	bool writable = true;
 
 	void increment_buffer()noexcept
@@ -63,18 +63,18 @@ private:
 	}	
 
 	void set_fullbit()
-	SROOK_NOEXCEPT(write_fewbits(std::declval<SROOK_BYTE>(),int()))
+	SROOK_NOEXCEPT(write_fewbits(std::declval<srook::byte>(),int()))
 	{
 		if(bit_position != 7){
 			write_fewbits(bit_fullmask[bit_position],bit_position + 1);
 		}
 	}
 		
-	void write8bits(SROOK_BYTE value,int bit_size)
+	void write8bits(srook::byte value,int bit_size)
 	SROOK_NOEXCEPT(
-			noexcept(write_fewbits(std::declval<SROOK_BYTE>(),int()))
+			noexcept(write_fewbits(std::declval<srook::byte>(),int()))
 			and
-			noexcept(write_bridge(std::declval<SROOK_BYTE>(),int()))
+			noexcept(write_bridge(std::declval<srook::byte>(),int()))
 	)
 	{
 		if(bit_position + 1 >= bit_size){
@@ -84,30 +84,30 @@ private:
 		}
 	}
 		
-	void write_fewbits(SROOK_BYTE value,int bit_size)
+	void write_fewbits(srook::byte value,int bit_size)
 	SROOK_NOEXCEPT(increment_buffer())
 	{
 		value &= bit_fullmask[bit_size-1];
 		*forward_iter |= (value << (bit_position + 1 - bit_size));
 		if((bit_position -= bit_size) < 0){
-			if(*forward_iter == SROOK_BYTE(0xff)){
+			if(*forward_iter == srook::byte(0xff)){
 				increment_buffer();
-				*forward_iter = SROOK_BYTE(0);
+				*forward_iter = srook::byte(0);
 			}
 			increment_buffer();
 			bit_position = 7;
 		}
 	}
 
-	void write_bridge(SROOK_BYTE value,int bit_size)
+	void write_bridge(srook::byte value,int bit_size)
 	SROOK_NOEXCEPT(increment_buffer())
 	{
 		value &= bit_fullmask[bit_size-1];
 		int next_bits = bit_size - (bit_position + 1);
 		*forward_iter |= ((value >> next_bits) & bit_fullmask[bit_position]);
-		if(*forward_iter == SROOK_BYTE(0xff)){
+		if(*forward_iter == srook::byte(0xff)){
 			increment_buffer();
-			*forward_iter = SROOK_BYTE(0);
+			*forward_iter = srook::byte(0);
 		}
 		increment_buffer();
 		*forward_iter = (value << (8 - next_bits));
@@ -140,11 +140,11 @@ private:
 					std::is_same_v<MARKER,std::decay_t<T>> or 
 					std::is_same_v<property::Units,std::decay_t<T>>
 			){
-				*p.second.forward_iter = static_cast<SROOK_BYTE>(src);
+				*p.second.forward_iter = static_cast<srook::byte>(src);
 			}else{
 				*p.second.forward_iter = src;
 			}*/
-			*p.second.forward_iter = SROOK_BYTE(src);
+			*p.second.forward_iter = srook::byte(src);
 			p.second.increment_buffer();
 		}else{
 			throw std::runtime_error(__func__);
@@ -158,9 +158,9 @@ private:
 	{
 		if(p.second.writable){
 			p.second.set_fullbit();
-			*p.second.forward_iter = SROOK_BYTE((value >> 8) & 0xff);
+			*p.second.forward_iter = srook::byte((value >> 8) & 0xff);
 			p.second.increment_buffer();
-			*p.second.forward_iter = SROOK_BYTE(value & 0xff);
+			*p.second.forward_iter = srook::byte(value & 0xff);
 			p.second.increment_buffer();
 		}else{
 			throw std::runtime_error(__func__);
@@ -182,10 +182,10 @@ private:
 
 
 		if(p.first.n > 8){
-			p.second.write8bits(SROOK_BYTE(value >> 8),p.first.n - 8);
+			p.second.write8bits(srook::byte(value >> 8),p.first.n - 8);
 			p.first.n = 8;
 		}
-		p.second.write8bits(SROOK_BYTE(value),p.first.n);
+		p.second.write8bits(srook::byte(value),p.first.n);
 		return p;
 	}
 
