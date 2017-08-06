@@ -1,36 +1,33 @@
-/*
- *
- * JPEZY
- * Copyright (c) 2017 Roki
- *
- */
-
-#ifndef INCLUDED_JPEZY_PNM_STREAM_HPP
-#define INCLUDED_JPEZY_PNM_STREAM_HPP
+// Copyright (C) 2017 roki
+#ifndef INCLUDED_SROOK_IO2D_COMPRESSION_JPEG_PNM_STREAM_HPP
+#define INCLUDED_SROOK_IO2D_COMPRESSION_JPEG_PNM_STREAM_HPP
 
 #include<fstream>
 #include<stdexcept>
 #include<string>
 #include<algorithm>
+#include<optional>
 #include<vector>
 #include<list>
 #include<iostream>
+#include<experimental/array>
+#include<experimental/iterator>
 #include<boost/algorithm/string/split.hpp>
 #include<boost/range/algorithm/copy.hpp>
 #include<boost/algorithm/string/classification.hpp>
 #include<boost/range/algorithm/transform.hpp>
 #include<srook/algorithm/for_each.hpp>
-#include"core/config.hpp"
-#include"core/jpeg.hpp"
-#include"core/jpeg_writer.hpp"
-#include"core/jpeg_encoder.hpp"
+#include"../jpeg/core/jpeg.hpp"
+#include"../jpeg/writer.hpp"
+#include"../jpeg/encoder.hpp"
 
 namespace srook{
 namespace io2d{
-namespace jpeg{
+namespace pnm{
+inline namespace v1{
 
 struct to_jpeg{
-	explicit constexpr to_jpeg(const char* file):file(file){}
+	explicit constexpr to_jpeg(const char* file_):file(file_){}
 	const char* file;
 };
 
@@ -76,13 +73,9 @@ struct pnm_stream{
 						std::list<std::string> spl;
 						boost::split(spl,line,boost::is_space());
 						if(spl.back()==""s)spl.pop_back();
-						boost::transform(spl,std::back_inserter(img),[](const std::string& str){return std::stoi(str);});
+						boost::transform(spl,std::back_inserter(img),[](const std::string& str){return srook::byte(std::stoi(str));});
 					}
-#ifdef USABLE_EXPERIMENTAL_MAKE_ARRAY
-					using std::experimental::make_array;
-#else
-					using srook::make_array;
-#endif
+
 					rgb_img.resize(img.size()/3);
 					typename decltype(rgb_img)::value_type::value_type r,g,b;
 					for(auto& v:rgb_img){
@@ -90,7 +83,7 @@ struct pnm_stream{
 							cl = img.front();
 							img.pop_front();
 						}
-						v = make_array(r,g,b);
+						v = std::experimental::make_array(r,g,b);
 					}
 				}
 				std::cout << "width: " << width << " height: " << height << std::endl;
@@ -103,8 +96,8 @@ struct pnm_stream{
 		return initializing_succeed;
 	}
 private:
-	using value_type = byte;
-	using rgb_type = byte;
+	using value_type = srook::byte;
+	using rgb_type = srook::byte;
 
 	bool initializing_succeed;
 	std::size_t width,height,max_color;
@@ -128,13 +121,9 @@ private:
 		pnm.report_error(__func__);
 		os << "P3\n" << static_cast<p3_ascii_type>(pnm.width) << " " << static_cast<p3_ascii_type>(pnm.height) << "\n";
 		os << static_cast<p3_ascii_type>(pnm.max_color) << "\n";
-#ifdef USABLE_EXPERIMENTAL_OSTREAM_JOINER
-		using std::experimental::make_ostream_joiner;
-#else
-		using srook::make_ostream_joiner;
-#endif
+
 		for(const auto& rgb:pnm.rgb_img){
-			boost::transform(rgb,make_ostream_joiner(os," "),[](const auto& v){return static_cast<p3_ascii_type>(v);});
+			boost::transform(rgb,std::experimental::make_ostream_joiner(os," "),[](const auto& v){return static_cast<p3_ascii_type>(v);});
 			os << '\n';
 		}
 		return os;
@@ -149,7 +138,7 @@ private:
 				srook::make_counter({std::ref(r),std::ref(g),std::ref(b)}),
 				[this](std::vector<rgb_type>& element,std::size_t i)
 				{
-					boost::transform(rgb_img,std::begin(element),[&i](const std::array<rgb_type,3>& ar){return ar[i];});
+					boost::transform(rgb_img,std::begin(element),[&i](const std::array<rgb_type,3>& ar){return srook::byte(ar[i]);});
 				}
 		);
 
@@ -163,23 +152,23 @@ private:
 		ofs.close();
 		pnm.second.report_error(__func__);
 
-		property pr{
+		srook::io2d::jpeg::property pr{
 				pnm.second.width,
 				pnm.second.height,
 				3,8,
-				"Encoded by JPEZY",
-				property::Format::JFIF,
-				1,2,
-				property::Units::dots_inch,
+				"Encoded by srook io2d",
+				srook::io2d::jpeg::property::Format::JFIF,
+				srook::byte(1),srook::byte(2),
+				srook::io2d::jpeg::property::Units::dots_inch,
 				96,96,
 				0,0,
-				property::ExtensionCodes::undefined
+				srook::io2d::jpeg::property::ExtensionCodes::undefined
 		};
 
 		auto&& [r,g,b] = pnm.second.split_rgb();
-		encoder enc(std::move(pr),std::move(r),std::move(g),std::move(b));
+		srook::io2d::jpeg::encoder enc(std::move(pr),std::move(r),std::move(g),std::move(b));
 		const std::size_t size = enc.encode<decltype(enc)::COLOR_MODE>(pnm.first.file);
-		std::cout << "Output size: " << size << " byte" << std::endl;
+		std::cout << "Output size: " << size << " srook::byte" << std::endl;
 
 		return ofs;
 	}
@@ -190,23 +179,23 @@ private:
 		ofs.close();
 		pnm.second.second.report_error(__func__);
 
-		property pr{
+		srook::io2d::jpeg::property pr{
 			pnm.second.second.width,
 			pnm.second.second.height,
 			3,8,
-			"Encoded by JPEZY",
-			property::Format::JFIF,
-			1,2,
-			property::Units::dots_inch,
+			"Encoded by srook io2d",
+			srook::io2d::jpeg::property::Format::JFIF,
+			srook::byte(1),srook::byte(2),
+			srook::io2d::jpeg::property::Units::dots_inch,
 			96,96,
 			0,0,
-			property::ExtensionCodes::undefined
+			srook::io2d::jpeg::property::ExtensionCodes::undefined
 		};
 
 		auto&& [r,g,b] = pnm.second.second.split_rgb();
-		encoder enc(std::move(pr),std::move(r),std::move(g),std::move(b));
+		srook::io2d::jpeg::encoder enc(std::move(pr),std::move(r),std::move(g),std::move(b));
 		const std::size_t size = enc.encode<decltype(enc)::GRAY_MODE>(pnm.second.first.file);
-		std::cout << "Output size: " << size << " byte" << std::endl;
+		std::cout << "Output size: " << size << " srook::byte" << std::endl;
 
 		return ofs;
 	}
@@ -224,11 +213,9 @@ private:
 	}
 };
 
-} // namespace jpeg
+} // inline namespace v1
+} // namespace pnm
 } // namespace io2d
 } // namespace srook
 
-#ifdef USABLE_EXPERIMENTAL_MAKE_ARRAY
-#undef USABLE_EXPERIMENTAL_MAKE_ARRAY
-#endif
 #endif
