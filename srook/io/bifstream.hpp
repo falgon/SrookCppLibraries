@@ -45,6 +45,11 @@ struct bifstream final : std::ifstream{
 			bit_position = -1;
 		}
 	}
+
+	std::size_t size()const noexcept
+	{
+		return last - buffer.get();
+	}
 private:
 	struct tag_argument{
 		explicit constexpr tag_argument(int num):n(std::move(num)){}
