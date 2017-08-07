@@ -89,7 +89,7 @@ private:
 
 	template<class T,std::size_t v>
 	friend std::pair<const decltype(Bytes)&,bifstream&>
-	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,const std::array<T,v>& ar)noexcept(false)
+	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,const std::array<T,v>& ar)noexcept(false) // imp
 	{
 		bifstream& this_ = p.second;
 		
@@ -105,7 +105,7 @@ private:
 	}
 
 	friend std::pair<const decltype(Byte)&,bifstream&>
-   	operator>>(std::pair<const decltype(Byte)&,bifstream&> p,srook::byte& src)noexcept(false)
+   	operator>>(std::pair<const decltype(Byte)&,bifstream&> p,srook::byte& src)noexcept(false) // imp
 	{
 		bifstream& this_ = p.second;
 
@@ -125,7 +125,7 @@ private:
 	}
 
 	friend std::pair<const decltype(Word)&,bifstream&> 
-	operator>>(std::pair<const decltype(Word)&,bifstream&> p,std::uint_fast16_t& value)noexcept(false)
+	operator>>(std::pair<const decltype(Word)&,bifstream&> p,std::uint_fast16_t& value)noexcept(false) // imp
 	{
 		bifstream& this_ = p.second;
 
@@ -145,7 +145,7 @@ private:
 	}
 
 	friend std::pair<Bits,bifstream&>
-	operator>>(std::pair<Bits,bifstream&> p,srook::byte& value)noexcept(false)
+	operator>>(std::pair<Bits,bifstream&> p,srook::byte& value)noexcept(false) // imp
 	{
 		using namespace srook::literals::byte_literals;
 
@@ -179,7 +179,7 @@ private:
 
 	template<class Range>
 	friend std::pair<const Byte_n&,bifstream&>
-	operator>>(std::pair<const Byte_n&,bifstream&> p,const Range& r)noexcept(false)
+	operator>>(std::pair<const Byte_n&,bifstream&> p,const Range& r)noexcept(false) // imp
 	{
 		bifstream& this_ = p.second;
 
