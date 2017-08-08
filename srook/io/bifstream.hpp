@@ -2,6 +2,9 @@
 #define INCLUDED_SROOK_IOS_BIFSTREAM_HPP
 #include<srook/config/noexcept_detection.hpp>
 #include<srook/cstddef/byte.hpp>
+#include<srook/config/require.hpp>
+#include<srook/type_traits/is_callable.hpp>
+
 #include<fstream>
 #include<type_traits>
 #include<array>
@@ -11,7 +14,7 @@
 namespace srook{
 inline namespace v1{
 
-struct bifstream final : std::ifstream{
+struct bifstream final : std::ifstream {
 	using std::ifstream::ifstream;
 
 	explicit bifstream(const char* filename,const std::ios_base::openmode& open_mode = std::ios::in | std::ios::binary)
@@ -33,7 +36,7 @@ struct bifstream final : std::ifstream{
 			buffer = std::make_unique<srook::byte[]>(size);
 
 			exceptions(std::ios::badbit);
-			read(reinterpret_cast<char*>(buffer.get()),size);
+			read(reinterpret_cast<char*>(buffer.get()),long(size));
 			close();
 
 			forward_iter = buffer.get();
@@ -46,9 +49,28 @@ struct bifstream final : std::ifstream{
 		}
 	}
 
+	void skip_byte(std::size_t n)
+	{
+		if(forward_iter + n > last)throw std::out_of_range(__func__);
+		if((forward_iter += n) >= last)readflag = false;
+		bit_position = 7;
+	}
+
+	explicit operator bool()const noexcept
+	{
+		return readflag;
+	}
+
 	std::size_t size()const noexcept
 	{
 		return last - buffer.get();
+	}
+
+	srook::byte* next_address()const noexcept
+	{
+		if(bit_position == 7)return forward_iter;
+		else if(forward_iter < last)return forward_iter + 1;
+		else return nullptr;
 	}
 private:
 	struct tag_argument{
@@ -85,13 +107,6 @@ private:
 		}
 	}	
 
-	srook::byte* next_address()const noexcept
-	{
-		if(bit_position == 7)return forward_iter;
-		else if(forward_iter < last)return forward_iter + 1;
-		else return nullptr;
-	}
-
 	template<class T,std::size_t v>
 	friend std::pair<const decltype(Bytes)&,bifstream&>
 	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,const std::array<T,v>& ar)noexcept(false)
@@ -109,8 +124,10 @@ private:
 		return p;
 	}
 
+
+	template<class Value,REQUIRES(!srook::is_callable_v<std::decay_t<Value>>)>
 	friend std::pair<const decltype(Byte)&,bifstream&>
-   	operator>>(std::pair<const decltype(Byte)&,bifstream&> p,srook::byte& src)noexcept(false)
+   	operator>>(std::pair<const decltype(Byte)&,bifstream&> p,Value& src)noexcept(false)
 	{
 		bifstream& this_ = p.second;
 
@@ -119,7 +136,7 @@ private:
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
-			src = *this_.forward_iter;
+			src = Value(*this_.forward_iter);
 			this_.increment_buffer();
 			this_.nextflag = true;
 		}else{
@@ -129,8 +146,9 @@ private:
 		return p;
 	}
 
+	template<class T,REQUIRES(std::is_integral<std::decay_t<T>>::value)>
 	friend std::pair<const decltype(Word)&,bifstream&> 
-	operator>>(std::pair<const decltype(Word)&,bifstream&> p,std::uint_fast16_t& value)noexcept(false)
+	operator>>(std::pair<const decltype(Word)&,bifstream&> p,T& value)noexcept(false)
 	{
 		bifstream& this_ = p.second;
 
@@ -139,9 +157,9 @@ private:
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
-			value = srook::to_integer<std::uint_fast16_t>(*this_.forward_iter << 8);
+			value = srook::to_integer<T>(*this_.forward_iter << 8);
 			this_.increment_buffer();
-			value |= srook::to_integer<std::uint_fast16_t>(*this_.forward_iter);
+			value |= srook::to_integer<T>(*this_.forward_iter);
 			this_.increment_buffer();
 		}else{
 			throw std::runtime_error(__func__);
@@ -149,42 +167,44 @@ private:
 		return p;
 	}
 
+	template<class T>
 	friend std::pair<Bits,bifstream&>
-	operator>>(std::pair<Bits,bifstream&> p,srook::byte& value)noexcept(false)
+	operator>>(std::pair<Bits,bifstream&> p,T& value)noexcept(false)
 	{
 		using namespace srook::literals::byte_literals;
 
-		if(p.first.n <= 0 or p.first.n >= 256)throw std::invalid_argument(__func__);
+		if(p.first.n <= 0)throw std::invalid_argument(__func__);
 		bifstream& this_ = p.second;
 		
-		value = 0_byte;
+		srook::byte r = 0_byte;
 		for(srook::byte c = 0_byte; p.first.n; --p.first.n){
 			if(this_.bit_position < 0){
 				this_.bit_position = 7;
 				this_.increment_buffer();
 				if(!this_.nextflag){
 					this_.increment_buffer();
-					this_.nextflag = !this_.nextflag;
+					this_.nextflag = true;
 				}
 				c = *this_.forward_iter;
 				if(c == 0xff_byte){
 					c = *(this_.forward_iter + 1);
-					if(!srook::to_integer<bool>(c)){
+					if(srook::to_integer<bool>(c)){
 						throw std::runtime_error(__func__);
 					}
 					this_.readflag = false;
 				}
 			}
-			value <<= 1;
-			value |= srook::to_integer<bool>(((*this_.forward_iter) & this_.bit_fullmask[this_.bit_position--])) ? 1_byte : 0_byte;
+			r <<= 1;
+			r |= srook::to_integer<bool>(((*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position--)])) ? 1_byte : 0_byte;
 		}
+		value = T(r);
 		
 		return p;
 	}
 
 	template<class Range>
 	friend std::pair<const Byte_n&,bifstream&>
-	operator>>(std::pair<const Byte_n&,bifstream&> p,const Range& r)noexcept(false)
+	operator>>(std::pair<const Byte_n&,bifstream&> p,Range& r)noexcept(false)
 	{
 		bifstream& this_ = p.second;
 
@@ -194,13 +214,14 @@ private:
 		}
 		if(this_.forward_iter + p.first.n > this_.last)throw std::out_of_range(__func__);
 		
-		if(r.size() >= p.first.n){
-			std::copy(this_.forward_iter,this_.forward_iter + p.first.n,std::begin(r));
+		if(r.size() >= std::size_t(p.first.n)){
+			std::generate(std::begin(r),std::end(r),[&this_]{return typename Range::value_type(*this_.forward_iter++);});
 		}else{
-			std::copy(this_.forward_iter,this_.forward_iter + p.first.n,std::back_inserter(r));
+			r.resize(std::size_t(p.first.n));
+			std::generate(std::begin(r),std::end(r),[&this_]{return typename Range::value_type(*this_.forward_iter++);});
 		}
 		
-		if( (this_.forward_iter += p.first.n) >= this_.last)this_.readflag = false;
+		if(this_.forward_iter >= this_.last)this_.readflag = false;
 
 		return p;
 	}

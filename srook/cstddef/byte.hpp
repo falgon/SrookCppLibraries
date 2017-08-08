@@ -24,6 +24,40 @@ constexpr IntegerType to_integer(byte b)noexcept
 {
 	return IntegerType(b);
 }
+#if __cplusplus >= 201703L
+constexpr std::byte to_stdbyte(byte b)noexcept
+{
+	return std::byte(static_cast<typename std::underlying_type<byte>::type>(b));
+}
+#endif
+
+constexpr byte operator+(const byte& l,const byte& r)
+{
+	return byte(static_cast<typename std::underlying_type<byte>::type>(l) + static_cast<typename std::underlying_type<byte>::type>(r));
+}
+template<class Value>
+constexpr Value operator+(byte l,Value v)
+{
+	return static_cast<Value>(v) + v;
+}
+template<class Value>
+constexpr Value operator+(Value v,byte l)
+{
+	return static_cast<Value>(v) + l;
+}
+
+constexpr byte operator-(const byte& l,const byte& r)
+{
+	return byte(static_cast<typename std::underlying_type<byte>::type>(l) - static_cast<typename std::underlying_type<byte>::type>(r));
+}
+constexpr byte operator*(const byte& l,const byte& r)
+{
+	return byte(static_cast<typename std::underlying_type<byte>::type>(l) * static_cast<typename std::underlying_type<byte>::type>(r));
+}
+constexpr byte operator/(const byte& l,const byte& r)
+{
+	return byte(static_cast<typename std::underlying_type<byte>::type>(l) / static_cast<typename std::underlying_type<byte>::type>(r));
+}
 
 template<class IntegerType,REQUIRES(std::is_integral<IntegerType>::value)>
 constexpr byte& operator<<=(byte& b,IntegerType shift)noexcept

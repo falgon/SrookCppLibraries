@@ -22,7 +22,7 @@ template<class T>
 struct optional{
 	constexpr explicit optional()
 		:data_{},init_(false){}
-	constexpr explicit optional(nullopt_t)
+	constexpr optional(nullopt_t)
 		:data_{},init_(false){}
 	template<REQUIRES(std::is_copy_constructible<T>::value)>
 	optional(const optional& other)
@@ -423,6 +423,7 @@ constexpr optional<T> make_optional(std::initializer_list<U> ilist,Args&&... arg
 using detail::optional;
 using detail::nullopt_t;
 using detail::nullopt;
+using detail::make_optional;
 
 } // namespace srook
 #endif
