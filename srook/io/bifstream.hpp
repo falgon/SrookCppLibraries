@@ -4,7 +4,7 @@
 #include<srook/cstddef/byte.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
-
+#include<srook/optional.hpp>
 #include<fstream>
 #include<type_traits>
 #include<array>
@@ -40,12 +40,12 @@ struct bifstream final : std::ifstream {
 			close();
 
 			forward_iter = buffer.get();
-			last = buffer.get() + size;	
+			last = std::next(buffer.get(),size);	
 		}catch(const std::ios_base::failure& e){
 			buffer.reset();
 			nextflag = readflag = false;
 			last = forward_iter = nullptr;
-			bit_position = -1;
+			bit_position = srook::nullopt;
 		}
 	}
 
@@ -68,7 +68,8 @@ struct bifstream final : std::ifstream {
 
 	srook::byte* next_address()const noexcept
 	{
-		if(bit_position == 7)return forward_iter;
+		if(!bit_position)return nullptr;
+		else if(bit_position.value() == 7)return forward_iter;
 		else if(forward_iter < last)return forward_iter + 1;
 		else return nullptr;
 	}
@@ -93,7 +94,7 @@ private:
 	srook::byte* last;
 	srook::byte* forward_iter;
 
-	int bit_position = 7u;
+	srook::optional<int> bit_position = 7u;
 	const std::array<srook::byte,8> bit_fullmask {
 		{ srook::byte(0x01),srook::byte(0x02),srook::byte(0x04),srook::byte(0x08),srook::byte(0x10),srook::byte(0x20),srook::byte(0x40),srook::byte(0x80) }
 	};
@@ -112,8 +113,10 @@ private:
 	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,const std::array<T,v>& ar)noexcept(false)
 	{
 		bifstream& this_ = p.second;
+
+		if(!this_.bit_position)throw std::runtime_error("invalid construct");
 		
-		if(this_.bit_position != 7){
+		if(this_.bit_position.value() != 7){
 			this_.increment_buffer();
 			this_.bit_position = 7;
 		}
@@ -131,8 +134,10 @@ private:
 	{
 		bifstream& this_ = p.second;
 
+		if(!this_.bit_position)throw std::runtime_error("invalid construct");
+
 		if(this_.readflag){
-			if(this_.bit_position != 7){
+			if(this_.bit_position.value() != 7){
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
@@ -152,8 +157,10 @@ private:
 	{
 		bifstream& this_ = p.second;
 
+		if(!this_.bit_position)throw std::runtime_error("invalid construct");
+
 		if(this_.readflag){
-			if(this_.bit_position != 7){
+			if(this_.bit_position.value() != 7){
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
@@ -174,11 +181,13 @@ private:
 		using namespace srook::literals::byte_literals;
 
 		if(p.first.n <= 0)throw std::invalid_argument(__func__);
+
 		bifstream& this_ = p.second;
-		
+		if(!this_.bit_position) throw std::runtime_error("invalid construct");
+
 		srook::byte r = 0_byte;
 		for(srook::byte c = 0_byte; p.first.n; --p.first.n){
-			if(this_.bit_position < 0){
+			if(this_.bit_position.value() < 0){
 				this_.bit_position = 7;
 				this_.increment_buffer();
 				if(!this_.nextflag){
@@ -195,7 +204,8 @@ private:
 				}
 			}
 			r <<= 1;
-			r |= srook::to_integer<bool>(((*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position--)])) ? 1_byte : 0_byte;
+			r |= srook::to_integer<bool>(((*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position.value())])) ? 1_byte : 0_byte;
+			this_.bit_position = this_.bit_position.value() - 1;
 		}
 		value = T(r);
 		
