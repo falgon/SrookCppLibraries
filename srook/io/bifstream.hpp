@@ -4,6 +4,7 @@
 #include<srook/cstddef/byte.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
+#include<srook/type_traits/has_iterator.hpp>
 #include<srook/optional.hpp>
 #include<fstream>
 #include<type_traits>
@@ -95,17 +96,13 @@ private:
 	srook::byte* forward_iter;
 
 	srook::optional<int> bit_position = 7u;
-	const std::array<srook::byte,8> bit_fullmask {
-		{ srook::byte(0x01),srook::byte(0x02),srook::byte(0x04),srook::byte(0x08),srook::byte(0x10),srook::byte(0x20),srook::byte(0x40),srook::byte(0x80) }
-	};
+	const std::array<int,8> bit_fullmask {{ 0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80 }};
 	bool nextflag = true;
 	bool readflag = true;
 private:
 	void increment_buffer()noexcept
 	{
-		if(++forward_iter >= last){
-			readflag = false;
-		}
+		if(++forward_iter >= last)readflag = false;
 	}	
 
 	template<class T,std::size_t v>
@@ -127,8 +124,7 @@ private:
 		return p;
 	}
 
-
-	template<class Value,REQUIRES(!srook::is_callable_v<std::decay_t<Value>>)>
+	template<class Value,REQUIRES(!srook::is_callable_v<std::decay_t<Value>> and !srook::has_iterator_v<std::decay_t<Value>>)>
 	friend std::pair<const decltype(Byte)&,bifstream&>
    	operator>>(std::pair<const decltype(Byte)&,bifstream&> p,Value& src)noexcept(false)
 	{
@@ -164,7 +160,7 @@ private:
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
-			value = srook::to_integer<T>(*this_.forward_iter << 8);
+			value = srook::to_integer<T>(*this_.forward_iter) << 8;
 			this_.increment_buffer();
 			value |= srook::to_integer<T>(*this_.forward_iter);
 			this_.increment_buffer();
@@ -174,19 +170,17 @@ private:
 		return p;
 	}
 
-	template<class T>
+	template<class T,REQUIRES(std::is_integral<std::decay_t<std::decay_t<T>>>::value)>
 	friend std::pair<Bits,bifstream&>
 	operator>>(std::pair<Bits,bifstream&> p,T& value)noexcept(false)
 	{
-		using namespace srook::literals::byte_literals;
-
 		if(p.first.n <= 0)throw std::invalid_argument(__func__);
 
 		bifstream& this_ = p.second;
 		if(!this_.bit_position) throw std::runtime_error("invalid construct");
 
-		srook::byte r = 0_byte;
-		for(srook::byte c = 0_byte; p.first.n; --p.first.n){
+		int r = 0;
+		for(srook::byte c{}; p.first.n; --p.first.n){
 			if(this_.bit_position.value() < 0){
 				this_.bit_position = 7;
 				this_.increment_buffer();
@@ -194,17 +188,18 @@ private:
 					this_.increment_buffer();
 					this_.nextflag = true;
 				}
+
 				c = *this_.forward_iter;
-				if(c == 0xff_byte){
+				if(srook::to_integer<std::underlying_type_t<srook::byte>>(c) == 0xff){
 					c = *(this_.forward_iter + 1);
 					if(srook::to_integer<bool>(c)){
 						throw std::runtime_error(__func__);
 					}
-					this_.readflag = false;
+					this_.nextflag = false;
 				}
 			}
 			r <<= 1;
-			r |= srook::to_integer<bool>(((*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position.value())])) ? 1_byte : 0_byte;
+			r |= (srook::to_integer<int>(*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position.value())]) ? 1 : 0;
 			this_.bit_position = this_.bit_position.value() - 1;
 		}
 		value = T(r);
@@ -212,7 +207,7 @@ private:
 		return p;
 	}
 
-	template<class Range>
+	template<class Range,REQUIRES(srook::has_iterator_v<std::decay_t<Range>>)>
 	friend std::pair<const Byte_n&,bifstream&>
 	operator>>(std::pair<const Byte_n&,bifstream&> p,Range& r)noexcept(false)
 	{
@@ -230,7 +225,6 @@ private:
 			r.resize(std::size_t(p.first.n));
 			std::generate(std::begin(r),std::end(r),[&this_]{return typename Range::value_type(*this_.forward_iter++);});
 		}
-		
 		if(this_.forward_iter >= this_.last)this_.readflag = false;
 
 		return p;
@@ -238,11 +232,20 @@ private:
 	
 	template<class Tag>
 	constexpr friend std::pair<Tag,bifstream&> operator|(bifstream& ofps,const Tag& t)
-	{	
+	SROOK_NOEXCEPT(std::make_pair(t,std::ref(ofps)))
+	{
+		static_assert(
+			std::is_same_v<Tag,Byte_n> or 
+			std::is_same_v<Tag,std::decay_t<decltype(Byte)>> or 
+			std::is_same_v<Tag,std::decay_t<decltype(Bytes)>> or 
+			std::is_same_v<Tag,std::decay_t<decltype(Word)>> or 
+			"Invalid tag"
+		);
 		return std::make_pair(t,std::ref(ofps));
 	}
 	
 	friend std::pair<Bits,bifstream&> operator|(bifstream& ofps,const Bits& bits)
+	SROOK_NOEXCEPT(std::make_pair(bits,std::ref(ofps)))
 	{
 		return std::make_pair(bits,std::ref(ofps));
 	}

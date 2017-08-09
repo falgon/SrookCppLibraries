@@ -84,7 +84,7 @@ inline namespace v1{
   			constexpr T& operator()(T&& t)const noexcept{return t;}
   		};
 
-  		template<template<class...>class Range> static decltype(detail::transfer<Range,v...>::value) range;
+  		template<template<class...>class Range,class Transformer = Nothing> static decltype(detail::transfer<Range,Transformer()(v)...>::value) range;
   		template<template<class...>class ConstantRange,class Transformer = Nothing>
   		static constexpr std::enable_if_t<std::is_invocable_v<Transformer,First_t<decltype(v)...>>,ConstantRange<std::decay_t<decltype(Transformer()(v))>...>> constant_range{Transformer()(v)...};
   		template<class AnyPack> static constexpr bool equal_pack = detail::equal_v<any_pack<v...>,AnyPack>;
@@ -111,8 +111,8 @@ inline namespace v1{
   	};
 
   	template<auto... v>
-  	template<template<class...>class Range>
-  	decltype(detail::transfer<Range,v...>::value) any_pack<v...>::range{detail::transfer<Range,v...>::value};
+  	template<template<class...>class Range,class Transformer>
+  	decltype(detail::transfer<Range,Transformer()(v)...>::value) any_pack<v...>::range{detail::transfer<Range,Transformer()(v)...>::value};
 
 } // inline namespace v1
 } // inline namespace mpl

@@ -20,7 +20,7 @@ constexpr nullopt_t nullopt{nullopt_t::init()};
 
 template<class T>
 struct optional{
-	constexpr explicit optional()
+	constexpr optional()
 		:data_{},init_(false){}
 	constexpr optional(nullopt_t)
 		:data_{},init_(false){}
