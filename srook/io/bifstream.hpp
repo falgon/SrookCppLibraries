@@ -69,10 +69,13 @@ struct bifstream final : std::ifstream {
 
 	srook::byte* next_address()const noexcept
 	{
-		if(!bit_position)return nullptr;
-		else if(bit_position.value() == 7)return forward_iter;
-		else if(forward_iter < last)return forward_iter + 1;
-		else return nullptr;
+		if(bit_position == 7){
+			return forward_iter;
+		}else if(forward_iter < last){
+			return forward_iter + 1;
+		}else{
+			return nullptr;
+		}
 	}
 private:
 	struct tag_argument{
@@ -95,7 +98,7 @@ private:
 	srook::byte* last;
 	srook::byte* forward_iter;
 
-	srook::optional<int> bit_position = 7u;
+	srook::optional<int> bit_position = 7;
 	const std::array<int,8> bit_fullmask {{ 0x01,0x02,0x04,0x08,0x10,0x20,0x40,0x80 }};
 	bool nextflag = true;
 	bool readflag = true;
@@ -105,9 +108,9 @@ private:
 		if(++forward_iter >= last)readflag = false;
 	}	
 
-	template<class T,std::size_t v>
+	template<class Range,REQUIRES(srook::has_iterator_v<std::decay_t<Range>>)>
 	friend std::pair<const decltype(Bytes)&,bifstream&>
-	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,const std::array<T,v>& ar)noexcept(false)
+	operator>>(std::pair<const decltype(Bytes)&,bifstream&> p,Range& ar)noexcept(false)
 	{
 		bifstream& this_ = p.second;
 
@@ -117,9 +120,10 @@ private:
 			this_.increment_buffer();
 			this_.bit_position = 7;
 		}
-		if(this_.forward_iter + ar.size() > this_.last)throw std::out_of_range(__func__);
-		std::copy(this_.forward_iter,this_.forward_iter + ar.size(),std::begin(ar));
-		if((this_.forward_iter += ar.size()) >= this_.last)this_.readflag = false;
+		if(this_.forward_iter + ar.size() > this_.last)throw std::out_of_range("Bytes operator<<");
+
+		std::generate(std::begin(ar),std::end(ar),[&this_](){return typename std::decay_t<Range>::value_type(*this_.forward_iter++);});
+		if((this_.forward_iter) >= this_.last)this_.readflag = false;
 
 		return p;
 	}
@@ -141,7 +145,7 @@ private:
 			this_.increment_buffer();
 			this_.nextflag = true;
 		}else{
-			throw std::runtime_error(__func__);
+			throw std::runtime_error("Byte operator<<: cannot read");
 		}
 
 		return p;
@@ -160,12 +164,13 @@ private:
 				this_.increment_buffer();
 				this_.bit_position = 7;
 			}
-			value = srook::to_integer<T>(*this_.forward_iter) << 8;
+			unsigned int r = srook::to_integer<unsigned>(*this_.forward_iter) << 8;
 			this_.increment_buffer();
-			value |= srook::to_integer<T>(*this_.forward_iter);
+			r |= srook::to_integer<unsigned>(*this_.forward_iter);
 			this_.increment_buffer();
+			value = T(r);
 		}else{
-			throw std::runtime_error(__func__);
+			throw std::runtime_error("Word operator<<: cannot read");
 		}
 		return p;
 	}
@@ -174,7 +179,10 @@ private:
 	friend std::pair<Bits,bifstream&>
 	operator>>(std::pair<Bits,bifstream&> p,T& value)noexcept(false)
 	{
-		if(p.first.n <= 0)throw std::invalid_argument(__func__);
+		if(p.first.n <= 0){
+			value = T(0);
+			return p;
+		}
 
 		bifstream& this_ = p.second;
 		if(!this_.bit_position) throw std::runtime_error("invalid construct");
@@ -192,18 +200,17 @@ private:
 				c = *this_.forward_iter;
 				if(srook::to_integer<std::underlying_type_t<srook::byte>>(c) == 0xff){
 					c = *(this_.forward_iter + 1);
-					if(srook::to_integer<bool>(c)){
-						throw std::runtime_error(__func__);
+					if(srook::to_integer<std::underlying_type_t<srook::byte>>(c) != 0){
+						value = -srook::to_integer<std::underlying_type_t<srook::byte>>(c);
 					}
 					this_.nextflag = false;
 				}
 			}
 			r <<= 1;
-			r |= (srook::to_integer<int>(*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position.value())]) ? 1 : 0;
+			r |= (srook::to_integer<std::underlying_type_t<srook::byte>>(*this_.forward_iter) & this_.bit_fullmask[std::size_t(this_.bit_position.value())]) ? 1 : 0;
 			this_.bit_position = this_.bit_position.value() - 1;
 		}
 		value = T(r);
-		
 		return p;
 	}
 
@@ -217,7 +224,7 @@ private:
 			this_.increment_buffer();
 			this_.bit_position = 7;
 		}
-		if(this_.forward_iter + p.first.n > this_.last)throw std::out_of_range(__func__);
+		if(this_.forward_iter + p.first.n > this_.last)throw std::out_of_range("Byte_n operator>> out of range");
 		
 		if(r.size() >= std::size_t(p.first.n)){
 			std::generate(std::begin(r),std::end(r),[&this_]{return typename Range::value_type(*this_.forward_iter++);});
