@@ -1,4 +1,4 @@
-#include<srook/mpl/math/four_arithmetic_operations_parser.hpp>
+#include<srook/mpl/spirit/math/four_arithmetic_operations_parser.hpp>
 
 static constexpr const char
 	exp0[] = "2*2*2+2",
@@ -17,12 +17,12 @@ static constexpr const int
 template<const char* e,int t>
 constexpr int check()
 {
-	static_assert(srook::math::four_arithmetic_operations_parser::calculator_t<const char,e>::value == t && t == 10,"");
+	static_assert(srook::spirit::math::four_arithmetic_operations_parser::calculator_t<const char,e>::value == t && t == 10,"");
 #if !defined(SROOK_IS_CXX11_EARLIER) and __cplusplus >= 201402L
-	constexpr auto result_cxx14 = srook::math::four_arithmetic_operations_parser::calculator_v<const char,e>;
+	constexpr auto result_cxx14 = srook::spirit::math::four_arithmetic_operations_parser::calculator_v<const char,e>;
 	static_assert(result_cxx14 == t && t == 10,"");
 #if __cplusplus >= 201703L
-	constexpr auto result_cxx17 = srook::math::four_arithmetic_operations_parser::calculator<e>;
+	constexpr auto result_cxx17 = srook::spirit::math::four_arithmetic_operations_parser::calculator<e>;
 	static_assert(result_cxx17 == t && t == 10,"");
 #endif
 #endif

@@ -9,6 +9,7 @@
 
 namespace srook{
 inline namespace mpl{
+namespace spirit{
 namespace math{
 namespace four_arithmetic_operations_parser{
 inline namespace v1{
@@ -164,6 +165,7 @@ struct calculator_t{
 } // inline namespace v1
 } // four_arithmetic_operations_parser
 } // namespace math
+} // namespace spirit
 } // inline namespace mpl
 } // namespace srook
 
