@@ -5,7 +5,7 @@
 [![Issue Count](https://codeclimate.com/github/falgon/SrookCppLibraries/badges/issue_count.svg)](https://codeclimate.com/github/falgon/SrookCppLibraries)
 
 
-[mikoCppLibraries](https://github.com/falgon/mikoCppLibraries)の後継。無駄な記述をしないための無駄なUselessライブラリ。全体的に開発段階のため不安定である。
+This is a derived of [mikoCppLibraries](https://github.com/falgon/mikoCppLibraries) that included modern-style container, iterators, utilities, helper and feature of creating code by template meta programming. This project is still in development stage so it is not stable.
 
 ## Recommendation
 ### Operating System
