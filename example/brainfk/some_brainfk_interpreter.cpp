@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Roki
 #include <srook/brainfk/brainfk.hpp>
 
 int main(const int argc, const char* argv[])
@@ -47,12 +48,12 @@ int main(const int argc, const char* argv[])
         return EXIT_FAILURE;
     }
 
-    const auto& status1 = km_syn.file_open(argv[1]);
+    const auto& status1 = km_syn.file_open(argv[2]);
     if (!status1) {
         return EXIT_FAILURE;
     }
 
-    const auto& status2 = pq_syn.file_open(argv[1]);
+    const auto& status2 = pq_syn.file_open(argv[3]);
     if (!status2) {
         return EXIT_FAILURE;
     }
