@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #include <srook/brainfk/llvm/brainfk_compiler.hpp>
 
 int main()
