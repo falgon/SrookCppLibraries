@@ -38,7 +38,7 @@ constexpr byte operator+(const byte& l,const byte& r)
 template<class Value>
 constexpr Value operator+(byte l,Value v)
 {
-	return static_cast<Value>(v) + v;
+	return static_cast<Value>(l) + v;
 }
 template<class Value>
 constexpr Value operator+(Value v,byte l)

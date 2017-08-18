@@ -3,19 +3,13 @@
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_HPP
 
 #include<srook/math/constants/pi.hpp>
-#include<limits>
 
 namespace srook{
 namespace math{
-
+inline namespace v1{
 namespace detail{
 
 constexpr std::size_t end_term = 10;
-
-constexpr double sqrt_aux(double x,double c,double prev)
-{
-	return c == prev ? c : sqrt_aux(x,(c + x / c) * 0.5,c);
-}
 
 } // namespace detail
 
@@ -28,8 +22,8 @@ constexpr double sin_convert(double x)noexcept{return fabs(x) > pi<double> / 2 ?
 constexpr double sin(double x)noexcept{return static_cast<int>(x / pi<double>) % 2 == 0 ? sin_convert(fmod(x,pi<double>)) : - sin_convert(fmod(x,pi<double>));}
 constexpr double cos(double x)noexcept{return fmod(x,pi<double> * 2) == pi<double> / 2 ? 0 : sin(x + pi<double> / 2);}
 constexpr double tan(double x)noexcept{return sin(x) / cos(x);}
-constexpr double sqrt(double x){return x >= 0 and x < std::numeric_limits<double>::infinity() ? detail::sqrt_aux(x,x,0) : std::numeric_limits<double>::quiet_NaN();}
 
+} // inline namespace v1
 } // namespace math
 } // namespace srook
 

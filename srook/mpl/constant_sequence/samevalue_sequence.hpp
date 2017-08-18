@@ -12,12 +12,12 @@ template<std::size_t,std::size_t,class>
 struct make_samevalue_sequence_impl;
 
 template<std::size_t size,std::size_t fill_value,std::size_t... seq>
-struct make_samevalue_sequence_impl<size,fill_value,std::index_sequence<seq...>>{
+struct [[deprecated("This feature was deprecated. Please use <srook/mpl/constant_sequence/algorithm/make_sequence.hpp>")]] make_samevalue_sequence_impl<size,fill_value,std::index_sequence<seq...>>{
 	using type=typename make_samevalue_sequence_impl<size-1,fill_value,std::index_sequence<fill_value,seq...>>::type;
 };
 
 template<std::size_t fill_value,std::size_t... seq>
-struct make_samevalue_sequence_impl<0,fill_value,std::index_sequence<seq...>>{
+struct [[deprecated("This feature was deprecated. Please use <srook/mpl/constant_sequence/algorithm/make_sequence.hpp>")]] make_samevalue_sequence_impl<0,fill_value,std::index_sequence<seq...>>{
 	using type=std::index_sequence<seq...>;
 };
 

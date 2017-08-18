@@ -9,7 +9,7 @@
 
 namespace srook{
 namespace math{
-
+inline namespace v1{
 namespace detail{
 
 constexpr std::int64_t to_integer = 10000000000000000;
@@ -54,9 +54,10 @@ struct Realvalue{
 
 } // namespace detail
 
-template<std::size_t x,std::size_t y>
-constexpr decltype(auto) cos_table = detail::make_costable_x<x,y>::template constant_range<std::tuple,detail::Realvalue>;
+template<std::size_t x,std::size_t y,template<class...>class Tuple = std::tuple>
+constexpr decltype(auto) cos_table = detail::make_costable_x<x,y>::template constant_range<Tuple,detail::Realvalue>;
 
+} // inline namespace v1
 } // namespace math
 } // namespace srook
 
