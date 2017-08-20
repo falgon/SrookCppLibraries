@@ -1,0 +1,13 @@
+// Copyright (C) 2017 roki
+#ifndef INCLUDED_SROOK_MATH_CONFIG_BUILTIN_HPP
+#define INCLUDED_SROOK_MATH_CONFIG_BUILTIN_HPP
+
+#include<srook/config/user_config.hpp>
+
+#ifndef SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION
+#	define SROOK_USE_BUILTIN_CMATH_FUNCTION 1
+#else
+#	define SROOK_USE_BUILTIN_CMATH_FUNCTION 0
+#endif
+
+#endif

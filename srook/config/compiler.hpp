@@ -1,22 +1,22 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
 #define INCLUDED_SROOK_UTILITY_SFINAE_REQUIRES_HPP
-#ifdef __cplusplus
-#include<cstddef>
+#include <cstddef>
+#include <srook/config/cpp_predefined/macro_names.hpp>
 
-#if __cplusplus <= 201103L
-#	define SROOK_IS_CXX11_EARLIER
-#elif __cplusplus == 201403L
-#	define SROOK_IS_CXX14
-#elif __cplusplus == 201703L
-#	define SROOK_IS_CXX17
+#if SROOK_CPLUSPLUS <= 201103L
+#define SROOK_IS_CXX11_EARLIER
+#elif SROOK_CPLUSPLUS == 201403L
+#define SROOK_IS_CXX14
+#elif SROOK_CPLUSPLUS == 201703L
+#define SROOK_IS_CXX17
 #endif
 
 #if !defined(__clang__) && __has_include(<boost/config/compiler/gcc.hpp>)
-#include<boost/config/compiler/gcc.hpp>
+#include <boost/config/compiler/gcc.hpp>
 #elif !defined(__clang__) && defined(__GNUC__)
 #define SROOK_NO_BOOST_COMPILER_GCC
-#define SROOK_GCC_VERSION(__GNUC__*10000+__GNUC_MINOR__*100+__GNUC_PATCHLEVEL__)
+#define SROOK_GCC_VERSION(__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #if !defined(__CUDACC__)
 #define SROOK__GCC SROOK_GCC_VERSION
 #endif
@@ -24,7 +24,7 @@
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || (__cplusplus >= 201103L)
 #define SROOK_GCC_CXX11
 #endif
-#if __GNUC__==3
+#if __GNUC__ == 3
 #ifdef __PATHSCALE__
 #define SROOK_NO_TWO_PHASE_NAME_LOOKUP
 #define SROOK_NO_IS_ABSTRACT
@@ -35,7 +35,7 @@
 #endif
 #define SROOK_NO_CXX11_EXTERN_TEMPLATE
 #endif
-#if !defined(__MINGW32__)&&!defined(linux)&&!defined(__linux)&&!defined(__linux__)
+#if !defined(__MINGW32__) && !defined(linux) && !defined(__linux) && !defined(__linux__)
 #define SROOK_HAS_THREADS
 #endif
 #if !defined(__DARWIN_NO_LONG_LONG)
@@ -53,7 +53,7 @@
 #define SROOK_NO_CXX11_STATIC_ASSERT
 #endif
 
-#if(SROOK_GCC_VERSION < 40400)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40400) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_AUTO_DECLARATIONS
 #define SROOK_NO_CXX11_HDR_INITIALIZER_LIST
 #define SROOK_NO_CXX11_DEFAULTED_FUNCTIONS
@@ -65,7 +65,7 @@
 #if SROOK_GCC_VERSION < 40500
 #define SROOK_NO_SFINAE_EXPR
 #endif
-#if __GNUC__ < 4 || (__GNUC__==4&&__GNUC_MINOR__==5)||!defined(SROOK_GCC_CXX11)
+#if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ == 5) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_NON_PUBLIC_DEFAULTED_FUNCTIONS
 #endif
 #if (SROOK_GCC_VERSION < 40500) || !defined(SROOK_GCC_CXX11)
@@ -75,46 +75,46 @@
 #define SROOK_NO_CXX11_RAW_LITERALS
 #define SROOK_NO_CXX11_UNICODE_LITERALS
 #endif
-#if (SROOK_GCC_VERSION < 40501)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40501) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_SCOPED_ENUMS
 #endif
-#if (SROOK_GCC_VERSION < 40600)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40600) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_CONSTEXPR
 #define SROOK_NO_CXX11_NOEXCEPT
 #define SROOK_NO_CXX11_NULLPTR
 #define SROOK_NO_CXX11_RANGE_BASED_FOR
 #define SROOK_NO_CXX11_UNIFIED_INITIALIZATION_SYNTAX
 #endif
-#if (SROOK_GCC_VERSION < 40700)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40700) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_FINAL
 #define SROOK_NO_CXX11_TEMPLATE_ALIASES
 #define SROOK_NO_CXX11_USER_DEFINED_LITERALS
 #define SROOK_NO_CXX11_FIXED_LENGTH_VARIADIC_TEMPLATE_EXPANSION_PAKCS
 #endif
-#if (SROOK_GCC_VERSION < 40800)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40800) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_ALIGNAS
 #define SROOK_NO_CXX11_THREAD_LOCAL
 #endif
-#if (SROOK_GCC_VERSION < 40801)||!defined(SROOK_GCC_CXX11)
+#if (SROOK_GCC_VERSION < 40801) || !defined(SROOK_GCC_CXX11)
 #define SROOK_NO_CXX11_DECLTYPE_N3276
 #define SROOK_NO_CXX11_REF_QUALIFIERS
 #define SROOK_NO_CXX14_BINARY_LITERALS
 #endif
-#if (SROOK_GCC_VERSION < 40900)||(__cplusplus<201300)
+#if (SROOK_GCC_VERSION < 40900) || (__cplusplus < 201300)
 #define SROOK_NO_CXX14_RETURN_TYPE_DEDUCTION
 #define SROOK_NO_CXX14_GENERIC_LAMBDAS
 #define SROOK_NO_CXX14_DECLTYPE_AUTO
-#if !((SROOK_GCC_VERSION>=40801)&&(SROOK_GCC_VERSION < 40900)&&defined(SROOK_GCC_CXX11))
+#if !((SROOK_GCC_VERSION >= 40801) && (SROOK_GCC_VERSION < 40900) && defined(SROOK_GCC_CXX11))
 #define SROOK_NO_CXX14_INITIALIZED_LAMBDA_CAPTURES
 #endif
 #endif
-#if !defined(__cpp_aggregate_nsdmi)||(__cpp_aggregate_nsdmi<201304)
+#if !defined(__cpp_aggregate_nsdmi) || (__cpp_aggregate_nsdmi < 201304)
 #define SROOK_NO_CXX14_AGGREGATE_NSDMI
 #endif
-#if !defined(__cpp_constexpr)||(__cpp_constexpr<201304)
+#if !defined(__cpp_constexpr) || (__cpp_constexpr < 201304)
 #define SROOK_NO_CXX14_CONSTEXPR
 #endif
-#if !defined(__cpp_variable_templates)||(__cpp_variable_templates<201304)
+#if !defined(__cpp_variable_templates) || (__cpp_variable_templates < 201304)
 #define SROOK_NO_CXX14_VARIABLE_TEMPLATES
 #endif
 #ifndef SROOK_COMPILER
@@ -127,7 +127,7 @@
 #endif
 
 #if defined(__clang__) && __has_include(<boost/config/compiler/clang.hpp>)
-#include<boost/config/compiler/clang.hpp>
+#include <boost/config/compiler/clang.hpp>
 #elif defined(__clang__major__)
 #define SROOK_NO_BOOST_COMPILER_CLANG
 
@@ -242,6 +242,5 @@
 #endif
 
 #else
-#include<stddef.h>
-#endif
+#include <stddef.h>
 #endif

@@ -1,9 +1,12 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONFIG_ATTRIBUTE_HPP
 #define INCLUDED_SROOK_CONFIG_ATTRIBUTE_HPP
-#ifdef __GNUC__
-#define SROOK_attribute_UNUSED [[gnu::unused]]
-#else
-#define SROOK_attribute_UNUSED [[maybe_unused]]
-#endif
+#include <srook/config/attribute/carries_dependency.hpp>
+#include <srook/config/attribute/deprecated.hpp>
+#include <srook/config/attribute/fallthrough.hpp>
+#include <srook/config/attribute/force_inline.hpp>
+#include <srook/config/attribute/maybe_unused.hpp>
+#include <srook/config/attribute/no_inline.hpp>
+#include <srook/config/attribute/nodiscard.hpp>
+#include <srook/config/attribute/noreturn.hpp>
 #endif
