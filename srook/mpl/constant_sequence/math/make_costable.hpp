@@ -1,6 +1,6 @@
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_MATH_MAKE_COSTABLE_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_MATH_MAKE_COSTABLE_HPP
-#include<srook/math/constants/algorithm/math.hpp>
+#include<srook/math/constants/algorithm/cos.hpp>
 #include<srook/mpl/constant_sequence/algorithm/concat.hpp>
 #include<srook/mpl/constant_sequence/algorithm/transfer_constant.hpp>
 

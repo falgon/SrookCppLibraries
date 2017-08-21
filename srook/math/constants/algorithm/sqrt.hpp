@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SQRT_HPP
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SQRT_HPP
 
@@ -15,7 +16,7 @@ namespace math {
 inline namespace v1 {
 namespace detail {
 
-#if SROOK_USE_BUILTIN_CMATH_FUNCTION
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 
 SROOK_FORCE_INLINE constexpr float builtin_sqrt(float x) SROOK_NOEXCEPT(__builtin_sqrtf(x))
 {
@@ -35,29 +36,35 @@ SROOK_FORCE_INLINE constexpr long double builtin_sqrt(long double x) SROOK_NOEXC
 #endif
 
 template <typename T>
-SROOK_FORCE_INLINE T sqrt_impl2(T x, T s, T s2)
+inline T sqrt_impl2(T x, T s, T s2)
 {
     return !(s < s2) ? s2 : sqrt_impl2(x, (x / s + s) / 2, s);
 }
 template <typename T>
-SROOK_FORCE_INLINE T sqrt_impl1(T x, T s)
+inline T sqrt_impl1(T x, T s)
 {
     return sqrt_impl2(x, (x / s + s) / 2, s);
 }
 template <typename T>
-SROOK_FORCE_INLINE T sqrt_impl(T x)
+inline T sqrt_impl(T x)
 {
     return sqrt_impl1(x, x > 1 ? x : T(1));
 }
 }
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
-SROOK_FORCE_INLINE constexpr FloatType sqrt(FloatType x)
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
+SROOK_FORCE_INLINE
+#else
+inline
+#endif
+    constexpr FloatType
+    sqrt(FloatType x)
 {
     return isnan(x) ? x
 		    : x >= numeric_limits<FloatType>::infinity() ? numeric_limits<FloatType>::infinity()
 								 : x < 0 ? -numeric_limits<FloatType>::quiet_NaN()
-#if SROOK_USE_BUILTIN_CMATH_FUNCTION
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 									 : detail::builtin_sqrt(x)
 #else
 									 : x == 0 ? x
@@ -67,7 +74,13 @@ SROOK_FORCE_INLINE constexpr FloatType sqrt(FloatType x)
 }
 
 template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
-SROOK_FORCE_INLINE constexpr double sqrt(IntType x)
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
+SROOK_FORCE_INLINE
+#else
+inline
+#endif
+    constexpr double
+    sqrt(IntType x)
 {
     return sqrt(static_cast<double>(x));
 }

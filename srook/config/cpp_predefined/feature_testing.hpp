@@ -112,7 +112,7 @@
 #define SROOK_CPP_EXCEPTIONS
 #endif
 
-#define SROOK_CPP_UNICODE_CHARACTERS
+#define SROOK_CPP_UNICODE_CHARACTERS 0
 
 #if defined(__clang__)
 #define SROOK_CPP_RAW_STRINGS __has_feature(cxx_raw_string_literals)
@@ -123,13 +123,13 @@
 #if defined(__clang__)
 #define SROOK_CPP_UNICODE_LITERALS __has_feature(cxx_unicode_literals)
 #else
-#define SROOK_CPP_UNICODE_LITERALS
+#define SROOK_CPP_UNICODE_LITERALS 0
 #endif
 
 #if defined(__clang__)
 #define SROOK_CPP_USER_DEFINED_LITERALS __has_feature(cxx_user_literals)
 #else
-#define SROOK_CPP_USER_DEFINED_LITERALS
+#define SROOK_CPP_USER_DEFINED_LITERALS 0
 #endif
 
 #if defind(__clang__)

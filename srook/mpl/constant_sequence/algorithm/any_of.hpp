@@ -3,12 +3,14 @@
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_ANY_OF_HPP
 #include<utility>
 #include<type_traits>
+#include<srook/config/compiler.hpp>
 
 namespace srook{
 inline namespace mpl{
 namespace constant_sequence{
 inline namespace v1{
 
+#ifndef SROOK_IS_CXX11_EARLIER
 template<template<std::size_t>class,class>
 struct any_of;
 
@@ -34,6 +36,7 @@ struct any_of<pred,std::index_sequence<head,tail...>>{
 
 template<template<std::size_t>class pred,class Sequence>
 constexpr bool any_of_v=any_of<pred,Sequence>::value;
+#endif
 
 } // inline namespace v1
 } // namespace constant_sequence

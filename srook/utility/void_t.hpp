@@ -21,8 +21,10 @@ struct void_t_impl:Empty_type<void,Ts...>{};
 } // namespace detail
 } // namespace utility
 
+#if __cplusplus > 201103L
 template<class... Ts>
 using void_t=typename utility::detail::void_t_impl<Ts...>::type;
+#endif
 
 } // namespace srook
 

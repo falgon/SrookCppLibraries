@@ -1,5 +1,6 @@
 #ifndef INCLUDED_SROOK_UTILITY_INTEGER_SEQUENCE_HPP
 #define INCLUDED_SROOK_UTILITY_INTEGER_SEQUENCE_HPP
+#include<cstddef>
 
 namespace srook{
 

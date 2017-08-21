@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_LIMITS_NUMERIC_LIMITS_HPP
 #define INCLUDED_SROOK_LIMITS_NUMERIC_LIMITS_HPP
 
@@ -12,9 +13,9 @@
 #include <srook/math/config/builtin.hpp>
 
 #if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
-#include <cstdint>
-#include <climits>
 #include <cfloat>
+#include <climits>
+#include <cstdint>
 #if !defined(__FLT_DENORM_MIN__) || !defined(__LDBL_DENORM_MIN__) || !defined(__LDBL_DENORM_MIN__)
 #include <cmath>
 #endif

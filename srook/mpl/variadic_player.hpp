@@ -123,7 +123,7 @@ struct Erase_if;
 
 template<template<class>class Pred,class Head,class... Tail>
 struct Erase_if<Pred,Head,Tail...>{
-	using type=Concat_t<std::conditional_t<Pred<Head>::value,Head,pack<>>,typename Erase_if<Pred,Tail...>::type>;
+	using type=Concat_t<typename std::conditional<Pred<Head>::value,Head,pack<>>::type,typename Erase_if<Pred,Tail...>::type>;
 };
 
 template<template<class>class Pred>

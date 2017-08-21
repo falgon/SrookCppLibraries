@@ -7,13 +7,13 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 #include <srook/math/config/builtin.hpp>
 
-#if SROOK_USE_BUILTIN_CMATH_FUNCTION
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 #if SROOK_CPP_RVALUE_REFERENCES
-#	include<utility>
+#include <utility>
 #endif
 namespace srook {
 namespace math {
-namespace v1{
+inline namespace v1 {
 namespace detail {
 
 template <typename FloatType>
@@ -29,15 +29,15 @@ SROOK_FORCE_INLINE
 #endif
 		x)
 {
-	return __builtin_isnan(
+    return __builtin_isnan(
 #if SROOK_CPP_RVALUE_REFERENCES
-			std::forward<FloatType>(
+	std::forward<FloatType>(
 #endif
-				x
+	    x
 #if SROOK_CPP_RVALUE_REFERENCES
-			)
+	    )
 #endif
-			);
+    );
 }
 
 } // namespace detail
@@ -57,15 +57,23 @@ namespace math {
 inline namespace v1 {
 
 template <typename FloatType, REQUIRES(std::is_floating_point<typename std::decay<FloatType>::type>::value)>
-SROOK_FORCE_INLINE constexpr bool isnan(FloatType &&x)
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
+SROOK_FORCE_INLINE
+#else
+inline
+#endif
+    constexpr bool
+    isnan(FloatType &&x)
 {
+#include <srook/config/disable_warnings/push/Wfloat_equal.hpp>
     return
-#if SROOK_USE_BUILTIN_CMATH_FUNCTION
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_isnan(std::forward<FloatType>(x))
 #else
 	!(x == x)
 #endif
 	    ;
+#include <srook/config/disable_warnings/pop.hpp>
 }
 
 template <typename IntType, REQUIRES(std::is_integral<typename std::decay<IntType>::type>::value)>
@@ -88,15 +96,23 @@ namespace math {
 namespace detail {
 
 template <typename FloatType>
-SROOK_FORCE_INLINE constexpr bool isnan(FloatType x)
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
+SROOK_FORCE_INLINE
+#else
+inline
+#endif
+    constexpr bool
+    isnan(FloatType x)
 {
+#include <srook/config/disable_warnings/push/Wfloat_equal.hpp>
     return
-#if SROOK_USE_BUILTIN_CMATH_FUNCTION
+#if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_isnan(x)
 #else
 	!(x == x)
 #endif
 	    ;
+#include <srook/config/disable_warnings/pop.hpp>
 }
 
 } // namespace detail

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_DETAIL_FLOAT_COMPUTE_HPP
 #define INCLUDED_SROOK_MATH_DETAIL_FLOAT_COMPUTE_HPP
 
@@ -15,7 +16,8 @@ inline namespace v1 {
 namespace detail {
 
 template <class... Ts>
-struct float_compute : float_promote<double, Ts...> {};
+struct float_compute : float_promote<double, Ts...> {
+};
 
 template <typename FloatType>
 SROOK_FORCE_INLINE constexpr typename float_compute<FloatType>::type as_float_compute(const FloatType &x)

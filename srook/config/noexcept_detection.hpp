@@ -19,6 +19,7 @@
 
 #else
 #define SROOK_NOEXCEPT_TRUE throw()
+#define SROOK_NOEXCEPT(...)
 #endif
 
 #endif
