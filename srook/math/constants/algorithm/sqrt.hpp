@@ -54,12 +54,11 @@ inline T sqrt_impl(T x)
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    sqrt(FloatType x)
+constexpr FloatType sqrt(FloatType x)
 {
     return isnan(x) ? x
 		    : x >= numeric_limits<FloatType>::infinity() ? numeric_limits<FloatType>::infinity()
@@ -75,12 +74,11 @@ inline
 
 template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
-inline
+inline 
 #endif
-    constexpr double
-    sqrt(IntType x)
+constexpr double sqrt(IntType x)
 {
     return sqrt(static_cast<double>(x));
 }

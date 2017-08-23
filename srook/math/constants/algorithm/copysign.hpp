@@ -41,16 +41,15 @@ inline constexpr bool broken_signbit(FloatType x) SROOK_NOEXCEPT(math::isnan(x))
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    copysign(FloatType x, FloatType y)
+constexpr FloatType copysign(FloatType x, FloatType y)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_copysign(x, y))
+    SROOK_NOEXCEPT(detail::builtin_copysign(x, y))
 #else
-	SROOK_NOEXCEPT(noexcept(detail::broken_signbit(x)) and noexcept(detail::broken_signbit(y)) and noexcept(math::isnan(x)) and noexcept(math::isnan(y)))
+    SROOK_NOEXCEPT(noexcept(detail::broken_signbit(x)) and noexcept(detail::broken_signbit(y)) and noexcept(math::isnan(x)) and noexcept(math::isnan(y)))
 #endif
 {
     return
@@ -64,13 +63,12 @@ inline
 
 template <typename ArithmeticType1, typename ArithmeticType2, REQUIRES(std::is_arithmetic<ArithmeticType1>::value and std::is_arithmetic<ArithmeticType2>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr typename float_promote<ArithmeticType1, ArithmeticType2>::type
-    copysign(ArithmeticType1 x, ArithmeticType2 y)
-	SROOK_NOEXCEPT(math::copysign(static_cast<typename float_promote<ArithmeticType1, ArithmeticType2>::type>(x), static_cast<typename float_promote<ArithmeticType1, ArithmeticType2>::type>(y)))
+constexpr typename float_promote<ArithmeticType1, ArithmeticType2>::type copysign(ArithmeticType1 x, ArithmeticType2 y)
+SROOK_NOEXCEPT(math::copysign(static_cast<typename float_promote<ArithmeticType1, ArithmeticType2>::type>(x), static_cast<typename float_promote<ArithmeticType1, ArithmeticType2>::type>(y)))
 {
     typedef typename float_promote<ArithmeticType1, ArithmeticType2>::type type;
     return math::copysign(static_cast<type>(x), static_cast<type>(y));

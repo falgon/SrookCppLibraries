@@ -39,31 +39,29 @@ SROOK_FORCE_INLINE
 #else
 inline
 #endif
-    constexpr FloatType
-    cos(FloatType x)
+constexpr FloatType cos(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_cos(x))
+    SROOK_NOEXCEPT(detail::builtin_cos(x))
 #else
-	SROOK_NOEXCEPT(noexcept(math::fmod(x, FloatType())) and noexcept(math::sin(FloatType())))
+   SROOK_NOEXCEPT(noexcept(math::fmod(x,FloatType())) and noexcept(math::sin(FloatType())))
 #endif
 {
     return math::isnan(x) ? x : x >= numeric_limits<FloatType>::infinity() or x <= -numeric_limits<FloatType>::infinity() ? -numeric_limits<FloatType>::quiet_NaN()
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 															  : detail::builtin_cos(x)
 #else
-															  : x == 0 ? FloatType(1) : math::fmod(x, math::PI<typename detail::float_compute<FloatType>::type>::value() * 2) == math::PI<typename detail::float_compute<FloatType>::type>::value() / 2 ? 0 : math::sin(x + math::PI<typename detail::float_compute<FloatType>::type>::value() / 2);
+															  : x == 0 ? FloatType(1) : math::fmod(x, math::PI<typename detail::float_compute<FloatType>::type>::value() * 2) == math::PI<typename detail::float_compute<FloatType>::type>::value() / 2  ? 0 : math::sin(x + math::PI<typename detail::float_compute<FloatType>::type>::value() / 2);
 #endif
 	;
 }
 
 template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr double
-    cos(IntType x) SROOK_NOEXCEPT(math::cos(static_cast<double>(x)))
+constexpr double cos(IntType x) SROOK_NOEXCEPT(math::cos(static_cast<double>(x)))
 {
     return math::cos(static_cast<double>(x));
 }

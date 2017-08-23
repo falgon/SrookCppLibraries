@@ -58,14 +58,13 @@ inline namespace v1 {
 
 template <typename FloatType, REQUIRES(std::is_floating_point<typename std::decay<FloatType>::type>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr bool
-    isnan(FloatType &&x)
+constexpr bool isnan(FloatType &&x)
 {
-#include <srook/config/disable_warnings/push/Wfloat_equal.hpp>
+#include<srook/config/disable_warnings/push/Wfloat_equal.hpp>
     return
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_isnan(std::forward<FloatType>(x))
@@ -73,7 +72,7 @@ inline
 	!(x == x)
 #endif
 	    ;
-#include <srook/config/disable_warnings/pop.hpp>
+#include<srook/config/disable_warnings/pop.hpp>
 }
 
 template <typename IntType, REQUIRES(std::is_integral<typename std::decay<IntType>::type>::value)>
@@ -95,16 +94,16 @@ namespace srook {
 namespace math {
 namespace detail {
 
+
 template <typename FloatType>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr bool
-    isnan(FloatType x)
+constexpr bool isnan(FloatType x)
 {
-#include <srook/config/disable_warnings/push/Wfloat_equal.hpp>
+#include<srook/config/disable_warnings/push/Wfloat_equal.hpp>
     return
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_isnan(x)
@@ -112,7 +111,7 @@ inline
 	!(x == x)
 #endif
 	    ;
-#include <srook/config/disable_warnings/pop.hpp>
+#include<srook/config/disable_warnings/pop.hpp>
 }
 
 } // namespace detail

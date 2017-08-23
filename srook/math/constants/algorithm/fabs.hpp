@@ -34,23 +34,22 @@ SROOK_FORCE_INLINE constexpr long double builtin_fabs(long double x) SROOK_NOEXC
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    fabs(FloatType x)
+constexpr FloatType fabs(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_fabs(x))
+    SROOK_NOEXCEPT(detail::builtin_fabs(x))
 #else
-	SROOK_NOEXCEPT(noexcept(math::isnan(x)) and noexcept(numeric_limits<FloatType>::quiet_NaN()) and noexcept(math::copysign(x, FloatType(0))))
+    SROOK_NOEXCEPT(noexcept(math::isnan(x)) and noexcept(numeric_limits<FloatType>::quiet_NaN()) and noexcept(math::copysign(x, FloatType(0))))
 #endif
 {
     return
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_fabs(x)
 #else
-	math::isnan(x) ? numeric_limits<FloatType>::quiet_NaN() : x < 0 ? -x : x
+	math::isnan(x) ? numeric_limits<FloatType>::quiet_NaN() : x < 0 ? -x : x 
 #endif
 	    ;
 }

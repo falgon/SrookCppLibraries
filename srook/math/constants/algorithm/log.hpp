@@ -55,16 +55,15 @@ inline constexpr T log_impl(T x) SROOK_NOEXCEPT(detail::log_impl1(T(1) / x))
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    log(FloatType x)
+constexpr FloatType log(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_log(x))
+    SROOK_NOEXCEPT(detail::builtin_log(x))
 #else
-	SROOK_NOEXCEPT(detail::log_impl(static_cast<typename detail::float_compute<FloatType>::type>(x)))
+    SROOK_NOEXCEPT(detail::log_impl(static_cast<typename detail::float_compute<FloatType>::type>(x)))
 #endif
 {
     return math::isnan(x) ? x : x == 0 ? -numeric_limits<FloatType>::infinity() : x >= numeric_limits<FloatType>::infinity() ? numeric_limits<FloatType>::infinity() : x < 0 ? numeric_limits<FloatType>::quiet_NaN()
@@ -78,12 +77,11 @@ inline
 
 template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr double
-    log(IntType x) SROOK_NOEXCEPT(math::log(static_cast<double>(x)))
+constexpr double log(IntType x) SROOK_NOEXCEPT(math::log(static_cast<double>(x)))
 {
     return math::log(static_cast<double>(x));
 }

@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_POWER_HPP
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_POWER_HPP
 
@@ -76,11 +75,11 @@ inline
 																																													      : numeric_limits<FloatType>::infinity()
 																																												      : x < 0 and !math::is_integer(y) ? numeric_limits<FloatType>::quiet_NaN()
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-																																																       : detail::builtin_pow(x, y)
+	: detail::builtin_pow(x, y)
 #else
-																																																       : static_cast<FloatType>(detail::pow_impl(static_cast<typename detail::float_compute<FloatType>::type>(x), static_cast<typename detail::float_compute<FloatType>::type>(y)))
+	: static_cast<FloatType>(detail::pow_impl(static_cast<typename detail::float_compute<FloatType>::type>(x), static_cast<typename detail::float_compute<FloatType>::type>(y)))
 #endif
-	;
+	    ;
 }
 
 template <typename ArithmeticType1, typename ArithmeticType2, REQUIRES(std::is_arithmetic<ArithmeticType1>::value and std::is_arithmetic<ArithmeticType2>::value)>

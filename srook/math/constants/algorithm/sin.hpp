@@ -1,8 +1,7 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SIN_HPP
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SIN_HPP
 
-#include <cmath>
+#include<cmath>
 
 #include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/noexcept_detection.hpp>
@@ -49,22 +48,22 @@ inline constexpr T sin_impl1(T x) SROOK_NOEXCEPT(sin_impl2(math::fmod(math::PI<T
 template <typename T>
 inline constexpr typename float_compute<T>::type sin_impl(T x) SROOK_NOEXCEPT(math::fmod(x, math::PI<typename detail::float_compute<T>::type>::value()))
 {
-    return static_cast<int>(x / math::PI<T>::value()) % 2 == 0 ? sin_impl1(std::fmod(x, math::PI<T>::value())) : -sin_impl1(std::fmod(x, math::PI<T>::value()));
+    return 
+		static_cast<int>(x / math::PI<T>::value()) % 2 == 0 ? sin_impl1(std::fmod(x, math::PI<T>::value())) : -sin_impl1(std::fmod(x, math::PI<T>::value()));
 }
 } // namespace detail
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    sin(FloatType x)
+constexpr FloatType sin(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_sin(x))
+    SROOK_NOEXCEPT(detail::builtin_sin(x))
 #else
-	SROOK_NOEXCEPT(sin_impl(x))
+    SROOK_NOEXCEPT(sin_impl(x))
 #endif
 {
     return math::isnan(x) ? x : x >= numeric_limits<FloatType>::infinity() or x <= -numeric_limits<FloatType>::infinity() ? -numeric_limits<FloatType>::quiet_NaN()
@@ -78,12 +77,11 @@ inline
 
 template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr double
-    sin(IntType x) SROOK_NOEXCEPT(math::sin(static_cast<double>(x)))
+constexpr double sin(IntType x) SROOK_NOEXCEPT(math::sin(static_cast<double>(x)))
 {
     return math::sin(static_cast<double>(x));
 }

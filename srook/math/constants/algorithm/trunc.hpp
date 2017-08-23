@@ -37,16 +37,15 @@ SROOK_FORCE_INLINE constexpr long double builtin_trunc(long double x) SROOK_NOEX
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr FloatType
-    trunc(FloatType x)
+constexpr FloatType trunc(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_trunc(x))
+    SROOK_NOEXCEPT(detail::builtin_trunc(x))
 #else
-	SROOK_NOEXCEPT(numeric_limits<std::uintmax_t>::max() < x or numeric_limits<std::uintmax_t>::max < -x ? numeric_limits<FloatType>::quiet_NaN() : x < 0 ? -static_cast<FloatType>(static_cast<std::uintmax_t>(-x)) : static_cast<FloatType>(static_cast<std::uintmax_t>(x)))
+    SROOK_NOEXCEPT(numeric_limits<std::uintmax_t>::max() < x or numeric_limits<std::uintmax_t>::max < -x ? numeric_limits<FloatType>::quiet_NaN() : x < 0 ? -static_cast<FloatType>(static_cast<std::uintmax_t>(-x)) : static_cast<FloatType>(static_cast<std::uintmax_t>(x)))
 #endif
 {
     return isnan(x) ? x : x >= numeric_limits<FloatType>::infinity() ? numeric_limits<FloatType>::infinity() : x <= -numeric_limits<FloatType>::infinity() ? -numeric_limits<FloatType>::infinity()

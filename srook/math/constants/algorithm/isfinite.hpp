@@ -28,16 +28,15 @@ SROOK_FORCE_INLINE constexpr bool builtin_isfinite(FloatType x) SROOK_NOEXCEPT(_
 
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-SROOK_FORCE_INLINE
+SROOK_FORCE_INLINE 
 #else
 inline
 #endif
-    constexpr bool
-    isfinite(FloatType x)
+constexpr bool isfinite(FloatType x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
-	SROOK_NOEXCEPT(detail::builtin_isfinite(x))
+    SROOK_NOEXCEPT(detail::builtin_isfinite(x))
 #else
-	SROOK_NOEXCEPT(!(math::isnan(x) or math::isinf(x)))
+    SROOK_NOEXCEPT(!(math::isnan(x) or math::isinf(x)))
 #endif
 {
     return

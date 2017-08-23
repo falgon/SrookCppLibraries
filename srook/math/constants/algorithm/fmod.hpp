@@ -25,7 +25,7 @@ SROOK_FORCE_INLINE constexpr T builtin_fmod(T x, T y) SROOK_NOEXCEPT(__builtin_f
 template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
 inline FloatType constexpr fmod_impl(FloatType x, FloatType y) SROOK_NOEXCEPT_TRUE
 {
-    return x - static_cast<int>(x / y) * y;
+	return x - static_cast<int>(x / y) * y;
 }
 
 } // namespace detail
