@@ -222,7 +222,7 @@ constexpr auto make_counter(std::array<T, s> &ar, std::size_t value = 0)
     return counter<decltype(ar)>(ar, std::move(value));
 }
 
-template <class Tuple>
+template <class Tuple,REQUIRES(!has_iterator_v<remove_ref_cv(Tuple)>)>
 constexpr auto make_counter(Tuple &&t, std::size_t value = 0)
     -> std::enable_if_t<!has_iterator_v<remove_ref_cv(Tuple)> or !is_range_iterator_v<remove_ref_cv(Tuple)>, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple>>
 {

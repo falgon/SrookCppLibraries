@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
 #include <type_traits>
+#include <tuple>
 
 template <class, class = std::void_t<>>
 struct is_tuple : std::false_type {
