@@ -4,6 +4,7 @@
 #include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/require.hpp>
+#include <srook/math/constants/algorithm/fmod.hpp>
 #include <srook/math/constants/algorithm/isfinite.hpp>
 
 namespace srook {
