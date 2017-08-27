@@ -3,6 +3,7 @@
 #include<srook/math/constants/algorithm/cos.hpp>
 #include<srook/mpl/constant_sequence/algorithm/concat.hpp>
 #include<srook/mpl/constant_sequence/algorithm/transfer_constant.hpp>
+#include<srook/mpl/constant_sequence/math/detail/convert_type.hpp>
 
 namespace srook {
 inline namespace mpl {
@@ -11,7 +12,6 @@ namespace math{
 inline namespace v1 {
 
 namespace detail {
-constexpr std::int64_t to_integer = 10000000000000000;
 
 template<std::size_t i,std::size_t j>
 constexpr double cos_value = srook::math::cos((2 * j + 1) * i * (srook::math::pi<double> / 16));
@@ -39,16 +39,6 @@ struct make_costable_x_impl<0,j,std::integer_sequence<std::int64_t,v...>>{
 };
 template<std::size_t x,std::size_t y,class Pack = std::integer_sequence<std::int64_t>>
 using make_costable_x = typename make_costable_x_impl<x - 1,y - 1,Pack>::type;
-
-struct Realvalue{
-	explicit constexpr Realvalue() = default;
-
-	template<class T>
-	constexpr double operator()(T&& v)
-	{
-		return double(v) / to_integer;
-	}
-};
 
 } // namespace detail
 
