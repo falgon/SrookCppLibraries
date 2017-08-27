@@ -132,7 +132,7 @@
 #define SROOK_CPP_USER_DEFINED_LITERALS 0
 #endif
 
-#if defind(__clang__)
+#if defined(__clang__)
 #define SROOK_CPP_LAMBDAS __has_feature(cxx_lambdas)
 #else
 #define SROOK_CPP_LAMBDAS
@@ -141,7 +141,7 @@
 #if defined(__clang__)
 #define SROOK_CPP_CONSTEXPR __has_feature(cxx_constexpr)
 #else
-#define SROOK_CPP_CONSTEXPR
+#define SROOK_CPP_CONSTEXPR 1 // FIX ME
 #endif
 
 #if defined(__clang__)
@@ -162,7 +162,7 @@
 #define SROOK_CPP_DECLTYPE
 #endif
 
-#if defind(__clang__)
+#if defined(__clang__)
 #define SROOK_CPP_ATTRIBUTES __has_feature(cxx_attributes)
 #else
 #define SROOK_CPP_ATTRIBUTES
@@ -187,7 +187,7 @@
 #if defined(__clang__)
 #define SROOK_CPP_VARIADIC_TEMPLATES __has_feature(cxx_variadic_templates)
 #else
-#define SROOK_CPP_VARIADIC_TEMPLATES
+#define SROOK_CPP_VARIADIC_TEMPLATES 1 // FIX ME
 #endif
 
 #if defined(__clang__)
@@ -219,7 +219,7 @@
 #if defined(__clang__)
 #define SROOK_CPP_ALIAS_TEMPLATES __has_feature(cxx_alias_templates)
 #else
-#define SROOK_CPP_ALIAS_TEMPLATES
+#define SROOK_CPP_ALIAS_TEMPLATES 1 // FIX ME
 #endif
 
 #if defined(__clang__)
