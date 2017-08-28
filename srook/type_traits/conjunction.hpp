@@ -19,7 +19,7 @@ template <class B1, class... Bn>
 struct conjunction<B1, Bn...> : std::conditional<bool(B1::value), conjunction<Bn...>, B1>::type {
 };
 
-#if SROOK_CPP_ALIAS_TEMPLATES
+#if SROOK_CPP_VARIABLE_TEMPLATES
 template <class... B>
 SROOK_INLINE_VARIABLE constexpr bool conjunction_v = conjunction<B...>::value;
 #endif
