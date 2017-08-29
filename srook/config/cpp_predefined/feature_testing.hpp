@@ -74,6 +74,7 @@
 #	define SROOK_CPP_TEMPLATE_AUTO __cpp_template_auto
 #	define SROOK_CPP_STRUCTURED_BINDINGS __cpp_structured_bindings
 #	define SROOK_CPP_VARIADIC_USING __cpp_variadic_using
+#	define SROOK_CPP_LIB_LAUNDER __cpp_lib_launder
 #else
 #	define SROOK_CPP_INLINE_VARIABLES 0
 #	define SROOK_CPP_HEX_FLOAT 0
@@ -89,6 +90,7 @@
 #	define SROOK_CPP_TEMPLATE_AUTO 0
 #	define SROOK_CPP_STRUCTURED_BINDINGS 0
 #	define SROOK_CPP_VARIADIC_USING 0
+#	define SROOK_CPP_LIB_LAUNDER 0
 #endif
 
 #else
@@ -314,6 +316,6 @@
 #define SROOK_CPP_TEMPLATE_AUTO 0
 #define SROOK_CPP_STRUCTURED_BINDINGS 0
 #define SROOK_CPP_VARIADIC_USING 0
-
+#define SROOK_CPP_LIB_LAUNDER 0
 #endif
 #endif
