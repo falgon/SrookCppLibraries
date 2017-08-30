@@ -11,6 +11,8 @@
 #include <utility>
 
 namespace srook {
+namespace optional_impl{
+inline namespace v1{
 namespace detail {
 struct nullopt_t {
     struct init {
@@ -456,11 +458,12 @@ constexpr optional<T> make_optional(std::initializer_list<U> ilist, Args &&... a
     return optional<T>(in_place, std::move(ilist), std::forward<Args>(args)...);
 }
 } // namespace detail
-
-using detail::optional;
-using detail::nullopt_t;
-using detail::nullopt;
-using detail::make_optional;
+} // inline namespace v1
+} // namespace optional
+using optional_impl::detail::optional;
+using optional_impl::detail::nullopt_t;
+using optional_impl::detail::nullopt;
+using optional_impl::detail::make_optional;
 
 } // namespace srook
 #endif

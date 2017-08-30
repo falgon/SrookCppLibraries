@@ -1,6 +1,9 @@
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_DETAIL_DOUBLE_CONVERT_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_DETAIL_DOUBLE_CONVERT_HPP
 
+#include<cstdint>
+#include<srook/config/attribute/deprecated.hpp>
+
 namespace srook {
 inline namespace mpl {
 namespace constant_sequence {

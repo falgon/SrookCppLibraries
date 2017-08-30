@@ -1,6 +1,7 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONFIG_NULLPTR_T
 #define INCLUDED_SROOK_CONFIG_NULLPTR_T
+#include<srook/config/cpp_predefined/feature_testing.hpp>
 
 namespace srook {
 struct nullptr_t {
@@ -9,7 +10,7 @@ struct nullptr_t {
 
 private:
     int dummy; // sizeof(std::nullptr_t)==sizeof(srook::nullptr_t)
-} nullptr;
+}nullptr;
 
 bool operator==(const void *null_, const nullptr_t &) throw()
 {

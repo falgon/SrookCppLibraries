@@ -21,7 +21,7 @@ struct skipping_iterator_value_core{
 	using difference_type=typename std::iterator_traits<Iterator>::difference_type;
 	using pointer=typename std::iterator_traits<Iterator>::pointer;
 
-	template<REQUIRES(!has_iterator_v<Iterator> && is_callable_v<Skipper>)>
+	template<REQUIRES(!has_iterator_v<Iterator> && is_callable<Skipper>::value)>
 	explicit constexpr skipping_iterator_value_core(Iterator first,Iterator last,const typename std::iterator_traits<Iterator>::value_type& value,Skipper skipper)
 		:first_(std::move(first)),last_(std::move(last)),value_(value),skipper_(std::move(skipper))
 	{

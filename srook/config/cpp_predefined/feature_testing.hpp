@@ -287,7 +287,7 @@
 #if defined(__clang__)
 #define SROOK_CPP_LIB_IS_NULL_POINTER __has_feature(cxx_nullptr)
 #else
-#define SROOK_CPP_LIB_IS_NULL_POINTER
+#define SROOK_CPP_LIB_IS_NULL_POINTER 1 // fix
 #endif
 
 #define SROOK_CPP_LIB_CHRONO_UDLS 0

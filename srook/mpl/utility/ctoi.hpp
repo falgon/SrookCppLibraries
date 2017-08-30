@@ -9,65 +9,69 @@ namespace srook{
 inline namespace mpl{
 inline namespace v1{
 
+namespace detail{
 // explicitly code for some characters code...
 
 template<char>
 struct ctoi{
-	static constexpr OPTIONAL<unsigned short int> value{NULLOPT};
+	static constexpr SROOK_OPTIONAL<unsigned short int> value{SROOK_NULLOPT};
 };
 
 template<>
 struct ctoi<'0'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(0u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(0u);
 };
 
 template<>
 struct ctoi<'1'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(1u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(1u);
 };
 
 template<>
 struct ctoi<'2'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(2u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(2u);
 };
 
 template<>
 struct ctoi<'3'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(3u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(3u);
 };
 
 template<>
 struct ctoi<'4'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(4u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(4u);
 };
 
 template<>
 struct ctoi<'5'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(5u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(5u);
 };
 
 template<>
 struct ctoi<'6'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(6u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(6u);
 };
 
 template<>
 struct ctoi<'7'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(7u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(7u);
 };
 template<>
 struct ctoi<'8'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(8u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(8u);
 };
 
 template<>
 struct ctoi<'9'>{
-	static constexpr OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(9u);
+	static constexpr SROOK_OPTIONAL<unsigned short int> value = static_cast<unsigned short int>(9u);
 };
+} // namespace detail
 
-#ifndef SROOK_IS_CXX11_EARLIER
+using detail::ctoi;
+
+#ifndef SROOK_CPP_VARIABLE_TEMPLATES
 template<char s>
-constexpr OPTIONAL<unsigned short int> ctoi_v = ctoi<s>::value;
+constexpr SROOK_OPTIONAL<unsigned short int> ctoi_v = detail::ctoi<s>::value;
 #endif
 
 } // inline namespace mpl

@@ -1,10 +1,15 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_CALLABLE
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_CALLABLE
+#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
+#include <srook/type_traits/true_false_type.hpp>
 #include <type_traits>
 
 namespace srook {
-inline namespace v1 {
+namespace type_traits {
+SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 
 template <class T>
 struct is_callable_impl {
@@ -31,13 +36,20 @@ public:
 };
 
 template <class T>
-struct is_callable : std::conditional<std::is_class<T>::value, is_callable_impl<T>, std::false_type>::type {
+struct is_callable : std::conditional<std::is_class<T>::value, is_callable_impl<T>, SROOK_FALSE_TYPE>::type {
 };
 
-template <class T>
-constexpr bool is_callable_v = is_callable<T>::value;
+} // namespace detail
+SROOK_INLINE_NAMESPACE_END
+} // namespace type_traits
 
-} // namespace v1
+using type_traits::detail::is_callable;
+
+#if SROOK_CPP_VARIABLE_TEMPLATES
+template <class T>
+constexpr bool is_callable_v = type_traits::detail::is_callable<T>::value;
+#endif
+
 } // namespace srook
 
 #endif

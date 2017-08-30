@@ -1,21 +1,14 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRIATS_CONDITIONAL_HPP
 #define INCLUDED_SROOK_TYPE_TRIATS_CONDITIONAL_HPP
-
-#if (__has_include(<type_traits>) || (__cplusplus == 201103L))
-#include <type_traits>
-#define CONDITIONAL(x, L, R) typename std::conditional<x, L, R>::type
-#define POSSSIBLE_TO_INCLUDE_STD_TYPE_TRAITS
-#elif (__has_include <boost / mpl / if.hpp>)
-#include <boost/mpl/if.hpp>
-#define CONDITIONAL(x, L, R) typename boost::mpl::if_c<x, L, R>::type
-#else
+#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 
 namespace srook {
+namespace type_traits {
+SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 
-#if __cplusplus > 201103L
-inline namespace v1 { // never active
-#endif
 template <bool, class, class R>
 struct conditional {
     typedef R type;
@@ -26,17 +19,17 @@ struct conditional<true, L, R> {
     typedef L type;
 };
 
-#if __cplusplus > 201103L
+} // namespace detail
+SROOK_INLINE_NAMESPACE_END
+} // namespace type_traits
 
+using type_traits::detail::conditional;
+
+#if SROOK_CPP_ALIAS_TEMPLATES
 template <bool b, class L, class R>
-using conditional_t = typename conditional<b, L, R>::type;
-
-} // inline namespace
+using conditional_t = typename type_traits::detail::conditional<b, L, R>::type;
 #endif
 
 } // namespace srook
 
-#define CONDITIONAL(x, L, R) typename srook::conditional<x, L, R>::type
-
-#endif
 #endif

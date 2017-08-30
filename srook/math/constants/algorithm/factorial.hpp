@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_FACTORIAL_HPP
 
 #include <srook/config/attribute/force_inline.hpp>
-#include <srook/config/inline_variable.hpp>
+#include <srook/config/feature/inline_variable.hpp>
 #include <srook/config/libraries/nullptr.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/require.hpp>

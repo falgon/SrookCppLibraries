@@ -1,32 +1,36 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_REVERSE_SEQUENCE_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_REVERSE_SEQUENCE_HPP
+#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <utility>
 
-#include<utility>
+namespace srook {
+namespace detail {
 
-namespace srook{
-
-namespace detail{
-
-template<std::size_t,class>
+template <std::size_t, class>
 struct make_reverse_sequence_impl;
 
-template<std::size_t n,std::size_t... v>
-struct make_reverse_sequence_impl<n,std::index_sequence<v...>>{
-	using type=typename make_reverse_sequence_impl<n-1,std::index_sequence<v...,n-1>>::type;
+template <std::size_t n, std::size_t... v>
+struct make_reverse_sequence_impl<n, std::index_sequence<v...>> {
+    using type = typename make_reverse_sequence_impl<n - 1, std::index_sequence<v..., n - 1>>::type;
 };
 
-template<std::size_t... v>
-struct make_reverse_sequence_impl<0,std::index_sequence<v...>>{
-	using type=std::index_sequence<v...>;
+template <std::size_t... v>
+struct make_reverse_sequence_impl<0, std::index_sequence<v...>> {
+    using type = std::index_sequence<v...>;
 };
-
 
 } // namespace detail
 
+template <std::size_t n, class Seq = std::index_sequence<>>
+struct make_reverse_sequence_type {
+    typedef typename detail::make_reverse_sequence_impl<n, Seq>::type type;
+};
 
-template<std::size_t n,class Seq=std::index_sequence<>>
-using make_reverse_sequence=typename detail::make_reverse_sequence_impl<n,Seq>::type;
+#if SROOK_CPP_ALIAS_TEMPLATES
+template <std::size_t n, class Seq = std::index_sequence<>>
+using make_reverse_sequence = typename detail::make_reverse_sequence_impl<n, Seq>::type;
+#endif
 
 } // namespace srook
 

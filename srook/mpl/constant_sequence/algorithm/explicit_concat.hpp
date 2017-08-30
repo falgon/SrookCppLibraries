@@ -2,6 +2,7 @@
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_EXPLICIT_CONCAT_HPP
 
 #include <utility>
+#include <srook/config/cpp_predefined/feature_testing.hpp>
 
 namespace srook {
 inline namespace mpl {
@@ -16,8 +17,10 @@ struct explicit_concat<T, std::integer_sequence<T, l...>, std::integer_sequence<
     using type = std::integer_sequence<T, l..., r...>;
 };
 
+#if SROOK_CPP_ALIAS_TEMPLATES
 template <class T, class L, class R>
 using explicit_concat_t = typename explicit_concat<T, L, R>::type;
+#endif
 
 } // namespace v1
 } // namespace constant_sequence

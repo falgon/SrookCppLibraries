@@ -7,7 +7,7 @@
 #include <srook/mpl/constant_sequence/algorithm/transfer_constant.hpp>
 #include <srook/mpl/constant_sequence/math/detail/convert_type.hpp>
 #include <srook/mpl/variadic_player.hpp>
-
+#include <srook/mpl/variadic_types/algorithm/unwrap_pack_from_value.hpp>
 namespace srook {
 inline namespace mpl {
 namespace constant_sequence {
@@ -91,7 +91,7 @@ struct make_costable {
 
 namespace unwrap_costable {
 
-template <class>
+/*template <class>
 struct array;
 template <class... Ts>
 struct array<pack<Ts...>> {
@@ -113,7 +113,9 @@ static constexpr decltype(auto) array_v = array<Pack>::value;
 template <class Pack, template <class...> class Tuple>
 static constexpr decltype(auto) tuple_v = tuple<Pack, Tuple>::value;
 
-#endif
+#endif*/
+
+using namespace constant_sequence::unwrap_pack;
 
 } // namespace unwrap_costable
 

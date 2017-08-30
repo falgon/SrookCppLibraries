@@ -1,8 +1,8 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #include <cstdint>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/inline_variable.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/functional/deduction_divides.hpp>
@@ -19,7 +19,7 @@
 
 namespace srook {
 namespace type_traits {
-inline namespace v1 {
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <typename ConvertType>
@@ -146,9 +146,11 @@ public:
 
 // for good error message...
 template <class, class = typename voider<>::type>
-struct has_value : SROOK_FALSE_TYPE {};
+struct has_value : SROOK_FALSE_TYPE {
+};
 template <class T>
-struct has_value<T, typename voider<decltype(T::value)>::type> : SROOK_TRUE_TYPE {};
+struct has_value<T, typename voider<decltype(T::value)>::type> : SROOK_TRUE_TYPE {
+};
 
 template <typename OutputType, class AnyConstantType, class Op>
 struct Operator {
@@ -203,36 +205,48 @@ struct Operator<any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any
 };
 
 template <typename OutputType, typename T, T value>
-struct Plus_value : Operator_value<OutputType, T, value, deduction_plus> {};
+struct Plus_value : Operator_value<OutputType, T, value, deduction_plus> {
+};
 template <typename OutputType, typename T, T value>
-struct Minus_value : Operator_value<OutputType, T, value, deduction_minus> {};
+struct Minus_value : Operator_value<OutputType, T, value, deduction_minus> {
+};
 template <typename OutputType, typename T, T value>
-struct Multiplies_value : Operator_value<OutputType, T, value, deduction_multiplies> {};
+struct Multiplies_value : Operator_value<OutputType, T, value, deduction_multiplies> {
+};
 template <typename OutputType, typename T, T value>
-struct Divides_value : Operator_value<OutputType, T, value, deduction_divides> {};
+struct Divides_value : Operator_value<OutputType, T, value, deduction_divides> {
+};
 template <typename OutputType, typename T, T value>
-struct Modulus_value : Operator_value<OutputType, T, value, deduction_modulus> {};
+struct Modulus_value : Operator_value<OutputType, T, value, deduction_modulus> {
+};
 template <typename OutputType, typename T, T value>
-struct Negate_value : Operator_value<OutputType, T, value, deduction_negate> {};
+struct Negate_value : Operator_value<OutputType, T, value, deduction_negate> {
+};
 
 template <typename OutputType, class AnyConstantType>
-struct Plus : Operator<OutputType, AnyConstantType, deduction_plus> {};
+struct Plus : Operator<OutputType, AnyConstantType, deduction_plus> {
+};
 template <typename OutputType, class AnyConstantType>
-struct Minus : Operator<OutputType, AnyConstantType, deduction_minus> {};
+struct Minus : Operator<OutputType, AnyConstantType, deduction_minus> {
+};
 template <typename OutputType, class AnyConstantType>
-struct Multiplies : Operator<OutputType, AnyConstantType, deduction_multiplies> {};
+struct Multiplies : Operator<OutputType, AnyConstantType, deduction_multiplies> {
+};
 template <typename OutputType, class AnyConstantType>
-struct Divides : Operator<OutputType, AnyConstantType, deduction_divides> {};
+struct Divides : Operator<OutputType, AnyConstantType, deduction_divides> {
+};
 template <typename OutputType, class AnyConstantType>
-struct Modulus : Operator<OutputType, AnyConstantType, deduction_modulus> {};
+struct Modulus : Operator<OutputType, AnyConstantType, deduction_modulus> {
+};
 template <typename OutputType, class AnyConstantType>
-struct Negate : Operator<OutputType, AnyConstantType, deduction_negate> {};
+struct Negate : Operator<OutputType, AnyConstantType, deduction_negate> {
+};
 
 } // namespace detail
 
 using detail::any_constant;
 
-} // namespace v1
+SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 namespace realvalue_compute {

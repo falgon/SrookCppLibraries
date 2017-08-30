@@ -2,22 +2,14 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_SAME_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_SAME_HPP
 
-#if (__has_include(<type_traits>) || (__cplusplus == 201103L))
-#include <type_traits>
-#define IS_SAME(L, R) std::is_same<L, R>::value
-#elif __has_include(<boost/type_traits/is_same.hpp>)
-#include <boost/type_traits/is_same.hpp>
-#define IS_SAME(L, R) boost::is_same<L, R>::value
-#else
-
+#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 
 namespace srook {
-
-#if __cplusplus > 201103L
-inline namespace v1 {
-#endif
-
+namespace type_traits {
+SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 template <class, class>
 struct is_same : SROOK_FALSE_TYPE {
 };
@@ -25,17 +17,16 @@ struct is_same : SROOK_FALSE_TYPE {
 template <class T>
 struct is_same<T, T> : SROOK_TRUE_TYPE {
 };
+} // namespace detail
+SROOK_INLINE_NAMESPACE_END
+} // namespace type_traits
 
-#if __cplusplus > 201103L
+using type_traits::detail::is_same;
 
+#if SROOK_CPP_VARIABLE_TEMPLATES
 template <class L, class R>
-constexpr bool is_same_v = is_same<L, R>::value;
-
-} // inline namespace v1
-
+constexpr bool is_same_v = type_traits::detail::is_same<L, R>::value;
 #endif
 
-#define IS_SAME(L, R) srook::is_same<L, R>::value
-
-#endif
+} // namespace srook
 #endif
