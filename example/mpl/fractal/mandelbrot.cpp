@@ -13,40 +13,37 @@
 #include <srook/type_traits/any_constant.hpp>
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/type_traits/true_false_type.hpp>
+#include <srook/type_traits/conditional.hpp>
 
-namespace srook {
-inline namespace mpl {
-namespace fractal {
-inline namespace v1 {
-namespace detail {
+namespace detail{ 
 
 template <class, class,
-	  class = any_constant<double, 0, realvalue_compute::convert_type<double>>,
-	  class = any_constant<double, 0, realvalue_compute::convert_type<double>>,
+	  class = srook::any_constant<double, 0, srook::realvalue_compute::convert_type<double>>,
+	  class = srook::any_constant<double, 0, srook::realvalue_compute::convert_type<double>>,
 	  std::size_t = 0, std::size_t = 1000, class = SROOK_NULLPTR_T>
 struct is_mandelbrot;
 
 template <class AA, class BB>
 struct Checkpower
-    : std::conditional<(math::pow(AA::value, AA::value) + math::pow(BB::value, BB::value) > 10), std::true_type, std::false_type> {
+    : std::conditional<(srook::math::pow(AA::value, AA::value) + srook::math::pow(BB::value, BB::value) > 10), SROOK_TRUE_TYPE, SROOK_FALSE_TYPE> {
 };
 
 template <class AnyConstant_x, class AnyConstant_y, class AnyConstant_a, class AnyConstant_b, std::size_t i, std::size_t last>
-struct is_mandelbrot<AnyConstant_x, AnyConstant_y, AnyConstant_a, AnyConstant_b, i, last, typename enable_if<(i < last), SROOK_NULLPTR_T>::type> {
+struct is_mandelbrot<AnyConstant_x, AnyConstant_y, AnyConstant_a, AnyConstant_b, i, last, typename srook::enable_if<(i < last), SROOK_NULLPTR_T>::type> {
 private:
     typedef
-	typename realvalue_compute::Plus<
-	    typename realvalue_compute::Minus<
-		typename realvalue_compute::Multiplies<AnyConstant_a, AnyConstant_a>::type,
-		typename realvalue_compute::Multiplies<AnyConstant_b, AnyConstant_b>::type>::type,
+	typename srook::realvalue_compute::Plus<
+	    typename srook::realvalue_compute::Minus<
+		typename srook::realvalue_compute::Multiplies<AnyConstant_a, AnyConstant_a>::type,
+		typename srook::realvalue_compute::Multiplies<AnyConstant_b, AnyConstant_b>::type>::type,
 	    AnyConstant_x>::type
 	    AA_type;
 
     typedef
-	typename realvalue_compute::Plus<
-	    typename realvalue_compute::Multiplies<
-		any_constant<double, 2, realvalue_compute::convert_type<double>>,
-		typename realvalue_compute::Multiplies<AnyConstant_a, AnyConstant_b>::type>::type,
+	typename srook::realvalue_compute::Plus<
+	    typename srook::realvalue_compute::Multiplies<
+		srook::any_constant<double, 2, srook::realvalue_compute::convert_type<double>>,
+		typename srook::realvalue_compute::Multiplies<AnyConstant_a, AnyConstant_b>::type>::type,
 	    AnyConstant_y>::type
 	    BB_type;
 
@@ -64,7 +61,7 @@ public:
 };
 
 template <class AnyConstant_x, class AnyConstant_y, class AnyConstant_a, class AnyConstant_b, std::size_t i, std::size_t last>
-struct is_mandelbrot<AnyConstant_x, AnyConstant_y, AnyConstant_a, AnyConstant_b, i, last, typename enable_if<!(i < last), SROOK_NULLPTR_T>::type> {
+struct is_mandelbrot<AnyConstant_x, AnyConstant_y, AnyConstant_a, AnyConstant_b, i, last, typename srook::enable_if<!(i < last), SROOK_NULLPTR_T>::type> {
     typedef SROOK_FALSE_TYPE type;
     static constexpr bool value = type::value;
 };
@@ -74,17 +71,17 @@ struct mandelbrot_impl2;
 template <class AnyConstant_r, class AnyConstant_i, class AnyConstant_diff>
 struct mandelbrot_impl2<AnyConstant_r, AnyConstant_i, AnyConstant_diff, typename srook::enable_if<(AnyConstant_i::value < 1), SROOK_NULLPTR_T>::type> {
     typedef
-	typename Concat<
-	    typename std::conditional<
+	typename srook::Concat<
+	    typename srook::conditional<
 		is_mandelbrot<AnyConstant_r, AnyConstant_i>::value,
-		pack<AnyConstant_r, AnyConstant_i>,
-		pack<>>::type,
-	    typename mandelbrot_impl2<AnyConstant_r, typename realvalue_compute::Plus<AnyConstant_i, AnyConstant_diff>::type, AnyConstant_diff>::type>::type
+		srook::pack<AnyConstant_r, AnyConstant_i>,
+		srook::pack<>>::type,
+	    typename mandelbrot_impl2<AnyConstant_r, typename srook::realvalue_compute::Plus<AnyConstant_i, AnyConstant_diff>::type, AnyConstant_diff>::type>::type
 	    type;
 };
 template <class AnyConstant_r, class AnyConstant_i, class AnyConstant_diff>
 struct mandelbrot_impl2<AnyConstant_r, AnyConstant_i, AnyConstant_diff, typename srook::enable_if<!(AnyConstant_i::value < 1), SROOK_NULLPTR_T>::type> {
-    typedef pack<> type;
+    typedef srook::pack<> type;
 };
 
 template <class, class, class, class = SROOK_NULLPTR_T>
@@ -92,46 +89,41 @@ struct mandelbrot_impl1;
 template <class AnyConstant_r, class AnyConstant_i, class AnyConstant_diff>
 struct mandelbrot_impl1<AnyConstant_r, AnyConstant_i, AnyConstant_diff, typename srook::enable_if<(AnyConstant_r::value < 1), SROOK_NULLPTR_T>::type> {
     typedef
-	typename Concat<
+	typename srook::Concat<
 	    typename mandelbrot_impl2<AnyConstant_r, AnyConstant_i, AnyConstant_diff>::type,
-	    typename mandelbrot_impl1<typename realvalue_compute::Plus<AnyConstant_r, AnyConstant_diff>::type, AnyConstant_i, AnyConstant_diff>::type>::type
+	    typename mandelbrot_impl1<typename srook::realvalue_compute::Plus<AnyConstant_r, AnyConstant_diff>::type, AnyConstant_i, AnyConstant_diff>::type>::type
 	    type;
 };
 template <class AnyConstant_r, class AnyConstant_i, class AnyConstant_diff>
 struct mandelbrot_impl1<AnyConstant_r, AnyConstant_i, AnyConstant_diff, typename srook::enable_if<!(AnyConstant_r::value < 1), SROOK_NULLPTR_T>::type> {
-    typedef pack<> type;
+    typedef srook::pack<> type;
 };
 
 } // namespace detail
 
 template <
-    class R = any_constant<double, -2, realvalue_compute::convert_type<double>>,
-    class I = any_constant<double, -1, realvalue_compute::convert_type<double>>,
-    class Diff = any_constant<double, 5, realvalue_compute::Divides_value<double, int, 10>>>
+    class R = srook::any_constant<double, -2, srook::realvalue_compute::convert_type<double>>,
+    class I = srook::any_constant<double, -1, srook::realvalue_compute::convert_type<double>>,
+    class Diff = srook::any_constant<double, 5, srook::realvalue_compute::Divides_value<double, int, 10>>>
 struct mandelbrot {
     typedef typename detail::mandelbrot_impl1<R, I, Diff>::type type;
 };
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <
-    class R = any_constant<double, -2, realvalue_compute::convert_type<double>>,
-    class I = any_constant<double, -1, realvalue_compute::convert_type<double>>,
-    class Diff = any_constant<double, 5, realvalue_compute::Divides_value<double, int, 1000>>>
+    class R = srook::any_constant<double, -2, srook::realvalue_compute::convert_type<double>>,
+    class I = srook::any_constant<double, -1, srook::realvalue_compute::convert_type<double>>,
+    class Diff = srook::any_constant<double, 5, srook::realvalue_compute::Divides_value<double, int, 1000>>>
 using mandelbrot_t = typename mandelbrot<R, I, Diff>::type;
 #endif
-
-} // namespace v1
-} // namespace fractal
-} // namespace mpl
-} // namespace srook
 
 #include <iostream>
 #include <srook/mpl/variadic_types/algorithm/unwrap_pack_from_value.hpp>
 
 int main()
 {
-    using type = srook::fractal::mandelbrot_t<>;
-    constexpr auto a = srook::unwrap_costable::array<type>::value;
+    using type = mandelbrot_t<>;
+    constexpr auto a = srook::unwrap_pack::array<type>::value;
     for (auto &&v : a) std::cout << v << " ";
 	std::cout << '\n';
 }
