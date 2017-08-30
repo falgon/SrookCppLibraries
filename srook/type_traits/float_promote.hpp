@@ -10,8 +10,8 @@ namespace srook {
 
 #if (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
 namespace type_traits {
-namespace detail {
 SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 
 template <class T>
 struct float_promote1 : std::conditional<std::is_floating_point<T>::value, T, double> {
@@ -34,13 +34,12 @@ template <class T>
 struct float_promote_impl<T> : float_promote1<T> {
 };
 
-SROOK_INLINE_NAMESPACE_END
 } // namespace detail
+SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 template <class... Ts>
-struct float_promote : srook::type_traits::detail::float_promote_impl<typename std::decay<Ts>::type...> {
-};
+struct float_promote : srook::type_traits::detail::float_promote_impl<typename std::decay<Ts>::type...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 
