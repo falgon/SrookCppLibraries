@@ -1,17 +1,17 @@
 #ifndef INCLUDED_SROOK_ITERATOR_OSTREAM_JOINER_HPP
 #define INCLUDED_SROOK_ITERATOR_OSTREAM_JOINER_HPP
 
-#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #if SROOK_CPLUSPLUS <= SROOK_CPLUSPLUS11_CONSTANT
-#include <bits/c++14_warning.h>
+#	include <bits/c++14_warning.h>
 #else
-#include <iosfwd>
-#include <iterator>
-#include <type_traits>
-#include <srook/config/noexcept_detection.hpp>
-#include <srook/config/attribute/force_inline.hpp>
-#include <srook/config/feature/inline_namespace.hpp>
+#	include <iosfwd>
+#	include <iterator>
+#	include <type_traits>
+#	include <srook/config/noexcept_detection.hpp>
+#	include <srook/config/attribute/force_inline.hpp>
+#	include <srook/config/feature/inline_namespace.hpp>
 
 namespace srook {
 namespace iterator {
@@ -44,16 +44,16 @@ struct ostream_joiner {
 
     ostream_joiner<Delim, CharT, Traits> &operator*() SROOK_NOEXCEPT_TRUE { return *this; }
     ostream_joiner<Delim, CharT, Traits> &operator++() SROOK_NOEXCEPT_TRUE { return *this; }
-    ostream_joiner<Delim, CharT, Traits> &operator++(int)SROOK_NOEXCEPT_TRUE { return *this; }
+    ostream_joiner<Delim, CharT, Traits> &operator++(int) SROOK_NOEXCEPT_TRUE { return *this; }
 
 private:
-    bool first = true;
+	bool first = true;
     std::basic_ostream<CharT, Traits> *out;
     Delim delim;
 };
 
 template <typename CharT, class Traits, class Delim>
-SROOK_FORCE_INLINE ostream_joiner<std::decay_t<Delim>, CharT, Traits>
+SROOK_FORCE_INLINE ostream_joiner<std::decay_t<Delim>, CharT, Traits> 
 make_ostream_joiner(std::basic_ostream<CharT, Traits> &os, Delim &&delimiter)
 {
     return {os, std::forward<Delim>(delimiter)};

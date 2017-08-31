@@ -35,6 +35,7 @@ public:
 	return *this;
     }
 #endif
+#if SROOK_CPLUSPLUS11_CONSTANT <= SROOK_CPLUSPLUS
     emplace_back_insert_iterator &operator=(const typename Container::value_type &value)
     {
 	container->emplace_back(value);
@@ -45,8 +46,11 @@ public:
 	container->emplace_back(std::move(value));
 	return *this;
     }
-
-    emplace_back_insert_iterator &operator*() { return *this; }
+#endif
+    emplace_back_insert_iterator &operator*()
+    {
+	return *this;
+    }
     emplace_back_insert_iterator &operator++() { return *this; }
     emplace_back_insert_iterator &operator++(int) { return *this; }
 };
