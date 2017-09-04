@@ -1,14 +1,20 @@
 // Copyright (C) 2017 roki
 #ifndef SROOK_INCLUDED_ADAPTOR_OPERATOR
 #define SROOK_INCLUDED_ADAPTOR_OPERATOR
-#include<utility>
+#include <type_traits>
+#include <utility>
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
+#include <srook/config/cpp_predefined/macro_names.hpp>
+#include <srook/config/noexcept_detection.hpp>
+#include <srook/type_traits/invoke_result.hpp>
+
 namespace srook{
 namespace adaptors{
 namespace detail{
 inline namespace v1{
 
 template<class Range,class Function>
-auto operator|(Range&& r,Function&& f)
+constexpr typename srook::invoke_result<Function,Range>::type operator|(Range&& r,Function&& f) SROOK_NOEXCEPT(f(std::declval<Range>()))
 {
 	return std::forward<Function>(f)(std::forward<Range>(r));
 }
@@ -22,7 +28,7 @@ namespace detail{
 inline namespace v1{
 
 template<class Range,class Function>
-auto operator|(Range&& r,Function&& f)
+constexpr typename srook::invoke_result<Function,Range>::type operator|(Range&& r,Function&& f) SROOK_NOEXCEPT(f(std::declval<Range>()))
 {
 	return std::forward<Function>(f)(std::forward<Range>(r));
 }
