@@ -9,4 +9,5 @@
 #include <srook/config/attribute/no_inline.hpp>
 #include <srook/config/attribute/nodiscard.hpp>
 #include <srook/config/attribute/noreturn.hpp>
+#include <srook/config/attribute/restrict.hpp>
 #endif
