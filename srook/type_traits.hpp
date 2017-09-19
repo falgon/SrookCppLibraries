@@ -10,6 +10,7 @@
 #include <srook/type_traits/has_iterator.hpp>
 #include <srook/type_traits/is_callable.hpp>
 #include <srook/type_traits/is_class.hpp>
+#include <srook/type_traits/is_character.hpp>
 #include <srook/type_traits/is_constexpr_function.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/is_same_all.hpp>
@@ -19,4 +20,5 @@
 #include <srook/type_traits/result_of.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/type_constant.hpp>
+#include <srook/type_traits/is_swappable.hpp>
 #endif
