@@ -5,11 +5,13 @@
 #include <cstddef>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_variable.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 #include <type_traits>
 #include <utility>
 
 namespace srook {
 namespace type_traits {
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class T> struct is_swappable;
@@ -89,7 +91,7 @@ struct is_swappable_with : detail::is_swappable_with_impl<T, U> {};
 template <class T, class U>
 struct is_nothrow_swappable_with : detail::is_nothrow_swappable_with_impl<T, U> {};
 
-
+SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 using type_traits::is_swappable;

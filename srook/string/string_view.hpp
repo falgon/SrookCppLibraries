@@ -521,22 +521,22 @@ typedef basic_string_view<char32_t, std::char_traits<char32_t> > u32string_view;
 
 #if SROOK_CPP_USER_DEFINED_LITERALS
 
-constexpr string_view operator "" _sv(const char* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR string_view operator "" _sv(const char* str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
 	return string_view{str, len};
 }
 
-constexpr u16string_view operator "" _sv(const char16_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR u16string_view operator "" _sv(const char16_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
 	return u16string_view{str, len};
 }
 
-constexpr u32string_view operator "" _sv(const char32_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR u32string_view operator "" _sv(const char32_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
 	return u32string_view{str, len};
 }
 
-constexpr wstring_view operator "" _sv(const wchar_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR wstring_view operator "" _sv(const wchar_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
 	return wstring_view{str, len};
 }
