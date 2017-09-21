@@ -7,7 +7,9 @@
 #include <srook/cxx20/concepts/workaround/workaround.hpp>
 #include <srook/type_traits/is_swappable.hpp>
 #if SROOK_HAS_CONCEPT
-#include <srook/cxx20/concepts/CharType.hpp>
+#	include <srook/cxx20/concepts/CharType.hpp>
+#else
+#	include <srook/type_traits/is_character.hpp>
 #endif
 #include <algorithm>
 #include <stdexcept>
@@ -22,7 +24,9 @@ template <class charT, class Traits>
 class basic_string_view {
 public:
 #if SROOK_HAS_CONCEPT
-    static_assert(srook::concepts::CharType<charT>, "");
+    static_assert(srook::concepts::CharType<charT>, "charT must be a character type.");
+#else
+	static_assert(srook::is_character<charT>(), "charT must be a character type.");
 #endif
     typedef Traits traits_type;
     typedef charT value_type;
@@ -116,7 +120,7 @@ public:
 
     size_type copy(charT *s, size_type n, size_type pos = 0)
     {
-	if (pos > size()) throw std::out_of_range("srook::string::copy");
+	if (pos > size()) throw std::out_of_range("srook::string_view::copy");
 	const size_type len = std::min(n, length_ - pos);
 	traits_type::copy(s, data() + pos, len);
 	return len;
