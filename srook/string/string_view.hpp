@@ -5,11 +5,12 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/cxx20/concepts/workaround/workaround.hpp>
+#include <srook/string/config/builtin.hpp>
 #include <srook/type_traits/is_swappable.hpp>
 #if SROOK_HAS_CONCEPT
-#	include <srook/cxx20/concepts/CharType.hpp>
+#include <srook/cxx20/concepts/CharType.hpp>
 #else
-#	include <srook/type_traits/is_character.hpp>
+#include <srook/type_traits/is_character.hpp>
 #endif
 #include <algorithm>
 #include <stdexcept>
@@ -26,7 +27,7 @@ public:
 #if SROOK_HAS_CONCEPT
     static_assert(srook::concepts::CharType<charT>, "charT must be a character type.");
 #else
-	static_assert(srook::is_character<charT>(), "charT must be a character type.");
+    static_assert(srook::is_character<charT>(), "charT must be a character type.");
 #endif
     typedef Traits traits_type;
     typedef charT value_type;
@@ -42,7 +43,8 @@ public:
     static SROOK_CONSTEXPR_OR_CONST size_type npos = size_type(-1);
 
     SROOK_CONSTEXPR basic_string_view() SROOK_NOEXCEPT_TRUE
-	: data_(nullptr), length_(0) {}
+	: data_(nullptr),
+	  length_(0) {}
 
     SROOK_CONSTEXPR basic_string_view(const basic_string_view &) SROOK_NOEXCEPT_TRUE = default;
 
@@ -50,10 +52,13 @@ public:
 
     template <class Allocator>
     basic_string_view(const std::basic_string<charT, Traits, Allocator> &s) SROOK_NOEXCEPT_TRUE
-	: data_(s.data()),length_(s.length()) {}
+	: data_(s.data()),
+	  length_(s.length())
+    {
+    }
 
     SROOK_CONSTEXPR basic_string_view(const charT *s)
-	: data_(s), length_(Traits::length(s)) {}
+	: data_(s), length_(strlen_impl(s)) {}
 
     SROOK_CONSTEXPR basic_string_view(const charT *s, size_type len)
 	: data_(s), length_(std::move(len)) {}
@@ -273,6 +278,11 @@ public:
 
     SROOK_CXX14_CONSTEXPR size_type find_first_not_of(const charT *s, size_type pos, size_type n) const SROOK_NOEXCEPT_TRUE
     {
+	return find_first_not_of(basic_string_view(s, n), pos);
+    }
+
+    SROOK_CXX14_CONSTEXPR size_type find_first_not_of(const charT *s, size_type pos = 0) const SROOK_NOEXCEPT_TRUE
+    {
 	return find_first_not_of(basic_string_view(s), pos);
     }
 
@@ -305,6 +315,22 @@ private:
     const charT *data_;
     size_type length_;
 
+    SROOK_CONSTEXPR size_type strlen_impl(const char *str)
+#if SROOK_USE_BUILTIN_STRING_FUNCTION
+	SROOK_NOEXCEPT(__builtin_strlen(str))
+#else
+	SROOK_NOEXCEPT(Traits::length(str))
+#endif
+    {
+	return str ?
+#if SROOK_USE_BUILTIN_STRING_FUNCTION
+		   __builtin_strlen(str)
+#else
+		   Traits::length(str)
+#endif
+		   : 0;
+    }
+
     template <class reverse_iter>
     size_type reverse_distance(reverse_iter first, reverse_iter last) const SROOK_NOEXCEPT_TRUE
     {
@@ -334,7 +360,7 @@ private:
 #define DEFINE_COMPARISON(OP)                                                                                          \
     friend inline SROOK_CXX14_CONSTEXPR bool operator OP(basic_string_view x, basic_string_view y) SROOK_NOEXCEPT_TRUE \
     {                                                                                                                  \
-	return x.compare(y) OP 0;                                                                                      	   \
+	return x.compare(y) OP 0;                                                                                      \
     }
     DEFINE_COMPARISON(<)
     DEFINE_COMPARISON(>)
@@ -478,7 +504,7 @@ private:
 	return basic_string_view(x) >= y;
     }
 
-    inline void sv_insert_fill_chars(std::basic_ostream<charT, Traits> &os, std::size_t n) const 
+    inline void sv_insert_fill_chars(std::basic_ostream<charT, Traits> &os, std::size_t n) const
     {
 	constexpr std::size_t chunk_size = 8;
 	charT fill_chars[chunk_size];
@@ -506,10 +532,10 @@ private:
 	if (os.good()) {
 	    const std::size_t size = str.size();
 	    const std::size_t w = static_cast<std::size_t>(os.width());
-		if(w <= size) {
-			os.write(str.data(), size);
-		} else {
-			str.sv_insert_aligned(os);
+	    if (w <= size) {
+		os.write(str.data(), size);
+	    } else {
+		str.sv_insert_aligned(os);
 	    }
 	    os.width(0);
 	}
@@ -518,31 +544,31 @@ private:
     }
 };
 
-typedef basic_string_view<char, std::char_traits<char> > string_view;
-typedef basic_string_view<wchar_t, std::char_traits<wchar_t> > wstring_view;
-typedef basic_string_view<char16_t, std::char_traits<char16_t> > u16string_view;
-typedef basic_string_view<char32_t, std::char_traits<char32_t> > u32string_view;
+typedef basic_string_view<char, std::char_traits<char>> string_view;
+typedef basic_string_view<wchar_t, std::char_traits<wchar_t>> wstring_view;
+typedef basic_string_view<char16_t, std::char_traits<char16_t>> u16string_view;
+typedef basic_string_view<char32_t, std::char_traits<char32_t>> u32string_view;
 
 #if SROOK_CPP_USER_DEFINED_LITERALS
 
-SROOK_CONSTEXPR string_view operator "" _sv(const char* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR string_view operator"" _sv(const char *str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
-	return string_view{str, len};
+    return string_view{str, len};
 }
 
-SROOK_CONSTEXPR u16string_view operator "" _sv(const char16_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR u16string_view operator"" _sv(const char16_t *str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
-	return u16string_view{str, len};
+    return u16string_view{str, len};
 }
 
-SROOK_CONSTEXPR u32string_view operator "" _sv(const char32_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR u32string_view operator"" _sv(const char32_t *str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
-	return u32string_view{str, len};
+    return u32string_view{str, len};
 }
 
-SROOK_CONSTEXPR wstring_view operator "" _sv(const wchar_t* str, std::size_t len) SROOK_NOEXCEPT_TRUE
+SROOK_CONSTEXPR wstring_view operator"" _sv(const wchar_t *str, std::size_t len) SROOK_NOEXCEPT_TRUE
 {
-	return wstring_view{str, len};
+    return wstring_view{str, len};
 }
 
 #endif
@@ -551,20 +577,20 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace string
 
 #if SROOK_CPP_USER_DEFINED_LITERALS
-namespace literals{
-namespace string_view_literals{
+namespace literals {
+namespace string_view_literals {
 
-using string::operator "" _sv;
+using string::operator"" _sv;
 
-} // namespace string_view_literals 
+} // namespace string_view_literals
 
-using string_view_literals::operator "" _sv;
+using string_view_literals::operator"" _sv;
 
 } // namespace literals
 
-namespace string_view_literals{
+namespace string_view_literals {
 
-using string::operator "" _sv;
+using string::operator"" _sv;
 
 } // namespace string_view_literals
 #endif
