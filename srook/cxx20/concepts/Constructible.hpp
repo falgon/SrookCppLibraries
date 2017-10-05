@@ -1,16 +1,15 @@
-#ifndef INCLUDED_SROOK_CXX20_CONCEPT_CHAR_TYPE
-#define INCLUDED_SROOK_CXX20_CONCEPT_CHAR_TYPE
+#ifndef INCLUDED_SROOK_CXX20_CONCEPT_CONSTRUCTIBLE_HPP
+#define INCLUDED_SROOK_CXX20_CONCEPT_CONSTRUCTIBLE_HPP
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/cxx20/concepts/workaround/workaround.hpp>
-#include <srook/type_traits/is_character.hpp>
-#include <string>
+#include <srook/type_traits/is_constructible.hpp>
 
 namespace srook {
 namespace concepts {
 SROOK_INLINE_NAMESPACE(v1)
 
-template<typename T>
-SROOK_CONCEPT CharType = srook::type_traits::is_character<T>::value;
+template<class T>
+SROOK_CONCEPT Constructible = type_traits::is_constructible<T>::value;
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace concepts

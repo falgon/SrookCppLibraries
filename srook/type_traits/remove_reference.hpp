@@ -1,6 +1,6 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERNCE_HPP
-#define INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERNCE_HPP
+#ifndef INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERENCE_HPP
+#define INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERENCE_HPP
 #include <srook/type_traits/is_reference.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
