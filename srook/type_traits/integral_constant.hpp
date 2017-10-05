@@ -4,6 +4,7 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/noexcept_detection.hpp>
+#include <type_traits>
 
 namespace srook {
 namespace type_traits {
@@ -15,8 +16,9 @@ struct integral_constant {
 	typedef T value_type;
 	typedef integral_constant type;
 
-	SROOK_CONSTEXPR operator value_type() SROOK_NOEXCEPT_TRUE { return value; }
+	SROOK_CONSTEXPR operator value_type() const SROOK_NOEXCEPT_TRUE { return value; }
 	SROOK_CONSTEXPR value_type operator()() const SROOK_NOEXCEPT_TRUE { return value; }
+	explicit SROOK_CONSTEXPR operator std::integral_constant<T, v>() const SROOK_NOEXCEPT_TRUE { return std::integral_constant<T, v>(); }
 };
 
 SROOK_INLINE_NAMESPACE_END

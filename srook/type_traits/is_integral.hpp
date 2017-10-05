@@ -54,7 +54,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_integral;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_integral_v = is_integral<T>::value;
 #endif
 

@@ -24,7 +24,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_object;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_object_v = is_object<T>::value;
 #endif
 

@@ -63,7 +63,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_enum;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_enum_v = is_enum<T>::value;
 #endif
 

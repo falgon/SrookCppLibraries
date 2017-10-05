@@ -28,7 +28,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_scalar;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_scalar_v = is_scalar<T>::value;
 #endif
 

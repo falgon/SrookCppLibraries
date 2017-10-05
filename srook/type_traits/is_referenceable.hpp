@@ -29,7 +29,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_referenceable;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_referenceable_v = is_referenceable<T>::value;
 #endif
 

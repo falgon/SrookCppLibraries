@@ -41,7 +41,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_floating_point;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_floating_point_v = is_floating_point<T>::value;
 #endif
 

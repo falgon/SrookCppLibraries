@@ -36,7 +36,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_function;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_function_v = is_function<T>::value;
 #endif
 

@@ -24,7 +24,7 @@ SROOK_INLINE_NAMESPACE_END
 using type_traits::is_array;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-template <class T, class U>
+template <class T>
 static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_array_v = is_array<T>::value;
 #endif
 
