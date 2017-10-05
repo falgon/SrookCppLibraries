@@ -1,30 +1,30 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_FIRST_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_FIRST_HPP
-#include<srook/mpl/variadic_player.hpp>
+#include <srook/mpl/variadic_player.hpp>
 
-namespace srook{
-inline namespace mpl{
-inline namespace v1{
-namespace detail{
+namespace srook {
+inline namespace mpl {
+inline namespace v1 {
+namespace detail {
 
-template<auto...>
+template <auto...>
 struct first;
-template<auto head,auto... tail>
-struct first<head,tail...>{
-	static constexpr decltype(head) value = head;
+template <auto head, auto... tail>
+struct first<head, tail...> {
+    static constexpr decltype(head) value = head;
 };
-template<>
-struct first<>{
-	static constexpr NULLOPT_T value = NULLOPT;
+template <>
+struct first<> {
+    static constexpr NULLOPT_T value = NULLOPT;
 };
 
-template<auto... v>
-constexpr std::conditional_t<!sizeof...(v),NULLOPT_T,First_t<decltype(v)...>> first_v = first<v...>::value;
+template <auto... v>
+constexpr std::conditional_t<!sizeof...(v), NULLOPT_T, First_t<decltype(v)...>> first_v = first<v...>::value;
 
 } // namespace detail
-} // inline namespace v1
-} // inlnie namespace mpl 
+} // namespace v1
+} // namespace mpl
 } // namespace srook
 
 #endif

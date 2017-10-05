@@ -1,35 +1,35 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_ERASE_ALL_ELEMENTS_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_ERASE_ALL_ELEMENTS_HPP
-#include<srook/mpl/variadic_player.hpp>
-#include<srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
-#include<optional>
+#include <optional>
+#include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
+#include <srook/mpl/variadic_player.hpp>
 
-namespace srook{
-inline namespace mpl{
-inline namespace v1{
-namespace detail{
+namespace srook {
+inline namespace mpl {
+inline namespace v1 {
+namespace detail {
 
-template<auto,auto...>
+template <auto, auto...>
 struct erase_all_elements;
-template<auto target,auto head,auto... tail>
-struct erase_all_elements<target,head,tail...>{
-	using type = concat_t<any_pack<head>,typename erase_all_elements<target,tail...>::type>;
+template <auto target, auto head, auto... tail>
+struct erase_all_elements<target, head, tail...> {
+    using type = concat_t<any_pack<head>, typename erase_all_elements<target, tail...>::type>;
 };
-template<auto target,auto... tail>
-struct erase_all_elements<target,target,tail...>{
-	using type = typename erase_all_elements<target,tail...>::type;
+template <auto target, auto... tail>
+struct erase_all_elements<target, target, tail...> {
+    using type = typename erase_all_elements<target, tail...>::type;
 };
-template<auto target>
-struct erase_all_elements<target>{
-	using type = any_pack<>;
+template <auto target>
+struct erase_all_elements<target> {
+    using type = any_pack<>;
 };
-template<auto target,auto... v>
-using erase_all_elements_t = typename erase_all_elements<target,v...>::type;
+template <auto target, auto... v>
+using erase_all_elements_t = typename erase_all_elements<target, v...>::type;
 
 } // namespace detail
-} // inline namespace v1
-} // inlnie namespace mpl 
+} // namespace v1
+} // namespace mpl
 } // namespace srook
 
 #endif
