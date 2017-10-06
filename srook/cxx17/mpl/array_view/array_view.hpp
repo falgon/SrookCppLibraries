@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CXX17_MPL_ARRAY_VIEW_ARRAY_VIEW_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ARRAY_VIEW_ARRAY_VIEW_HPP
 #include <srook/config/feature/constexpr.hpp> 
