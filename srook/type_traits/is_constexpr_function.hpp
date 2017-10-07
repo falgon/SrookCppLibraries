@@ -8,9 +8,12 @@
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/require.hpp>
 #include <srook/type_traits/conjunction.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 #include <type_traits>
 
 namespace srook {
+SROOK_INLINE_NAMESPACE(mpl)
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class T>
@@ -44,6 +47,8 @@ SROOK_FORCE_INLINE constexpr bool is_constexpr_function_impl(const bool &&) SROO
 }
 
 } // namespace detail
+SROOK_INLINE_NAMESPACE_END
+SROOK_INLINE_NAMESPACE_END
 
 template <class T, class... Args>
 SROOK_FORCE_INLINE constexpr bool is_constexpr_function(Args &&...) SROOK_NOEXCEPT_TRUE

@@ -14,10 +14,10 @@ namespace type_traits{
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail{
 
-template <typename, typename, typename...>
+template <typename, typename...>
 struct invoke_result {};
 template <typename F, typename... Args>
-struct invoke_result<decltype(void(library_concepts::INVOKE(std::declval<F>(), std::declval<Args>()...))),F, Args...> {
+struct invoke_result<decltype(void(library_concepts::INVOKE(std::declval<F>(), std::declval<Args>()...))), F, Args...> {
 	typedef decltype(library_concepts::INVOKE(std::declval<F>(), std::declval<Args>()...)) type;
 };
 

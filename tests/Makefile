@@ -1,12 +1,27 @@
 FLAGS := -Wall -Wextra -pedantic -std=c++1z
 INCLUDE_PATH := -I../
-CLANG = clang++-5.0
-GXX = g++-6
+GXX = g++-7
 
-all:clang_target1 gcc_target1
-clang_target1: range/adaptor/adaptor_exp.cpp
-	$(CLANG) $(FLAGS) $(INCLUDE_PATH) range/adaptor/adaptor_exp.cpp -o 0x01_clang.out
-gcc_target1: range/adaptor/adaptor_exp.cpp
-	$(GXX)  $(FLAGS) $(INCLUDE_PATH) range/adaptor/adaptor_exp.cpp -o 0x01_gcc.out
+TEST1 = cxx17/array_view/at_test.o\
+	cxx17/array_view/back_test.o\
+	cxx17/array_view/front_test.o\
+	cxx17/array_view/type_check_test.o\
+	cxx17/array_view/substr_test.o\
+	mpl/constant_sequence/constant_exp.o\
+	mpl/math/compile_time_four_arithmetic_operations_parser_test.o\
+	cxx17/any_pack/meta_random_engine_test.o\
+       	range/adaptor/adaptor_exp.o
+
+all: gcc_target1
+
+gcc_target1: $(TEST1)
+
+$(TEST1): %.o: %.cpp
+	cppcheck --enable=all $<
+	$(GXX) $(FLAGS) $(INCLUDE_PATH) $< -o $@
+run:
+	./cxx17/array_view/at_test.o
+	./cxx17/any_pack/meta_random_engine_test.o
+	./range/adaptor/adaptor_exp.o
 clean:
-	$(RM) tests/0x01_clang.out tests/0x01_gcc.out
+	$(RM) $(TEST1)

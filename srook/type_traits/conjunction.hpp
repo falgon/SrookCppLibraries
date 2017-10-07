@@ -12,8 +12,8 @@
 
 namespace srook {
 namespace type_traits {
-namespace detail {
 SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 
 template <class...>
 struct conjunction : std::true_type {
@@ -27,9 +27,11 @@ template <class B1, class... Bn>
 struct conjunction<B1, Bn...> : std::conditional<bool(B1::value), conjunction<Bn...>, B1>::type {
 };
 
-SROOK_INLINE_NAMESPACE_END
 } // namespace detail
+SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
+
+using type_traits::detail::conjunction;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class... B>

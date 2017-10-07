@@ -9,23 +9,19 @@
 namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
-namespace detail {
 template <class, class>
-struct is_same : SROOK_FALSE_TYPE {
-};
+struct is_same : SROOK_FALSE_TYPE {};
 
 template <class T>
-struct is_same<T, T> : SROOK_TRUE_TYPE {
-};
-} // namespace detail
+struct is_same<T, T> : SROOK_TRUE_TYPE {};
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
-using type_traits::detail::is_same;
+using type_traits::is_same;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class L, class R>
-constexpr bool is_same_v = type_traits::detail::is_same<L, R>::value;
+constexpr bool is_same_v = is_same<L, R>::value;
 #endif
 
 } // namespace srook

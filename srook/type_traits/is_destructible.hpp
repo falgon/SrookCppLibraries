@@ -12,6 +12,7 @@
 #include <srook/type_traits/is_scalar.hpp>
 #include <srook/type_traits/is_reference.hpp>
 #include <srook/type_traits/remove_all_extents.hpp>
+#include <srook/type_traits/is_default_constructible.hpp>
 #include <srook/utility/declval.hpp>
 
 namespace srook {
@@ -19,11 +20,6 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
-
-template <class T>
-struct is_array_known_bounds : public integral_constant<bool, (extent<T, 0>::value > 0)> {};
-template <class T>
-struct is_array_unknown_bounds : public integral_constant<bool, is_array<T>::value && !extent<T>::value> {};
 
 struct is_destructible_impl_ {
 	template <class T, typename = decltype(declval<T&>().~T())>

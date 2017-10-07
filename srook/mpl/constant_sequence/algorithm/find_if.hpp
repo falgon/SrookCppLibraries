@@ -30,8 +30,8 @@ struct find_if<false,pred,std::index_sequence<head,tail...>,counter,find_if_tag_
 };
 
 template<template<std::size_t>class pred,std::size_t counter,class tag>
-struct find_if<false,pred,std::index_sequence<>,counter,tag>{
-	static constexpr int value=-counter-1;
+struct find_if<false,pred,std::index_sequence<>,counter,tag> {
+	static constexpr int value= (counter-1);
 };
 
 template<template<std::size_t>class pred,std::size_t... seq,std::size_t counter,class tag>

@@ -1,19 +1,23 @@
 language: cpp
 script:
-        - clang-5.0 --version
-        - g++-6 --version
+        - g++-7 --version
         - cd tests && make
-        - ./0x01_clang.out && ./0x01_gcc.out
         - make clean
 compiler:
-        - clang
-        - gcc-6
+        - gcc-7
+before_install:
+    - sudo apt remove -qq -y postgresql-9.1 postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.6 postgresql-contrib-9.6
+    - sudo apt -qq -y update 
+    - sudo apt -qq upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+    - sudo apt -qq dist-upgrade -y
 install:
-        - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-        - wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
-        - sudo add-apt-repository --yes 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise main'
-        - sudo add-apt-repository --yes 'deb http://us.archive.ubuntu.com/ubuntu wily main universe'
-        - sudo apt-get -qq update
-        - sudo apt-get -qq install clang-5.0
-        - sudo apt-get -qq install libboost-all-dev
-        - sudo apt-get -qq install g++-6
+    - sudo apt -qq -y install build-essential software-properties-common
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt -qq update -y
+    - sudo apt -qq install gcc-7 g++-7 -y
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+    - sudo update-alternatives --config gcc
+    - sudo apt -qq -y install cppcheck
+    - wget -O boost_1_64_0.tar.gz http://sourceforge.net/projects/boost/files/boost/1.64.0/boost_1_64_0.tar.gz/download
+    - tar xzf boost_1_64_0.tar.gz
+    - mv boost_1_64_0/boost .
