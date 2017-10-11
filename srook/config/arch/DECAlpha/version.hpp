@@ -1,0 +1,18 @@
+// Copyright (C) 2017 roki
+#ifndef INCLUDED_SROOK_CONFIG_ARCH_DECALPHA_HPP
+#define INCLUDED_SROOK_CONFIG_ARCH_DECALPHA_HPP
+#include <srook/config/arch/DECAlpha/core.hpp>
+#if SROOK_ARCH_IS_DECALPHA 
+#	if SROOK_ALPHA_EV4
+#		define SROOK_ARCH_DECALPHA_VERSION 4.0
+#	elif SROOK_ALPHA_EV5
+#		define SROOK_ARCH_DECALPHA_VERSION 5.0
+#	elif SROOK_ALPHA_EV6
+#		define SROOK_ARCH_DECALPHA_VERSION 6.0
+#	else
+#		define SROOK_ARCH_DECALPHA_VERSION 0.0
+#	endif
+#else
+#	define SROOK_ARCH_DECALPHA_VERSION 0.0
+#endif
+#endif

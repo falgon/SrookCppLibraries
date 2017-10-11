@@ -18,7 +18,7 @@
 #endif
 
 #if defined(SROOK_NO_CXX14_CONSTEXPR)
-#		define SROOK_CXX14_CONSTEXPR
+#	define SROOK_CXX14_CONSTEXPR
 #else
 #	define SROOK_CXX14_CONSTEXPR constexpr
 #endif

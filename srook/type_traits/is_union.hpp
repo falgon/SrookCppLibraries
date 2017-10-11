@@ -30,6 +30,16 @@
 #if defined(__clang__)
 #	if !__has_feature(is_union)
 #		undef COMPILER_MAGIC_IS_UNION
+#		include <srook/type_traits/is_integral.hpp>
+#		include <srook/type_traits/is_floating_point.hpp>
+#		include <srook/type_traits/is_array.hpp>
+#		include <srook/type_traits/is_void.hpp>
+#		include <srook/type_traits/is_pointer.hpp>
+#		include <srook/type_traits/is_reference.hpp>
+#		include <srook/type_traits/is_member_pointer.hpp>
+#		include <srook/type_traits/is_union.hpp>
+#		include <srook/type_traits/is_union.hpp>
+#		include <srook/type_traits/is_function.hpp>
 #	endif
 #endif
 

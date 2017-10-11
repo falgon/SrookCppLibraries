@@ -3,4 +3,5 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/feature/inline_variable.hpp>
 #include <srook/feature/alignas.hpp>
+#include <srook/feature/constexpr.hpp>
 #endif
