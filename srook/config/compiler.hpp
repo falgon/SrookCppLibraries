@@ -3,6 +3,6 @@
 #define INCLUDED_SROOK_CONFIG_COMPILER_HPP
 
 #include <srook/config/compiler/longlong_type.hpp>
-#include <srook/config/compiler/verison.hpp>
+#include <srook/config/compiler/version.hpp>
 
 #endif
