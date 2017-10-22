@@ -97,7 +97,7 @@
 #define SROOK_CPP_LIB_SHARED_PTR_ARRAYS __cpp_lib_shared_ptr_arrays
 #define SROOK_CPP_LIB_INVOKE __cpp_lib_invoke
 #define SROOK_CPP_LIB_NOT_FN __cpp_lib_not_fn
-#define SROOK_CPP_LIB_VOIT_T __cpp_lib_void_t
+#define SROOK_CPP_LIB_VOID_T __cpp_lib_void_t
 #define SROOK_CPP_LIB_BOOL_CONSTANT __cpp_lib_bool_constant
 #define SROOK_CPP_LIB_TYPE_TRAIT_VARIABLE_TEMPLATES __cpp_lib_type_trait_variable_templates
 #define SROOK_CPP_LIB_LOGICAL_TRAITS __cpp_lib_logical_traits

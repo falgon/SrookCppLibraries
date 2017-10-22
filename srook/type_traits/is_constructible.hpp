@@ -91,13 +91,13 @@ struct is_direct_constructible : public is_direct_constructible_new<T, Arg>::typ
 struct is_nary_constructible_impl_ {
 	template <class T, class... Args, class = decltype(T(declval<Args>()...))>
 	static SROOK_TRUE_TYPE test(int);
-	template <class, class>
+	template <class, class...>
 	static SROOK_FALSE_TYPE test(...);
 };
 
 template <class T, class... Args>
 struct is_nary_constructible_impl : public is_nary_constructible_impl_ {
-	typedef decltype(test<T,Args...>(0)) tyoe;
+	typedef decltype(is_nary_constructible_impl_::test<T,Args...>(0)) type;
 };
 
 template <class T, class... Args>
