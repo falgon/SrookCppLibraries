@@ -8,7 +8,7 @@ compiler:
 before_install:
     - sudo apt remove -qq -y postgresql-9.1 postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.6 postgresql-contrib-9.6
     - sudo apt -qq -y update 
-    - sudo apt -qq upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+    - sudo apt -qq upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --allow-unauthenticated
     - sudo apt -qq dist-upgrade -y
 install:
     - sudo apt -qq -y install build-essential software-properties-common

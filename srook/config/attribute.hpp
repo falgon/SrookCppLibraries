@@ -6,8 +6,11 @@
 #include <srook/config/attribute/fallthrough.hpp>
 #include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/attribute/maybe_unused.hpp>
-#include <srook/config/attribute/no_inline.hpp>
+#include <srook/config/attribute/noinline.hpp>
 #include <srook/config/attribute/nodiscard.hpp>
 #include <srook/config/attribute/noreturn.hpp>
 #include <srook/config/attribute/restrict.hpp>
+#include <srook/config/attribute/visibility.hpp>
+#include <srook/config/attribute/returns_nonnull.hpp>
+#include <srook/config/attribute/diagnose.hpp>
 #endif

@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_DETAIL_NON_SUPPORT_MOVE_SEMANTICS_HPP
 #define INCLUDED_SROOK_UTILITY_DETAIL_NON_SUPPORT_MOVE_SEMANTICS_HPP
 #include <srook/config/attribute/deprecated.hpp>

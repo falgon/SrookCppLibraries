@@ -10,4 +10,20 @@
 #define SROOK_CPLUSPLUS23_CONSTANT
 #define SROOK_CPLUSPLUS26_CONSTANT
 
+#ifdef __cplusplus
+#	if SROOK_CPLUSPLUS98_CONSTANT == __cplusplus
+#		define SROOK_CPPSTD_VER 98
+#	elif SROOK_CPLUSPLUS11_CONSTANT == __cplusplus
+#		define SROOK_CPPSTD_VER 11
+#	elif SROOK_CPLUSPLUS14_CONSTANT == __cplusplus
+#		define SROOK_CPPSTD_VER 14
+#	elif SROOK_CPLUSPLUS17_CONSTANT == __cplusplus
+#		define SROOK_CPPSTD_VER 17
+#	else
+#		define SROOK_CPPSTD_VER __cplusplus
+#	endif
+#else
+#	error "__cplusplus macro is not defined"
+#endif
+
 #endif

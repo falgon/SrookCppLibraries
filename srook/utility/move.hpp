@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_MOVE_HPP
 #define INCLUDED_SROOK_UTILITY_MOVE_HPP
 #include <srook/config/feature/inline_namespace.hpp>

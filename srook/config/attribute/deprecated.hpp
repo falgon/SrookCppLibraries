@@ -9,14 +9,14 @@
 #	define SROOK_DEPRECATED __attribute__((deprecated))
 #	define SROOK_DEPRECATED_MESSAGE(mes) __attribute__((deprecated(mes)))
 #elif defined(_MSC_VER)
-#	define SROOK_DEPRECATED __declspec(deprecated(mes))
+#	define SROOK_DEPRECATED __declspec(deprecated)
 #	define SROOK_DEPRECATED_MESSAGE(mes) __declspec(deprecated(mes))
 #elif SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
 #	define SROOK_DEPRECATED [[deprecated]]
 #	define SROOK_DEPRECATED_MESSAGE(mes) [[deprecated(mes)]]
 #else
 #	define SROOK_DEPRECATED
-#	define SROOK_DEPRECATED_MESSAGE(x)
+#	define SROOK_DEPRECATED_MESSAGE(...)
 #endif
 
 #endif

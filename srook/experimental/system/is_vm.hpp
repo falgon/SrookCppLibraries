@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_SYSTEM_IS_VM_HPP
 #define INCLUDED_SROOK_SYSTEM_IS_VM_HPP
 #include <srook/config/attribute/naked.hpp>

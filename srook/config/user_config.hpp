@@ -6,10 +6,11 @@
  * 
  * builtin features settings. 
  *
- * */
+ */
 
 // #define SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION 1
 // #define SROOK_CONFIG_DISABLE_BUILTIN_STRING_FUNCTION 1
+// #define SROOK_CONFIG_DISABLE_BUILTIN_ADDRESS_OF 1
 
 /* 
  *
@@ -21,4 +22,19 @@
 
 // #define SROOK_ARCH_ARM_THUMB_CHECK_MORE_COMPREHENSIVE 1
 
+/*
+ *
+ * thread settings.
+ *
+ */
+
+// #define SROOK_CONFIG_NO_THREADS 1
+
+/*
+ *
+ * diagnostics settings.
+ *
+ */
+
+// #define SROOK_CONFIG_DIABLE_ADDITIONAL_DIAGNOSTICS 1
 #endif

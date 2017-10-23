@@ -1,3 +1,4 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_TYPE_CONSTANT_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_TYPE_CONSTANT_HPP
 #include <srook/type_traits/enable_if.hpp>

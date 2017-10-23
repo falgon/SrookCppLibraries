@@ -3,6 +3,7 @@
 #ifndef INCLUDED_SROOK_CONFIG_CPP_PREDEFINED_MACRO_NAMES_HPP
 #define INCLUDED_SROOK_CONFIG_CPP_PREDEFINED_MACRO_NAMES_HPP
 
+#ifdef __cplusplus
 #define SROOK_CPLUSPLUS __cplusplus
 #define SROOK_DATE __DATE__
 #define SROOK_FILE __FILE__
@@ -44,6 +45,7 @@
 #define SROOK_STDCPP_THREADS __STDCPP_THREADS__
 #else
 #define SROOK_STDCPP_THREADS
+#endif
 #endif
 
 #endif

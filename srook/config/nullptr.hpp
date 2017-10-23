@@ -2,6 +2,11 @@
 #ifndef INCLUDED_SROOK_CONFIG_NULLPTR_T
 #define INCLUDED_SROOK_CONFIG_NULLPTR_T
 
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
+#include <srook/config/cpp_predefined/macro_names.hpp>
+
+#if SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT
+
 namespace srook {
 
 const class nullptr_t{
@@ -16,5 +21,7 @@ private:
 } nullptr = {};
 
 } // namespace srook
+
+#endif
 
 #endif
