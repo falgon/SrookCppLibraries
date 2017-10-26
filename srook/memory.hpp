@@ -5,4 +5,6 @@
 #include <srook/memory/unique_ptr.hpp>
 #include <srook/memory/weak_ptr.hpp>
 #include <srook/memory/addressof.hpp>
+#include <srook/memory/utility/aggregate_adaptor.hpp>
+#include <srook/memory/utility/checked_delete.hpp>
 #endif

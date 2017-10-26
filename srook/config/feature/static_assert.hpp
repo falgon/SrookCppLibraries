@@ -22,7 +22,7 @@ extern "C++" {
 	template <unsigned> struct static_assert_check {};
 }
 
-#define static_assert(x, y)\
+#define SROOK_STATIC_ASSERT(x, y)\
 	typedef static_assert_check<sizeof(static_assert_test<(x)>)>\
 	SROOK_CONCAT(__t, SROOK_LINE)
 #endif

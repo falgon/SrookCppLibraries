@@ -5,7 +5,7 @@
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
 
-#if SROOK_CPLUSPLUS11 <= SROOK_CPLUSPLUS
+#if SROOK_CPLUSPLUS11_CONSTANT <= SROOK_CPLUSPLUS
 #	define SROOK_NULLPTR nullptr
 #	define SROOK_NULLPTR_T std::nullptr_t
 #else

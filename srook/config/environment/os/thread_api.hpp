@@ -11,7 +11,7 @@
 	!defined(SROOK_HAS_THREAD_API_PTHREAD) &&\
 	!defined(SROOK_HAS_THREAD_API_WIN32) &&\
 	!defined(SROOK_HAS_THREAD_API_EXTERNAL)
-	#if defined(__FreeBSD__) ||\
+#	if defined(__FreeBSD__) ||\
 	   	defined(__Fuchsia__) ||\
 	   	defined(__NetBSD__) ||\
 	   	defined(__linux__) ||\
