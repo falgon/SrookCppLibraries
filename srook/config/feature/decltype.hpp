@@ -18,8 +18,6 @@
 #	endif
 #elif defined(__GNUC__) || SROOK_COMPILER_IS_ILE
 #	define SROOK_DECLTYPE(T) __typeof__(T)
-#else
-#	error "not supported decltype"
 #endif
 
 

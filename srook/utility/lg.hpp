@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_LG_HPP
 #define INCLUDED_SROOK_UTILITY_LG_HPP
 

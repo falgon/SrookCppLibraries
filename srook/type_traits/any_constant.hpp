@@ -1,4 +1,3 @@
-// Copyrihgt (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #include <cstdint>
@@ -30,10 +29,10 @@ struct convert_type {
     using value_type = ConvertType;
 
     template <class U>
-    SROOK_FORCE_INLINE constexpr value_type operator()(U &&v) const SROOK_NOEXCEPT_TRUE
+    SROOK_FORCE_INLINE constexpr value_type operator()(U&& v) const SROOK_NOEXCEPT_TRUE
     {
-	static_assert(std::is_convertible<value_type, typename std::decay<U>::type>::value, "These types are not able to convert");
-	return static_cast<value_type>(v);
+        static_assert(std::is_convertible<value_type, typename std::decay<U>::type>::value, "These types are not able to convert");
+        return static_cast<value_type>(v);
     }
 };
 
@@ -42,7 +41,7 @@ struct any_constant;
 template <class, class, class>
 struct any_constant_compute;
 
-template <typename T, long long Value, class Callable = convert_type<T>>
+template <typename T, long long Value, class Callable = convert_type<T> >
 struct any_constant {
 private:
     static_assert(std::is_trivially_default_constructible<Callable>::value, "Callable must have constexpr default constructor");
@@ -56,27 +55,27 @@ public:
 
     template <class Rhs>
     struct Plus {
-	typedef any_constant_compute<deduction_plus, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_plus, type, Rhs> inner_type;
     };
     template <class Rhs>
     struct Minus {
-	typedef any_constant_compute<deduction_minus, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_minus, type, Rhs> inner_type;
     };
     template <class Rhs>
     struct Multiplies {
-	typedef any_constant_compute<deduction_multiplies, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_multiplies, type, Rhs> inner_type;
     };
     template <class Rhs>
     struct Divides {
-	typedef any_constant_compute<deduction_divides, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_divides, type, Rhs> inner_type;
     };
     template <class Rhs>
     struct Modulus {
-	typedef any_constant_compute<deduction_modulus, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_modulus, type, Rhs> inner_type;
     };
     template <class Rhs>
     struct Negate {
-	typedef any_constant_compute<deduction_modulus, type, Rhs> inner_type;
+        typedef any_constant_compute<deduction_modulus, type, Rhs> inner_type;
     };
 
 #if SROOK_CPP_ALIAS_TEMPLATES
@@ -96,13 +95,13 @@ public:
 };
 
 template <class Op, typename L, long long Value1, class Callable1, typename R, long long Value2, class Callable2>
-struct any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant<R, Value2, Callable2>> {
+struct any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant<R, Value2, Callable2> > {
 private:
     static_assert(
-	std::is_trivially_default_constructible<Op>::value and
-	    std::is_trivially_default_constructible<Callable1>::value and
-	    std::is_trivially_default_constructible<Callable2>::value,
-	"");
+        std::is_trivially_default_constructible<Op>::value and
+            std::is_trivially_default_constructible<Callable1>::value and
+                std::is_trivially_default_constructible<Callable2>::value,
+        "");
 
 public:
     typedef Op apply_type;
@@ -111,19 +110,19 @@ public:
 };
 
 template <class Op, class Inner_Op, class Inner_typeL, class Inner_typeR, class R, long long Value1, class Callable1>
-struct any_constant_compute<Op, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, any_constant<R, Value1, Callable1>> {
+struct any_constant_compute<Op, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, any_constant<R, Value1, Callable1> > {
     typedef decltype(Op()(any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value, Callable1()(Value1))) value_type;
     static constexpr value_type value = Op()(any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value, Callable1()(Value1));
 };
 
 template <class Op, class Inner_Op, class Inner_typeL, class Inner_typeR, class L, long long Value1, class Callable1>
-struct any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>> {
+struct any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR> > {
     typedef decltype(Op()(Callable1()(Value1), any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value)) value_type;
     static constexpr value_type value = Op()(Callable1()(Value1), any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value);
 };
 
 template <class Op, class LInner_Op, class LInner_typeL, class LInner_typeR, class RInner_Op, class RInner_typeL, class RInner_typeR>
-struct any_constant_compute<Op, any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>> {
+struct any_constant_compute<Op, any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR> > {
     typedef decltype(Op()(any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>::value, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>::value)) value_type;
     static constexpr value_type value = Op()(any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>::value, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>::value);
 };
@@ -138,10 +137,10 @@ public:
     explicit constexpr Operator_value() = default;
 
     template <class U>
-    SROOK_FORCE_INLINE constexpr value_type operator()(U &&v) const SROOK_NOEXCEPT_TRUE
+    SROOK_FORCE_INLINE constexpr value_type operator()(U&& v) const SROOK_NOEXCEPT_TRUE
     {
-	typedef typename std::common_type<typename std::decay<U>::type, OutputType>::type common_type;
-	return static_cast<value_type>(Operator()(static_cast<common_type>(v), static_cast<common_type>(value)));
+        typedef typename std::common_type<typename std::decay<U>::type, OutputType>::type common_type;
+        return static_cast<value_type>(Operator()(static_cast<common_type>(v), static_cast<common_type>(value)));
     }
 };
 
@@ -166,10 +165,10 @@ public:
     static constexpr typename AnyConstantType::value_type value = AnyConstantType::value;
 
     template <class U>
-    SROOK_FORCE_INLINE constexpr OutputType operator()(U &&v) const SROOK_NOEXCEPT_TRUE
+    SROOK_FORCE_INLINE constexpr OutputType operator()(U&& v) const SROOK_NOEXCEPT_TRUE
     {
-	typedef typename std::common_type<typename std::decay<U>::type, OutputType>::type common_type;
-	return static_cast<value_type>(Op()(static_cast<common_type>(v), static_cast<common_type>(value)));
+        typedef typename std::common_type<typename std::decay<U>::type, OutputType>::type common_type;
+        return static_cast<value_type>(Op()(static_cast<common_type>(v), static_cast<common_type>(value)));
     }
 };
 
@@ -177,7 +176,7 @@ template <typename L, typename R, long long Value1, long long Value2, class Call
 struct Operator<any_constant<L, Value1, Callable1>, any_constant<R, Value2, Callable2>, Op> {
     explicit constexpr Operator() = default;
     typedef decltype(Op()(Callable1()(Value1), Callable2()(Value2))) value_type;
-    typedef any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant<R, Value1, Callable2>> type;
+    typedef any_constant_compute<Op, any_constant<L, Value1, Callable1>, any_constant<R, Value1, Callable2> > type;
     static constexpr value_type value = type::value;
 };
 
@@ -185,7 +184,7 @@ template <class Inner_Op, class Inner_typeL, class Inner_typeR, class R, long lo
 struct Operator<any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, any_constant<R, Value1, Callable>, Op> {
     explicit constexpr Operator() = default;
     typedef decltype(Op()(any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value, Callable()(Value1))) value_type;
-    typedef any_constant_compute<Op, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, any_constant<R, Value1, Callable>> type;
+    typedef any_constant_compute<Op, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, any_constant<R, Value1, Callable> > type;
     static constexpr value_type value = type::value;
 };
 
@@ -193,7 +192,7 @@ template <class Inner_Op, class Inner_typeL, class Inner_typeR, class L, long lo
 struct Operator<any_constant<L, Value1, Callable>, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>, Op> {
     explicit constexpr Operator() = default;
     typedef decltype(Op()(Callable()(Value1), any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>::value)) value_type;
-    typedef any_constant_compute<Op, any_constant<L, Value1, Callable>, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR>> type;
+    typedef any_constant_compute<Op, any_constant<L, Value1, Callable>, any_constant_compute<Inner_Op, Inner_typeL, Inner_typeR> > type;
     static constexpr value_type value = type::value;
 };
 
@@ -201,7 +200,7 @@ template <class LInner_Op, class LInner_typeL, class LInner_typeR, class RInner_
 struct Operator<any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>, Op> {
     explicit constexpr Operator() = default;
     typedef decltype(Op()(any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>::value, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>::value)) value_type;
-    typedef any_constant_compute<Op, any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR>> type;
+    typedef any_constant_compute<Op, any_constant_compute<LInner_Op, LInner_typeL, LInner_typeR>, any_constant_compute<RInner_Op, RInner_typeL, RInner_typeR> > type;
     static constexpr value_type value = type::value;
 };
 
@@ -253,14 +252,14 @@ SROOK_INLINE_NAMESPACE_END
 namespace realvalue_compute {
 
 using type_traits::detail::convert_type;
-using type_traits::detail::Plus_value;
-using type_traits::detail::Minus_value;
-using type_traits::detail::Multiplies_value;
-using type_traits::detail::Divides_value;
-using type_traits::detail::Plus;
-using type_traits::detail::Minus;
-using type_traits::detail::Multiplies;
 using type_traits::detail::Divides;
+using type_traits::detail::Divides_value;
+using type_traits::detail::Minus;
+using type_traits::detail::Minus_value;
+using type_traits::detail::Multiplies;
+using type_traits::detail::Multiplies_value;
+using type_traits::detail::Plus;
+using type_traits::detail::Plus_value;
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 

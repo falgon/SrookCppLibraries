@@ -18,7 +18,7 @@ struct is_tuple : SROOK_FALSE_TYPE {
 };
 
 template <class T>
-struct is_tuple<T, typename voider<decltype(std::tuple_size<std::decay_t<T>>::value)>::type> : SROOK_TRUE_TYPE {
+struct is_tuple<T, typename voider<decltype(std::tuple_size<std::decay_t<T> >::value)>::type> : SROOK_TRUE_TYPE {
 };
 
 } // namespace detail

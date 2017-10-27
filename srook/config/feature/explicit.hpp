@@ -5,7 +5,7 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 
-#ifdef __clang__
+#if defined(__clang__) && defined(_LIBCPP_EXPLICIT)
 #	define SROOK_EXPLICIT _LIBCPP_EXPLICIT
 #elif defined(__GNUC__) && (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
 #	define SROOK_EXPLICIT explicit

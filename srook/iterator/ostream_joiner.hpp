@@ -4,7 +4,9 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #if SROOK_CPLUSPLUS <= SROOK_CPLUSPLUS11_CONSTANT
-#	include <bits/c++14_warning.h>
+#if __has_include(<bits/c++14_warning.h>)
+#	include <bits/c++14_warnings.h>
+#endif
 #else
 #	include <iosfwd>
 #	include <iterator>

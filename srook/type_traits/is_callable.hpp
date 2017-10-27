@@ -18,7 +18,7 @@ private:
     typedef char (&no)[2];
 
     struct Fallback {
-	void operator()();
+        void operator()();
     };
     struct derived : T, Fallback {
     };
@@ -29,7 +29,7 @@ private:
     template <class>
     static yes test(...);
     template <class C>
-    static no test(Check<void (Fallback::*)(), &C::operator()> *);
+    static no test(Check<void (Fallback::*)(), &C::operator()>*);
 
 public:
     static constexpr bool value = sizeof(test<derived>(nullptr)) == sizeof(yes);

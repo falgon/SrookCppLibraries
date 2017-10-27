@@ -10,10 +10,12 @@ namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 template <class, class>
-struct is_same : SROOK_FALSE_TYPE {};
+struct is_same : SROOK_FALSE_TYPE {
+};
 
 template <class T>
-struct is_same<T, T> : SROOK_TRUE_TYPE {};
+struct is_same<T, T> : SROOK_TRUE_TYPE {
+};
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 

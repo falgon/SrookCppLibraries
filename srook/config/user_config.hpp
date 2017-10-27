@@ -29,6 +29,7 @@
  */
 
 // #define SROOK_CONFIG_NO_THREADS 1
+// #define SROOK_CONFIG_DISABLE_THREAD_SAFETY_ANNOTATIONS 1
 
 /*
  *
@@ -37,4 +38,12 @@
  */
 
 // #define SROOK_CONFIG_DIABLE_ADDITIONAL_DIAGNOSTICS 1
+
+/*
+ *
+ * attributes settings.
+ *
+ */
+
+// #define SROOK_CONFIG_DISABLE_VISIBILITY_ANNOTATIONS 1
 #endif

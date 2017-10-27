@@ -12,7 +12,7 @@ SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
 struct remove_cv {
-	typedef typename remove_const<typename remove_volatile<T>::type>::type type;
+    typedef typename remove_const<typename remove_volatile<T>::type>::type type;
 };
 
 SROOK_INLINE_NAMESPACE_END

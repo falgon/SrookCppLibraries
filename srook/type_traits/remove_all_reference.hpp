@@ -23,7 +23,7 @@ struct remove_all_reference<Tail> {
 };
 
 template <class... Pack>
-struct remove_all_reference<srook::mpl::pack<Pack...>> : remove_all_reference<Pack...> {
+struct remove_all_reference<srook::mpl::pack<Pack...> > : remove_all_reference<Pack...> {
 };
 
 } // namespace detail

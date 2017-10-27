@@ -19,38 +19,37 @@ template <class, class = typename srook::voider<>::type>
 struct has_iterator_category : SROOK_FALSE_TYPE {
 };
 template <class T>
-struct has_iterator_category<T, std::void_t<typename T::iterator_category>> : SROOK_TRUE_TYPE {
+struct has_iterator_category<T, std::void_t<typename T::iterator_category> > : SROOK_TRUE_TYPE {
 };
 
 template <class, class = typename srook::voider<>::type>
 struct has_iterator : SROOK_FALSE_TYPE {
 };
 template <class T>
-struct has_iterator<T, typename srook::voider<typename T::iterator, std::enable_if_t<!has_iterator_category<T>::value>>::type> : SROOK_TRUE_TYPE {
+struct has_iterator<T, typename srook::voider<typename T::iterator, std::enable_if_t<!has_iterator_category<T>::value> >::type> : SROOK_TRUE_TYPE {
 };
 template <class T>
 struct has_iterator<
     T,
-    typename std::enable_if<has_iterator_category<T>::value>::type> : std::conditional<std::is_base_of<std::iterator<typename T::iterator_category, void, void, void, void>, T>::value ||
-											   experimental::is_iterator_v<T>,
+    typename std::enable_if<has_iterator_category<T>::value>::type> : std::conditional<std::is_base_of<std::iterator<typename T::iterator_category, void, void, void, void>, T>::value || experimental::is_iterator_v<T>,
 #ifdef SROOK_GCC_VERSION
-#if SROOK_GCC_VERSION > 619
-										       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
-#else
-										       SROOK_TRUE_TYPE, SROOK_FALSE_TYPE // not support
-#endif
+#    if SROOK_GCC_VERSION > 619
+                                                                                       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
+#    else
+                                                                                       SROOK_TRUE_TYPE, SROOK_FALSE_TYPE // not support
+#    endif
 
 #elif defined(SROOK_CLANG_VERSION)
-#if SROOK_CLANG_VERSION > 380
-										       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
-#else
-										       SROOK_TRUE_TYPE, SROOK_FALSE_TYPE // deprecate
-#endif
+#    if SROOK_CLANG_VERSION > 380
+                                                                                       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
+#    else
+                                                                                       SROOK_TRUE_TYPE, SROOK_FALSE_TYPE // deprecate
+#    endif
 
 #elif !defined(SROOK_CLANG_VERSION) && !defined(SROOK_GCC_VERSION) && defined(__APPLE__) // deprecate
-										       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
+                                                                                       SROOK_FALSE_TYPE, SROOK_TRUE_TYPE
 #endif
-										       >::type {
+                                                                                       >::type {
 };
 } // namespace detail
 

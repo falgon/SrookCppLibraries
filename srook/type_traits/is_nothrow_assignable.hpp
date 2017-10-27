@@ -1,9 +1,9 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_NOTHROW_ASSIGNABLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_NOTHROW_ASSIGNABLE_HPP
+#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/type_traits/integral_constant.hpp>
 #include <srook/type_traits/is_assignable.hpp>
 
@@ -12,7 +12,8 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class T, class U>
-struct is_nothrow_assignable : integral_constant<bool, is_assignable<T, U>::value && noexcept(declval<T>() = declval<U>())> {};
+struct is_nothrow_assignable : integral_constant<bool, is_assignable<T, U>::value && noexcept(declval<T>() = declval<U>())> {
+};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

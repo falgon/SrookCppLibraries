@@ -13,4 +13,5 @@
 #include <srook/config/attribute/visibility.hpp>
 #include <srook/config/attribute/returns_nonnull.hpp>
 #include <srook/config/attribute/diagnose.hpp>
+#include <srook/config/attribute/preferred_overload.hpp>
 #endif

@@ -3,7 +3,6 @@
 #define INCLUDED_SROOK_LIMITS_NUMERIC_LIMITS_HPP
 
 #include <limits>
-
 #include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
@@ -11,6 +10,7 @@
 #include <srook/config/inline_variable.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/math/config/builtin.hpp>
+#include <srook/config/feature/constexpr.hpp>
 
 #if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
 #include <cfloat>
@@ -32,29 +32,29 @@ class numeric_limits_base {
     typedef std::numeric_limits<T> base_type;
 
 public:
-    SROOK_INLINE_VARIABLE static constexpr bool is_specialized = base_type::is_specialized;
-    SROOK_INLINE_VARIABLE static constexpr int digits = base_type::digits;
-    SROOK_INLINE_VARIABLE static constexpr int digits10 = base_type::digits10;
-    SROOK_INLINE_VARIABLE static constexpr int max_digits10 = base_type::max_digits10;
-    SROOK_INLINE_VARIABLE static constexpr bool is_signed = base_type::is_signed;
-    SROOK_INLINE_VARIABLE static constexpr bool is_integer = base_type::is_integer;
-    SROOK_INLINE_VARIABLE static constexpr bool is_exact = base_type::is_exact;
-    SROOK_INLINE_VARIABLE static constexpr int radix = base_type::radix;
-    SROOK_INLINE_VARIABLE static constexpr int min_exponent = base_type::min_exponent;
-    SROOK_INLINE_VARIABLE static constexpr int max_exponent = base_type::max_exponent;
-    SROOK_INLINE_VARIABLE static constexpr int min_exponent10 = base_type::min_exponent10;
-    SROOK_INLINE_VARIABLE static constexpr int max_exponent10 = base_type::max_exponent10;
-    SROOK_INLINE_VARIABLE static constexpr bool has_infinity = base_type::has_infinity;
-    SROOK_INLINE_VARIABLE static constexpr bool has_quiet_NaN = base_type::has_quiet_NaN;
-    SROOK_INLINE_VARIABLE static constexpr bool has_signaling_NaN = base_type::has_signaling_NaN;
-    SROOK_INLINE_VARIABLE static constexpr std::float_denorm_style has_denorm = base_type::has_denorm;
-    SROOK_INLINE_VARIABLE static constexpr bool has_denorm_loss = base_type::has_denorm_loss;
-    SROOK_INLINE_VARIABLE static constexpr bool is_iec559 = base_type::is_iec559;
-    SROOK_INLINE_VARIABLE static constexpr bool is_bounded = base_type::is_bounded;
-    SROOK_INLINE_VARIABLE static constexpr bool is_modulo = base_type::is_modulo;
-    SROOK_INLINE_VARIABLE static constexpr bool traps = base_type::traps;
-    SROOK_INLINE_VARIABLE static constexpr bool tinyness_before = base_type::tinyness_before;
-    SROOK_INLINE_VARIABLE static constexpr std::float_round_style round_style = base_type::round_style;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_specialized = base_type::is_specialized;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int digits = base_type::digits;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int digits10 = base_type::digits10;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int max_digits10 = base_type::max_digits10;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_signed = base_type::is_signed;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_integer = base_type::is_integer;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_exact = base_type::is_exact;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int radix = base_type::radix;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int min_exponent = base_type::min_exponent;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int max_exponent = base_type::max_exponent;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int min_exponent10 = base_type::min_exponent10;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST int max_exponent10 = base_type::max_exponent10;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool has_infinity = base_type::has_infinity;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool has_quiet_NaN = base_type::has_quiet_NaN;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool has_signaling_NaN = base_type::has_signaling_NaN;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST std::float_denorm_style has_denorm = base_type::has_denorm;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool has_denorm_loss = base_type::has_denorm_loss;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_iec559 = base_type::is_iec559;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_bounded = base_type::is_bounded;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool is_modulo = base_type::is_modulo;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool traps = base_type::traps;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST bool tinyness_before = base_type::tinyness_before;
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST std::float_round_style round_style = base_type::round_style;
 };
 
 template <typename, bool>
@@ -66,7 +66,7 @@ class numeric_limits_impl<T, true> : public numeric_limits_base<T> {
 
 public:
 #define DEFINE_MEMBER_FUNCTION(x)                                 \
-    SROOK_FORCE_INLINE static constexpr T x() SROOK_NOEXCEPT_TRUE \
+    SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST T x() SROOK_NOEXCEPT_TRUE \
     {                                                             \
 	return base_type::x();                                    \
     }
@@ -88,7 +88,7 @@ class numeric_limits_impl<T, false> : public numeric_limits_base<T> {
 
 public:
 #define DEFINE_RETURN_T_FUNCTION(x)                               \
-    SROOK_FORCE_INLINE static constexpr T x() SROOK_NOEXCEPT_TRUE \
+    SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST T x() SROOK_NOEXCEPT_TRUE \
     {                                                             \
 	return T();                                               \
     }
@@ -126,39 +126,39 @@ class numeric_limits<const volatile T> : public numeric_limits<T> {
     template <>                                                                      \
     class numeric_limits<TYPE> : public detail::numeric_limits_base<TYPE> {          \
     public:                                                                          \
-	SROOK_FORCE_INLINE static constexpr TYPE min() SROOK_NOEXCEPT_TRUE           \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE min() SROOK_NOEXCEPT_TRUE           \
 	{                                                                            \
 	    return MIN;                                                              \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE max() SROOK_NOEXCEPT_TRUE           \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE max() SROOK_NOEXCEPT_TRUE           \
 	{                                                                            \
 	    return MAX;                                                              \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE lowest() SROOK_NOEXCEPT_TRUE        \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE lowest() SROOK_NOEXCEPT_TRUE        \
 	{                                                                            \
 	    return min();                                                            \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE epsilon() SROOK_NOEXCEPT_TRUE       \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE epsilon() SROOK_NOEXCEPT_TRUE       \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE round_error() SROOK_NOEXCEPT_TRUE   \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE round_error() SROOK_NOEXCEPT_TRUE   \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE infinity() SROOK_NOEXCEPT_TRUE      \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE infinity() SROOK_NOEXCEPT_TRUE      \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE quiet_NaN() SROOK_NOEXCEPT_TRUE     \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE quiet_NaN() SROOK_NOEXCEPT_TRUE     \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE signaling_NaN() SROOK_NOEXCEPT_TRUE \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE signaling_NaN() SROOK_NOEXCEPT_TRUE \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE denorm_min() SROOK_NOEXCEPT_TRUE    \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE denorm_min() SROOK_NOEXCEPT_TRUE    \
 	{                                                                            \
 	    return static_cast<TYPE>(0);                                             \
 	}                                                                            \
@@ -168,39 +168,39 @@ class numeric_limits<const volatile T> : public numeric_limits<T> {
     template <>                                                                                        \
     class numeric_limits<TYPE> : public detail::numeric_limits_base<TYPE> {                            \
     public:                                                                                            \
-	SROOK_FORCE_INLINE static constexpr TYPE min() SROOK_NOEXCEPT_TRUE                             \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE min() SROOK_NOEXCEPT_TRUE                             \
 	{                                                                                              \
 	    return MIN;                                                                                \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE max() SROOK_NOEXCEPT_TRUE                             \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE max() SROOK_NOEXCEPT_TRUE                             \
 	{                                                                                              \
 	    return MAX;                                                                                \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE lowest() SROOK_NOEXCEPT_TRUE                          \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE lowest() SROOK_NOEXCEPT_TRUE                          \
 	{                                                                                              \
 	    return -max();                                                                             \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE epsilon() SROOK_NOEXCEPT_TRUE                         \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE epsilon() SROOK_NOEXCEPT_TRUE                         \
 	{                                                                                              \
 	    return EPS;                                                                                \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE round_error() SROOK_NOEXCEPT_TRUE                     \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE round_error() SROOK_NOEXCEPT_TRUE                     \
 	{                                                                                              \
 	    return RND;                                                                                \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE infinity() SROOK_NOEXCEPT_TRUE                        \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE infinity() SROOK_NOEXCEPT_TRUE                        \
 	{                                                                                              \
 	    return INF;                                                                                \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE quiet_NaN() SROOK_NOEXCEPT_TRUE                       \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE quiet_NaN() SROOK_NOEXCEPT_TRUE                       \
 	{                                                                                              \
 	    return QNAM;                                                                               \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE signaling_NaN() SROOK_NOEXCEPT_TRUE                   \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE signaling_NaN() SROOK_NOEXCEPT_TRUE                   \
 	{                                                                                              \
 	    return SNAN;                                                                               \
 	}                                                                                              \
-	SROOK_FORCE_INLINE static constexpr TYPE denorm_min() SROOK_NOEXCEPT_TRUE                      \
+	SROOK_FORCE_INLINE static SROOK_CONSTEXPR_OR_CONST TYPE denorm_min() SROOK_NOEXCEPT_TRUE                      \
 	{                                                                                              \
 	    return DMIN;                                                                               \
 	}                                                                                              \

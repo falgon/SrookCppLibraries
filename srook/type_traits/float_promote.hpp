@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MATH_DETAIL_FLOAT_PROMOTE_HPP
 #define INCLUDED_SROOK_MATH_DETAIL_FLOAT_PROMOTE_HPP
 
@@ -40,16 +39,17 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 template <class... Ts>
-struct float_promote : srook::type_traits::detail::float_promote_impl<typename std::decay<Ts>::type...> {};
+struct float_promote : srook::type_traits::detail::float_promote_impl<typename std::decay<Ts>::type...> {
+};
 
-#if SROOK_CPP_ALIAS_TEMPLATES
+#    if SROOK_CPP_ALIAS_TEMPLATES
 
 template <class... Ts>
 using float_promote_t = typename float_promote<Ts...>::type;
 
-#endif
+#    endif
 
 #endif
-}
+} // namespace srook
 
 #endif

@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_EXCHANGE_HPP
 #define INCLUDED_SROOK_UTILITY_EXCHANGE_HPP
 #include <srook/config/feature/inline_namespace.hpp>

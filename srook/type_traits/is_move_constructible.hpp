@@ -14,15 +14,18 @@ template <class T, bool = is_referenceable<T>::value>
 struct is_move_constructible_impl;
 
 template <class T>
-struct is_move_constructible_impl<T, false> : public SROOK_FALSE_TYPE {};
+struct is_move_constructible_impl<T, false> : public SROOK_FALSE_TYPE {
+};
 
 template <class T>
-struct is_move_constructible_impl<T, true> : public is_constructible<T, T&&> {};
+struct is_move_constructible_impl<T, true> : public is_constructible<T, T&&> {
+};
 
 } // namespace detail
 
 template <class T>
-struct is_move_constructible : public detail::is_move_constructible_impl<T> {};
+struct is_move_constructible : public detail::is_move_constructible_impl<T> {
+};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

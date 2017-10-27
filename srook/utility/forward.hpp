@@ -1,4 +1,3 @@
-// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_UTILITY_FORWARD_HPP
 #define INCLUDED_SROOK_UTILITY_FORWARD_HPP
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>

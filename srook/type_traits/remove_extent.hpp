@@ -1,9 +1,9 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_REMOVE_EXTENT_HPP
 #define INCLUDED_SROOK_REMOVE_EXTENT_HPP
-#include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <cstddef>
+#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 
 namespace srook {
 namespace type_traits {
@@ -11,17 +11,17 @@ SROOK_INLINE_NAMESPACE(v1)
 
 template <typename T>
 struct remove_extent {
-	typedef T type;
+    typedef T type;
 };
 
 template <class T, std::size_t Size>
 struct remove_extent<T[Size]> {
-	typedef T type;
+    typedef T type;
 };
 
 template <class T>
 struct remove_extent<T[]> {
-	typedef T type;
+    typedef T type;
 };
 
 SROOK_INLINE_NAMESPACE_END

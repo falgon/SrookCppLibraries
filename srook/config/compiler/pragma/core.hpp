@@ -26,8 +26,7 @@
 #		define SROOK_POP_MACROS\
 			_Pragma("pop_macro(\"min\")")\
 			_Pragma("pop_macro(\"max\")")
-#endif
-
+#	endif
 #else
 #	define SROOK_PUSH_MACROS
 #	define SROOK_POP_MACROS

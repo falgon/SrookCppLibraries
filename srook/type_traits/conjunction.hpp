@@ -7,7 +7,7 @@
 #include <type_traits>
 
 #if !SROOK_CPP_VARIADIC_TEMPLATES
-#error "must useable variadic templates"
+#    error "must useable variadic templates"
 #else
 
 namespace srook {
@@ -33,10 +33,10 @@ SROOK_INLINE_NAMESPACE_END
 
 using type_traits::detail::conjunction;
 
-#if SROOK_CPP_VARIABLE_TEMPLATES
+#    if SROOK_CPP_VARIABLE_TEMPLATES
 template <class... B>
 SROOK_INLINE_VARIABLE constexpr bool conjunction_v = type_traits::detail::conjunction<B...>::value;
-#endif
+#    endif
 
 } // namespace srook
 

@@ -4,11 +4,12 @@
 
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/preprocessor/concat.hpp>
 
-#if SROOK_CPP_STATIC_ASSERT
+#if SROOK_CPP_STATIC_ASSERT && (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
 #	define SROOK_STATIC_ASSERT(x, y) static_assert(x, y)
-#elif defined(__clang__)
+#elif defined(__clang__) && (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
 #	define SROOK_STATIC_ASSERT(x, y) static_assert(x, y)
 #elif defined(__has_extension)
 #	if __has_extension(c_static_assert)

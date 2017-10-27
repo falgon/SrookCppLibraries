@@ -11,7 +11,7 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
-template <class T, T &(T::*)(const T &)>
+template <class T, T& (T::*)(const T&)>
 struct copy_signature {
     typedef T type;
 };
@@ -19,7 +19,7 @@ template <class T, class = T>
 struct copy_f_deleted : std::false_type {
 };
 template <class T>
-struct copy_f_deleted<T, std::enable_if_t<std::is_pod<std::remove_reference_t<T>>{}, T>> : std::true_type {
+struct copy_f_deleted<T, std::enable_if_t<std::is_pod<std::remove_reference_t<T> >{}, T> > : std::true_type {
 };
 template <class T>
     struct copy_f_deleted < T,

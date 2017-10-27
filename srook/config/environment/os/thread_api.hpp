@@ -5,6 +5,7 @@
 #include <srook/config/user_config.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/environment/os/endian.hpp>
+#include <srook/config/environment/os/win.hpp>
 
 #if !defined(SROOK_CONFIG_NO_THREADS) &&\
 	!defined(SROOK_HAS_THREADS) &&\
@@ -72,6 +73,21 @@
 #endif
 #ifndef SROOK_HAS_GCC_ATOMIC_IMP
 #	define SROOK_HAS_GCC_ATOMIC_IMP 0
+#endif
+
+#if !SROOK_CONFIG_DISABLE_THREAD_SAFETY_ANNOTATIONS &&\
+	defined(__clang__) &&\
+   	__has_cpp_attribute(acquire_capability) &&\
+	!SROOK_OBJECT_FORMAT_IS_COFF
+#		define SROOK_HAS_THREAD_SAFETY_ANNOTATIONS 1
+#else
+#		define SROOK_HAS_THREAD_SAFETY_ANNOTATIONS 0
+#endif
+
+#ifndef SROOK_HAS_CPP_ATTRIBUTE(require_constant_initialization)
+#	define SROOK_SAFE_STATIC __attribute__((__require__constant_initialization__))
+#else
+#	define SROOK_SAFE_STATIC
 #endif
 
 #include <srook/config/environment/os/apple.hpp>

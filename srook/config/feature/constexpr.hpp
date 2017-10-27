@@ -1,15 +1,16 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONFIG_FEATURE_CONSTEXPR_HPP
 #define INCLUDED_SROOK_CONFIG_FEATURE_CONSTEXPR_HPP
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
+#include <srook/config/cpp_predefined/macro_names.hpp>
 
-#if defined(SROOK_NO_CXX11) && !defined(SROOK_NO_CONSTTEXPR)
-#	if defined(SROOK_NO_CXX11_CONSTEXPR) && !defined(SROOK_NO_CONSTTEXPR)
-#		define SROOK_NO_CONSTEXPR
-#	endif
+#if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && !defined(SROOK_NO_CONSTTEXPR)
+#	define SROOK_NO_CONSTEXPR
+#	define SROOK_NO_CXX11_CONSTEXPR
+#	define SROOK_NO_CXX14_CONSTEXPR
 #endif
 
-
-#if defined(SROOK_NO_CXX11_CONSTEXPR)
+#if defined(SROOK_NO_CXX11_CONSTEXPR) || defined(SROOK_NO_CONSTEXPR)
 #	define SROOK_CONSTEXPR
 #	define SROOK_CONSTEXPR_OR_CONST const
 #else

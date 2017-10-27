@@ -6,7 +6,7 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 
 #if SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT
-
+#ifndef nullptr
 namespace srook {
 
 const class nullptr_t{
@@ -19,8 +19,8 @@ public:
 private:
 	void operator&() const;
 } nullptr = {};
-
 } // namespace srook
+#endif
 
 #endif
 

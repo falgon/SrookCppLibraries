@@ -11,21 +11,22 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class T, class... Args>
-struct is_nothrow_constructible_impl : 
-public conditional<noexcept(T(declval<Args>()...)), SROOK_TRUE_TYPE, SROOK_FALSE_TYPE>::type {};
+struct is_nothrow_constructible_impl : public conditional<noexcept(T(declval<Args>()...)), SROOK_TRUE_TYPE, SROOK_FALSE_TYPE>::type {
+};
 
 template <class T, class Arg>
-struct is_nothrow_constructible_impl<T, Arg> :
-public conditional<noexcept(static_cast<T>(declval<Arg>())), SROOK_TRUE_TYPE, SROOK_FALSE_TYPE>::type {};
+struct is_nothrow_constructible_impl<T, Arg> : public conditional<noexcept(static_cast<T>(declval<Arg>())), SROOK_TRUE_TYPE, SROOK_FALSE_TYPE>::type {
+};
 
 template <class T>
-struct is_nothrow_constructible_impl<T> : public is_nothrow_default_constructible<T> {};
+struct is_nothrow_constructible_impl<T> : public is_nothrow_default_constructible<T> {
+};
 
 } // namespace detail
 
 template <class T, class... Args>
-struct is_nothrow_constructible : 
-public detail::Land<is_constructible<T, Args...>, detail::is_nothrow_constructible_impl<T, Args...>> {};
+struct is_nothrow_constructible : public detail::Land<is_constructible<T, Args...>, detail::is_nothrow_constructible_impl<T, Args...> > {
+};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

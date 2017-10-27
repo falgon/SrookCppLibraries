@@ -1,9 +1,9 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERENCE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_REMOVE_REFERENCE_HPP
-#include <srook/type_traits/is_reference.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/type_traits/is_reference.hpp>
 
 namespace srook {
 namespace type_traits {
@@ -11,14 +11,16 @@ SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
 struct remove_reference {
-	typedef T type;
+    typedef T type;
 };
 
 template <class T>
-struct remove_reference<T&> : remove_reference<T> {};
+struct remove_reference<T&> : remove_reference<T> {
+};
 
 template <class T>
-struct remove_reference<T&&> : remove_reference<T> {};
+struct remove_reference<T&&> : remove_reference<T> {
+};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

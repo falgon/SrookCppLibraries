@@ -11,7 +11,7 @@ namespace detail {
 
 template <class T>
 struct add_pointer {
-    typedef T *type;
+    typedef T* type;
 };
 
 } // namespace detail

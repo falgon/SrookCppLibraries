@@ -7,7 +7,7 @@
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
 #define SROOK_HAS_INCLUDE(header) __has_include(header)
-#define SROOK_HAS_CPP_ATTRIBUTE(attributes) __has_cpp_attribute(attributes)
+#define SROOK_HAS_CPP_ATTRIBUTE(ATTR) __has_cpp_attribute(ATTR)
 #define SROOK_CPP_RTTI __cpp_rtti
 #define SROOK_CPP_UNICODE_CHARACTERS __cpp_unicode_characters
 #define SROOK_CPP_EXCEPTIONS __cpp_exceptions

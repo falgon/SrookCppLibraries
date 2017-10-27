@@ -1,13 +1,13 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_INTEGRAL_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_INTEGRAL_HPP
+#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/type_traits/integral_constant.hpp>
 #include <srook/type_traits/remove_cv.hpp>
 #include <srook/type_traits/true_false_type.hpp>
-#include <srook/type_traits/integral_constant.hpp>
 
 namespace srook {
 namespace type_traits {
@@ -15,12 +15,14 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-#define DEFINE_TRUE_INTEGRAL(TYPE)\
-	template<>\
-	struct is_integral_impl<TYPE> : public SROOK_TRUE_TYPE {}
+#define DEFINE_TRUE_INTEGRAL(TYPE)                           \
+    template <>                                              \
+    struct is_integral_impl<TYPE> : public SROOK_TRUE_TYPE { \
+    }
 
-template<typename>
-struct is_integral_impl : public SROOK_FALSE_TYPE {};
+template <typename>
+struct is_integral_impl : public SROOK_FALSE_TYPE {
+};
 
 DEFINE_TRUE_INTEGRAL(bool);
 DEFINE_TRUE_INTEGRAL(char);
@@ -38,15 +40,16 @@ DEFINE_TRUE_INTEGRAL(unsigned long);
 DEFINE_TRUE_INTEGRAL(long long);
 DEFINE_TRUE_INTEGRAL(unsigned long long);
 #if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_INT128)
-	DEFINE_TRUE_INTEGRAL(__int128);
-	DEFINE_TRUE_INTEGRAL(unsigned __int128);
+DEFINE_TRUE_INTEGRAL(__int128);
+DEFINE_TRUE_INTEGRAL(unsigned __int128);
 #endif
 #undef DEFINE_TRUE_INTEGRAL
 
 } // namespace detail
 
 template <class T>
-struct is_integral : public detail::is_integral_impl<typename remove_cv<T>::type>::type {};
+struct is_integral : public detail::is_integral_impl<typename remove_cv<T>::type>::type {
+};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
