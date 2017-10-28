@@ -1,15 +1,18 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_THREAD_GUARDS_LOCK_GUARD_HPP
-#define INCLUDED_SROOK_THREAD_GUARDS_LOCK_GUARD_HPP
+#ifndef INCLUDED_SROOK_MUTEX_GUARDS_LOCK_GUARD_HPP
+#define INCLUDED_SROOK_MUTEX_GUARDS_LOCK_GUARD_HPP
 
 #include <srook/config/feature/explicit.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
+#include <srook/config/cpp_predefined/macro_names.hpp>
+#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/noexcept_detection.hpp>
-#include <srook/thread/detail/lock_tags.hpp>
+#include <srook/mutex/detail/lock_tags.hpp>
 #include <srook/utility/noncopyable.hpp>
 
 namespace srook {
-namespace thread {
+namespace mutexes {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class Mutex>
@@ -27,15 +30,14 @@ public:
     {
         m_device.unlock();
     }
-
 private:
     Mutex& m_device;
 };
 
 SROOK_INLINE_NAMESPACE_END
-} // namespace thread
+} // namespace mutex
 
-using thread::lock_guard;
+using mutexes::lock_guard;
 
 } // namespace srook
 #endif

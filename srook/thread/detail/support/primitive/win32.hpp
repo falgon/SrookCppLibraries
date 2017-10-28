@@ -39,7 +39,6 @@ SROOK_PUSH_MACROS
 
 namespace srook {
 namespace thread {
-namespace mutex_collection {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
@@ -175,7 +174,6 @@ int tls_set(tls_key_type key, void* p) { return !FlsSetValue(key, p) ? GetLastEr
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
-} // namespace mutex_collection
 } // namespace thread
 } // namespace srook
 

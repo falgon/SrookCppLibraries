@@ -190,7 +190,7 @@
 #endif
 
 #else
-#if defined(__clang__)
+#if defined(__clang__) || defined(__has_include)
 #define SROOK_HAS_INCLUDE(header) __has_include(header)
 #else
 #define SROOK_HAS_INCLUDE(header)

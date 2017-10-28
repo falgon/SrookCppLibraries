@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_MUTEX_HPP
 #define INCLUDED_SROOK_MUTEX_HPP
 
-#include <srook/thread/mutex.hpp>
-#include <srook/thread/guards.hpp>
+#include <srook/mutex/mutex.hpp>
+#include <srook/mutex/guards.hpp>
 
 #endif

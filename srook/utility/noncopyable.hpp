@@ -6,6 +6,7 @@
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/feature/default.hpp>
 #include <srook/config/feature/delete.hpp>
+#include <srook/config/feature/constexpr.hpp>
 
 namespace srook {
 namespace utility {
@@ -14,7 +15,7 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class T>
 class noncopyable {
 protected:
-	noncopyable() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
+	SROOK_CONSTEXPR noncopyable() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
 	~noncopyable() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
 private:
 	noncopyable(const noncopyable&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE

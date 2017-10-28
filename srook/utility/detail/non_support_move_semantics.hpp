@@ -9,7 +9,7 @@
 			"\nThe move semantics is only supported since C++11.\n"\
 			"You can continue to use this function; however, it will do nothing."\
 	)\
-	const T& FuncName(const T& t) SROOK_NOEXCEPT_TRUE\
+	T& FuncName(T& t) SROOK_NOEXCEPT_TRUE\
 	{\
 		return t;\
 	}

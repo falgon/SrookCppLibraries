@@ -14,7 +14,6 @@
 
 namespace srook {
 namespace thread {
-namespace mutex_collection {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
@@ -33,7 +32,6 @@ typedef DWORD tls_key_type;
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
-} // namespace mutex_collection
 } // namespace thread
 } // namespace srook
 

@@ -4,6 +4,7 @@
 
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
+#include <srook/config/user_config.hpp>
 
 #if defined(__GNUC__) || defined(__clang__)
 #	define SROOK_DEPRECATED __attribute__((deprecated))
@@ -15,6 +16,13 @@
 #	define SROOK_DEPRECATED [[deprecated]]
 #	define SROOK_DEPRECATED_MESSAGE(mes) [[deprecated(mes)]]
 #else
+#	define SROOK_DEPRECATED
+#	define SROOK_DEPRECATED_MESSAGE(...)
+#endif
+
+#ifdef SROOK_CONFIG_DISABLE_DEPRECATED_OF_ATTRIBUTE_MESSAGES
+#	undef SROOK_DEPRECATED
+#	undef SROOK_DEPRECATED_MESSAGE
 #	define SROOK_DEPRECATED
 #	define SROOK_DEPRECATED_MESSAGE(...)
 #endif

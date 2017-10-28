@@ -12,7 +12,7 @@
 #include <srook/config/attribute/visibility.hpp>
 
 namespace srook {
-namespace thread {
+namespace mutexes {
 SROOK_INLINE_NAMESPACE(v1)
 
 struct SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT defer_lock_t {
@@ -35,14 +35,14 @@ SROOK_INLINE_VARIABLE SROOK_CONSTEXPR adopt_lock_t adopt_lock{};
 #        endif
 
 SROOK_INLINE_NAMESPACE_END
-} // namespace thread
+} // namespace mutex
 
-using thread::defer_lock_t;
-using thread::defer_lock;
-using thread::try_to_lock_t;
-using thread::try_to_lock;
-using thread::adopt_lock_t;
-using thread::adopt_lock;
+using mutexes::defer_lock_t;
+using mutexes::defer_lock;
+using mutexes::try_to_lock_t;
+using mutexes::try_to_lock;
+using mutexes::adopt_lock_t;
+using mutexes::adopt_lock;
 
 } // namespace srook
 
