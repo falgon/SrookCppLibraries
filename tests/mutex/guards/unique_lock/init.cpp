@@ -31,6 +31,9 @@ namespace compatibility_boost {
 		{
 			boost::unique_lock<srook::mutex> lk1(m, boost::try_to_lock);
 			srook::unique_lock<srook::mutex> lk2(srook::move(lk1));
+			if (!lk2) {
+				// ...
+			}
 		}
 		{
 			m.lock();
@@ -55,6 +58,38 @@ void unique_lock_construct_test()
 		compatibility_boost::lock_ts();
 #endif
 	}
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+	{
+		m.lock();
+		srook::unique_lock<srook::mutex> lk1(m, std::adopt_lock);
+	}
+	{
+		srook::unique_lock<srook::mutex> lk1(m, std::try_to_lock);
+		if (!lk1) {
+		   // ....
+		}
+	}	
+	{
+		srook::unique_lock<srook::mutex> lk1(m, std::defer_lock);
+		lk1.lock();
+	}
+#elif !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && SROOK_HAS_INCLUDE(<boost/thread.hpp>)
+	{
+		m.lock();
+		srook::unique_lock<srook::mutex> lk1(m, boost::adopt_lock);
+	}
+	{
+		srook::unique_lock<srook::mutex> lk1(m, boost::try_to_lock);
+		if (!lk1) {
+			// ...
+		}
+	}
+	{
+		srook::unique_lock<srook::mutex> lk1(m, boost::defer_lock);
+		lk1.lock();
+	}
+#endif
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
 	{

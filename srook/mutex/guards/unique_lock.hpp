@@ -7,11 +7,15 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
 #include <srook/config/feature/explicit.hpp>
+#include <srook/config/feature/exception.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/feature/static_assert.hpp>
+#include <srook/config/libraries/nullptr.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/user_config.hpp>
 #include <srook/memory/addressof.hpp>
 #include <srook/mutex/detail/lock_tags.hpp>
+#include <srook/type_traits/library_concepts/is_mutex.hpp>
 #include <srook/utility/move.hpp>
 #include <srook/utility/noncopyable.hpp>
 
@@ -47,7 +51,9 @@ class unique_lock
 {
 public:
     typedef Mutex mutex_type;
-
+#    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+    SROOK_STATIC_ASSERT(is_mutex<Mutex>::value, "The template argument must be Mutex");
+#    endif
     unique_lock() SROOK_NOEXCEPT_TRUE : m_device(SROOK_NULLPTR), owns(false) {}
 
     SROOK_EXPLICIT unique_lock(mutex_type& m) : m_device(addressof(m)), owns(false)
@@ -56,11 +62,18 @@ public:
         owns = true;
     }
 
-    unique_lock(mutex_type& m, defer_lock_t) SROOK_NOEXCEPT_TRUE : m_device(addressof(m)), owns(false) {}
+#    define DEF_CONSTRUCT_LOCK_T(LIB)\
+    unique_lock(mutex_type& m, LIB::defer_lock_t) SROOK_NOEXCEPT_TRUE : m_device(addressof(m)), owns(false) {}\
+    unique_lock(mutex_type& m, LIB::try_to_lock_t) : m_device(addressof(m)), owns(m_device->try_lock()) {}\
+    unique_lock(mutex_type& m, LIB::adopt_lock_t) SROOK_NOEXCEPT_TRUE : m_device(addressof(m)), owns(true) {}
 
-    unique_lock(mutex_type& m, try_to_lock_t) : m_device(addressof(m)), owns(m_device->try_lock()) {}
-
-    unique_lock(mutex_type& m, adopt_lock_t) SROOK_NOEXCEPT_TRUE : m_device(addressof(m)), owns(true) {}
+    DEF_CONSTRUCT_LOCK_T(srook)
+#        if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_HAS_INCLUDE(<mutex>)
+    DEF_CONSTRUCT_LOCK_T(std)
+#        elif !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && SROOK_HAS_INCLUDE(<boost/thread.hpp>)
+    DEF_CONSTRUCT_LOCK_T(boost)
+#        endif
+#    undef DEF_CONSTRUCT_LOCK_T
 
     ~unique_lock()
     {
@@ -176,8 +189,6 @@ public:
 	}
 
 #        endif
-
-
 #    endif
 
     void swap(unique_lock& u) SROOK_NOEXCEPT_TRUE
@@ -201,8 +212,8 @@ public:
     mutex_type* mutex() const SROOK_NOEXCEPT_TRUE { return m_device; }
 
 #    define THROW_SYSTEM_ERR(SYSLIB, ERRC) \
-        throw SYSLIB::system_error(        \
-            SYSLIB::error_code(static_cast<int>(SYSLIB::errc::ERRC), SYSLIB::system_category()), #ERRC)
+        SROOK_THROW(SYSLIB::system_error(        \
+            SYSLIB::error_code(static_cast<int>(SYSLIB::errc::ERRC), SYSLIB::system_category()), #ERRC))
 
 #    define DEF_MEMFN(CHLIB, SYSLIB)                                                       \
         template <class Clock, class Duration>                                             \

@@ -34,9 +34,15 @@ struct is_moveable {
     SROOK_INLINE_VARIABLE static constexpr bool value = type_traits::detail::move_f_deleted<T>::value;
 };
 
+template <class T>
+struct is_movable : is_moveable<T> {};
+
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>
 constexpr bool is_moveable_v = type_traits::detail::move_f_deleted<T>::value;
+
+template <class T>
+constexpr bool is_movable_v = is_moveable_v<T>;
 #endif
 
 } // namespace srook

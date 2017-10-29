@@ -2,8 +2,12 @@
 #ifndef INCLUDED_SROOK_MUTEX_MUTEX_HPP
 #define INCLUDED_SROOK_MUTEX_MUTEX_HPP
 
+#include <srook/config/cpp_predefined.hpp>
+#include <srook/config/feature/exception.hpp>
 #include <srook/mutex/detail/lock_tags.hpp>
 #include <srook/mutex/detail/mutex_base.hpp>
+#include <srook/type_traits/library_concepts/is_mutex.hpp>
+#include <srook/type_traits/is_nothrow_default_constructible.hpp>
 
 namespace srook {
 namespace mutexes {
@@ -17,7 +21,7 @@ public:
     SROOK_MUTEX_DOES_NOT_SUPPORT_STATIC_INIT_MESSAGE
     SROOK_CONSTEXPR mutex() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
 
-    ~mutex() SROOK_DEFAULT;
+    ~mutex() SROOK_DEFAULT
 
     mutex(const mutex&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
 
@@ -34,8 +38,7 @@ public:
                 boost::system
 #endif
                 ;
-            error_code ec(e, std::system_category());
-            throw system_error(ec, "operation not permitted");
+            SROOK_THROW(system_error(error_code(e, system_category())));
         }
     }
 
@@ -56,9 +59,8 @@ public:
 };
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-SROOK_STATIC_ASSERT(
-    is_nothrow_default_constructible<mutex>::value,
-    "the default constructor for srook::mutex must be nothrow");
+SROOK_STATIC_ASSERT(is_mutex<mutex>::value && is_nothrow_default_constructible<mutex>::value,
+        "the default constructor for srook::mutex must be nothrow");
 #endif
 
 SROOK_INLINE_NAMESPACE_END

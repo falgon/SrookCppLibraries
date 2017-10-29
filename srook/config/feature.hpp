@@ -10,4 +10,5 @@
 #include <srook/config/feature/static_assert.hpp>
 #include <srook/config/feature/decltype.hpp>
 #include <srook/config/feature/explicit.hpp>
+#include <srook/config/feature/exception.hpp>
 #endif

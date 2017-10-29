@@ -4,5 +4,6 @@
 
 #include <srook/mutex/mutex.hpp>
 #include <srook/mutex/guards.hpp>
+#include <srook/mutex/generic.hpp>
 
 #endif
