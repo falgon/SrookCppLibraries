@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_TUPLE_REVERSE_HPP
 #include <srook/mpl/constant_sequence/reverse_sequence.hpp>
 #include <srook/mpl/variadic_player.hpp>
+#include <srook/config/libraries/type_traits/index_sequence.hpp>
 #include <tuple>
 
 namespace srook {
@@ -12,7 +13,7 @@ namespace detail {
 
 template <class... Ts, std::size_t... n>
 constexpr Transfer_t<std::tuple, Reverse_t<Ts...>>
-tuple_reverse_impl(const std::tuple<Ts...> &tpl, std::index_sequence<n...>)
+tuple_reverse_impl(const std::tuple<Ts...> &tpl, SROOK_INDEX_SEQUENCE<n...>)
 {
     return std::make_tuple(std::get<n>(tpl)...);
 }

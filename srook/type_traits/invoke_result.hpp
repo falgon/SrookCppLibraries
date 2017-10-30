@@ -4,27 +4,30 @@
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_VARIADIC_TEMPLATES
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/library_concepts/INVOKE.hpp>
-#include <utility>
+#include <srook/utility/void_t.hpp>
+#include <srook/utility/declval.hpp>
 
 namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
-template <typename, typename...>
-struct invoke_result {
-};
-template <typename F, typename... Args>
-struct invoke_result<decltype(void(library_concepts::INVOKE(std::declval<F>(), std::declval<Args>()...))), F, Args...> {
-    typedef decltype(library_concepts::INVOKE(std::declval<F>(), std::declval<Args>()...)) type;
+template <class, class, class...>
+struct invoke_result;
+
+template <class F, class... Args>
+struct invoke_result<typename voider<decltype(library_concepts::INVOKE(declval<F>(), declval<Args>()...))>::type, F, Args...> {
+	typedef decltype(library_concepts::INVOKE(declval<F>(), declval<Args>()...)) type;
 };
 
 } // namespace detail
 
 template <class F, class... ArgTypes>
 struct invoke_result : detail::invoke_result<void, F, ArgTypes...> {
+	typedef typename detail::invoke_result<void, F, ArgTypes...>::type type;
 };
 
 SROOK_INLINE_NAMESPACE_END
@@ -39,4 +42,5 @@ using invoke_result_t = typename invoke_result<F, ArgTypes...>::type;
 
 } // namespace srook
 
+#endif
 #endif

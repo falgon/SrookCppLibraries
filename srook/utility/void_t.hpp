@@ -4,11 +4,12 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #if SROOK_CPP_VARIADIC_TEMPLATES
 #include <cstddef>
+#include <srook/config/feature/inline_namespace.hpp>
 
 namespace srook {
 namespace utility {
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
-inline namespace v1 {
 
 template <class T, class... Ts>
 struct Empty_type {
@@ -20,8 +21,8 @@ template <class... Ts>
 struct void_t_impl : Empty_type<void, Ts...> {
 };
 
-} // namespace v1
 } // namespace detail
+SROOK_INLINE_NAMESPACE_END
 } // namespace utility
 
 #if SROOK_CPP_ALIAS_TEMPLATES

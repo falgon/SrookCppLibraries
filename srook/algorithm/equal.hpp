@@ -3,16 +3,20 @@
 #define INCLUDED_SROOK_ALGORITHM_EQUAL_HPP
 #include <algorithm>
 #include <srook/config/require.hpp>
+#include <srook/config/cpp_predefined.hpp>
+#include <srook/config/feature/constexpr.hpp>
 #include <srook/mpl/variadic_player.hpp>
 #include <srook/tuple/algorithm/filter_type.hpp>
 #include <srook/type_traits/has_iterator.hpp>
+#include <srook/type_traits/conditional.hpp>
+#include <srook/utility/forward.hpp>
 #include <tuple>
 #include <type_traits>
 
 #include <iostream>
 
 namespace srook {
-
+namespace algorithm {
 namespace detail {
 
 template <bool, class>
@@ -60,7 +64,7 @@ struct Apply_Equal<true, pack<Head, Second, Tail...>> {
 	static bool
 	apply(const std::tuple<LTs...> &l, const std::tuple<RTs...> &r, const std::tuple<SL...> &sl, const std::tuple<SR...> &sr, std::integral_constant<std::size_t, n> inc, BinaryPred &&pred)
 	{
-	    return std::conditional_t<n == 0, invoker, unpacker>::apply(l, r, sl, sr, std::move(inc), std::forward<BinaryPred>(pred));
+	    return typename conditional<n == 0, invoker, unpacker>::type::apply(l, r, sl, sr, std::move(inc), std::forward<BinaryPred>(pred));
 	}
     };
 
@@ -108,7 +112,7 @@ struct Apply_Equal<true, pack<Tail>> {
 	constexpr static bool
 	apply(const std::tuple<LTs...> &l, const std::tuple<RTs...> &r, std::integral_constant<std::size_t, n> ic, BinaryPred &&pred)
 	{
-	    return std::conditional_t<n == 0, invoker, unpacker>::apply(l, r, std::move(ic), std::forward<BinaryPred>(pred));
+	    return typename conditional<n == 0, invoker, unpacker>::type::apply(l, r, std::move(ic), std::forward<BinaryPred>(pred));
 	}
     };
 
@@ -153,31 +157,84 @@ struct sequence_same<pack<LH, LT...>, pack<RH, RT...>> {
 template <class L, class R>
 constexpr bool sequence_same_v = sequence_same<L, R>::value;
 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
 const auto same_pred = [](const auto &x, const auto &y) { return x == y; };
+#else
+struct same_pred_t {
+	template <class L, class R>
+	SROOK_CONSTEXPR bool operator()(L&& l, R&& r) const SROOK_NOEXCEPT_TRUE
+	{
+		return srook::forward<L>(l) == srook::forward<R>(r);
+	}
+};
+#endif
 
 } // namespace detail
 
-template <class... LTs, class... RTs, class BinaryPred = decltype(detail::same_pred)>
-constexpr bool equal(const std::tuple<LTs...> &l, const std::tuple<RTs...> &r, const BinaryPred &pred = detail::same_pred)
+template <class... LTs, class... RTs, class BinaryPred = 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+decltype(detail::same_pred)
+#else
+detail::same_pred_t
+#endif
+>
+constexpr bool equal(const std::tuple<LTs...> &l, const std::tuple<RTs...> &r, const BinaryPred &pred = 
+		detail::
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+		same_pred
+#else
+		same_pred_t()
+#endif
+		)
 {
-    return detail::Apply_Equal <
+    return detail::Apply_Equal<
 		       std::tuple_size<std::tuple<LTs...>>::value ==
 		   std::tuple_size<std::tuple<RTs...>>::value and
 	       detail::sequence_same_v<pack<LTs...>, pack<RTs...>>,
-	   NoDuplicate_t<LTs...>> ::apply(l, r, pred);
+	   NoDuplicate_t<LTs...>>::apply(l, r, pred);
 }
 
-template <class L, class R, class BinaryPred = decltype(detail::same_pred), REQUIRES(has_iterator_v<std::decay_t<L>> and has_iterator_v<std::decay_t<R>>)>
-constexpr bool equal(L &&l, R &&r, const BinaryPred &pred = detail::same_pred)
+template <class L, class R, class BinaryPred = 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+	decltype(detail::same_pred)
+#else
+	detail::same_pred_t
+#endif
+, REQUIRES(has_iterator<typename decay<L>::type>::value and has_iterator<typename decay<R>::type>::value)>
+constexpr bool equal(L &&l, R &&r, const BinaryPred &pred = 
+		detail::
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+		same_pred
+#else
+		same_pred_t()
+#endif
+		)
 {
     return std::equal(std::begin(l), std::end(l), std::begin(r), std::end(r), pred);
 }
 
-template <class LInputIterator, class RInputIterator, class BinaryPred = decltype(detail::same_pred), REQUIRES(!has_iterator_v<std::decay_t<LInputIterator>> and !has_iterator_v<std::decay_t<RInputIterator>>)>
-constexpr bool equal(LInputIterator &&lbegin, LInputIterator lend, RInputIterator &&rbegin, RInputIterator &&rend, const BinaryPred &pred = detail::same_pred)
+template <class LInputIterator, class RInputIterator, class BinaryPred = 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+	decltype(detail::same_pred)
+#else
+	detail::same_pred_t
+#endif
+	, REQUIRES(!has_iterator<typename decay<LInputIterator>::type>::value and !has_iterator<typename decay<RInputIterator>::type>::value)>
+constexpr bool equal(LInputIterator &&lbegin, LInputIterator lend, RInputIterator &&rbegin, RInputIterator &&rend, const BinaryPred &pred = 
+		detail::
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+		same_pred
+#else
+		same_pred_t()
+#endif
+		)
 {
     return std::equal(std::forward<LInputIterator>(lbegin), std::forward<LInputIterator>(lend), std::forward<RInputIterator>(rbegin), std::forward<RInputIterator>(rend), pred);
 }
+
+} // namespace algorithm
+
+using algorithm::equal;
 
 } // namespace srook
 

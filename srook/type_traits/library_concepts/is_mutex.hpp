@@ -28,7 +28,6 @@ struct is_mutex
 	SROOK_TRUE_TYPE, SROOK_FALSE_TYPE
 >::type {};
 
-
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 

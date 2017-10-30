@@ -4,5 +4,6 @@
 
 #include <srook/mutex/guards/lock_guard.hpp>
 #include <srook/mutex/guards/unique_lock.hpp>
+#include <srook/mutex/guards/scoped_lock.hpp>
 
 #endif

@@ -4,6 +4,9 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
+#include <srook/type_traits/enable_if.hpp>
+#include <srook/type_traits/remove_reference.hpp>
+#include <srook/type_traits/true_false_type.hpp>
 #include <type_traits>
 
 namespace srook {
@@ -19,8 +22,7 @@ template <class T, class = T>
 struct copy_f_deleted : std::false_type {
 };
 template <class T>
-struct copy_f_deleted<T, std::enable_if_t<std::is_pod<std::remove_reference_t<T> >{}, T> > : std::true_type {
-};
+struct copy_f_deleted<T, typename enable_if<std::is_pod<typename remove_reference<T>::type>{}, T>::type> : std::true_type {};
 template <class T>
     struct copy_f_deleted < T,
     typename copy_signature < T, &T::operator=> ::type> : std::true_type {

@@ -3,5 +3,5 @@
 #define INCLUDED_SROOK_TUPLE_HPP
 #include <srook/tuple/algorithm.hpp>
 #include <srook/tuple/numeric.hpp>
-#include <tuple>
+#include <srook/tuple/algorithm.hpp>
 #endif

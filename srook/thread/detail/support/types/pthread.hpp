@@ -17,17 +17,18 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 typedef pthread_mutex_t mutex_type;
-#        define SROOK_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 typedef pthread_mutex_t recursive_mutex_type;
 typedef pthread_cond_t cond_var_type;
-#        define SROOK_COND_VAR_INITIALIZER PTHREAD_COND_INITIALIZER
 typedef pthread_once_t exec_once_flag_type;
-#        define SROOK_EXEC_ONCE_INITIALIZER PTHREAD_ONCE_INIT
 typedef pthread_t thread_id_type;
-#        define SROOK_NULL_THREAD SROOK_NULLPTR
 typedef pthread_t thread_type;
 typedef pthread_key_t tls_key_type;
-#        define SROOK_TLS_DESTRUCTOR_CC
+#   define SROOK_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
+#   define SROOK_RECURSIVE_MUTEX_INITIALIZER PTHREAD_RECURSIVE_MUTEX_INITIALIZER
+#   define SROOK_COND_VAR_INITIALIZER PTHREAD_COND_INITIALIZER
+#   define SROOK_EXEC_ONCE_INITIALIZER PTHREAD_ONCE_INIT
+#   define SROOK_TLS_DESTRUCTOR_CC
+#   define SROOK_NULL_THREAD SROOK_NULLPTR
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END

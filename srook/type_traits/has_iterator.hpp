@@ -7,6 +7,9 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/experimental/is_iterator.hpp>
 #include <srook/type_traits/true_false_type.hpp>
+#include <srook/type_traits/conditional.hpp>
+#include <srook/type_traits/is_base_of.hpp>
+#include <srook/type_traits/enable_if.hpp>
 #include <srook/utility/void_t.hpp>
 #include <type_traits>
 
@@ -19,19 +22,19 @@ template <class, class = typename srook::voider<>::type>
 struct has_iterator_category : SROOK_FALSE_TYPE {
 };
 template <class T>
-struct has_iterator_category<T, std::void_t<typename T::iterator_category> > : SROOK_TRUE_TYPE {
+struct has_iterator_category<T, typename voider<typename T::iterator_category>::type > : SROOK_TRUE_TYPE {
 };
 
 template <class, class = typename srook::voider<>::type>
 struct has_iterator : SROOK_FALSE_TYPE {
 };
 template <class T>
-struct has_iterator<T, typename srook::voider<typename T::iterator, std::enable_if_t<!has_iterator_category<T>::value> >::type> : SROOK_TRUE_TYPE {
+struct has_iterator<T, typename voider<typename T::iterator, enable_if_t<!has_iterator_category<T>::value> >::type> : SROOK_TRUE_TYPE {
 };
 template <class T>
 struct has_iterator<
     T,
-    typename std::enable_if<has_iterator_category<T>::value>::type> : std::conditional<std::is_base_of<std::iterator<typename T::iterator_category, void, void, void, void>, T>::value || experimental::is_iterator_v<T>,
+    typename enable_if<has_iterator_category<T>::value>::type> : conditional<is_base_of<std::iterator<typename T::iterator_category, void, void, void, void>, T>::value || experimental::is_iterator_v<T>,
 #ifdef SROOK_GCC_VERSION
 #    if SROOK_GCC_VERSION > 619
                                                                                        SROOK_FALSE_TYPE, SROOK_TRUE_TYPE

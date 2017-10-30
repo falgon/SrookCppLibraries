@@ -1,63 +1,60 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
-#include<type_traits>
-#include<iterator>
+#include <iterator>
+#include <srook/type_traits/conditional.hpp>
+#include <srook/type_traits/true_false_type.hpp>
+#include <srook/utility/void_t.hpp>
+#include <type_traits>
 
-namespace srook{
-namespace experimental{
+namespace srook {
+namespace experimental {
 
-inline namespace mpl{
-inline namespace v1{
+inline namespace mpl {
+inline namespace v1 {
 
-template<class,class=std::void_t<>>
-constexpr bool has_iterator_category_v=std::false_type::value;
-template<class T>
-constexpr bool has_iterator_category_v<T,std::void_t<typename T::iterator_category>> =std::true_type::value;
+template <class, class = typename voider<>::type>
+constexpr bool has_iterator_category_v = SROOK_FALSE_TYPE::value;
+template <class T>
+constexpr bool has_iterator_category_v<T, typename voider<typename T::iterator_category>::type> = SROOK_TRUE_TYPE::value;
 
-template<class,class=std::void_t<>>
-constexpr bool has_value_type_v=std::false_type::value;
-template<class T>
-constexpr bool has_value_type_v<T,std::void_t<typename T::value_type>> =std::true_type::value;
+template <class, class = typename voider<>::type>
+constexpr bool has_value_type_v = SROOK_FALSE_TYPE::value;
+template <class T>
+constexpr bool has_value_type_v<T, typename voider<typename T::value_type>::type> = SROOK_TRUE_TYPE::value;
 
-template<class,class=std::void_t<>>
-constexpr bool has_difference_type_v=std::false_type::value;
-template<class T>
-constexpr bool has_difference_type_v<T,std::void_t<typename T::difference_type>> =std::true_type::value;
+template <class, class = typename voider<>::type>
+constexpr bool has_difference_type_v = SROOK_FALSE_TYPE::value;
+template <class T>
+constexpr bool has_difference_type_v<T, typename voider<typename T::difference_type>::type> = SROOK_TRUE_TYPE::value;
 
-template<class,class=std::void_t<>>
-constexpr bool has_pointer_v=std::false_type::value;
-template<class T>
-constexpr bool has_pointer_v<T,std::void_t<typename T::pointer>> =std::true_type::value;
+template <class, class = typename voider<>::type>
+constexpr bool has_pointer_v = SROOK_FALSE_TYPE::value;
+template <class T>
+constexpr bool has_pointer_v<T, typename voider<typename T::pointer>::type> = SROOK_TRUE_TYPE::value;
 
-template<class,class=std::void_t<>>
-constexpr bool has_reference_v=std::false_type::value;
-template<class T>
-constexpr bool has_reference_v<T,std::void_t<typename T::reference>> =std::true_type::value;
+template <class, class = typename voider<>::type>
+constexpr bool has_reference_v = SROOK_FALSE_TYPE::value;
+template <class T>
+constexpr bool has_reference_v<T, typename voider<typename T::reference>::type> = SROOK_TRUE_TYPE::value;
 
-template<class T>
-constexpr bool has_iterators_types_v=
-	std::conditional<
-		(has_iterator_category_v<T> && has_value_type_v<T>&& has_difference_type_v<T> && has_pointer_v<T> && has_reference_v<T>),
-		std::true_type,
-		std::false_type
-	>::type::value;
+template <class T>
+constexpr bool has_iterators_types_v = conditional<
+    (has_iterator_category_v<T> && has_value_type_v<T> && has_difference_type_v<T> && has_pointer_v<T> && has_reference_v<T>),
+    SROOK_TRUE_TYPE,
+    SROOK_FALSE_TYPE>::type::value;
 
+template <class, class = typename voider<>::type>
+constexpr bool is_iterator_v = SROOK_FALSE_TYPE::value;
 
-template<class,class=std::void_t<>>
-constexpr bool is_iterator_v = std::false_type::value;
-
-template<class T>
+template <class T>
 constexpr bool is_iterator_v<
-	T,
-	std::enable_if_t<
-		std::is_base_of<std::iterator<typename T::iterator_category,void,void,void,void>,T>::value ||
-		has_iterators_types_v<T>
-	>
-> = std::true_type::value;
+    T,
+    typename enable_if<
+        std::is_base_of<std::iterator<typename T::iterator_category, void, void, void, void>, T>::value || has_iterators_types_v<T> >::type > = SROOK_TRUE_TYPE::value;
 
-} // inline namespace v1
-} // inline namespace mpl
+} // namespace v1
+} // namespace mpl
 } // namespace experimental
 } // namespace srook
 #endif

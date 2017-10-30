@@ -4,6 +4,7 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/true_false_type.hpp>
+#include <srook/type_traits/decay.hpp>
 #include <srook/utility/void_t.hpp>
 #include <tuple>
 #include <type_traits>
@@ -18,7 +19,7 @@ struct is_tuple : SROOK_FALSE_TYPE {
 };
 
 template <class T>
-struct is_tuple<T, typename voider<decltype(std::tuple_size<std::decay_t<T> >::value)>::type> : SROOK_TRUE_TYPE {
+struct is_tuple<T, typename voider<decltype(std::tuple_size<typename decay<T>::type >::value)>::type> : SROOK_TRUE_TYPE {
 };
 
 } // namespace detail

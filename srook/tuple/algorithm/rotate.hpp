@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_TUPLE_ROTATE_HPP
 #define INCLUDED_SROOK_TUPLE_ROTATE_HPP
 #include <srook/mpl/variadic_player.hpp>
+#include <srook/type_traits/conditional.hpp>
 #include <tuple>
 
 namespace srook {
@@ -42,7 +43,7 @@ struct Applyer_Rotate {
 	static constexpr Transfer_t<std::tuple, Concat_t<Last_t<Ts...>, PopBack_t<Ts...>>>
 	apply(const std::tuple<Ts...> &t, std::integral_constant<std::size_t, v> ic, std::integral_constant<bool, b> ib, Args &&... args)
 	{
-	    return std::conditional_t<b, first, not_first>::apply(t, std::move(ic), std::move(ib), std::forward<Args>(args)...);
+	    return typename conditional<b, first, not_first>::type::apply(t, std::move(ic), std::move(ib), std::forward<Args>(args)...);
 	}
     };
 
@@ -50,7 +51,7 @@ struct Applyer_Rotate {
     static constexpr Transfer_t<std::tuple, Concat_t<Last_t<Ts...>, PopBack_t<Ts...>>>
     apply(const std::tuple<Ts...> &t, std::integral_constant<std::size_t, v> ic, std::integral_constant<bool, b> ib, Args &&... args)
     {
-	return std::conditional_t<sizeof...(args) == std::tuple_size<std::tuple<Ts...>>::value, invoker, unpacker>::apply(t, std::move(ic), std::move(ib), std::forward<Args>(args)...);
+	return typename conditional<sizeof...(args) == std::tuple_size<std::tuple<Ts...>>::value, invoker, unpacker>::type::apply(t, std::move(ic), std::move(ib), std::forward<Args>(args)...);
     }
 };
 
