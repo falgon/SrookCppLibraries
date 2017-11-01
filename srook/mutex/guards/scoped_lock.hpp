@@ -6,7 +6,7 @@
 #include <srook/config/feature.hpp>
 #include <srook/utility/noncopyable.hpp>
 #include <srook/config/noexcept_detection.hpp>
-#include <srook/mutex/detail/lock_tags.hpp>
+#include <srook/mutex/guards/detail/lock_tags.hpp>
 
 #if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && SROOK_HAS_INCLUDE(<boost/thread.hpp>)
 #    define SCOPED_LOCK_BLOCK_BOOST_TAG \

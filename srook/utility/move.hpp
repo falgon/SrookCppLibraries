@@ -8,7 +8,7 @@
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/user_config.hpp>
 #include <srook/type_traits/remove_reference.hpp>
-#include <srook/utility/detail/non_support_move_semantics.hpp>
+#include <srook/utility/detail/non_supported/move_semantics.hpp>
 
 namespace srook {
 namespace utility {

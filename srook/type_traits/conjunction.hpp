@@ -4,7 +4,9 @@
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
-#include <type_traits>
+#include <srook/type_traits/conjunction.hpp>
+#include <srook/type_traits/conditional.hpp>
+#include <srook/type_traits/true_false_type.hpp>
 
 #if (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && SROOK_CPP_VARIADIC_TEMPLATES
 
@@ -14,13 +16,13 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class...>
-struct conjunction : std::true_type {};
+struct conjunction : SROOK_TRUE_TYPE {};
 
 template <class B1>
 struct conjunction<B1> : B1 {};
 
 template <class B1, class... Bn>
-struct conjunction<B1, Bn...> : std::conditional<bool(B1::value), conjunction<Bn...>, B1>::type {};
+struct conjunction<B1, Bn...> : conditional<bool(B1::value), conjunction<Bn...>, B1>::type {};
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END

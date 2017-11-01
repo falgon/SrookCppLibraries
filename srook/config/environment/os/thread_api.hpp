@@ -8,7 +8,7 @@
 #include <srook/config/environment/os/win.hpp>
 
 #if !defined(SROOK_CONFIG_NO_THREADS) &&\
-	!defined(SROOK_HAS_THREADS) &&\
+!defined(SROOK_HAS_THREADS) &&\
 	!defined(SROOK_HAS_THREAD_API_PTHREAD) &&\
 	!defined(SROOK_HAS_THREAD_API_WIN32) &&\
 	!defined(SROOK_HAS_THREAD_API_EXTERNAL)
@@ -24,6 +24,26 @@
 #		define SROOK_HAS_THREAD_API_PTHREAD 1
 #		define SROOK_HAS_THREAD_API_WIN32 0
 #		define SROOK_HAS_THREAD_API_EXTERNAL 0
+#		ifdef __NetBSD__
+#			pragma weak pthread_create
+#		endif
+#		if defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+#			include <sys/param.h>
+#			ifdef BSD
+#				include <sys/sysctl.h>
+#			endif
+#		endif
+#		if defined(__unix__) || (defined(__APPLE__) &&\
+	   	defined(__MACH__)) || defined(__CloudABI__) || defined(__Fuchsia__)
+#			include <unistd.h>
+#		endif
+#		if defined(_POSIX_TIMEOUTS) &&\
+		(_POSIX_TIMEOUTS - 200112L) >= 0L &&\
+		(_POSIX_THREADS - 200112L) >= 0L
+#			define SROOK_PTHREAD_TIMEOUTS_SUPPORT 1
+#		else
+#			define SROOK_PTHREAD_TIMEOUTS_SUPPORT 0
+#		endif
 #	elif defined(SROOK_WIN32API)
 #		define SROOK_HAS_THREADS 1
 #		define SROOK_HAS_THREAD_API_PTHREAD 0

@@ -4,8 +4,7 @@
 
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature/exception.hpp>
-#include <srook/mutex/detail/lock_tags.hpp>
-#include <srook/mutex/detail/mutex_base.hpp>
+#include <srook/mutex/mutexes/detail/mutex_base.hpp>
 #include <srook/type_traits/library_concepts/is_mutex.hpp>
 #include <srook/type_traits/is_nothrow_default_constructible.hpp>
 

@@ -7,7 +7,7 @@
 #include <srook/config/feature/static_assert.hpp>
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/noexcept_detection.hpp>
-#include <srook/mutex/detail/lock_tags.hpp>
+#include <srook/mutex/guards/detail/lock_tags.hpp>
 #include <srook/utility/noncopyable.hpp>
 #include <srook/type_traits/library_concepts/is_mutex.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_HAS_INCLUDE(<mutex>)

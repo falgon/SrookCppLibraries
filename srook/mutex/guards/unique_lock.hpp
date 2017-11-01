@@ -14,7 +14,7 @@
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/user_config.hpp>
 #include <srook/memory/addressof.hpp>
-#include <srook/mutex/detail/lock_tags.hpp>
+#include <srook/mutex/guards/detail/lock_tags.hpp>
 #include <srook/type_traits/library_concepts/is_mutex.hpp>
 #include <srook/utility/move.hpp>
 #include <srook/utility/noncopyable.hpp>

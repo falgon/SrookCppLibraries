@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_CALLABLE
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/feature/constexpr.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <type_traits>
 
@@ -32,7 +33,7 @@ private:
     static no test(Check<void (Fallback::*)(), &C::operator()>*);
 
 public:
-    static constexpr bool value = sizeof(test<derived>(nullptr)) == sizeof(yes);
+    static SROOK_CONSTEXPR_OR_CONST bool value = sizeof(test<derived>(nullptr)) == sizeof(yes);
 };
 
 template <class T>

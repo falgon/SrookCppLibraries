@@ -11,4 +11,6 @@
 #include <srook/config/feature/decltype.hpp>
 #include <srook/config/feature/explicit.hpp>
 #include <srook/config/feature/exception.hpp>
+#include <srook/config/feature/strong_enum.hpp>
+#include <srook/config/feature/final.hpp>
 #endif

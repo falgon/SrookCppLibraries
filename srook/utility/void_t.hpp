@@ -2,9 +2,9 @@
 #ifndef INCLUDED_SROOK_UTILITY_VOID_T_HPP
 #define INCLUDED_SROOK_UTILITY_VOID_T_HPP
 #include <srook/config/cpp_predefined/feature_testing.hpp>
-#if SROOK_CPP_VARIADIC_TEMPLATES
 #include <cstddef>
 #include <srook/config/feature/inline_namespace.hpp>
+#if SROOK_CPP_VARIADIC_TEMPLATES
 
 namespace srook {
 namespace utility {
@@ -18,8 +18,7 @@ struct Empty_type {
 };
 
 template <class... Ts>
-struct void_t_impl : Empty_type<void, Ts...> {
-};
+struct void_t_impl : Empty_type<void, Ts...> {};
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
@@ -38,6 +37,10 @@ struct voider {
 };
 
 } // namespace srook
+
+#else
+
+#include <srook/utility/detail/non_supported/void_t.hpp>
 
 #endif
 #endif

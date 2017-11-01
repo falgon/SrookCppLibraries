@@ -6,7 +6,7 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/remove_reference.hpp>
 #include <srook/type_traits/is_lvalue_reference.hpp>
-#include <srook/utility/detail/non_support_move_semantics.hpp>
+#include <srook/utility/detail/non_supported/move_semantics.hpp>
 
 namespace srook {
 namespace utility {
