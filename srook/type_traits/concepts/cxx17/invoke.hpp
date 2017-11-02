@@ -3,6 +3,9 @@
 #define INCLUDED_SROOK_TYPE_TRAITS_CONCEPT_INVOKE_CONCEPT_HPP
 #include <srook/config/feature/inline_namespace.hpp>
 #include <utility>
+#include <srook/config/cpp_predefined.hpp>
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
 namespace srook {
 namespace cxx17 {
@@ -54,4 +57,5 @@ using detail::INVOKE;
 } // namespace cxx17
 } // namespace srook
 
+#endif
 #endif

@@ -38,7 +38,7 @@ SROOK_PUSH_MACROS
 #        endif
 
 namespace srook {
-namespace thread {
+namespace threading {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
@@ -55,6 +55,12 @@ namespace detail {
 #            endif
 
 #            if SROOK_HAS_THREAD_API_WIN32
+static inline int get_nprocs() SROOK_NOEXCEPT_TRUE
+{
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+	return info.dwNumberOfProcessors;
+}
 int recursive_mutex_init(recursive_mutex_type* m) { return InitializeCriticalSection(m), 0; }
 int recursive_mutex_lock(recursive_mutex_type* m) { return EnterCriticalSection(m), 0; }
 bool recursive_mutex_trylock(recursive_mutex_type* m) { return TryEnterCriticalSection(m) != 0; }

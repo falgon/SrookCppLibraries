@@ -27,7 +27,7 @@ public:
 
     void lock() SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
     {
-        const int e = thread::detail::recursive_mutex_lock(&m);
+        const int e = threading::detail::recursive_mutex_lock(&m);
         if (e) {
             using namespace
 #if SROOK_HAS_INCLUDE(<system_error>)
@@ -42,12 +42,12 @@ public:
 
     bool try_lock() SROOK_NOEXCEPT_TRUE SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
-        return thread::detail::recursive_mutex_trylock(&m);
+        return threading::detail::recursive_mutex_trylock(&m);
     }
 
     void unlock() SROOK_NOEXCEPT_TRUE SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
     {
-        thread::detail::recursive_mutex_unlock(&m);
+        threading::detail::recursive_mutex_unlock(&m);
     }
 
     SROOK_ATTRIBUTE_INLINE_VISIBILITY native_handle_type native_handle() SROOK_NOEXCEPT_TRUE

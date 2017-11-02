@@ -21,7 +21,7 @@
 #   include <ctime>
 
 namespace srook {
-namespace thread {
+namespace threading {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 

@@ -55,7 +55,7 @@ SROOK_STRONG_ENUM_BEGIN(cv_status) {
 SROOK_STRONG_ENUM_EPILOG(cv_status)
 
 class SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT condition_variable : private noncopyable<condition_variable> {
-    thread::detail::cond_var_type cv CONDVAR_INLINE_INIT;
+    threading::detail::cond_var_type cv CONDVAR_INLINE_INIT;
 
 public:
     SROOK_ATTRIBUTE_INLINE_VISIBILITY SROOK_CONSTEXPR condition_variable() SROOK_NOEXCEPT_TRUE
@@ -63,22 +63,22 @@ public:
         SROOK_DEFAULT
 #    else
     {
-        cv = (thread::detail::cond_var_type)SROOK_COND_VAR_INITIALIZER;
+        cv = (threading::detail::cond_var_type)SROOK_COND_VAR_INITIALIZER;
     }
 #    endif
-        ~condition_variable()
+    ~condition_variable()
     {
-        thread::detail::condvar_destroy(&cv);
+        threading::detail::condvar_destroy(&cv);
     }
 
     void notify_one() SROOK_NOEXCEPT_TRUE
     {
-        thread::detail::condvar_signal(&cv);
+        threading::detail::condvar_signal(&cv);
     }
 
     void notify_all() SROOK_NOEXCEPT_TRUE
     {
-        thread::detail::condvar_broadcast(&cv);
+        threading::detail::condvar_broadcast(&cv);
     }
 
 #    define THROW_SYSTEM_ERR(SYSLIB, ERRC, MES) \
@@ -99,7 +99,7 @@ public:
             THROW_SYSTEM_ERR_CODE(boost::system, EPERM, condition_variable::wait: mutex not locked)
 #    endif
                 ;
-		const int ec = thread::detail::condvar_wait(&cv, lk.mutex()->native_handle());
+		const int ec = threading::detail::condvar_wait(&cv, lk.mutex()->native_handle());
 		if(ec) 
 #    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 			THROW_SYSTEM_ERR_CODE(std, ec, condition_variable wait failed)
@@ -134,13 +134,13 @@ public:
 
 	template <class Clock, class Duration, class Pred>
 	SROOK_ATTRIBUTE_METHOD_TEMPLATE_IMPLICIT_INSTANTIATION_VIS_DEFAULT
-	cv_status wait_until(unique_lock<mutex>& lk, const detail::included_type::chrono::time_point<Clock, Duration>& t, PRED_TYPE pred)
+	bool wait_until(unique_lock<mutex>& lk, const detail::included_type::chrono::time_point<Clock, Duration>& t, PRED_TYPE pred)
 	{
 		SROOK_STATIC_ASSERT(is_callable<Pred>::value, "Predicate must be callable");
 		while(!pred()) {
 			if (wait_until(lk, t) == cv_status::timeout) return pred();
 		}
-		return cv_status::timeout;
+		return true;
 	}
 #    undef PRED_TYPE
 
@@ -190,7 +190,7 @@ private:
 		nanoseconds d = tp.time_since_epoch();
 		if (d > nanoseconds(0x59682F000000E941)) d = nanoseconds(0x59682F000000E941);
 
-		thread::detail::thread_time_type ts;
+		threading::detail::thread_time_type ts;
 		seconds s = duration_cast<seconds>(d);
 
 		typedef
@@ -217,7 +217,7 @@ private:
 			ts.tv_nsec = detail::included_type::giga::num - 1;
 		}
 
-		const int ec = thread::detail::condvar_timedwait(&cv, lk.mutex()->native_handle(), &ts);
+		const int ec = threading::detail::condvar_timedwait(&cv, lk.mutex()->native_handle(), &ts);
 		if (ec != 0 && ec != ETIMEDOUT) 
 #    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 			THROW_SYSTEM_ERR_CODE(std, ec, condition_variable timed_wait failed)

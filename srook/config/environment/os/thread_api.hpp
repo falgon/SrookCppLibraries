@@ -32,10 +32,15 @@
 #			ifdef BSD
 #				include <sys/sysctl.h>
 #			endif
+#           if defined(__linux__) && !defined(SROOK_CONFIG_USE_PTHREADS_NUMS_PROCESSORS_NP)
+#               include <sys/sysinfo.h>
+#               define SROOK_SYSTEM_NPROCS 1
+#           endif
 #		endif
 #		if defined(__unix__) || (defined(__APPLE__) &&\
 	   	defined(__MACH__)) || defined(__CloudABI__) || defined(__Fuchsia__)
 #			include <unistd.h>
+#			define SROOK_ENV_HAS_UNISTD 1
 #		endif
 #		if defined(_POSIX_TIMEOUTS) &&\
 		(_POSIX_TIMEOUTS - 200112L) >= 0L &&\

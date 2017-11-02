@@ -2,13 +2,8 @@
 #ifndef INCLUDED_SROOK_THREAD_DETAIL_LOCK_TAGS_HPP
 #define INCLUDED_SROOK_THREAD_DETAIL_LOCK_TAGS_HPP
 
-#include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
-#include <srook/config/cpp_predefined/macro_names.hpp>
-#include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/feature/inline_variable.hpp>
-#include <srook/config/feature/constexpr.hpp>
-#include <srook/config/feature/default.hpp>
-#include <srook/config/feature/explicit.hpp>
+#include <srook/config/cpp_predefined.hpp>
+#include <srook/config/feature.hpp>
 #include <srook/config/attribute/visibility.hpp>
 
 namespace srook {

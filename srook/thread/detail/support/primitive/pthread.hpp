@@ -20,13 +20,11 @@
 #    include <srook/limits/numeric_limits.hpp>
 #    include <srook/thread/detail/support/types.hpp>
 #    include <srook/utility/declval.hpp>
-#    if SROOK_HAS_INCLUDE(<chrono>)
+#    if SROOK_HAS_INCLUDE(<chrono>) && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #        include <chrono>
 #    elif SROOK_HAS_INCLUDE(<boost/chrono.hpp>)
 #        include <boost/chrono.hpp>
 #    endif
-
-//SROOK_PUSH_MACROS
 
 #    ifdef min
 #        undef min
@@ -36,7 +34,7 @@
 #    endif
 
 namespace srook {
-namespace thread {
+namespace threading {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
@@ -51,6 +49,40 @@ namespace detail {
 #        else
 #            define SROOK_CPP03_AUTO(x) x
 #        endif
+
+namespace ext {
+
+static inline int thread_active_p ()
+{
+	static void* const p = (void*)&pthread_create;
+	return p != 0;
+}
+
+} // namespace ext
+
+static inline int get_nprocs()
+{
+#if defined(PTW32_VERSION) || defined(__hpux) && !defined(SROOK_SYSTEM_NPROCS)
+	return pthread_num_processors_np();
+#elif defined(__APPLE__) || defined(__FreeBSD__)
+	int c;
+	std::size_t size = sizeof(c);
+	return sysctlbyname("hw.ncpu", &c, &size, NULL, 0) ? 0 : c;
+#elif defined(SROOK_ENV_HAS_UNISTD)
+	const int c = sysconf(_SC_NPROCESSORS_ONLN);
+	return (c > 0) ? c : 0;
+#elif defined(__GLIBC__)
+	return get_nprocs();
+#elif defined(CTL_HW) && defined(HW_NCPU)
+	unsigned n;
+	int mib[2] = {CTL_HW, HW_NCPU};
+	std::size_t s = sizeof(n);
+	sysctl(mib, 2, &n, &s, 0, 0);
+	return n;
+#else
+	return 0;
+#endif
+}
 
 static int recursive_mutex_init(recursive_mutex_type* m)
 {
@@ -194,10 +226,9 @@ static void thread_yield()
                         ;                                                                                       \
                 }
 
-#            if SROOK_HAS_INCLUDE(<chrono>)
+#            if SROOK_HAS_INCLUDE(<chrono>) && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 DEF_THREAD_SLEEP_FOR(std)
-#            endif
-#            if !SROOK_HAS_INCLUDE(<chrono>) && SROOK_HAS_INCLUDE(<boost/chrono.hpp>)
+#            elif SROOK_HAS_INCLUDE(<boost/chrono.hpp>)
 DEF_THREAD_SLEEP_FOR(boost)
 #            endif
 #            undef DEF_THREAD_SLEEP_FOR
@@ -225,7 +256,6 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace thread
 } // namespace srook
 
-//SROOK_POP_MACROS
 #        endif
 #    else
 #        error "This environment is not supported multi threading"

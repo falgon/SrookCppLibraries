@@ -26,9 +26,7 @@ struct invoke_result<typename voider<decltype(library_concepts::INVOKE(declval<F
 } // namespace detail
 
 template <class F, class... ArgTypes>
-struct invoke_result : detail::invoke_result<void, F, ArgTypes...> {
-	typedef typename detail::invoke_result<void, F, ArgTypes...>::type type;
-};
+struct invoke_result : detail::invoke_result<void, F, ArgTypes...> {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

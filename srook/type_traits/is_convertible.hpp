@@ -4,6 +4,7 @@
 
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/feature/decltype.hpp>
 #include <srook/type_traits/is_array.hpp>
 #include <srook/type_traits/is_function.hpp>
 #include <srook/type_traits/is_void.hpp>
@@ -25,13 +26,13 @@ struct is_convertible_impl<From, To, false> {
 private:
     template <class To1>
     static void test(To1);
-    template <class From1, class To1, typename = decltype(test<To1>(declval<From>()))>
+    template <class From1, class To1, typename = SROOK_DECLTYPE((test<To1>(declval<From>())))>
     static SROOK_TRUE_TYPE test(int);
     template <class, class>
     static SROOK_FALSE_TYPE test(...);
 
 public:
-    typedef decltype(test<From, To>(0)) type;
+    typedef SROOK_DECLTYPE((test<From, To>(0))) type;
 };
 
 } // namespace detail

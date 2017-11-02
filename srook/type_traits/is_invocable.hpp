@@ -1,7 +1,7 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_INVOCABLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_INVOCABLE_HPP
-#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
@@ -12,6 +12,8 @@
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/utility/declval.hpp>
 #include <srook/utility/void_t.hpp>
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
 namespace srook {
 namespace type_traits {
@@ -45,4 +47,5 @@ static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_invocable_v = is_invocable<
 
 } // namespace srook
 
+#endif
 #endif

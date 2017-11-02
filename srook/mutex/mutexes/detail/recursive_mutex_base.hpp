@@ -21,13 +21,6 @@
 #        include <boost/system/system_error.hpp>
 #    endif
 
-#    ifdef min
-#        undef min
-#    endif
-#    ifdef max
-#        undef max
-#    endif
-
 #    if SROOK_HAS_THREADS
 #        if !SROOK_THREAD_SAFETY_ANNOTATION
 #            if SROOK_HAS_THREAD_SAFETY_ANNOTATIONS
@@ -50,7 +43,7 @@ SROOK_INLINE_NAMESPACE(v1)
 class SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT SROOK_THREAD_SAFETY_ANNOTATION(capability("mutex")) 
 recursive_mutex_base : private noncopyable<recursive_mutex_base> {
 protected:
-    typedef thread::detail::recursive_mutex_type native_type;
+    typedef threading::detail::recursive_mutex_type native_type;
     native_type m SROOK_RECURSIVE_MUTEX_INIT;
 #undef SROOK_MUTEX_INIT
 public:
@@ -58,12 +51,12 @@ public:
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 		: m(SROOK_RECURSIVE_MUTEX_INITIALIZER)		
 #endif
-	{
-		thread::detail::recursive_mutex_init(&m);
-	}
+    {
+        threading::detail::recursive_mutex_init(&m);
+    }
 	~recursive_mutex_base() SROOK_NOEXCEPT_TRUE
     {
-		thread::detail::recursive_mutex_destroy(&m);
+        threading::detail::recursive_mutex_destroy(&m);
     }
 };
 
