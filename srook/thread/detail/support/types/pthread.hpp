@@ -32,6 +32,10 @@ typedef pthread_once_t exec_once_flag_type;
 typedef pthread_t thread_id_type;
 typedef pthread_t thread_type;
 typedef pthread_key_t tls_key_type;
+typedef pthread_mutexattr_t mutexattr_type;
+typedef pthread_attr_t attr_type;
+typedef pthread_condattr_t condattr_type;
+
 
 typedef 
 // Not implemented yet in GCC 7.2.0...

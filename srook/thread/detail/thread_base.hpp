@@ -261,12 +261,13 @@ private:
 
     template <class Callable>
     struct States_impl SROOK_FINAL : public States {
-        Callable f_;
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+		Callable f_;
         States_impl(Callable&& f) : f_(srook::forward<Callable>(f))
         {
         }
 #else
+        const Callable& f_;
         States_impl(const Callable& f) : f_(f)
         {
         }

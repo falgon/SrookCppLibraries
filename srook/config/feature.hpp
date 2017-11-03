@@ -14,4 +14,5 @@
 #include <srook/config/feature/strong_enum.hpp>
 #include <srook/config/feature/final.hpp>
 #include <srook/config/feature/override.hpp>
+#include <srook/config/feature/thread_local.hpp>
 #endif

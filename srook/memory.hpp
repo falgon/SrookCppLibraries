@@ -7,4 +7,5 @@
 #include <srook/memory/addressof.hpp>
 #include <srook/memory/utility/aggregate_adaptor.hpp>
 #include <srook/memory/utility/checked_delete.hpp>
+#include <srook/memory/utility/load.hpp>
 #endif
