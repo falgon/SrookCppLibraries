@@ -2,8 +2,9 @@
 
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_SWAP_ABLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_SWAP_ABLE_HPP
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <cstddef>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
 #include <type_traits>
@@ -131,4 +132,5 @@ SROOK_INLINE_VARIABLE constexpr bool is_nothrow_swappable_with_v = is_nothrow_sw
 
 } // namespace srook
 
+#endif
 #endif

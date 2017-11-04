@@ -5,6 +5,7 @@
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
+#include <srook/config/feature/decltype.hpp>
 #include <srook/type_traits/integral_constant.hpp>
 #include <srook/type_traits/is_base_of.hpp>
 #include <srook/type_traits/is_default_constructible.hpp>
@@ -28,7 +29,7 @@ struct is_constructible;
 namespace detail {
 
 struct is_direct_constructible_impl_ {
-    template <class T, class Arg, class = decltype(::new T(declval<Arg>()))>
+    template <class T, class Arg, class = SROOK_DECLTYPE(::new T(declval<Arg>()))>
     static SROOK_TRUE_TYPE test(int);
 
     template <class, class>
@@ -37,7 +38,7 @@ struct is_direct_constructible_impl_ {
 
 template <class T, class Arg>
 struct is_direct_constructible_impl : public is_direct_constructible_impl_ {
-    typedef decltype(test<T, Arg>(0)) type;
+    typedef SROOK_DECLTYPE((test<T, Arg>(0))) type;
 };
 
 template <class T, class Arg>
@@ -55,7 +56,7 @@ struct is_base_to_derived_reference<From, To, true> {
     typedef integral_constant<bool,
                               (!is_same<src_type, dst_type>::value) && is_base_of<src_type, dst_type>::value && (!is_constructible<dst_type, From>::value)>
         type;
-    static SROOK_CONSTEXPR bool value = type::value;
+    static SROOK_CONSTEXPR_OR_CONST bool value = type::value;
 };
 
 template <class From, class To>
@@ -71,7 +72,7 @@ struct is_lvalue_to_rvalue_reference<From, To, true> {
     typedef typename remove_cv<typename remove_reference<From>::type>::type src_type;
     typedef typename remove_cv<typename remove_reference<To>::type>::type dst_type;
     typedef integral_constant<bool, ((!is_function<To>::value) && (is_same<src_type, dst_type>::value || is_base_of<dst_type, src_type>::value))> type;
-    static constexpr bool value = type::value;
+    static SROOK_CONSTEXPR_OR_CONST bool value = type::value;
 };
 
 template <class From, class To>
@@ -93,7 +94,7 @@ struct is_direct_constructible : public is_direct_constructible_new<T, Arg>::typ
 };
 
 struct is_nary_constructible_impl_ {
-    template <class T, class... Args, class = decltype(T(declval<Args>()...))>
+    template <class T, class... Args, class = SROOK_DECLTYPE(T(declval<Args>()...))>
     static SROOK_TRUE_TYPE test(int);
     template <class, class...>
     static SROOK_FALSE_TYPE test(...);
@@ -101,7 +102,7 @@ struct is_nary_constructible_impl_ {
 
 template <class T, class... Args>
 struct is_nary_constructible_impl : public is_nary_constructible_impl_ {
-    typedef decltype(is_nary_constructible_impl_::test<T, Args...>(0)) type;
+    typedef SROOK_DECLTYPE((is_nary_constructible_impl_::test<T, Args...>(0))) type;
 };
 
 template <class T, class... Args>
@@ -134,7 +135,7 @@ using type_traits::is_constructible;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T, class... Args>
-static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_constructible_v = is_constructible<T, Args...>::value;
+static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST bool is_constructible_v = is_constructible<T, Args...>::value;
 #endif
 
 } // namespace srook

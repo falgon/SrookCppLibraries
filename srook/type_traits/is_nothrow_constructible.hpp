@@ -25,7 +25,14 @@ struct is_nothrow_constructible_impl<T> : public is_nothrow_default_constructibl
 } // namespace detail
 
 template <class T, class... Args>
-struct is_nothrow_constructible : public detail::Land<is_constructible<T, Args...>, detail::is_nothrow_constructible_impl<T, Args...> > {
+struct is_nothrow_constructible : 
+	public 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+	detail::Land<
+#else
+	detail::Land_2<
+#endif
+	is_constructible<T, Args...>, detail::is_nothrow_constructible_impl<T, Args...> > {
 };
 
 SROOK_INLINE_NAMESPACE_END

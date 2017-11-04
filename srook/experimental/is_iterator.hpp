@@ -1,6 +1,8 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_IS_ITERATOR
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <iterator>
 #include <srook/type_traits/conditional.hpp>
 #include <srook/type_traits/true_false_type.hpp>
@@ -57,4 +59,5 @@ constexpr bool is_iterator_v<
 } // namespace mpl
 } // namespace experimental
 } // namespace srook
+#endif
 #endif

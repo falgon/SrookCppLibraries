@@ -1,9 +1,10 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <iterator>
 #include <srook/config/compiler_version.hpp>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/experimental/is_iterator.hpp>
 #include <srook/type_traits/true_false_type.hpp>
@@ -66,4 +67,5 @@ constexpr bool has_iterator_v = detail::has_iterator<T, Default>::value;
 SROOK_INLINE_NAMESPACE_END
 SROOK_INLINE_NAMESPACE_END
 } // namespace srook
+#endif
 #endif

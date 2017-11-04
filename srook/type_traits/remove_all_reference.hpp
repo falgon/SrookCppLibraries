@@ -1,6 +1,8 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_REMOVE_ALL_REFERENCES
 #define INCLUDED_SROOK_TYPE_TRAITS_REMOVE_ALL_REFERENCES
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/mpl/variadic_types/algorithm/concat.hpp>
@@ -38,4 +40,5 @@ using remove_all_reference_t = typename type_traits::detail::remove_all_referenc
 #endif
 
 } // namespace srook
+#endif
 #endif

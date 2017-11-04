@@ -18,9 +18,7 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class L1, class L2, class... Ls>
 void lock(L1& l1, L2& l2, Ls&... ls)
 {
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 	SROOK_STATIC_ASSERT(is_lockable<L1>::value && is_lockable<L2>::value && conjunction<is_lockable<Ls>...>::value, "Arguments must be lockable");
-#endif
 	for(int index = 0;; index = 0) {
 		unique_lock<L1> l(l1);
 		detail::try_locker<0, sizeof...(Ls) != 0>::do_try_lock(std::forward_as_tuple(l2, ls...), index);

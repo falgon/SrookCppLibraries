@@ -22,7 +22,13 @@ struct is_nothrow_default_constructible_impl;
 
 template <class T>
 struct is_nothrow_default_constructible_impl<T, true>
-    : public Land<is_array_known_bounds<T>, is_nothrow_default_constructible_atom<typename remove_all_extents<T>::type> > {
+    : public 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+	Land<
+#else
+	Land_2<
+#endif
+	is_array_known_bounds<T>, is_nothrow_default_constructible_atom<typename remove_all_extents<T>::type> > {
 };
 
 template <class T>

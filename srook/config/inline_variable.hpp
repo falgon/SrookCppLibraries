@@ -1,11 +1,5 @@
+// Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONFIG_INLINE_VARIABLE_HPP
 #define INCLUDED_SROOK_CONFIG_INLINE_VARIABLE_HPP
-#include<srook/config/cpp_predefined/feature_testing.hpp>
-
-#if SROOK_CPP_INLINE_VARIABLES
-#	define SROOK_INLINE_VARIABLE inline
-#else
-#	define SROOK_INLINE_VARIABLE
-#endif
-
+#include<srook/config/feature/inline_variable.hpp>
 #endif

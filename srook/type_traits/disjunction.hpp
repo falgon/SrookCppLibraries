@@ -1,6 +1,6 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_TYPE_TRAITS_CONJUNCTION_HPP
-#define INCLUDED_SROOK_TYPE_TRAITS_CONJUNCTION_HPP
+#ifndef INCLUDED_SROOK_TYPE_TRAITS_DISJUNCTION_HPP
+#define INCLUDED_SROOK_TYPE_TRAITS_DISJUNCTION_HPP
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/constexpr.hpp>
@@ -14,17 +14,17 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class... Ts>
-struct conjunction : detail::Land<Ts...> {};
+struct disjunction : detail::Lor<Ts...> {};
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
-using type_traits::detail::conjunction;
+using type_traits::detail::disjunction;
 
 #    if SROOK_CPP_VARIABLE_TEMPLATES
 template <class... B>
-SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool conjunction_v = type_traits::detail::conjunction<B...>::value;
+SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool disjunction_v = type_traits::detail::disjunction<B...>::value;
 #    endif
 
 } // namespace srook

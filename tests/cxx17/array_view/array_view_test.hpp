@@ -2,6 +2,7 @@
 #define INCLUDED_SROOK_ARRAY_VIEW_TEST_HPP
 
 #include <srook/cxx17/mpl/array_view.hpp>
+#include <srook/config/attribute/maybe_unused.hpp>
 #include <srook/type_traits/integral_constant.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/conjunction.hpp>

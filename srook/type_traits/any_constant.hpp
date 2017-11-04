@@ -1,7 +1,8 @@
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_TYPE_TRAITS_ANY_CONSTANT_HPP
 #include <cstdint>
-#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/inline_variable.hpp>
 #include <srook/config/noexcept_detection.hpp>
@@ -286,5 +287,5 @@ SROOK_INLINE_VARIABLE constexpr T any_constant_v = any_constant<T, Value, Callab
 #endif
 
 } // namespace srook
-
+#endif
 #endif

@@ -1,7 +1,8 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITAS_IS_TUPLE_HPP
-#include <srook/config/cpp_predefined/feature_testing.hpp>
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/decay.hpp>
@@ -34,4 +35,5 @@ constexpr bool is_tuple_v = type_traits::detail::is_tuple<T, V>::value;
 #endif
 
 } // namespace srook
+#endif
 #endif

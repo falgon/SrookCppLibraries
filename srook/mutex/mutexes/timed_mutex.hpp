@@ -2,8 +2,8 @@
 #ifndef INCLUDED_SROOK_MUTEX_TIMED_MUTEX_HPP
 #define INCLUDED_SROOK_MUTEX_TIMED_MUTEX_HPP
 
-#include <srook/mutex/mutexes/mutex.hpp>
 #include <srook/mutex/mutexes/detail/timed_mutex_base.hpp>
+#include <srook/mutex/mutexes/mutex.hpp>
 #include <srook/type_traits/is_nothrow_default_constructible.hpp>
 #include <srook/type_traits/library_concepts/is_mutex.hpp>
 #if !SROOK_PTHREAD_TIMEOUTS_SUPPORT
@@ -46,7 +46,7 @@ public:
     {}
 #    endif
 
-    ~timed_mutex()
+        ~timed_mutex()
     {
         assert(!locked);
     }
@@ -55,16 +55,16 @@ public:
 
     timed_mutex& operator=(const timed_mutex&) SROOK_EQ_DELETE
 
-    void lock() 
-	SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
+    void lock()
+    SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
     {
         unique_lock<mutex> lk(m);
         cv.wait(lk, LOCKED_CHECK);
         locked = true;
     }
 
-    bool try_lock() SROOK_NOEXCEPT_TRUE 
-	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    bool try_lock() SROOK_NOEXCEPT_TRUE
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         unique_lock<mutex> lk(m);
         if (locked) return false;
@@ -73,7 +73,7 @@ public:
     }
 
     template <class Rep, class Period>
-    bool try_lock_for(const includes::chrono::duration<Rep, Period>& rtime) 
+    bool try_lock_for(const includes::chrono::duration<Rep, Period>& rtime)
     SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         unique_lock<mutex> lk(m);
@@ -90,7 +90,7 @@ public:
         return locked = true;
     }
 
-    void unlock() SROOK_NOEXCEPT_TRUE 
+    void unlock() SROOK_NOEXCEPT_TRUE
     SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
     {
         lock_guard<mutex> lk(m);
@@ -99,24 +99,27 @@ public:
         cv.notify_one();
     }
 
-    SROOK_ATTRIBUTE_INLINE_VISIBILITY 
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
     native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
     {
         return m.native_handle();
     }
 
-#if SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT && !SROOK_CPP_LAMBDAS
+#    if SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT && !SROOK_CPP_LAMBDAS
 private:
     struct SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT LockedCheck {
+        SROOK_ATTRIBUTE_INLINE_VISIBILITY
         explicit LockedCheck(timed_mutex* this_ptr) SROOK_NOEXCEPT_TRUE : this_ptr_(this_ptr) {}
-        inline const bool operator()() const SROOK_NOEXCEPT_TRUE { return !this_ptr_->locked; }
+        SROOK_ATTRIBUTE_INLINE_VISIBILITY
+        const bool operator()() const SROOK_NOEXCEPT_TRUE { return !this_ptr_->locked; }
+
     private:
         const timed_mutex* const this_ptr_;
     };
-#endif
+#    endif
 };
 
-#undef LOCKED_CHECK
+#    undef LOCKED_CHECK
 #    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 SROOK_STATIC_ASSERT(is_mutex<mutex>::value&& is_nothrow_default_constructible<mutex>::value,
                     "the default constructor for srook::mutex must be nothrow");
@@ -134,47 +137,48 @@ public:
     ~timed_mutex() SROOK_DEFAULT
 
     void lock()
-	SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
+    SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
     {
         const int e = threading::detail::mutex_lock(&m);
         if (e) includes::throw_system_err(e);
     }
 
     bool try_lock() SROOK_NOEXCEPT_TRUE
-	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         return threading::detail::mutex_trylock(&m);
     }
 
     template <class Rep, class Period>
     bool try_lock_for(const includes::chrono::duration<Rep, Period>& rtime)
-	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         return invoke_try_lock_for(rtime);
     }
 
     template <class Clock, class Duration>
     bool try_lock_until(const includes::chrono::time_point<Clock, Duration>& atime)
-	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
-		return invoke_try_lock_until(atime);
+        return invoke_try_lock_until(atime);
     }
 
-	void unlock()
+    void unlock()
     SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
-	{
-		threading::detail::mutex_unlock(&m);
-	}
+    {
+        threading::detail::mutex_unlock(&m);
+    }
 
-    SROOK_ATTRIBUTE_INLINE_VISIBILITY 
-	native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
-	{
-		return &m;
-	}
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
+    native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
+    {
+        return &m;
+    }
+
 private:
     friend class timed_mutex_base<timed_mutex>;
     bool timedlock(const threading::detail::thread_time_type& ts)
-	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         return !threading::detail::mutex_timedlock(&m, &ts);
     }

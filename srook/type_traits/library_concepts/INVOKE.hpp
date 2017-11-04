@@ -2,6 +2,8 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_CONCEPT_CXX17_INVOKE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_CONCEPT_CXX17_INVOKE_HPP
 
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <functional>
 #include <utility>
 #include <srook/type_traits/true_false_type.hpp>
@@ -75,4 +77,5 @@ auto INVOKE(F&& f, Args&&... args)
 } // namespace type_traits
 } // namespace srook
 
+#endif
 #endif

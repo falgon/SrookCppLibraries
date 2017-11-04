@@ -1,6 +1,8 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_CONCAT_HPP
 #define INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_CONCAT_HPP
+#include <srook/config/cpp_predefined.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <cstddef>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
@@ -48,4 +50,5 @@ using Concat_t = typename variadic_types::detail::Concat<L, R...>::type;
 SROOK_INLINE_NAMESPACE_END
 
 } // namespace srook
+#endif
 #endif

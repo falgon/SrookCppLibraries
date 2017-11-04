@@ -17,18 +17,17 @@ struct is_character
 };
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
-
 template <typename T>
 SROOK_INLINE_VARIABLE constexpr bool is_character_v = is_character<T>::value;
-
 #endif
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 using type_traits::is_character;
+#if SROOK_CPP_VARIABLE_TEMPLATES
 using type_traits::is_character_v;
-
+#endif
 } // namespace srook
 
 #endif

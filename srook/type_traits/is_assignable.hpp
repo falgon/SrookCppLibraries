@@ -2,9 +2,7 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_ASSIGNABLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_ASSIGNABLE_HPP
 #include <srook/config/cpp_predefined/feature_testing.hpp>
-#include <srook/config/feature/constexpr.hpp>
-#include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/feature/inline_variable.hpp>
+#include <srook/config/feature.hpp>
 #include <srook/type_traits/detail/sfinae_types.hpp>
 #include <srook/type_traits/integral_constant.hpp>
 #include <srook/utility/declval.hpp>
@@ -17,12 +15,12 @@ namespace detail {
 template <class T, class U>
 class is_assignable_impl : public sfinae_types {
     template <class T1, class U1>
-    static decltype(srook::declval<T1>() = srook::declval<U1>(), one()) test(int);
+    static SROOK_DECLTYPE((srook::declval<T1>() = srook::declval<U1>(), one())) test(int);
     template <class, class>
     static two test(...);
 
 public:
-    static constexpr bool value = sizeof(test<T, U>(0)) == 1;
+    static SROOK_CONSTEXPR_OR_CONST bool value = sizeof(test<T, U>(0)) == 1;
 };
 
 } // namespace detail

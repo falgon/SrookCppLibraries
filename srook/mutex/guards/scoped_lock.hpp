@@ -4,15 +4,17 @@
 #include <srook/config/attribute/maybe_unused.hpp>
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature.hpp>
-#include <srook/utility/noncopyable.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/mutex/guards/detail/lock_tags.hpp>
+#include <srook/utility/noncopyable.hpp>
 
 #if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && SROOK_HAS_INCLUDE(<boost/thread.hpp>)
-#    define SCOPED_LOCK_BLOCK_BOOST_TAG \
+#    define SCOPED_LOCK_BLOCK_BOOST_TAG   \
+        SROOK_ATTRIBUTE_INLINE_VISIBILITY \
         explicit scoped_lock(boost::adopt_lock_t, mutex_type& m) SROOK_NOEXCEPT_TRUE : m_devices(m) {}
 #else
-#    define SCOPED_LOCK_BLOCK_BOOST_TAG \
+#    define SCOPED_LOCK_BLOCK_BOOST_TAG   \
+        SROOK_ATTRIBUTE_INLINE_VISIBILITY \
         explicit scoped_lock(std::adopt_lock_t, mutex_type& m) SROOK_NOEXCEPT_TRUE : m_devices(m) {}
 #endif
 
@@ -59,13 +61,16 @@ public:
 
     typedef srook::pack<Mutexes...> mutexes_type;
 
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
     explicit scoped_lock(Mutexes&... m) : m_devices(std::tie(m...))
     {
         lock(m...);
     }
 
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
     explicit scoped_lock(adopt_lock_t, Mutexes&... m) SROOK_NOEXCEPT_TRUE : m_devices(std::tie(m...)) {}
 
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
     explicit scoped_lock(std::adopt_lock_t, Mutexes&... m) SROOK_NOEXCEPT_TRUE : m_devices(std::tie(m...)) {}
 
     // boost::unique_lock is not supported
@@ -78,9 +83,10 @@ public:
         }
     };
 
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY
     ~scoped_lock()
     {
-		srook::apply(Unlocker(), m_devices);
+        srook::apply(Unlocker(), m_devices);
     }
 
 private:
@@ -90,18 +96,18 @@ private:
 template <>
 class scoped_lock<> : private noncopyable<scoped_lock<> > {
 public:
-    explicit scoped_lock() SROOK_DEFAULT;
-    explicit scoped_lock(adopt_lock_t) SROOK_NOEXCEPT_TRUE {}
-    ~scoped_lock() SROOK_DEFAULT;
+    explicit scoped_lock() SROOK_DEFAULT
+        explicit scoped_lock(adopt_lock_t) SROOK_NOEXCEPT_TRUE {}
+    ~scoped_lock() SROOK_DEFAULT
 };
 
 template <class Mutex>
 class scoped_lock<Mutex> : DEF_SCOPED_LOCK_BLOCK;
 
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_DEDUCTION_GUIDES
+#    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_DEDUCTION_GUIDES
 template <class... M>
-scoped_lock(scoped_lock<M...>) -> scoped_lock<M...>;
-#endif
+scoped_lock(scoped_lock<M...>)->scoped_lock<M...>;
+#    endif
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace mutexes

@@ -4,15 +4,17 @@
 
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature/exception.hpp>
+#include <srook/mutex/includes/lib.hpp>
 #include <srook/mutex/mutexes/detail/mutex_base.hpp>
-#include <srook/type_traits/library_concepts/is_mutex.hpp>
 #include <srook/type_traits/is_nothrow_default_constructible.hpp>
+#include <srook/type_traits/library_concepts/is_mutex.hpp>
 
 namespace srook {
 namespace mutexes {
 SROOK_INLINE_NAMESPACE(v1)
 
-class SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT SROOK_THREAD_SAFETY_ANNOTATION(capability("mutex"))
+class SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT
+SROOK_THREAD_SAFETY_ANNOTATION(capability("mutex"))
     mutex : private mutex_base {
 public:
     typedef native_type* native_handle_type;
@@ -26,40 +28,37 @@ public:
 
     mutex& operator=(const mutex&) SROOK_EQ_DELETE
 
-    void lock() SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
+    void lock() 
+    SROOK_THREAD_SAFETY_ANNOTATION(acquire_capability())
     {
         const int e = threading::detail::mutex_lock(&m);
-        if (e) {
-            using namespace
-#if SROOK_HAS_INCLUDE(<system_error>)
-                std
-#elif SROOK_HAS_INCLUDE(<boost/system/system_error.hpp>)
-                boost::system
-#endif
-                ;
-            SROOK_THROW(system_error(error_code(e, system_category())));
-        }
+        if (e) includes::throw_system_err(e);
     }
 
-    bool try_lock() SROOK_NOEXCEPT_TRUE SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
+    bool try_lock() 
+    SROOK_NOEXCEPT_TRUE 
+    SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
         return threading::detail::mutex_trylock(&m);
     }
 
-    void unlock() SROOK_NOEXCEPT_TRUE SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
+    void unlock() 
+    SROOK_NOEXCEPT_TRUE 
+    SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
     {
         threading::detail::mutex_unlock(&m);
     }
 
-    SROOK_ATTRIBUTE_INLINE_VISIBILITY native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
+    SROOK_ATTRIBUTE_INLINE_VISIBILITY 
+    native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
     {
         return &m;
     }
 };
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-SROOK_STATIC_ASSERT(is_mutex<mutex>::value && is_nothrow_default_constructible<mutex>::value,
-        "the default constructor for srook::mutex must be nothrow");
+SROOK_STATIC_ASSERT(is_mutex<mutex>::value&& is_nothrow_default_constructible<mutex>::value,
+                    "the default constructor for srook::mutex must be nothrow");
 #endif
 
 SROOK_INLINE_NAMESPACE_END
