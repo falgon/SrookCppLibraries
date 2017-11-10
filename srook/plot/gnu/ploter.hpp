@@ -2,73 +2,78 @@
 #ifndef INCLUDED_SROOK_PLOT_GNU_PLOTER_HPP
 #define INCLUDED_SROOK_PLOT_GNU_PLOTER_HPP
 
-#include <cstdio>
 #include <fstream>
 #include <srook/algorithm/for_each.hpp>
-#include <stdexcept>
+#include <srook/config/feature.hpp>
+#include <srook/process.hpp>
+#include <srook/scope/unique_resource.hpp>
+#include <srook/string/string_view.hpp>
 #include <string>
-#include <string_view>
 
 namespace srook {
 namespace plot {
 namespace gnu {
+SROOK_INLINE_NAMESPACE(v1)
 
 struct ploter {
-    constexpr ploter(const char *file) : file_(file) {}
+    constexpr ploter(const char* file) : file_(file) {}
 
-    void output(const std::size_t index_size) noexcept(false)
+    void output(const size_t index_size)
     {
-	using namespace std::string_literals;
+        using namespace std;
+        using namespace std::string_literals;
 
-	std::string str = "plot \"" + std::string(file_) + "\"";
-	for (std::size_t i = 0; i < index_size; ++i) {
-	    str += " index " + std::to_string(i) + ", \"" + std::string(file_) + "\"";
-	}
-	str.erase(std::next(std::end(str),-file_.size()-4),std::end(str));
-	std::cout << str << std::endl;
-	str += "\n";
+        std::string str = "plot \"" + std::string(file_) + "\"";
+        for (size_t i = 0; i < index_size; ++i) {
+            str += " index " + std::to_string(i) + ", \"" + std::string(file_) + "\"";
+        }
+        str.erase(next(end(str), -file_.size() - 4), end(str));
+        cout << str << endl;
+        str += "\n";
 
-	std::FILE *fp = popen("gnuplot", "w");
-	if (fp == nullptr) throw std::runtime_error("could not start gnuplot properly");
-	
-	std::string file_type;
-	std::copy(std::next(std::begin(file_), file_.find(".") + 1), std::end(file_), std::back_inserter(file_type));
-	const std::string first_cmd = "set terminal "s + file_type + "\n"s;
-	const std::string second_cmd = "set output \""s + std::string(file_.data()) + "\"\n"s;
+        const auto resource = srook::make_unique_resource(srook::process::popen("gnuplot", "w"), resource_closer());
 
-	std::fputs(first_cmd.c_str(), fp);
-	std::fputs(second_cmd.c_str(), fp);
-	std::fputs(str.c_str(), fp);
+        std::string file_type;
+        copy(next(begin(file_), file_.find(".") + 1), end(file_), back_inserter(file_type));
+        const std::string first_cmd = "set terminal " s + file_type + "\n" s;
+        const std::string second_cmd = "set output \"" s + std::string(file_.data()) + "\"\n" s;
 
-	std::fflush(fp);
-	pclose(fp);
+        fputs(first_cmd.c_str(), resource.get());
+        fputs(second_cmd.c_str(), resource.get());
+        fputs(str.c_str(), resource.get());
     }
 
-    void output(const char *plt_command) noexcept(false)
+    void output(const char* plt_command)
     {
-	using namespace std::string_literals;
+        using namespace std;
+        using namespace std::string_literals;
 
-	std::FILE *fp = popen("gnuplot", "w");
-	if (fp == nullptr) throw std::runtime_error("could not start gnuplot properly");
-	std::string file_type, plt_cmd = plt_command;
-	plt_cmd += "\n";
+        const auto resource = srook::make_unique_resource(srook::process::popen("gnuplot", "w"), resource_closer());
 
-	std::copy(std::next(std::begin(file_), file_.find(".") + 1), std::end(file_), std::back_inserter(file_type));
-	std::string first_cmd = "set terminal "s + file_type + "\n"s;
-	std::string second_cmd = "set output \""s + std::string(file_.data()) + "\"\n"s;
+        std::string file_type, plt_cmd = plt_command;
+        plt_cmd += "\n";
 
-	std::fputs(first_cmd.c_str(), fp);
-	std::fputs(second_cmd.c_str(), fp);
-	std::fputs(plt_cmd.c_str(), fp);
+        copy(next(begin(file_), file_.find(".") + 1), end(file_), back_inserter(file_type));
+        std::string first_cmd = "set terminal " s + file_type + "\n" s;
+        std::string second_cmd = "set output \"" s + std::string(file_.data()) + "\"\n" s;
 
-	std::fflush(fp);
-	pclose(fp);
+        fputs(first_cmd.c_str(), resource.get());
+        fputs(second_cmd.c_str(), resource.get());
+        fputs(plt_cmd.c_str(), resource.get());
     }
 
 private:
-    const std::string_view file_;
+    struct resource_closer {
+        void operator()(FILE* fp) const
+        {
+            std::fflush(fp);
+            srook::process::pclose(fp);
+        }
+    };
+    const srook::string_view file_;
 };
 
+SROOK_INLINE_NAMESPACE_END
 } // namespace gnu
 } // namespace plot
 } // namespace srook
