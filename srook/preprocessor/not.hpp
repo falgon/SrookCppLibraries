@@ -6,10 +6,10 @@
 #include <srook/preprocessor/concat.hpp>
 
 #ifdef _MSC_VER
-#	define SROOK_PP_INDIRECT(X) X
-#	define SROOK_PP_IS(...) SROOK_PP_INDIRECT(SROOK_PP_AT_2(__VA_ARGS__, 0))
+#    define SROOK_PP_INDIRECT(X) X
+#    define SROOK_PP_IS(...) SROOK_PP_INDIRECT(SROOK_PP_AT_2(__VA_ARGS__, 0))
 #else
-#	define SROOK_PP_IS(...) SROOK_PP_AT_2(__VA_ARGS__, 0)
+#    define SROOK_PP_IS(...) SROOK_PP_AT_2(__VA_ARGS__, 0)
 #endif
 #define SROOK_PP_PROBE() ~, 1
 

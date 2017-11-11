@@ -1,6 +1,8 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_HPP
+#include <srook/type_traits/aligned_storage.hpp>
+#include <srook/type_traits/aligned_union.hpp>
 #include <srook/type_traits/add_const.hpp>
 #include <srook/type_traits/add_cv.hpp>
 #include <srook/type_traits/add_pointer.hpp>

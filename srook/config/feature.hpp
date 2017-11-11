@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_CONIG_FEATURE_HPP
 #define INCLUDED_SROOK_CONIG_FEATURE_HPP
 #include <srook/config/feature/alignas.hpp>
+#include <srook/config/feature/alignof.hpp>
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/feature/decltype.hpp>
 #include <srook/config/feature/default.hpp>
