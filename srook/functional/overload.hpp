@@ -30,14 +30,15 @@ struct wrap_caller {
         SROOK_REQUIRES(
             type_traits::detail::Land<
             type_traits::detail::Lnot<is_base_of<wrap_caller, SROOK_DEDUCED_TYPENAME decay<U>::type> >,
-            is_constructible<F, U> >::value)>
+            is_constructible<F, U> >::value)
+    >
     SROOK_CONSTEXPR wrap_caller(U&& f) : f_(srook::forward<U>(f))
     {}
 #    define DECL_CALLOP_L(X)                                                                    \
         template <class... Ts>                                                                  \
         SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F, Ts...>::type \
         operator()(Ts&&... ts)                                                                  \
-            X SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<F, Ts...>::value))                     \
+        X SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<F, Ts...>::value))                         \
         {                                                                                       \
             return invoke(f_, srook::forward<Ts>(ts)...);                                       \
         }
@@ -49,7 +50,7 @@ struct wrap_caller {
         template <class... Ts>                                                                  \
         SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F, Ts...>::type \
         operator()(Ts&&... ts)                                                                  \
-            X SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<F&&, Ts...>::value))                   \
+        X SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<F&&, Ts...>::value))                       \
         {                                                                                       \
             return invoke(srook::move(f_), srook::forward<Ts>(ts)...);                          \
         }
@@ -67,7 +68,7 @@ struct wrap_caller {
             SROOK_CONSTEXPR wrap_caller(type f) : f_(f) {}                                                                           \
             template <class... Ts, SROOK_REQUIRES(is_equal<pack<Args...>, pack<SROOK_DEDUCED_TYPENAME decay<Ts>::type...> >::value)> \
             SROOK_FORCE_INLINE SROOK_CONSTEXPR R operator()(Ts&&... ts) const                                                        \
-                SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<type, Ts...>::value))                                                     \
+            SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<type, Ts...>::value))                                                         \
             {                                                                                                                        \
                 return invoke(f_, srook::forward<Ts>(ts)...);                                                                        \
             }                                                                                                                        \
@@ -98,7 +99,7 @@ public:
         )
     >
     SROOK_FORCE_INLINE SROOK_CONSTEXPR R operator()(U&& obj, Ts&&... ts)
-        const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<U, Ts...>::value))
+    const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<U, Ts...>::value))
     {
         return (srook::forward<U>(obj).*f_)(srook::forward<Ts>(ts)...);
     }
@@ -111,7 +112,7 @@ public:
         )
     >
     SROOK_FORCE_INLINE SROOK_CONSTEXPR R operator()(std::reference_wrapper<U> ref, Ts&&... ts)
-        const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<SROOK_DECLTYPE((ref.get())), Ts...>::value))
+    const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<SROOK_DECLTYPE((ref.get())), Ts...>::value))
     {
         return (ref.get().*f_)(srook::forward<Ts>(ts)...);
     }
@@ -125,7 +126,7 @@ public:
         )
     >
     SROOK_FORCE_INLINE SROOK_CONSTEXPR R operator()(U&& ptr, Ts&&... ts)
-        const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<U, Ts...>::value))
+    const SROOK_MEMFN_NOEXCEPT((is_nothrow_invocable<U, Ts...>::value))
     {
         return ((*srook::forward<U>(ptr)).*f_)(srook::forward<Ts>(ts)...);
     }

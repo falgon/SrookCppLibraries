@@ -15,11 +15,10 @@ namespace optional_impl {
 inline namespace v1 {
 namespace detail {
 struct nullopt_t {
-    struct init {
-    };
-    constexpr explicit nullopt_t(init) {}
+    enum class Construct { Token };
+    constexpr explicit nullopt_t(Construct) {}
 };
-constexpr nullopt_t nullopt{nullopt_t::init()};
+constexpr nullopt_t nullopt { nullopt_t::Construct::Token };
 
 template <class T>
 struct optional {
@@ -90,7 +89,7 @@ struct optional {
         reset();
         return *this;
     }
-    template <REQUIRES(std::is_copy_constructible<T>::value&& std::is_copy_assignable<T>::value)>
+    template <REQUIRES(std::is_copy_constructible<T>::value && std::is_copy_assignable<T>::value)>
     optional& operator=(const optional& other)
     {
         if (*this && other) {
