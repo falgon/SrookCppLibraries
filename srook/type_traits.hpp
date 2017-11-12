@@ -1,13 +1,13 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_HPP
-#include <srook/type_traits/aligned_storage.hpp>
-#include <srook/type_traits/aligned_union.hpp>
 #include <srook/type_traits/add_const.hpp>
 #include <srook/type_traits/add_cv.hpp>
 #include <srook/type_traits/add_pointer.hpp>
 #include <srook/type_traits/add_rvalue_reference.hpp>
 #include <srook/type_traits/add_volatile.hpp>
+#include <srook/type_traits/aligned_storage.hpp>
+#include <srook/type_traits/aligned_union.hpp>
 #include <srook/type_traits/any_constant.hpp>
 #include <srook/type_traits/bool_constant.hpp>
 #include <srook/type_traits/concepts.hpp>
@@ -41,11 +41,15 @@
 #include <srook/type_traits/is_default_constructible.hpp>
 #include <srook/type_traits/is_destructible.hpp>
 #include <srook/type_traits/is_enum.hpp>
+#include <srook/type_traits/is_equal.hpp>
+#include <srook/type_traits/is_final.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_function.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/is_invocable.hpp>
 #include <srook/type_traits/is_lvalue_reference.hpp>
+#include <srook/type_traits/is_member_function_pointer.hpp>
+#include <srook/type_traits/is_member_object_pointer.hpp>
 #include <srook/type_traits/is_member_pointer.hpp>
 #include <srook/type_traits/is_movable.hpp>
 #include <srook/type_traits/is_move_constructible.hpp>
@@ -53,6 +57,8 @@
 #include <srook/type_traits/is_nothrow_constructible.hpp>
 #include <srook/type_traits/is_nothrow_default_constructible.hpp>
 #include <srook/type_traits/is_nothrow_destructible.hpp>
+#include <srook/type_traits/is_nothrow_invocable.hpp>
+#include <srook/type_traits/is_nothrow_invocable_r.hpp>
 #include <srook/type_traits/is_nothrow_move_constructible.hpp>
 #include <srook/type_traits/is_nullptr.hpp>
 #include <srook/type_traits/is_object.hpp>
@@ -78,6 +84,7 @@
 #include <srook/type_traits/remove_pointer.hpp>
 #include <srook/type_traits/remove_reference.hpp>
 #include <srook/type_traits/remove_volatile.hpp>
+#include <srook/type_traits/result_of.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/type_constant.hpp>
 #endif

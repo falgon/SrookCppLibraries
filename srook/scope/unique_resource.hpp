@@ -79,7 +79,7 @@ public:
           deleter(rhs.get().deleter),
 		  execute_on_destruction(exchange(rhs.get().execute_on_destruction, false))
 #endif
-	{}
+    {}
 
 
     SROOK_ATTRIBUTE_INLINE_VISIBILITY

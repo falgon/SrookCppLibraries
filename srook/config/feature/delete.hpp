@@ -6,9 +6,9 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 
 #if SROOK_CPLUSPLUS11_CONSTANT <= SROOK_CPLUSPLUS
-#	define SROOK_EQ_DELETE = delete;
+#    define SROOK_EQ_DELETE = delete;
 #else
-#	define SROOK_EQ_DELETE ;
+#    define SROOK_EQ_DELETE ;
 #endif
 
 #endif

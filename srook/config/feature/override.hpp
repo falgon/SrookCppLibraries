@@ -5,9 +5,9 @@
 #include <srook/config/cpp_predefined.hpp>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#	define SROOK_OVERRIDE override
+#    define SROOK_OVERRIDE override
 #else
-#	define SROOK_OVERRIDE
+#    define SROOK_OVERRIDE
 #endif
 
 #endif

@@ -19,6 +19,9 @@
 #elif defined(_MSC_VER)
 #	define SROOK_ATTRIBUTE_ALIGNED __declspec((align))
 #	define SROOK_ATTRIBUTE_ALIGNED_X(x) __declspec((align((x))))
+#elif SROOK_COMPILER_IS_ILE
+#	define SROOK_ATTRIBUTE_ALIGNED __align
+#	define SROOK_ATTRIBUTE_ALIGNED_X(x) __align(x)
 #endif
 
 #endif

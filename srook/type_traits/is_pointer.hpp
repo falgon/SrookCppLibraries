@@ -16,17 +16,14 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class>
-struct is_pointer_impl : public SROOK_FALSE_TYPE {
-};
+struct is_pointer_impl : public SROOK_FALSE_TYPE {};
 template <class T>
-struct is_pointer_impl<T*> : public SROOK_TRUE_TYPE {
-};
+struct is_pointer_impl<T*> : public SROOK_TRUE_TYPE {};
 
 } // namespace detail
 
 template <class T>
-struct is_pointer : public detail::is_pointer_impl<typename remove_cv<T>::type>::type {
-};
+struct is_pointer : public detail::is_pointer_impl<typename remove_cv<T>::type>::type {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

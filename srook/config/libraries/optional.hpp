@@ -4,7 +4,7 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 
-#if SROOK_HAS_INCLUDE(<optional>)
+#if SROOK_HAS_INCLUDE(<optional>) && SROOK_CPP_LIB_OPTIONAL
 #	include<optional>
 #	define OPTIONAL std::optional
 #	define NULLOPT_T std::nullopt_t

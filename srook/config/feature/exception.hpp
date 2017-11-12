@@ -5,13 +5,13 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 
 #if SROOK_CPP_EXCEPTIONS
-#	define SROOK_TRY try
-#	define SROOK_CATCH(x) catch(x)
-#	define SROOK_THROW throw
+#    define SROOK_TRY try
+#    define SROOK_CATCH(x) catch (x)
+#    define SROOK_THROW throw
 #else
-#	define SROOK_TRY if (true)
-#	define SROOK_CATCH(x) if (false)
-#	define SROOK_THROW
+#    define SROOK_TRY if (true)
+#    define SROOK_CATCH(x) if (false)
+#    define SROOK_THROW
 #endif
 
 #endif

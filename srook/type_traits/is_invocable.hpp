@@ -22,18 +22,16 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class, class, typename = typename voider<>::type>
-struct is_invocable_impl : SROOK_FALSE_TYPE {
-};
+struct is_invocable_impl : SROOK_FALSE_TYPE {};
 
 template <class Result, class Ret>
-struct is_invocable_impl<Result, Ret, typename voider<typename Result::type>::type> : Lor<is_void<Ret>, is_convertible<typename Result::type, Ret> >::type {
-};
+struct is_invocable_impl<Result, Ret, typename voider<typename Result::type>::type> 
+	: Lor<is_void<Ret>, is_convertible<typename Result::type, Ret> >::type {};
 
 } // namespace detail
 
 template <class Fn, class... Args>
-struct is_invocable : public detail::is_invocable_impl<invoke_result<Fn, Args...>, typename voider<>::type>::type {
-};
+struct is_invocable : public detail::is_invocable_impl<invoke_result<Fn, Args...>, typename voider<>::type>::type {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
