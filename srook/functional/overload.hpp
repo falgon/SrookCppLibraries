@@ -72,10 +72,10 @@ struct wrap_caller {
             {                                                                                                                        \
                 return invoke(f_, srook::forward<Ts>(ts)...);                                                                        \
             }                                                                                                                        \
-        };
+        }
 
-DEF_SPECIALS(R (*)(Args...))
-DEF_SPECIALS(R (&)(Args...))
+DEF_SPECIALS(R (*)(Args...));
+DEF_SPECIALS(R (&)(Args...));
 #    undef DEF_SPECIALS
 
 template <class Memptr, class Class, class R, class... Args>
@@ -166,7 +166,7 @@ struct overload_storage
           type_traits::detail::Land<is_accesable_type<F>, is_class<F>, type_traits::detail::Lnot<is_final<F> > >::value,
           F, wrap_caller<F> >::type {};
 
-template <class F, class... Fs>
+template <class, class...>
 class overloader;
 template <class F>
 class overloader<F> : public overload_storage<F>::type {
@@ -174,8 +174,7 @@ class overloader<F> : public overload_storage<F>::type {
 
 public:
     template <class U>
-    SROOK_CONSTEXPR explicit overloader(U&& f) : base(srook::forward<U>(f))
-    {}
+    SROOK_CONSTEXPR explicit overloader(U&& f) : base(srook::forward<U>(f)) {}
     using base::operator();
 };
 template <class F1, class F2, class... Fs>

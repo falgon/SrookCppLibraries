@@ -54,13 +54,9 @@ srook::cxx03::nullptr_t get_nullptr() { return srook::cxx03::nullptr_t(0); }
 
 #        define SROOK_NULLPTR_T srook::cxx03::nullptr_t
 #        define SROOK_NULLPTR srook::cxx03::get_nullptr()
-#    elif defined(nullptr)
-#        include <srook/config/feature/decltype.hpp>
-#        define SROOK_NULLPTR nullptr
-#        define SROOK_NULLPTR_T SROOK_DECLTYPE(nullptr)
 #    else
-#        define SROOK_NULLPTR_T std::nullptr_t
 #        define SROOK_NULLPTR nullptr
+#        define SROOK_NULLPTR_T std::nullptr_t
 #    endif
 
 #endif

@@ -52,6 +52,7 @@
 #include <srook/type_traits/is_member_object_pointer.hpp>
 #include <srook/type_traits/is_member_pointer.hpp>
 #include <srook/type_traits/is_movable.hpp>
+#include <srook/type_traits/is_move_assignable.hpp>
 #include <srook/type_traits/is_move_constructible.hpp>
 #include <srook/type_traits/is_nothrow_assignable.hpp>
 #include <srook/type_traits/is_nothrow_constructible.hpp>

@@ -4,16 +4,16 @@
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 
-#if SROOK_HAS_INCLUDE(<optional>) /*&& SROOK_CPP_LIB_OPTIONAL */
-#	include<optional>
+#if SROOK_HAS_INCLUDE(<optional>) && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
+#	include <optional>
 #	define OPTIONAL std::optional
 #	define NULLOPT_T std::nullopt_t
 #	define NULLOPT std::nullopt
 #else
-#	include<srook/optional.hpp>
-#	define OPTIONAL srook::optional
-#	define NULLOPT_T srook::nullopt_t
-#	define NULLOPT srook::nullopt
+#	include <srook/optional.hpp>
+#	define OPTIONAL srook::optionally::optional
+#	define NULLOPT_T srook::optionally::nullopt_t
+#	define NULLOPT srook::optionally::nullopt
 #endif
 
 #define SROOK_OPTIONAL OPTIONAL
@@ -30,6 +30,5 @@ using NULLOPT;
 SROOK_INLINE_NAMESPACE_END
 } // libraries
 } // srook
-
 
 #endif
