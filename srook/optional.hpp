@@ -108,7 +108,7 @@ struct optional_payload {
 
     template <class... Args>
     void construct(Args&&... args)
-        SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
         ::new ((void*)addressof(payload_)) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
@@ -202,7 +202,7 @@ public:
         return *this;
     }
     optional_base& operator=(optional_base&& other)
-        SROOK_NOEXCEPT((type_traits::detail::Land<is_nothrow_move_constructible<T>, is_nothrow_assignable<T> >::value))
+    SROOK_NOEXCEPT((type_traits::detail::Land<is_nothrow_move_constructible<T>, is_nothrow_assignable<T> >::value))
     {
         if (payload_.engaged_ && other.payload_.engaged_) {
             get() = srook::move(other.get());
@@ -606,37 +606,37 @@ public:
 #    define DEF_OPERATORS(X, Y, NULLOP)                                                                          \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator==(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>                             \
+        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>                                \
         {                                                                                                        \
             return static_cast<bool>(lhs) == static_cast<bool>(rhs) && (!lhs || *lhs == *rhs);                   \
         }                                                                                                        \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator!=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>                             \
+        ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>                                 \
         {                                                                                                        \
             return static_cast<bool>(lhs) != static_cast<bool>(rhs) || (static_cast<bool>(lhs) && *lhs != *rhs); \
         }                                                                                                        \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator<(const X::optional<L>& lhs, const Y::optional<R>& rhs)              \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>                              \
+        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>                                 \
         {                                                                                                        \
             return static_cast<bool>(rhs) && (!lhs || *lhs < *rhs);                                              \
         }                                                                                                        \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator>(const X::optional<L>& lhs, const Y::optional<R>& rhs)              \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>                              \
+        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>                                 \
         {                                                                                                        \
             return static_cast<bool>(lhs) && (!rhs || *lhs > *rhs);                                              \
         }                                                                                                        \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator<=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>                             \
+        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>                                \
         {                                                                                                        \
             return !lhs || (static_cast<bool>(rhs) && *lhs <= *rhs);                                             \
         }                                                                                                        \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator>=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-            ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>                             \
+        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>                                \
         {                                                                                                        \
             return !rhs || (static_cast<bool>(lhs) && *lhs >= *rhs);                                             \
         }                                                                                                        \
@@ -897,17 +897,17 @@ public:
 #    define DEF_SWAP(X, Y)                                                                                                      \
         template <class T>                                                                                                      \
         SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME                                                                               \
-            enable_if<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> >::value>::type                       \
-            swap(X::optional<T>& lhs, Y::optional<T>& rhs)                                                                      \
-                SROOK_NOEXCEPT(lhs.swap(rhs))                                                                                   \
+        enable_if<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> >::value>::type                           \
+        swap(X::optional<T>& lhs, Y::optional<T>& rhs)                                                                          \
+        SROOK_NOEXCEPT(lhs.swap(rhs))                                                                                           \
         {                                                                                                                       \
             lhs.swap(rhs);                                                                                                      \
         }                                                                                                                       \
         template <class T>                                                                                                      \
         SROOK_DEDUCED_TYPENAME                                                                                                  \
-            enable_if<                                                                                                          \
-                type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> > >::value>::type \
-            swap(X::optional<T>&, Y::optional<T>&) SROOK_EQ_DELETE
+        enable_if<                                                                                                              \
+            type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> > >::value>::type     \
+        swap(X::optional<T>&, Y::optional<T>&) SROOK_EQ_DELETE
 DEF_SWAP(optionally, optionally)
 #    if SROOK_HAS_STD_OPTIONAL
 DEF_SWAP(optionally, std)
