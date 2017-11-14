@@ -14,29 +14,13 @@ namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class T1, class T2>
-struct is_equal : is_same<T1, T2> {};
+template <class, class> struct is_equal;
 
-namespace detail {
-
-template <bool, class, class>
-struct is_equal_impl;
-
-template <class LHead, class... LTail, class RHead, class... RTail>
-struct is_equal_impl<true, pack<LHead, LTail...>, pack<RHead, RTail...>> 
-	: public is_equal_impl<is_same<LHead, RHead>::value, pack<LTail...>, pack<RTail...>> {};
+template <class... Ts>
+struct is_equal<pack<Ts...>, pack<Ts...>> : SROOK_TRUE_TYPE {};
 
 template <class... L, class... R>
-struct is_equal_impl<false, pack<L...>, pack<R...>> : SROOK_FALSE_TYPE {};
-
-template <class L, class R>
-struct is_equal_impl<true, pack<L>, pack<R>> : is_equal<L, R> {};
-
-} // namespace detail
-
-template <class LHead, class... LTail, class RHead, class... RTail>
-struct is_equal<pack<LHead, LTail...>, pack<RHead, RTail...>> 
-	: public detail::is_equal_impl<sizeof...(LTail) == sizeof...(RTail) && is_same<LHead, RHead>::value, pack<LTail...>, pack<RTail...>> {};
+struct is_equal<pack<L...>, pack<R...>> : SROOK_FALSE_TYPE {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

@@ -86,6 +86,7 @@
 #include <srook/type_traits/remove_reference.hpp>
 #include <srook/type_traits/remove_volatile.hpp>
 #include <srook/type_traits/result_of.hpp>
+#include <srook/type_traits/strong_variadic_check.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/type_constant.hpp>
 #endif
