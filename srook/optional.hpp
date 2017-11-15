@@ -152,6 +152,8 @@ struct optional_payload<T, false, true> {
     };
     bool engaged_ = false;
 
+	// trivially destructible...
+
     template <class... Args>
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
