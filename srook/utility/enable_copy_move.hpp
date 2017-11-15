@@ -40,10 +40,21 @@ DEF_ENABLE_COPY_MOVE(true, false, false, false, SROOK_DEFAULT, SROOK_DEFAULT, SR
 DEF_ENABLE_COPY_MOVE(false, false, false, false, SROOK_DEFAULT, SROOK_EQ_DELETE, SROOK_EQ_DELETE, SROOK_EQ_DELETE, SROOK_EQ_DELETE);
 #undef DEF_ENABLE_COPY_MOVE
 
+template <class = SROOK_DEDUCED_TYPENAME voider<void>::type>
+struct disable_special_functions {
+	SROOK_CONSTEXPR disable_special_functions() SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
+	SROOK_CONSTEXPR disable_special_functions(const disable_special_functions&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
+	SROOK_CONSTEXPR disable_special_functions(disable_special_functions&&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
+	disable_special_functions& operator=(const disable_special_functions&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
+	disable_special_functions& operator=(disable_special_functions&&) SROOK_NOEXCEPT_TRUE SROOK_EQ_DELETE
+};
+
+
 SROOK_INLINE_NAMESPACE_END
 } // namespace utility
 
 using utility::enable_copy_move;
+using utility::disable_special_functions;
 
 } // namespace srook
 #endif
