@@ -46,7 +46,7 @@ template <class T>
 struct alignment_of_impl
     : public integral_constant<std::size_t,
 	// This function always returns a multiple of alignment.
-#if defined(BOOST_MSVC) && (BOOST_MSVC >= 1400)
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
 	alignment_logic<sizeof(alignment_of_hack<T>) - sizeof(T), __alignof(T)>::value  
 #else
 	alignment_logic<sizeof(alignment_of_hack<T>) - sizeof(T), sizeof(T)>::value
@@ -92,7 +92,7 @@ SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool alignment_of_v = alignment_of<T>::val
 #    if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
 #        pragma option pop
 #    endif
-#    ifdef BOOST_MSVC
+#    ifdef _MSC_VER
 #        pragma warning(pop)
 #    endif
 #endif

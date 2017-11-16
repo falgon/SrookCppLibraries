@@ -4,6 +4,7 @@
 
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature.hpp>
+#include <srook/type_traits/alignment_of.hpp>
 
 namespace srook {
 namespace type_traits {
@@ -15,17 +16,15 @@ template <std::size_t L_>
 struct aligned_storage_impl {
     union type_ {
         unsigned char data_[L_];
-        struct SROOK_ATTRIBUTE_ALIGNED {
-        } al_;
+        struct SROOK_ATTRIBUTE_ALIGNED {} al_;
     };
 };
 
 } // namespace detail
 
-template <std::size_t L_
+template <std::size_t L_, std::size_t Al_
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-          ,
-          std::size_t Al_ = SROOK_ALIGN_OF(typename detail::aligned_storage_impl<L_>::type_)
+          = alignment_of<SROOK_DEDUCED_TYPENAME detail::aligned_storage_impl<L_>::type_>::value
 #endif
           >
 struct aligned_storage {
@@ -35,7 +34,7 @@ struct aligned_storage {
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
             SROOK_ATTRIBUTE_ALIGNED_X(Al_)
 #else
-            SROOK_ATTRIBUTE_ALIGNED_X(SROOK_ALIGN_OF(typename detail::aligned_storage_impl<L_>::type_))
+            SROOK_ATTRIBUTE_ALIGNED_X(alignment_of<SROOK_DEDUCED_TYPENAME detail::aligned_storage_impl<L_>::type_>::value)
 #endif
         {
         } al_;

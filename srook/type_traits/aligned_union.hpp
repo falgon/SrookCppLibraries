@@ -6,6 +6,7 @@
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #    include <srook/config/feature.hpp>
 #    include <srook/type_traits/aligned_storage.hpp>
+#    include <srook/type_traits/alignment_of.hpp>
 
 namespace srook {
 namespace type_traits {
@@ -20,7 +21,7 @@ struct strictest_alignment {
 
 template <class T, class... Ts>
 struct strictest_alignment<T, Ts...> {
-    static const std::size_t al_ = SROOK_ALIGN_OF(T) > strictest_alignment<Ts...>::al_ ? SROOK_ALIGN_OF(T) : strictest_alignment<Ts...>::al_;
+    static const std::size_t al_ = alignment_of<T>::value > strictest_alignment<Ts...>::al_ ? alignment_of<T>::value : strictest_alignment<Ts...>::al_;
     static const std::size_t s_ = sizeof(T) > strictest_alignment<Ts...>::s_ ? sizeof(T) : strictest_alignment<Ts...>::s_;
 };
 
