@@ -43,6 +43,7 @@
 #include <srook/type_traits/is_copyable.hpp>
 #include <srook/type_traits/is_default_constructible.hpp>
 #include <srook/type_traits/is_destructible.hpp>
+#include <srook/type_traits/is_duration.hpp>
 #include <srook/type_traits/is_empty.hpp>
 #include <srook/type_traits/is_enum.hpp>
 #include <srook/type_traits/is_equal.hpp>

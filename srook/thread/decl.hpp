@@ -18,7 +18,7 @@ using threading::detail::yield;
 using threading::detail::get_id;
 
 SROOK_INLINE_NAMESPACE_END
-} // namespace thread
+} // namespace this_thread
 } // namespace srook
 
 #endif

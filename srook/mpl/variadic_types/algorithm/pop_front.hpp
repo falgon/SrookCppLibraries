@@ -19,8 +19,7 @@ struct PopFront<Head, Tail...> {
     using type = pack<Tail...>;
 };
 template <class Head, class... Tail>
-struct PopFront<pack<Head, Tail...>> : PopFront<Head, Tail...> {
-};
+struct PopFront<pack<Head, Tail...>> : PopFront<Head, Tail...> {};
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END

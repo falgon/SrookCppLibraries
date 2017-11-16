@@ -4,6 +4,7 @@
 #include <srook/config/cpp_predefined.hpp>
 
 #if (SROOK_HAS_INCLUDE(<chrono>) || SROOK_HAS_INCLUDE(<boost/chrono.hpp>) || SROOK_HAS_INCLUDE(<boost/chrono/include.hpp>)) && (SROOK_HAS_INCLUDE(<system_error>) || SROOK_HAS_INCLUDE(<boost/system/system_error.hpp>))
+#    include <srook/chrono/ceil.hpp>
 #    include <srook/config/feature.hpp>
 #    include <srook/config/noexcept_detection.hpp>
 #    include <srook/mutex/guards/unique_lock.hpp>
@@ -158,7 +159,7 @@ public:
 		steady_clock::time_point c_now = steady_clock::now();
 		system_clock::time_point s_now = system_clock::now();
 
-		if (max - d > s_now) timed_wait(lk, s_now + ceil<nanoseconds>(d));
+		if (max - d > s_now) timed_wait(lk, s_now + srook::chrono::ceil<nanoseconds>(d));
 		else timed_wait(lk, sys_tpi::max());
 
 		return steady_clock::now() - c_now < d ? cv_status::no_timeout : cv_status::timeout;

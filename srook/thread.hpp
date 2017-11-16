@@ -3,5 +3,6 @@
 #define INCLUDED_SROOK_THREAD_HPP
 
 #include <srook/thread/decl.hpp>
+#include <srook/thread/safe.hpp>
 
 #endif

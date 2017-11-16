@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_POLYMORPHIC_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_POLYMORPHIC_HPP
 
-#if (defined(__GNUC__) && __GNUC__ >= 5 || __GNUC__ >= 4 && (__GNUC_MINOR__ >= 5 && __GNUC_PATCH_LEVEL__ >= 4)) || (defined(_MSC_VER) && _MSC_VER >= 1800)
+#if (defined(__GNUC__) && __GNUC__ >= 5 || __GNUC__ >= 4 && (__GNUC_MINOR__ >= 5 && __GNUC_PATCH_LEVEL__ >= 4)) || (defined(_MSC_VER) && _MSC_VER >= 1800) || defined(__clang__)
 #    define SROOK_HAS_BUILTIN_IS_POLYMORPHIC
 #elif defined(__has_builtin)
 #    if __has_builtin(__is_polymorphic)

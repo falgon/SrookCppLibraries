@@ -1,12 +1,10 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_TYPE_TRAITS_VARIADIC_CHECK_HPP
-#define INCLUDED_SROOK_TYPE_TRAITS_VARIADIC_CHECK_HPP
+#ifndef INCLUDED_SROOK_TYPE_TRAITS_STRONG_VARIADIC_CHECK_HPP
+#define INCLUDED_SROOK_TYPE_TRAITS_STRONG_VARIADIC_CHECK_HPP
 
 #include <srook/config/cpp_predefined.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #    include <srook/config/feature.hpp>
-#    include <srook/mpl/variadic_types/algorithm/first.hpp>
-#    include <srook/mpl/variadic_types/algorithm/pop_front.hpp>
 #    include <srook/mpl/variadic_types/pack.hpp>
 #    include <srook/type_traits/true_false_type.hpp>
 
@@ -29,9 +27,7 @@ struct strong_variadic_check_impl<true, Checker, pack<L>, pack<R> >
 
 template <template <class, class> class Checker, class LH, class... LT, class RH, class... RT>
 struct strong_variadic_check_impl<true, Checker, pack<LH, LT...>, pack<RH, RT...> >
-    : public strong_variadic_check_impl<
-          Checker<LH, RH>::value,
-          Checker,
+    : public strong_variadic_check_impl<Checker<LH, RH>::value,Checker,
           pack<LT...>,
           pack<RT...> > {};
 
@@ -40,13 +36,9 @@ struct strong_variadic_check_impl<true, Checker, pack<LH, LT...>, pack<RH, RT...
 template <template <class, class> class, class, class>
 struct strong_variadic_check;
 
-template <template <class, class> class Checker, class... L, class... R>
-struct strong_variadic_check<Checker, pack<L...>, pack<R...> >
-    : public detail::strong_variadic_check_impl<
-          sizeof...(L) == sizeof...(R) && Checker<SROOK_DEDUCED_TYPENAME First<L...>::type, SROOK_DEDUCED_TYPENAME First<R...>::type>::value,
-          Checker,
-          SROOK_DEDUCED_TYPENAME PopFront<L...>::type,
-          SROOK_DEDUCED_TYPENAME PopFront<R...>::type> {};
+template <template <class, class> class Checker, class LH, class... L, class RH, class... R>
+struct strong_variadic_check<Checker, pack<LH, L...>, pack<RH, R...> >
+    : public detail::strong_variadic_check_impl<((sizeof...(L) == sizeof...(R)) && Checker<LH, RH>::value), Checker, pack<L...>, pack<R...> > {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

@@ -5,6 +5,7 @@
 #include <srook/memory/launder.hpp>
 #include <srook/memory/shared_ptr.hpp>
 #include <srook/memory/unique_ptr.hpp>
+#include <srook/memory/uses_allocator.hpp>
 #include <srook/memory/utility/aggregate_adaptor.hpp>
 #include <srook/memory/utility/checked_delete.hpp>
 #include <srook/memory/utility/load.hpp>

@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_STANDARD_LAYOUT_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_STANDARD_LAYOUT_HPP
 
-#if (defined(__GNUC__) && __GNUC__ >= 5 || __GNUC__ >= 4 && (__GNUC_MINOR__ >= 5 && __GNUC_PATCH_LEVEL__ >= 4)) || (defined(_MSC_VER) && _MSC_VER >= 1800) // There is the __is_standard_layout in Visual C++ 11.0, but its implemention has bugs.
+#if (defined(__GNUC__) && __GNUC__ >= 5 || __GNUC__ >= 4 && (__GNUC_MINOR__ >= 5 && __GNUC_PATCH_LEVEL__ >= 4)) || (defined(_MSC_VER) && _MSC_VER >= 1800) || defined(__clang__) // There is the __is_standard_layout in Visual C++ 11.0, but its implemention has bugs.
 #    define SROOK_HAS_BUILTIN_IS_STANDARD_LAYOUT
 #elif defined(__has_builtin)
 #    if __has_builtin(__is_standard_layout)

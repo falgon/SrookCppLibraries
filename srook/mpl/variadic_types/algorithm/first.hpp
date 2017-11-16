@@ -20,7 +20,7 @@ struct First<Head, Tail...> {
 };
 template <>
 struct First<> {
-    using type = SROOK_NULLOPT_T;
+    using type = srook::libraries::nullopt_t;
 };
 template <class Head, class... Tail>
 struct First<pack<Head, Tail...>> : First<Head> {
