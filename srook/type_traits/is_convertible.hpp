@@ -18,8 +18,7 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class From, class To, bool = is_void<From>::value || is_function<To>::value || is_array<To>::value>
-struct is_convertible_impl : is_void<To>::type {
-};
+struct is_convertible_impl : is_void<To>::type {};
 
 template <class From, class To>
 struct is_convertible_impl<From, To, false> {
@@ -38,8 +37,7 @@ public:
 } // namespace detail
 
 template <class From, class To>
-struct is_convertible : public detail::is_convertible_impl<From, To>::type {
-};
+struct is_convertible : public detail::is_convertible_impl<From, To>::type {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

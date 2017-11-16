@@ -5,9 +5,11 @@
 #include <srook/config/cpp_predefined/macro_names.hpp>
 
 #if SROOK_CPLUSPLUS11_CONSTANT <= SROOK_CPLUSPLUS
-#	define SROOK_DEFAULT = default;
+#    define SROOK_DEFAULT = default;
 #else
-#	define SROOK_DEFAULT {}
+#    define SROOK_DEFAULT \
+        {                 \
+        }
 #endif
 
 #endif

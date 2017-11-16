@@ -4,6 +4,7 @@
 
 #include <srook/utility/declval.hpp>
 #include <srook/utility/exchange.hpp>
+#include <srook/utility/enable_copy_move.hpp>
 #include <srook/utility/forward.hpp>
 #include <srook/utility/in_place.hpp>
 #include <srook/utility/index_sequence.hpp>

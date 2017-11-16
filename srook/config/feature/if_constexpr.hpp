@@ -4,10 +4,12 @@
 
 #include <srook/config/cpp_predefined.hpp>
 
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
-#	define SROOK_IF_CONSTEXPR if constexpr
+#if __cpp_if_constexpr //SROOK_CPP_IF_CONSTEXPR
+#    define SROOK_IF_CONSTEXPR \
+        if                     \
+        constexpr
 #else
-#	define SROOK_IF_CONSTEXPR if
+#    define SROOK_IF_CONSTEXPR if
 #endif
 
 #endif

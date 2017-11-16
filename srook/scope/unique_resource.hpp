@@ -78,8 +78,8 @@ public:
 		: resource(rhs.get().resource),
           deleter(rhs.get().deleter),
 		  execute_on_destruction(exchange(rhs.get().execute_on_destruction, false))
-    {}
 #endif
+    {}
 
 
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
@@ -122,7 +122,7 @@ public:
 #endif
     {
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT 
-        SROOK_IF_CONSTEXPR(detail::is_nothrow_swappable_v) {
+        SROOK_IF_CONSTEXPR(is_nothrow_swappable_v) {
             using std::swap;
             swap(execute_on_destruction, other.execute_on_destruction);
             swap(resource, other.resource);

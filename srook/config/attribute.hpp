@@ -1,6 +1,7 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_CONFIG_ATTRIBUTE_HPP
 #define INCLUDED_SROOK_CONFIG_ATTRIBUTE_HPP
+#include <srook/config/attribute/aligned.hpp>
 #include <srook/config/attribute/carries_dependency.hpp>
 #include <srook/config/attribute/deprecated.hpp>
 #include <srook/config/attribute/fallthrough.hpp>

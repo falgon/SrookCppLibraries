@@ -7,10 +7,11 @@
 #include <srook/config/inline_variable.hpp>
 #include <srook/config/feature/inline_variable.hpp>
 #include <srook/config/feature/constexpr.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
 
 namespace srook {
-inline namespace mpl {
-inline namespace v1 {
+SROOK_INLINE_NAMESPACE(mpl)
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 template <class... T>
 struct pack {
@@ -20,8 +21,8 @@ struct pack {
 
 using detail::pack;
 
-} // namespace v1
-} // namespace mpl
+SROOK_INLINE_NAMESPACE_END
+SROOK_INLINE_NAMESPACE_END
 } // namespace srook
 #endif
 #endif

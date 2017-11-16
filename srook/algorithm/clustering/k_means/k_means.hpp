@@ -1,138 +1,147 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_K_MEANS_HPP
 #define INCLUDED_SROOK_K_MEANS_HPP
+#include <srook/config/cpp_predefined.hpp>
 
-#include <cassert>
-#include <cmath>
-#include <cstdio>
-#include <fstream>
-#include <iostream>
-#include <limits>
-#include <random>
-#include <srook/algorithm/for_each.hpp>
-#include <srook/plot/gnu/ploter.hpp>
-#include <stdexcept>
-#include <string_view>
-#include <tuple>
-#include <utility>
-#include <vector>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+
+#    include <cassert>
+#    include <cmath>
+#    include <fstream>
+#    include <iostream>
+#    include <random>
+#    include <srook/limits/numeric_limits.hpp>
+#    include <srook/utility/move.hpp>
+#    include <srook/utility/forward.hpp>
+#    include <srook/algorithm/for_each.hpp>
+#    include <srook/config/require.hpp>
+#    include <srook/config/feature.hpp>
+#    include <srook/plot/gnu/ploter.hpp>
+#    include <srook/type_traits/conditional.hpp>
+#    include <srook/type_traits/decay.hpp>
+#    include <srook/type_traits/detail/logical.hpp>
+#    include <srook/type_traits/is_same.hpp>
+#    include <vector>
 
 namespace srook {
 namespace clustering {
+SROOK_INLINE_NAMESPACE(v1)
 
 using Point = std::pair<double, double>;
 
 struct k_means {
-    k_means(const char *file, std::size_t clustering_size) : master_vec(std::move(clustering_size)), initialized(false)
+    k_means(const char* file, std::size_t clustering_size) : master_vec(srook::move(clustering_size)), initialized(false)
     {
-	std::ifstream ifs(file);
-	if (!ifs.fail()) {
-	    std::string one_point, first, second;
-	    while (std::getline(ifs, one_point)) {
-		std::string::const_iterator iter = std::next(std::begin(one_point), one_point.find(","));
-		std::copy(std::cbegin(one_point), iter, std::back_inserter(first));
-		std::copy(std::next(iter, 1), std::cend(one_point), std::back_inserter(second));
+		using namespace std;
 
-		input_data.emplace_back(Point{std::stod(first), std::stod(second)});
-		first.clear();
-		second.clear();
-	    }
-	}
+        ifstream ifs(file);
+        if (!ifs.fail()) {
+			std::string one_point, first, second;
+            while (getline(ifs, one_point)) {
+				std::string::const_iterator iter = next(begin(one_point), one_point.find(","));
+                copy(cbegin(one_point), iter, back_inserter(first));
+                copy(next(iter, 1), cend(one_point), back_inserter(second));
+
+                input_data.emplace_back(Point{stod(first), stod(second)});
+                first.clear();
+                second.clear();
+            }
+        }
     }
 
-    template <
-	class... Ts,
-	std::enable_if_t<(sizeof...(Ts) > 0) and std::conjunction_v<std::is_same<Point, Ts>...>, std::nullptr_t> = nullptr>
-    void set_initial_point(Ts &&... ts) noexcept
+    template <class... Ts, SROOK_REQUIRES(((sizeof...(Ts) > 0) && type_traits::detail::Land<is_same<Point, Ts>...>::value))>
+    void set_initial_point(Ts&&... ts) SROOK_MEMFN_NOEXCEPT(true)
     {
-	const std::tuple<std::decay_t<Ts>...> tpl{std::forward<Ts>(ts)...};
-	assert(sizeof...(ts) == clustering_size());
-	srook::for_each(srook::make_counter(tpl), [this](const auto &x, std::size_t i) { master_vec[i] = x; });
-	initialized = true;
+		const auto tpl = std::forward_as_tuple(srook::forward<Ts>(ts)...);
+        assert(sizeof...(ts) == clustering_size());
+        srook::for_each(srook::make_counter(tpl), [this](const auto& x, std::size_t i) { master_vec[i] = x; });
+        initialized = true;
     }
 
     template <class T>
-    using rand_type =
-	std::conditional_t<
-	    !std::is_same_v<std::decay_t<T>, double> and !std::is_same_v<std::decay_t<T>, float>,
-	    std::uniform_int_distribution<std::decay_t<T>>,
-	    std::uniform_real_distribution<std::decay_t<T>>>;
+    using rand_type = typename conditional<
+        !is_same<typename decay<T>::type, double>::value && !is_same<typename decay<T>::type, float>::value,
+        std::uniform_int_distribution<typename decay<T>::type>,
+        std::uniform_real_distribution<typename decay<T>::type> >::type;
     template <class X, class Y>
-    void set_initial_point(X &&x_min, X &&x_max, Y &&y_min, Y &&y_max)
+    void set_initial_point(X&& x_min, X&& x_max, Y&& y_min, Y&& y_max)
     {
-	std::random_device rd;
-	std::mt19937 gen(rd());
+        std::random_device rd;
+        std::mt19937 gen(rd());
 
-	rand_type<X> x_dis(std::move(x_min), std::move(x_max));
-	rand_type<Y> y_dis(std::move(y_min), std::move(y_max));
+        rand_type<X> x_dis(srook::forward<X>(x_min), srook::forward<X>(x_max));
+        rand_type<Y> y_dis(srook::forward<Y>(y_min), srook::forward<Y>(y_max));
 
-	for (auto &v : master_vec)
-	    v = Point{x_dis(gen), y_dis(gen)};
-	initialized = true;
+        for (auto& v : master_vec)
+            v = Point{x_dis(gen), y_dis(gen)};
+        initialized = true;
     }
 
     void clustering()
     {
-	if (!initialized) {
-	    std::vector<Point::first_type> xs(input_data.size());
-	    std::vector<Point::second_type> ys(input_data.size());
-	    srook::for_each(srook::make_counter(xs), [this](auto &x, std::size_t i) { x = input_data[i].first; });
-	    srook::for_each(srook::make_counter(ys), [this](auto &y, std::size_t i) { y = input_data[i].second; });
+		using namespace std;
 
-	    set_initial_point(
-		*std::min_element(std::begin(xs), std::end(xs)), *std::max_element(std::begin(xs), std::end(xs)),
-		*std::min_element(std::begin(ys), std::end(ys)), *std::max_element(std::begin(ys), std::end(ys)));
-	}
+        if (!initialized) {
+            vector<Point::first_type> xs(input_data.size());
+            vector<Point::second_type> ys(input_data.size());
+            srook::for_each(srook::make_counter(xs), [this](auto& x, size_t i) { x = input_data[i].first; });
+            srook::for_each(srook::make_counter(ys), [this](auto& y, size_t i) { y = input_data[i].second; });
 
-	std::vector<int> prev_cluster(input_data.size(), 0);
-	cluster.resize(input_data.size(), -1);
+            set_initial_point(
+                *min_element(begin(xs), end(xs)), *max_element(begin(xs), end(xs)),
+                *min_element(begin(ys), end(ys)), *max_element(begin(ys), end(ys)));
+        }
 
-	while (!std::equal(std::begin(prev_cluster), std::end(prev_cluster), std::begin(cluster), std::end(cluster))) {
-	    prev_cluster = cluster;
+        vector<int> prev_cluster(input_data.size(), 0);
+        cluster.resize(input_data.size(), -1);
 
-	    srook::for_each(
-		srook::make_counter(input_data),
-		[this](const auto &v, std::size_t i) {
-		    int max_cluster = -1;
-		    double arg_max = std::numeric_limits<double>::infinity();
+        while (!equal(begin(prev_cluster), end(prev_cluster), begin(cluster), end(cluster))) {
+            prev_cluster = cluster;
 
-		    srook::for_each(
-			srook::make_counter(master_vec),
-			[this, &arg_max, &v, &max_cluster](const auto &mp, std::size_t j) {
-			    if (arg_max > distance(v, mp)) {
-				arg_max = distance(v, mp);
-				max_cluster = j;
-			    }
-			});
-		    cluster[i] = max_cluster;
-		});
+            srook::for_each(
+                srook::make_counter(input_data),
+                [this](const auto& v, std::size_t i) {
+                    int max_cluster = -1;
+                    double arg_max = srook::numeric_limits<double>::infinity();
 
-	    srook::for_each(
-		srook::make_counter(master_vec),
-		[this](auto &m, int i) {
-		    int c = 0;
-		    m.first = 0;
-		    m.second = 0;
-		    srook::for_each(
-			srook::make_counter(input_data),
-			[i, &c, &m, this](const auto &v, std::size_t j) {
-			    if (cluster[j] == i) {
-				m.first += v.first;
-				m.second += v.second;
-				++c;
-			    }
-			});
-		    if (c) {
-			m.first /= c;
-			m.second /= c;
-		    }
-		});
-	}
+                    srook::for_each(
+                        srook::make_counter(master_vec),
+                        [this, &arg_max, &v, &max_cluster](const auto& mp, size_t j) {
+                            if (arg_max > distance(v, mp)) {
+                                arg_max = distance(v, mp);
+                                max_cluster = j;
+                            }
+                        });
+                    cluster[i] = max_cluster;
+                });
+
+            srook::for_each(
+                srook::make_counter(master_vec),
+                [this](auto& m, int i) {
+                    int c = 0;
+                    m.first = 0;
+                    m.second = 0;
+                    srook::for_each(
+                        srook::make_counter(input_data),
+                        [i, &c, &m, this](const auto& v, std::size_t j) {
+                            if (cluster[j] == i) {
+                                m.first += v.first;
+                                m.second += v.second;
+                                ++c;
+                            }
+                        });
+                    if (c) {
+                        m.first /= c;
+                        m.second /= c;
+                    }
+                });
+        }
     }
 
-    std::vector<Point>::size_type clustering_size() const noexcept
+    std::vector<Point>::size_type clustering_size() 
+	const SROOK_MEMFN_NOEXCEPT(true)
     {
-	return master_vec.size();
+        return master_vec.size();
     }
 
 private:
@@ -142,43 +151,46 @@ private:
     bool initialized;
 
 private:
-    double distance(const Point &l, const Point &r) noexcept
+    double distance(const Point& l, const Point& r)
+	const SROOK_MEMFN_NOEXCEPT(true)
     {
-	return std::sqrt(std::pow(l.first - r.first, 2.0) + std::pow(l.second - r.second, 2.0));
+        return std::sqrt(std::pow(l.first - r.first, 2.0) + std::pow(l.second - r.second, 2.0));
     }
 
-    friend std::ofstream &operator<<(std::ofstream &ofs, const k_means &km)
+    friend std::ofstream& operator<<(std::ofstream& ofs, const k_means& km)
     {
-	for (std::size_t i = 0; i < km.clustering_size(); ++i) {
-	    srook::for_each(
-		srook::make_counter(km.input_data),
-		[i, &ofs, &km](const auto &v, std::size_t j) {
-		    if (std::size_t(km.cluster[j]) == i) {
-			ofs << v.first << " " << v.second << "\n";
-		    }
-		});
-	    ofs << "\n\n";
-	}
-	return ofs;
+        for (std::size_t i = 0; i < km.clustering_size(); ++i) {
+            srook::for_each(
+                srook::make_counter(km.input_data),
+                [i, &ofs, &km](const auto& v, std::size_t j) {
+                    if (std::size_t(km.cluster[j]) == i) {
+                        ofs << v.first << " " << v.second << "\n";
+                    }
+                });
+            ofs << "\n\n";
+        }
+        return ofs;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const k_means &km)
+    friend std::ostream& operator<<(std::ostream& os, const k_means& km)
     {
-	for (std::size_t i = 0; i < km.clustering_size(); ++i) {
-	    srook::for_each(
-		srook::make_counter(km.input_data),
-		[i, &os, &km](const auto &v, std::size_t j) {
-		    if (std::size_t(km.cluster[j]) == i) {
-			os << v.first << "," << v.second << "\n";
-		    }
-		});
-	    os << "\n";
-	}
-	return os;
+        for (std::size_t i = 0; i < km.clustering_size(); ++i) {
+            srook::for_each(
+                srook::make_counter(km.input_data),
+                [i, &os, &km](const auto& v, std::size_t j) {
+                    if (std::size_t(km.cluster[j]) == i) {
+                        os << v.first << "," << v.second << "\n";
+                    }
+                });
+            os << "\n";
+        }
+        return os;
     }
 };
 
+SROOK_INLINE_NAMESPACE_END
 } // namespace clustering
 } // namespace srook
 
+#    endif
 #endif

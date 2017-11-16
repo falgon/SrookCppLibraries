@@ -5,9 +5,9 @@
 #include <srook/config/cpp_predefined.hpp>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#	define SROOK_FINAL final
+#    define SROOK_FINAL final
 #else
-#	define SROOK_FINAL
+#    define SROOK_FINAL
 #endif
 
 #endif

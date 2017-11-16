@@ -1,6 +1,6 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_TYPE_TRAITS_RESULT_OF_HPP
-#define INCLUDED_SROOK_TYPE_TRAITS_RESULT_OF_HPP
+#ifndef INCLUDED_SROOK_TYPE_TRAITS_INVOKE_RESULT_HPP
+#define INCLUDED_SROOK_TYPE_TRAITS_INVOKE_RESULT_HPP
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>

@@ -7,14 +7,3 @@
 #include <srook/config/nullptr.hpp>
 
 #endif
-
-/*#if SROOK_CPLUSPLUS11_CONSTANT <= SROOK_CPLUSPLUS
-#	define SROOK_NULLPTR nullptr
-#	define SROOK_NULLPTR_T std::nullptr_t
-#else
-#	include <srook/config/nullptr.hpp>
-#	define SROOK_NULLPTR srook::cxx03::nullptr
-#	define SROOK_NULLPTR_T srook::cxx03::nullptr_t
-#endif
-
-#endif*/
