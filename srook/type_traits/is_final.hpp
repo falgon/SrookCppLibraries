@@ -10,8 +10,7 @@ namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 
-#if (defined(__has_feature) && __has_feature(is_final) && !defined(__CUDACC__)) ||\
-   	(__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))
+#if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 7))
 template <class T>
 struct is_final : bool_constant<__is_final(T)> {};
 #define SROOK_HAS_IS_FINAL
@@ -19,6 +18,11 @@ struct is_final : bool_constant<__is_final(T)> {};
 template <class T>
 struct is_final : bool_constant<__oracle_is_final(T)> {};
 #define SROOK_HAS_IS_FINAL
+#elif defined(__has_feature) 
+#    if __has_feature(is_final) && !defined(__CUDACC__)
+template <class T>
+struct is_final : bool_constant<__is_final(T)> {};
+#    endif
 #else
 #	error is_final: This environment was not supported.
 #endif

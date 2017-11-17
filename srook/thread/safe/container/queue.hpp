@@ -1,49 +1,23 @@
 // Copyright (C) 2017 roki
-#ifndef INCLUDED_SROOK_THREAD_SAFE_CONTAINER_STACK_HPP
-#define INCLUDED_SROOK_THREAD_SAFE_CONTAINER_STACK_HPP
+#ifndef INCLUDED_SROOK_THREAD_SAFE_CONTAINER_QUEUE_HPP
+#define INCLUDED_SROOK_THREAD_SAFE_CONTAINER_QUEUE_HPP
 
 #include <srook/config/cpp_predefined.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#include <deque>
-#include <exception>
-#include <cassert>
-#include <functional>
-#include <srook/config/feature.hpp>
-#include <srook/config/libraries/optional.hpp>
-#include <srook/config/require.hpp>
-#include <srook/functional/overload.hpp>
-#include <srook/scope/unique_resource.hpp>
-#include <srook/memory/uses_allocator.hpp>
-#include <srook/mutex.hpp>
-#include <srook/type_traits.hpp>
-#include <srook/utility/enable_copy_move.hpp>
+#include <srook/thread/safe/container/stack.hpp>
 
 namespace srook {
 namespace threading {
 namespace safe {
 SROOK_INLINE_NAMESPACE(v1)
 
-struct aborted : public std::exception {
-    aborted() SROOK_DEFAULT
-    virtual const char* what() const SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE
-    {
-        return "srook::thread_safe::stack: Aborted";
-    }
-    virtual ~aborted() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
-};
-SROOK_STRONG_ENUM_BEGIN(behavior) {
-    wait_pushed,
-    no_wait_pushed
-};
-SROOK_STRONG_ENUM_EPILOG(perform)
-	
 template <class T, class Container = std::deque<T>, behavior = behavior::wait_pushed>
-class stack;
+class queue;
 
 namespace detail {
 
 template <class T, class Container>
-struct stack_impl {
+struct queue_impl {
     typedef SROOK_DEDUCED_TYPENAME Container::value_type value_type;
     typedef SROOK_DEDUCED_TYPENAME Container::reference reference;
     typedef SROOK_DEDUCED_TYPENAME Container::const_reference const_reference;
@@ -53,21 +27,21 @@ struct stack_impl {
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #    define USES_ALLOC(X) SROOK_REQUIRES(uses_allocator<container_type, X>::value)
 	template <class C = Container, SROOK_REQUIRES(is_default_constructible<C>::value)>
-	stack_impl() : c() {}
+	queue_impl() : c() {}
 
-	explicit stack_impl(const container_type& con) : c(con) {}
-	explicit stack_impl(container_type&& con) : c(srook::move(con)) {}
+	explicit queue_impl(const container_type& con) : c(con) {}
+	explicit queue_impl(container_type&& con) : c(srook::move(con)) {}
 	
 	template <class Alloc, USES_ALLOC(Alloc)>
-	explicit stack_impl(const Alloc& a) : c(a) {}
+	explicit queue_impl(const Alloc& a) : c(a) {}
 
 	template <class Alloc, USES_ALLOC(Alloc)>
-	explicit stack_impl(const container_type& con, const Alloc& a) : c(con, a) {}
+	explicit queue_impl(const container_type& con, const Alloc& a) : c(con, a) {}
 
 	template <class Alloc, USES_ALLOC(Alloc)>
-	explicit stack_impl(container_type&& con, const Alloc& a) : c(srook::move(con), a) {}
+	explicit queue_impl(container_type&& con, const Alloc& a) : c(srook::move(con), a) {}
 #else
-	explicit stack_impl(const container_type& con = container_type()), c(con) {}
+	explicit queue_impl(const container_type& con = container_type()), c(con) {}
 #endif
 protected:
 	container_type c;
@@ -107,7 +81,7 @@ public:
     }
 #endif
 	
-    void swap(stack_impl& other)
+    void swap(queue_impl& other)
     {
         if (this == srook::addressof(other)) return;
         using std::swap;
@@ -121,13 +95,13 @@ public:
 } // namespace detail
 
 template <class T, class Container, behavior>
-class stack : public detail::stack_impl<T, Container> {
-	typedef detail::stack_impl<T, Container> base_type;
+class queue : public detail::queue_impl<T, Container> {
+	typedef detail::queue_impl<T, Container> base_type;
     struct check_notifier_ : public enable_copy_move<true, true, true, true, check_notifier_> {
-        check_notifier_(stack& st) : st_(st) {}
+        check_notifier_(queue& st) : st_(st) {}
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { if(!st_.empty()) cv.notify_all(); }
     private:
-        stack& st_;
+        queue& st_;
 	};
 	struct notifier_ {
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { cv.notify_all(); }
@@ -151,29 +125,29 @@ protected:
 public:
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_RVALUE_REFERENCES
     template <class C = container_type, SROOK_REQUIRES(is_default_constructible<C>::value)>
-    stack()
+    queue()
         : base_type() {}
-    explicit stack(const container_type& con)
+    explicit queue(const container_type& con)
         : base_type(con) {}
-    explicit stack(container_type&& con)
+    explicit queue(container_type&& con)
 		: base_type(srook::move(con)) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const Alloc& a)
+    explicit queue(const Alloc& a)
 		: base_type(a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const container_type& con, const Alloc& a)
+    explicit queue(const container_type& con, const Alloc& a)
 		: base_type(con, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(container_type&& con, const Alloc& a)
+    explicit queue(container_type&& con, const Alloc& a)
         : base_type(srook::move(con), a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const stack& s, const Alloc& a)
+    explicit queue(const queue& s, const Alloc& a)
         : base_type(s.c, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(stack&& s, const Alloc& a)
+    explicit queue(queue&& s, const Alloc& a)
         : base_type(srook::move(s.c), a) {}
 #else
-    explicit stack(const container_type& con = container_type())
+    explicit queue(const container_type& con = container_type())
         : base_type(con), is_aborted_(false) {}
 #endif
 
@@ -206,7 +180,23 @@ public:
         is_aborted_ = true;
     }
 
-    reference top()
+    reference front()
+    {
+        unique_lock<mutex> lk(this->m_);
+        cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
+        if (is_aborted_) throw aborted();
+        return this->c.front();
+    }
+
+    const_reference front() const
+    {
+        unique_lock<mutex> lk(this->m_);
+        cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
+        if (is_aborted_) throw aborted();
+        return this->c.front();
+    }
+
+    reference back()
     {
         unique_lock<mutex> lk(this->m_);
         cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
@@ -214,7 +204,7 @@ public:
         return this->c.back();
     }
 
-    const_reference top() const
+    const_reference back() const
     {
         unique_lock<mutex> lk(this->m_);
         cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
@@ -228,12 +218,12 @@ public:
         cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
         if (is_aborted_) throw aborted();
 
-        const value_type result(this->c.back());
-        this->c.pop_back();
+        const value_type result(this->c.front());
+        this->c.pop_front();
         return srook::libraries::make_optional(result);
     }
 	
-    void swap(stack& other)
+    void swap(queue& other)
     SROOK_MEMFN_NOEXCEPT(is_nothrow_swappable<container_type>::value)
     {
         if (this == srook::addressof(other)) return;
@@ -247,8 +237,8 @@ public:
 };
 
 template <class T, class Container>
-struct stack<T, Container, behavior::no_wait_pushed> : public detail::stack_impl<T, Container> {
-	typedef detail::stack_impl<T, Container> base_type;
+struct queue<T, Container, behavior::no_wait_pushed> : public detail::queue_impl<T, Container> {
+	typedef detail::queue_impl<T, Container> base_type;
 public:
     typedef SROOK_DEDUCED_TYPENAME base_type::value_type value_type;
     typedef SROOK_DEDUCED_TYPENAME base_type::reference reference;
@@ -259,31 +249,31 @@ public:
 public:
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_RVALUE_REFERENCES
     template <class C = container_type, SROOK_REQUIRES(is_default_constructible<C>::value)>
-    stack()
+    queue()
         : base_type() {}
-    explicit stack(const container_type& con)
-        : base_type(con) {}
-    explicit stack(container_type&& con)
-		: base_type(srook::move(con)) {}
+    explicit queue(const container_type& c)
+        : base_type(c) {}
+    explicit queue(container_type&& c)
+		: base_type(srook::move(c)) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const Alloc& a)
+    explicit queue(const Alloc& a)
 		: base_type(a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const container_type& con, const Alloc& a)
-		: base_type(con, a) {}
+    explicit queue(const container_type& c, const Alloc& a)
+		: base_type(c, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(container_type&& con, const Alloc& a)
-        : base_type(srook::move(con), a) {}
+    explicit queue(container_type&& c, const Alloc& a)
+        : base_type(srook::move(c), a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(const stack& s, const Alloc& a)
+    explicit queue(const queue& s, const Alloc& a)
         : base_type(s.c, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
-    explicit stack(stack&& s, const Alloc& a)
+    explicit queue(queue&& s, const Alloc& a)
         : base_type(srook::move(s.c), a) {}
 #    undef USES_ALLOC
 #else
-    explicit stack(const container_type& con = container_type())
-        : base_type(con) {}
+    explicit queue(const container_type& c = container_type())
+        : base_type(c) {}
 #endif
 
 #ifdef __glibcxx_check_nonempty
@@ -291,68 +281,81 @@ public:
 #else
 #    define CHECK_NONEMPTY() assert(this->size())
 #endif
-    SROOK_CONSTEXPR reference top()
+    SROOK_CONSTEXPR reference front()
+    {
+        CHECK_NONEMPTY();
+        return this->c.front();
+    }
+
+    SROOK_CONSTEXPR const_reference front() const
+    {
+        CHECK_NONEMPTY();
+        return this->c.front();
+    }
+
+    SROOK_CONSTEXPR reference back()
     {
         CHECK_NONEMPTY();
         return this->c.back();
     }
 
-    SROOK_CONSTEXPR const_reference top() const
+    SROOK_CONSTEXPR const_reference back() const
     {
         CHECK_NONEMPTY();
         return this->c.back();
     }
+
 #undef CHECK_NONEMPTY
     srook::libraries::optional<value_type> pop()
     {
         if (this->empty()) return srook::libraries::nullopt;
 
         unique_lock<mutex> lk(this->m_);
-        const value_type result(this->c.back());
-        this->c.pop_back();
+        const value_type result(this->c.front());
+        this->c.pop_front();
         return srook::libraries::make_optional(result);
     }
 };
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator==(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator==(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return lhs.c == rhs.c;
 }
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator<(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator<(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return lhs.c < rhs.c;
 }
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator!=(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator!=(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return !(lhs == rhs);
 }
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator>(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator>(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return rhs < lhs;
 }
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator<=(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator<=(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return !(rhs < lhs);
 }
 
 template <class T, class Container>
-SROOK_FORCE_INLINE bool operator>=(const stack<T, Container>& lhs, const stack<T, Container>& rhs)
+SROOK_FORCE_INLINE bool operator>=(const queue<T, Container>& lhs, const queue<T, Container>& rhs)
 {
     return !(lhs < rhs);
 }
 
 template <class T, class Container>
 inline SROOK_DEDUCED_TYPENAME enable_if<is_swappable<Container>::value>::type
-swap(stack<T, Container>& lhs, stack<T, Container>& rhs)
+swap(queue<T, Container>& lhs, queue<T, Container>& rhs)
 SROOK_NOEXCEPT(lhs.swap(rhs))
 {
     lhs.swap(rhs);
@@ -360,10 +363,10 @@ SROOK_NOEXCEPT(lhs.swap(rhs))
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
 template <class Container>
-stack(Container) -> stack<SROOK_DEDUCED_TYPENAME Container::value_type, Container>;
+queue(Container) -> queue<SROOK_DEDUCED_TYPENAME Container::value_type, Container>;
 
 template <class Container, class Alloc>
-stack(Container, Alloc) -> stack<SROOK_DEDUCED_TYPENAME Container::value_type, Container>;
+queue(Container, Alloc) -> queue<SROOK_DEDUCED_TYPENAME Container::value_type, Container>;
 #endif
 
 SROOK_INLINE_NAMESPACE_END
@@ -373,16 +376,14 @@ SROOK_INLINE_NAMESPACE_END
 namespace thread_safe {
 namespace container {
 
-using threading::safe::aborted;
-using threading::safe::behavior;
-using threading::safe::stack;
+using threading::safe::queue;
 using threading::safe::swap;
 
 } // namespace container
 } // namespace thread_safe
 
 template <class T, class Container, class Alloc>
-struct uses_allocator<thread_safe::container::stack<T, Container>, Alloc>
+struct uses_allocator<thread_safe::container::queue<T, Container>, Alloc>
     : public uses_allocator<Container, Alloc>::type {};
 
 } // namespace srook
@@ -393,7 +394,7 @@ struct uses_allocator<thread_safe::container::stack<T, Container>, Alloc>
 namespace std {
 
 template <class T, class Container, class Alloc>
-struct uses_allocator<srook::thread_safe::container::stack<T, Container>, Alloc>
+struct uses_allocator<srook::thread_safe::container::queue<T, Container>, Alloc>
     : public uses_allocator<Container, Alloc>::type {};
 
 } // namespace std

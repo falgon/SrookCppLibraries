@@ -5,6 +5,7 @@
 #include <fstream>
 #include <srook/algorithm/for_each.hpp>
 #include <srook/config/feature.hpp>
+#include <srook/functional/deduction_negate.hpp>
 #include <srook/process.hpp>
 #include <srook/scope/unique_resource.hpp>
 #include <srook/string/string_view.hpp>
@@ -27,7 +28,7 @@ struct ploter {
         for (size_t i = 0; i < index_size; ++i) {
             str += " index " + std::to_string(i) + ", \"" + std::string(file_) + "\"";
         }
-        str.erase(next(end(str), -file_.size() - 4), end(str));
+        str.erase(next(end(str), deduction_negate()(file_.size() - 4)), end(str));
         cout << str << endl;
         str += "\n";
 
@@ -35,8 +36,8 @@ struct ploter {
 
         std::string file_type;
         copy(next(begin(file_), file_.find(".") + 1), end(file_), back_inserter(file_type));
-        const std::string first_cmd = "set terminal " s + file_type + "\n" s;
-        const std::string second_cmd = "set output \"" s + std::string(file_.data()) + "\"\n" s;
+        const std::string first_cmd = "set terminal "s + file_type + "\n"s;
+        const std::string second_cmd = "set output \""s + std::string(file_.data()) + "\"\n"s;
 
         fputs(first_cmd.c_str(), resource.get());
         fputs(second_cmd.c_str(), resource.get());
@@ -54,8 +55,8 @@ struct ploter {
         plt_cmd += "\n";
 
         copy(next(begin(file_), file_.find(".") + 1), end(file_), back_inserter(file_type));
-        std::string first_cmd = "set terminal " s + file_type + "\n" s;
-        std::string second_cmd = "set output \"" s + std::string(file_.data()) + "\"\n" s;
+        std::string first_cmd = "set terminal "s + file_type + "\n"s;
+        std::string second_cmd = "set output \""s + std::string(file_.data()) + "\"\n"s;
 
         fputs(first_cmd.c_str(), resource.get());
         fputs(second_cmd.c_str(), resource.get());

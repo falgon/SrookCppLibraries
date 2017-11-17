@@ -4,11 +4,19 @@
 
 #if __sun__
 #	include <sys/isa_defs.h>
-#	define SROOK_LITTLE_ENDIAN 1
-#	define SROOK_BIG_ENDIAN 0
+#   if !defined(SROOK_LITTLE_ENDIAN)
+#		define SROOK_LITTLE_ENDIAN 1
+#   endif
+#	if !defined(SROOK_BIG_ENDIAN)
+#		define SROOK_BIG_ENDIAN 0
+#	endif
 #else
-#	define SROOK_LITTLE_ENDIAN 0
-#	define SROOK_BIG_ENDIAN 1
+#	if !defined(SROOK_LITTLE_ENDIAN)
+#		define SROOK_LITTLE_ENDIAN 0
+#	endif
+#	if !defined(SROOK_BIG_ENDIAN)
+#		define SROOK_BIG_ENDIAN 1
+#	endif
 #endif
 
 #endif

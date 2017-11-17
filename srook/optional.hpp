@@ -18,9 +18,9 @@ struct nullopt_t {
         Token
     };
     SROOK_STRONG_ENUM_EPILOG(Construct)
-    explicit SROOK_CONSTEXPR nullopt_t(Construct) {}
+    explicit SROOK_CONSTEXPR_OR_CONST nullopt_t(Construct) {}
 };
-SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST nullopt_t nullopt(nullopt_t::Construct::Token);
+SROOK_INLINE_VARIABLE SROOK_CONSTEXPR nullopt_t nullopt(nullopt_t::Construct::Token);
 
 class bad_optional_access : public std::exception {
 public:
