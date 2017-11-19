@@ -108,4 +108,5 @@
 #include <srook/type_traits/strong_variadic_check.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/type_constant.hpp>
+#include <srook/type_traits/variadic_conjunction.hpp>
 #endif

@@ -122,18 +122,18 @@ public:
 
 template <class T, class Container, behavior>
 class stack : public detail::stack_impl<T, Container> {
-	typedef detail::stack_impl<T, Container> base_type;
+    typedef detail::stack_impl<T, Container> base_type;
     struct check_notifier_ : public enable_copy_move<true, true, true, true, check_notifier_> {
-        check_notifier_(stack& st) : st_(st) {}
+        check_notifier_(const stack& st) : st_(st) {}
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { if(!st_.empty()) cv.notify_all(); }
     private:
-        stack& st_;
-	};
-	struct notifier_ {
+        const stack& st_;
+    };
+    struct notifier_ {
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { cv.notify_all(); }
-	};
+    };
     typedef unique_resource<condition_variable&, check_notifier_> scoped_check_notifier;
-	typedef unique_resource<condition_variable&, notifier_> scoped_notifier;
+    typedef unique_resource<condition_variable&, notifier_> scoped_notifier;
 public:
     typedef SROOK_DEDUCED_TYPENAME base_type::value_type value_type;
     typedef SROOK_DEDUCED_TYPENAME base_type::reference reference;
