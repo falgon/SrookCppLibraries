@@ -59,6 +59,7 @@ class SROOK_ATTRIBUTE_TYPE_VIS_DEFAULT condition_variable : private noncopyable<
     threading::detail::cond_var_type cv CONDVAR_INLINE_INIT;
 
 public:
+    typedef threading::detail::cond_var_type* native_handle_type;
     SROOK_ATTRIBUTE_INLINE_VISIBILITY SROOK_CONSTEXPR condition_variable() SROOK_NOEXCEPT_TRUE
 #    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
         SROOK_DEFAULT
@@ -70,6 +71,11 @@ public:
     ~condition_variable()
     {
         threading::detail::condvar_destroy(&cv);
+    }
+
+    SROOK_FORCE_INLINE native_handle_type native_handle() SROOK_NOEXCEPT_TRUE
+    {
+        return &cv;
     }
 
     void notify_one() SROOK_NOEXCEPT_TRUE

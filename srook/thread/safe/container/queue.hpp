@@ -102,7 +102,7 @@ class queue : public detail::queue_impl<T, Container> {
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { if(!st_.empty()) cv.notify_all(); }
     private:
         const queue& st_;
-	};
+    };
     struct notifier_ {
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const { cv.notify_all(); }
     };
