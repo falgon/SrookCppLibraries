@@ -4,4 +4,6 @@
 #include <srook/semaphore/semaphore.hpp>
 #include <srook/semaphore/timed_semaphore.hpp>
 #include <srook/semaphore/binary_semaphore.hpp>
+#include <srook/semaphore/binary_timed_semaphore.hpp>
+#include <srook/semaphore/generic.hpp>
 #endif

@@ -409,7 +409,7 @@ SROOK_FORCE_INLINE bool operator>=(const priority_queue<T, Container, Compare>& 
 template <class T, class Container, class Compare>
 inline SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<is_swappable<Container>, is_swappable<Compare> >::value>::type
 swap(priority_queue<T, Container, Compare>& lhs, priority_queue<T, Container, Compare>& rhs)
-SROOK_NOEXCEPT(lhs.swap(rhs))
+    SROOK_NOEXCEPT(lhs.swap(rhs))
 {
     lhs.swap(rhs);
 }

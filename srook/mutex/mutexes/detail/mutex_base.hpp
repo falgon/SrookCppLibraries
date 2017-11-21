@@ -20,7 +20,7 @@ SROOK_INLINE_NAMESPACE(v1)
 #            define SROOK_MUTEX_INIT
 #            define SROOK_MUTEX_DOES_NOT_SUPPORT_STATIC_INIT_MESSAGE                                    \
                 SROOK_DEPRECATED_MESSAGE(                                                               \
-                    "No constexpr until C++03 so srook::mutex doesn't support static initialization.\n" \
+                    "No constexpr until C++03 so mutex doesn't support static initialization.\n" \
                     "See also: http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#828 ")
 #            define SROOK_MUTEX_BASE_CONSTRUCTOR                             \
                 SROOK_MUTEX_DOES_NOT_SUPPORT_STATIC_INIT_MESSAGE             \

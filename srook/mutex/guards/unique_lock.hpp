@@ -27,9 +27,7 @@ public:
     SROOK_STATIC_ASSERT(is_mutex<Mutex>::value, "The template argument must be Mutex");
 #endif
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
-    unique_lock() SROOK_NOEXCEPT_TRUE : m_device(SROOK_NULLPTR), owns(false)
-    {
-    }
+    unique_lock() SROOK_NOEXCEPT_TRUE : m_device(SROOK_NULLPTR), owns(false) {}
 
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
     explicit unique_lock(mutex_type& m) : m_device(srook::addressof(m)), owns(false)
@@ -208,15 +206,11 @@ public:
     template <class Clock, class Duration>
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
     unique_lock(mutex_type& m, const includes::chrono::time_point<Clock, Duration>& time)
-        : m_device(srook::addressof(m)), owns(m_device->try_lock_until(time))
-    {
-    }
+        : m_device(srook::addressof(m)), owns(m_device->try_lock_until(time)) {}
     template <class Rep, class Period>
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
     unique_lock(mutex_type& m, const includes::chrono::duration<Rep, Period>& time)
-        : m_device(srook::addressof(m)), owns(m_device->try_lock_for(time))
-    {
-    }
+        : m_device(srook::addressof(m)), owns(m_device->try_lock_for(time)) {}
     SROOK_ATTRIBUTE_INLINE_VISIBILITY
     void lock()
     {
