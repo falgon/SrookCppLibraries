@@ -230,7 +230,7 @@ public:
         if (this == srook::addressof(other)) return;
         using std::swap;
 
-		lock(this->m_, other.m_);
+        lock(this->m_, other.m_);
         scoped_lock<mutex, mutex> lk(adopt_lock, this->m_, other.m_);
         swap(this->c, other.c);
         swap(is_aborted_, other.is_aborted_);

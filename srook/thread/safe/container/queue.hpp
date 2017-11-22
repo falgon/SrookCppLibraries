@@ -94,7 +94,7 @@ public:
         using std::swap;
 
         lock(m_, other.m_);
-		scoped_lock<mutex, mutex> lk(adopt_lock, m_, other.m_);
+        scoped_lock<mutex, mutex> lk(adopt_lock, m_, other.m_);
         swap(c, other.c);
     }
 };
@@ -137,13 +137,13 @@ public:
     explicit queue(const container_type& con)
         : base_type(con) {}
     explicit queue(container_type&& con)
-		: base_type(srook::move(con)) {}
+        : base_type(srook::move(con)) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(const Alloc& a)
-		: base_type(a) {}
+        : base_type(a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(const container_type& con, const Alloc& a)
-		: base_type(con, a) {}
+        : base_type(con, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(container_type&& con, const Alloc& a)
         : base_type(srook::move(con), a) {}
@@ -273,13 +273,13 @@ public:
     explicit queue(const container_type& c)
         : base_type(c) {}
     explicit queue(container_type&& c)
-		: base_type(srook::move(c)) {}
+        : base_type(srook::move(c)) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(const Alloc& a)
-		: base_type(a) {}
+        : base_type(a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(const container_type& c, const Alloc& a)
-		: base_type(c, a) {}
+        : base_type(c, a) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit queue(container_type&& c, const Alloc& a)
         : base_type(srook::move(c), a) {}

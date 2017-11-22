@@ -117,7 +117,7 @@ public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size()
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
-		lock_guard<mutex> lk(m_);
+        lock_guard<mutex> lk(m_);
         return c.size();
     }
 
@@ -152,7 +152,7 @@ public:
         using std::swap;
 
         lock(m_, other.m_);
-        lock_guard<mutex> l1(m_, adopt_lock), l2(other.m_, adopt_lock);
+        scoped_lock<mutex, mutex> lk(adopt_lock, m_, other.m_);
         swap(c, other.c);
     }
 };
@@ -290,7 +290,7 @@ public:
         using std::swap;
 
         lock(this->m_, other.m_);
-        lock_guard<mutex> l1(this->m_, adopt_lock), l2(other.m_, adopt_lock);
+        scoped_lock<mutex> lk(adopt_lock, this->m_, other.m_);
         swap(this->c, other.c);
         swap(is_aborted_, other.is_aborted_);
     }
@@ -369,6 +369,7 @@ public:
 #    endif
     SROOK_CONSTEXPR const_reference top() const
     {
+        lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         return this->c.front();
     }
