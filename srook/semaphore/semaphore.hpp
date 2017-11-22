@@ -71,7 +71,11 @@ public:
 
     SROOK_CONSTEXPR counter_type max() const SROOK_NOEXCEPT_TRUE { return max_; }
     SROOK_CONSTEXPR bool is_binary() const SROOK_NOEXCEPT_TRUE { return max_ == 1; }
-    SROOK_CONSTEXPR const counter_type& resource() const SROOK_NOEXCEPT_TRUE { return counter_; }
+    SROOK_CONSTEXPR const counter_type& resource() const SROOK_NOEXCEPT_TRUE 
+    {
+        lock_guard<mutex_type> lk(m_);
+        return counter_; 
+    }
 
     // Lockable requirements [thread.req.lockable.req] for scoped guards.
     SROOK_FORCE_INLINE void lock() { down(); }

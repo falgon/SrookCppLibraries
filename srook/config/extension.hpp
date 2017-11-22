@@ -5,5 +5,6 @@
 #include <srook/config/extension/Nonnull.hpp>
 #include <srook/config/extension/Nullunspecified.hpp>
 #include <srook/config/extension/Nullable.hpp>
+#include <srook/config/extension/irq_control.hpp>
 
 #endif
