@@ -8,8 +8,10 @@
 #    include <functional>
 #    include <iterator>
 #    include <srook/config.hpp>
+#    include <srook/thread/safe/container/config.hpp>
 #    include <srook/scope/unique_resource.hpp>
-#    include <srook/thread/safe/container/stack.hpp>
+#    include <srook/memory/uses_allocator.hpp>
+#    include <srook/mutex.hpp>
 #    include <srook/type_traits.hpp>
 #    include <vector>
 
@@ -106,20 +108,22 @@ private:
 
 public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty()
-    const SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
+    SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
     {
+        lock_guard<mutex> lk(m_);
         return c.empty();
     }
 
     SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size()
-    const SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
+    SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
+		lock_guard<mutex> lk(m_);
         return c.size();
     }
 
     void push(const value_type& x)
     {
-        unique_lock<mutex> lk(m_);
+        lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         c.push_back(x);
     }
@@ -127,7 +131,7 @@ public:
 #    if SROOK_CPP_RVALUE_REFERENCES
     void push(value_type&& x)
     {
-        unique_lock<mutex> lk(m_);
+        lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         c.push_back(srook::move(x));
     }
@@ -136,7 +140,7 @@ public:
     auto emplace(Args&&... args)
     -> decltype(declval<container_type>().emplace_back(declval<Args>()...))
     {
-        unique_lock<mutex> lk(m_);
+        lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         return c.emplace_back(srook::forward<Args>(args)...);
     }
@@ -162,7 +166,7 @@ class priority_queue : public detail::priority_queue_impl<T, Container, Compare>
         check_notifier_(const priority_queue& st) : st_(st) {}
         SROOK_FORCE_INLINE void operator()(condition_variable& cv) const
         {
-            if (!st_.empty()) cv.notify_all();
+            if (!st_.c.empty()) cv.notify_all();
         }
 
     private:
@@ -262,7 +266,7 @@ public:
     const_reference top()
     {
         unique_lock<mutex> lk(this->m_);
-        cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
+        cv_empty_check.wait(lk, [this] { return !this->c.empty() || is_aborted_; });
         if (is_aborted_) throw aborted();
         return this->c.front();
     }
@@ -270,7 +274,7 @@ public:
     srook::libraries::optional<value_type> pop()
     {
         unique_lock<mutex> lk(this->m_);
-        cv_empty_check.wait(lk, [this] { return !this->empty() || is_aborted_; });
+        cv_empty_check.wait(lk, [this] { return !this->c.empty() || is_aborted_; });
         if (is_aborted_) throw aborted();
 
         const value_type result(this->c.front());
@@ -290,6 +294,18 @@ public:
         swap(this->c, other.c);
         swap(is_aborted_, other.is_aborted_);
     }
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator==(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator<(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator!=(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator>(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator<=(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator>=(const priority_queue<U, C>&, const priority_queue<U, C>&);
 };
 
 template <class T, class Container, class Compare>
@@ -330,9 +346,7 @@ public:
         : base_type(s.c, a, s.comp) {}
     template <class Alloc, USES_ALLOC(Alloc)>
     explicit priority_queue(priority_queue&& s, const Alloc& a)
-        : base_type(srook::move(s.c), a, s.comp)
-    {
-    }
+        : base_type(srook::move(s.c), a, s.comp) {}
     template <class InputIterator>
     priority_queue(InputIterator first, InputIterator last, const value_compare& com, const container_type& con)
         : base_type(first, last, com, con) {}
@@ -351,65 +365,90 @@ public:
 #    ifdef __glibcxx_check_nonempty
 #        define CHECK_NONEMPTY() __glibcxx_check_nonempty()
 #    else
-#        define CHECK_NONEMPTY() assert(this->size())
+#        define CHECK_NONEMPTY() assert(this->c.size())
 #    endif
     SROOK_CONSTEXPR const_reference top() const
     {
         CHECK_NONEMPTY();
         return this->c.front();
     }
-#    undef CHECK_NONEMPTY
     srook::libraries::optional<value_type> pop()
     {
         if (this->empty()) return srook::libraries::nullopt;
 
-        unique_lock<mutex> lk(this->m_);
+        lock_guard<mutex> lk(this->m_);
+        CHECK_NONEMPTY();
         const value_type result(this->c.front());
         this->c.pop_front();
         return srook::libraries::make_optional(result);
     }
+#    undef CHECK_NONEMPTY
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator==(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator<(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator!=(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator>(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator<=(const priority_queue<U, C>&, const priority_queue<U, C>&);
+    template <class U, class C>
+    friend SROOK_FORCE_INLINE bool operator>=(const priority_queue<U, C>&, const priority_queue<U, C>&);
 };
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator==(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return lhs.c == rhs.c;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator<(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return lhs.c < rhs.c;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator!=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(lhs == rhs);
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator>(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return rhs < lhs;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator<=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(rhs < lhs);
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator>=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
+    lock(lhs.m_, rhs.m_);
+    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(lhs < rhs);
 }
 
 template <class T, class Container, class Compare>
 inline SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<is_swappable<Container>, is_swappable<Compare> >::value>::type
 swap(priority_queue<T, Container, Compare>& lhs, priority_queue<T, Container, Compare>& rhs)
-    SROOK_NOEXCEPT(lhs.swap(rhs))
+SROOK_NOEXCEPT(lhs.swap(rhs))
 {
     lhs.swap(rhs);
 }
