@@ -3,6 +3,7 @@
 #define INCLUDED_MEMORY_POINTER_TRAITS_HPP
 #include <srook/config/cpp_predefined.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/feature.hpp>
 #include <srook/memory/addressof.hpp>
 #include <srook/memory/to_address.hpp>
@@ -55,8 +56,8 @@ public:
     template <class U>
     using rebind = SROOK_DEDUCED_TYPENAME rebinder<Ptr, U>::type;
     
-    static Ptr pointer_to(detail::make_not_void<element_type>& e) { return Ptr::pointer_to(e); }
-    static element_type* to_address(pointer p) SROOK_NOEXCEPT_TRUE { return ::srook::to_address(p); }
+    SROOK_FORCE_INLINE static Ptr pointer_to(detail::make_not_void<element_type>& e) { return Ptr::pointer_to(e); }
+    SROOK_FORCE_INLINE static element_type* to_address(pointer p) SROOK_NOEXCEPT_TRUE { return ::srook::to_address(p); }
 
     SROOK_STATIC_ASSERT((type_traits::detail::Lnot<is_same<element_type, detail::invalid>>::value), 
             "pointer type defines element_type or is like SomePointer<T, Args>");
@@ -70,8 +71,8 @@ struct pointer_traits<T*> {
     template <class U>
     using rebind = U*;
 
-    static pointer pointer_to(detail::make_not_void<element_type>& r) SROOK_NOEXCEPT_TRUE { return srook::addressof(r); }
-    static element_type* to_address(pointer p) SROOK_NOEXCEPT_TRUE { return ::srook::to_address(p); }
+    SROOK_FORCE_INLINE static pointer pointer_to(detail::make_not_void<element_type>& r) SROOK_NOEXCEPT_TRUE { return srook::addressof(r); }
+    SROOK_FORCE_INLINE static element_type* to_address(pointer p) SROOK_NOEXCEPT_TRUE { return ::srook::to_address(p); }
 };
 
 SROOK_INLINE_NAMESPACE_END

@@ -9,7 +9,7 @@ srook::binary_timed_semaphore bts;
 
 using namespace srook::mutexes::includes;
 
-const auto lm = [](auto&& x) { srook::semaphores::up_all(srook::forward<SROOK_DECLTYPE(x)>(x)); };
+const auto lm = [](auto&& x) { srook::forward<SROOK_DECLTYPE(x)>(x).up_all(); };
 template <class T>
 using scoped_upall = srook::unique_resource<T, SROOK_DECLTYPE(lm)>;
 
@@ -20,13 +20,13 @@ int main()
 {
     {
         scoped_upall<srook::semaphore&> rs(s, lm);
-        srook::semaphores::down_all(s);
+        s.down_all();
         SROOK_ST_ASSERT(noexcept(s.is_binary()));
         assert(!s.is_binary() && !s.try_lock());
     }
     {
         scoped_upall<srook::timed_semaphore&> rs(ts, lm);
-        srook::semaphores::down_all(ts);
+        ts.down_all();
         assert(!ts.try_lock_for(chrono::nanoseconds(1)));
         assert(!ts.try_lock_until(chrono::system_clock::now() + chrono::nanoseconds(1)));
         SROOK_ST_ASSERT(noexcept(ts.is_binary()));

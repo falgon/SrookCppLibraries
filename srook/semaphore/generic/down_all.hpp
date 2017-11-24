@@ -14,7 +14,7 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class Semaphore, SROOK_REQUIRES(type_traits::detail::Land<is_downable<Semaphore>, is_upable<Semaphore> >::value)>
 SROOK_FORCE_INLINE void down_all(Semaphore& sm)
 {
-    while (sm.resource()) sm.down();
+    sm.down_all();
 }
 
 SROOK_INLINE_NAMESPACE_END

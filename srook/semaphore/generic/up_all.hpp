@@ -11,8 +11,7 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class Semaphore, SROOK_REQUIRES(type_traits::detail::Land<is_downable<Semaphore>, is_upable<Semaphore> >::value)>
 void up_all(Semaphore& sm)
 {
-    SROOK_ST_ASSERT(is_integral<SROOK_DEDUCED_TYPENAME Semaphore::counter_type>::value);
-    while (sm.resource() != sm.max()) sm.up();
+    sm.up_all();
 }
 
 SROOK_INLINE_NAMESPACE_END

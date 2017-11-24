@@ -28,7 +28,7 @@ public:
     SROOK_CONSTEXPR explicit basic_semaphore(counter_type max) : counter_(max), max_(srook::move(max)) {}
 #else
     SROOK_MUTEX_DOES_NOT_SUPPORT_STATIC_INIT_MESSAGE
-    basic_semaphore() : counter_(max), max_(max) {} // The behavior is binary semaphore
+    basic_semaphore() : counter_(1), max_(1) {} // The behavior is binary semaphore
     SROOK_MUTEX_DOES_NOT_SUPPORT_STATIC_INIT_MESSAGE
     explicit basic_semaphore(counter_type max) : counter_(max) max_(max) {}
 #endif
@@ -45,6 +45,7 @@ public:
         cv_.wait(lk, Instructor(*this));
         --counter_;
     }
+
     int down_interruptible()
     {
         down();
@@ -69,8 +70,29 @@ public:
         cv_.notify_one();
     }
 
-    SROOK_CONSTEXPR counter_type max() const SROOK_NOEXCEPT_TRUE { return max_; }
-    SROOK_CONSTEXPR bool is_binary() const SROOK_NOEXCEPT_TRUE { return max_ == 1; }
+    void down_all()
+    {
+        lock_guard<mutex_type> lk(m_);
+        counter_ = 0;
+    }
+
+    void up_all()
+    {
+        lock_guard<mutex_type> lk(m_);
+        counter_ = max_;
+        cv_.notify_all();
+    }
+
+    SROOK_CONSTEXPR counter_type max() const SROOK_NOEXCEPT_TRUE 
+    { 
+        lock_guard<mutex_type> lk(m_);
+        return max_; 
+    }
+    SROOK_CONSTEXPR bool is_binary() const SROOK_NOEXCEPT_TRUE 
+    { 
+        lock_guard<mutex_type> lk(m_);
+        return max_ == 1; 
+    }
     SROOK_CONSTEXPR const counter_type& resource() const SROOK_NOEXCEPT_TRUE 
     {
         lock_guard<mutex_type> lk(m_);
@@ -82,6 +104,10 @@ public:
     SROOK_FORCE_INLINE bool try_lock() { return !down_trylock(); }
     SROOK_FORCE_INLINE void unlock() { up(); }
 
+    // options...
+    SROOK_FORCE_INLINE void lock_all() { down_all(); }
+    SROOK_FORCE_INLINE void unlock_all() { up_all(); }
+
 protected:
     struct Instructor {
         SROOK_CONSTEXPR explicit Instructor(const basic_semaphore& bs) : b_(bs) {}
@@ -90,7 +116,7 @@ protected:
     private:
         const basic_semaphore& b_;
     };
-    mutex_type m_;
+    mutable mutex_type m_;
     condition_variable_type cv_;
     counter_type counter_
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
