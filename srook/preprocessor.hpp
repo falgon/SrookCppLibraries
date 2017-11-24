@@ -7,6 +7,9 @@
 #include <srook/preprocessor/concat.hpp>
 #include <srook/preprocessor/if.hpp>
 #include <srook/preprocessor/not.hpp>
-#include <srook/preprocessor/va_args_size.hpp>
+#include <srook/preprocessor/va_count.hpp>
+#include <srook/preprocessor/control/iif.hpp>
+#include <srook/preprocessor/comparison/equal.hpp>
+#include <srook/preprocessor/comparison/not_equal.hpp>
 
 #endif

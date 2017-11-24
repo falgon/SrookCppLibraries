@@ -17,6 +17,7 @@
 #include <srook/type_traits/copy_move_able.hpp>
 #include <srook/type_traits/decay.hpp>
 #include <srook/type_traits/detail.hpp>
+#include <srook/type_traits/detect.hpp>
 #include <srook/type_traits/disable_if.hpp>
 #include <srook/type_traits/disjunction.hpp>
 #include <srook/type_traits/enable_disable_if.hpp>

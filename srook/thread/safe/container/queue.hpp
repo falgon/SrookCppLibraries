@@ -50,17 +50,17 @@ struct queue_impl {
 #endif
 protected:
 	container_type c;
-	srook::mutex m_;
+    mutable mutex m_;
 public:
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty()
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty() const
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
     {
         lock_guard<mutex> lock(m_);
         return c.empty();
     }
 
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size()
-    const SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size() const
+    SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
 		lock_guard<mutex> lock(m_);
         return c.size();

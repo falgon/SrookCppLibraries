@@ -95,7 +95,7 @@ public:
 protected:
     container_type c;
     value_compare comp;
-    srook::mutex m_;
+    mutex m_;
 
 private:
     struct push_heaper_ {

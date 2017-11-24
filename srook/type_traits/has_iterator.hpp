@@ -20,18 +20,14 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class, class = typename srook::voider<>::type>
-struct has_iterator_category : SROOK_FALSE_TYPE {
-};
+struct has_iterator_category : SROOK_FALSE_TYPE {};
 template <class T>
-struct has_iterator_category<T, typename voider<typename T::iterator_category>::type > : SROOK_TRUE_TYPE {
-};
+struct has_iterator_category<T, typename voider<typename T::iterator_category>::type > : SROOK_TRUE_TYPE {};
 
 template <class, class = typename srook::voider<>::type>
-struct has_iterator : SROOK_FALSE_TYPE {
-};
+struct has_iterator : SROOK_FALSE_TYPE {};
 template <class T>
-struct has_iterator<T, typename voider<typename T::iterator, enable_if_t<!has_iterator_category<T>::value> >::type> : SROOK_TRUE_TYPE {
-};
+struct has_iterator<T, typename voider<typename T::iterator, enable_if_t<!has_iterator_category<T>::value> >::type> : SROOK_TRUE_TYPE {};
 template <class T>
 struct has_iterator<
     T,
