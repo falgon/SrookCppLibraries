@@ -75,6 +75,9 @@ using optionally::make_optional;
 #        include <boost/optional.hpp>
 #        define SROOK_HAS_BOOST_OPTIONAL 1
 #    endif
+#    if SROOK_HAS_INCLUDE(<compare>) // C++20 feature
+#        include <compare> 
+#    endif
 
 namespace srook {
 namespace optionally {
@@ -117,14 +120,14 @@ struct optional_payload {
     }
 
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
-    struct Empty_byte {};
+    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
     union {
         Empty_byte empty_;
         Stored_type payload_;
     };
     bool engaged_ = false;
 
-    ~optional_payload()
+    ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
         if (engaged_) payload_.~Stored_type();
     }
@@ -168,7 +171,7 @@ struct optional_payload<T, false, true> {
     }
 
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
-    struct Empty_byte {};
+    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
     union {
         Empty_byte empty_;
         Stored_type payload_;
@@ -176,6 +179,57 @@ struct optional_payload<T, false, true> {
     bool engaged_ = false;
 
 	// trivially destructible...
+
+    template <class... Args>
+    void construct(Args&&... args)
+    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    {
+        ::new ((void*)addressof(payload_)) Stored_type(srook::forward<Args>(args)...);
+        engaged_ = true;
+    }
+};
+
+template <class T>
+struct optional_payload<T, false, false> {
+    SROOK_CONSTEXPR optional_payload() : empty_() {}
+#    define DEF_CONSTRUCTOR(X)                                          \
+        template <class... Args>                                        \
+        SROOK_CONSTEXPR optional_payload(X::in_place_t, Args&&... args) \
+            : payload_(srook::forward<Args>(args)...), engaged_(true) {}
+    DEF_CONSTRUCTOR(srook)
+#    if SROOK_HAS_STD_OPTIONAL
+    DEF_CONSTRUCTOR(std)
+#    endif
+#    undef DEF_CONSTRUCTOR
+
+    template <class U, class... Args>
+    SROOK_CONSTEXPR optional_payload(std::initializer_list<U> li, Args&&... args)
+        : payload_(li, srook::forward<Args>(args)...), engaged_(true) {}
+    SROOK_CONSTEXPR optional_payload(bool, const optional_payload& other)
+        : optional_payload(other) {}
+    SROOK_CONSTEXPR optional_payload(bool, optional_payload&& other)
+        : optional_payload(srook::move(other)) {}
+    SROOK_CONSTEXPR optional_payload(const optional_payload& other)
+    {
+        if (other.engaged_) construct(other.payload_);
+    }
+    SROOK_CONSTEXPR optional_payload(optional_payload&& other)
+    {
+        if (other.engaged) construct(srook::move(other.payload_));
+    }
+
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
+    bool engaged_ = false;
+
+    ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
+    {
+        if (engaged_) payload_.~Stored_type();
+    }
 
     template <class... Args>
     void construct(Args&&... args)
@@ -270,6 +324,7 @@ protected:
         payload_.payload_.~Stored_type();
     }
     void reset()
+    SROOK_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
         if (payload_.engaged_) destruct();
     }
@@ -628,6 +683,41 @@ public:
     }
     void reset() SROOK_MEMFN_NOEXCEPT(true) { Base_type::reset(); }
 
+#if 0 && SROOK_HAS_INCLUDE(<compare>) // C++20 feature
+#define DEF_COMP(NAMESPACE, NULLOP)\
+    template <class U>\
+    SROOK_CONSTEXPR auto operator<=>(const NAMESPACE::optional<U>& rhs) const\
+    -> SROOK_DECLTYPE(std::compare_3way(**this, *rhs))\
+    {\
+        if (has_value() && rhs.has_value()) {\
+            return std::compare_3way(**this, *rhs);\
+        } else {\
+            return has_value() <=> rhs.has_value();\
+        }\
+    }\
+    template <class U>\
+    SROOK_CONSTEXPR auto operator<=>(const U& rhs) const\
+    -> SROOK_DECLTYPE(std::compare_3way(**this, rhs))\
+    {\
+        if (has_value()) {\
+            return compare_3way(**this, rhs);\
+        } else {\
+            return std::strong_ordering::less;\
+        }\
+    }\
+    SROOK_CONSTEXPR std::strong_ordering operator<=>(NAMESPACE::NULLOP) const\
+    {\
+        return has_value() ? std::strong_ordering::greater : std::strong_ordering::equal;\
+    }
+    DEF_COMP(optionally, nullopt_t)
+#   if SROOK_HAS_STD_OPTIONAL
+    DEF_COMP(std, nullopt_t)
+#   endif
+#   if SROOK_HAS_BOOST_OPTIONAL
+    DEF_COMP(boost, none_t)
+#   endif
+#   undef DEF_COMP
+#else
 #    define DEF_OPERATORS(X, Y, NULLOP)                                                                          \
         template <class L, class R>                                                                              \
         friend SROOK_CONSTEXPR auto operator==(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
@@ -833,6 +923,7 @@ public:
     DEF_OPERATORS(optionally, boost)
 #    endif
 #    undef DEF_OPERATORS
+#endif
 
     template <class L, class R>
     friend SROOK_CONSTEXPR auto operator==(const optional<L>& lhs, const R& rhs)
