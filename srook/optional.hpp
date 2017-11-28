@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_OPTIONAL_HPP
 #define INCLUDED_SROOK_OPTIONAL_HPP
 #include <srook/config/feature.hpp>
-#include <srook/type_traits/decay.hpp>
+#include <srook/type_traits.hpp>
 #include <initializer_list>
 #include <exception>
 
@@ -10,7 +10,19 @@ namespace srook {
 namespace optionally {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class>
+namespace detail {
+
+template <class T, bool, bool>
+class optional_payload;
+template <class T, bool, bool>
+class safe_optional_payload;
+
+} // namespace detail
+
+using detail::optional_payload;
+using detail::safe_optional_payload;
+
+template <class, template <class, bool, bool> class = optional_payload>
 class optional;
 
 struct nullopt_t {
@@ -63,7 +75,6 @@ using optionally::make_optional;
 #    include <new>
 #    include <srook/config/attribute.hpp>
 #    include <srook/memory/addressof.hpp>
-#    include <srook/type_traits.hpp>
 #    include <srook/utility.hpp>
 #    include <stdexcept>
 #    include <type_traits>
@@ -86,10 +97,216 @@ namespace detail {
 
 SROOK_FORCE_INLINE SROOK_NORETURN void throw_bad_optional_access() { SROOK_THROW bad_optional_access(); }
 
-template <class T,
-          bool = type_traits::detail::Land<std::is_trivially_copy_constructible<T>, std::is_trivially_move_constructible<T> >::value,
-          bool = std::is_trivially_destructible<T>::value>
+template <class T, bool, bool>
+struct safe_optional_payload {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
+    SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
+
+#    define DEF_CONSTRUCTOR(LIB)                                          \
+        template <class... Args>                                          \
+        SROOK_CONSTEXPR safe_optional_payload(LIB::in_place_t, Args&&... args) \
+            : payload_(srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
+
+    DEF_CONSTRUCTOR(srook)
+#    if SROOK_HAS_STD_OPTIONAL
+    DEF_CONSTRUCTOR(std)
+#    endif
+#    undef DEF_CONSTRUCTOR
+
+    template <class U, class... Args>
+    SROOK_CONSTEXPR safe_optional_payload(std::initializer_list<U> li, Args&&... args)
+        : payload_(li, srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
+
+    template <class U> struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+
+    SROOK_CONSTEXPR safe_optional_payload(ctor_tag<bool>, const T& other)
+        : payload_(other), payload_ptr_(srook::addressof(payload_)) {}
+    SROOK_CONSTEXPR safe_optional_payload(ctor_tag<void>)
+        : empty_() {}
+    SROOK_CONSTEXPR safe_optional_payload(ctor_tag<bool>, T&& other)
+        : payload_(srook::move(other)), payload_ptr_(srook::addressof(payload_)) {}
+
+    SROOK_CONSTEXPR safe_optional_payload(bool is_engaged, const safe_optional_payload& other)
+        : safe_optional_payload(payload_ptr_ ? safe_optional_payload(ctor_tag<bool>{}, other.payload_) : safe_optional_payload(ctor_tag<void>{})) {}
+    SROOK_CONSTEXPR safe_optional_payload(bool is_engaged, safe_optional_payload&& other)
+        : safe_optional_payload(payload_ptr_ ? safe_optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : safe_optional_payload(ctor_tag<void>{})) {}
+public:
+    ~safe_optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
+    {
+        if (payload_ptr_) payload_ptr_->~Stored_type();
+    }
+    template <class... Args>
+    void construct(Args&&... args)
+    SROOK_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    {
+        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
+    { 
+        if (!b) payload_ptr_ = SROOK_NULLPTR;
+        else payload_ptr_ = srook::addressof(payload_);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+private:
+    struct Empty_byte SROOK_FINAL {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
+    // 3.8 Object lifetime [basic.life] cause UB if Stored_type has const or reference type member variable.
+    // This pointer is neccessary in order to prevent the problem.
+    Stored_type* payload_ptr_ = SROOK_NULLPTR;
+};
+
+
+template <class T>
+struct safe_optional_payload<T, false, true> {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
+    SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
+#    define DEF_CONSTRUCTOR(X)                                          \
+        template <class... Args>                                        \
+        SROOK_CONSTEXPR safe_optional_payload(X::in_place_t, Args&&... args) \
+            : payload_(srook::forward<Args>(args)...), payload_ptr_(true) {}
+    DEF_CONSTRUCTOR(srook)
+#    if SROOK_HAS_STD_OPTIONAL
+    DEF_CONSTRUCTOR(std)
+#    endif
+#    undef DEF_CONSTRUCTOR
+
+    template <class U, class... Args>
+    SROOK_CONSTEXPR safe_optional_payload(std::initializer_list<U> li, Args&&... args)
+        : payload_(li, srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
+    SROOK_CONSTEXPR safe_optional_payload(bool, const safe_optional_payload& other)
+        : safe_optional_payload(other) {}
+    SROOK_CONSTEXPR safe_optional_payload(bool, safe_optional_payload&& other)
+        : safe_optional_payload(srook::move(other)) {}
+    SROOK_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
+    {
+        if (other.load_engaged()) construct(other.payload_);
+    }
+    SROOK_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
+    {
+        if (other.load_engaged()) construct(srook::move(other.payload_));
+    }
+
+	// trivially destructible...
+
+    template <class... Args>
+    void construct(Args&&... args)
+    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    {
+        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
+    { 
+        if (!b) payload_ptr_ = SROOK_NULLPTR;
+        else payload_ptr_ = srook::addressof(payload_);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+private:
+    struct Empty_byte SROOK_FINAL {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
+    // 3.8 Object lifetime [basic.life] cause UB if Stored_type has const or reference type member variable.
+    // This pointer is neccessary in order to prevent the problem.
+    Stored_type* payload_ptr_ = SROOK_NULLPTR;
+};
+
+template <class T>
+struct safe_optional_payload<T, false, false> {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
+    SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
+#    define DEF_CONSTRUCTOR(X)                                          \
+        template <class... Args>                                        \
+        SROOK_CONSTEXPR safe_optional_payload(X::in_place_t, Args&&... args) \
+            : payload_(srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
+    DEF_CONSTRUCTOR(srook)
+#    if SROOK_HAS_STD_OPTIONAL
+    DEF_CONSTRUCTOR(std)
+#    endif
+#    undef DEF_CONSTRUCTOR
+
+    template <class U, class... Args>
+    SROOK_CONSTEXPR safe_optional_payload(std::initializer_list<U> li, Args&&... args)
+        : payload_(li, srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
+    SROOK_CONSTEXPR safe_optional_payload(bool, const safe_optional_payload& other)
+        : safe_optional_payload(other) {}
+    SROOK_CONSTEXPR safe_optional_payload(bool, safe_optional_payload&& other)
+        : safe_optional_payload(srook::move(other)) {}
+    SROOK_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
+    {
+        if (other.load_engaged()) construct(other.payload_);
+    }
+    SROOK_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
+    {
+        if (other.load_engaged()) construct(srook::move(other.payload_));
+    }
+
+    ~safe_optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
+    {
+        if (payload_ptr_) payload_ptr_->~Stored_type();
+    }
+
+    template <class... Args>
+    void construct(Args&&... args)
+    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    {
+        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
+    { 
+        if (!b) payload_ptr_ = SROOK_NULLPTR;
+        else payload_ptr_ = srook::addressof(payload_);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return *payload_ptr_;
+    }
+private:
+    struct Empty_byte SROOK_FINAL {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
+    // 3.8 Object lifetime [basic.life] cause UB if Stored_type has const or reference type member variable.
+    // This pointer is neccessary in order to prevent the problem.
+    Stored_type* payload_ptr_ = SROOK_NULLPTR;
+};
+
+template <class T, bool, bool>
 struct optional_payload {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
     SROOK_CONSTEXPR optional_payload() : empty_() {}
 
 #    define DEF_CONSTRUCTOR(LIB)                                          \
@@ -97,6 +314,78 @@ struct optional_payload {
         SROOK_CONSTEXPR optional_payload(LIB::in_place_t, Args&&... args) \
             : payload_(srook::forward<Args>(args)...), engaged_(true) {}
 
+    DEF_CONSTRUCTOR(srook)
+#    if SROOK_HAS_STD_OPTIONAL
+    DEF_CONSTRUCTOR(std)
+#    endif
+#    undef DEF_CONSTRUCTOR
+
+    template <class U, class... Args>
+    SROOK_CONSTEXPR optional_payload(std::initializer_list<U> li, Args&&... args)
+        : payload_(li, srook::forward<Args>(args)...), engaged_(true) {}
+
+    template <class U> struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+
+    SROOK_CONSTEXPR optional_payload(ctor_tag<bool>, const T& other)
+        : payload_(other), engaged_(true) {}
+    SROOK_CONSTEXPR optional_payload(ctor_tag<void>)
+        : empty_() {}
+    SROOK_CONSTEXPR optional_payload(ctor_tag<bool>, T&& other)
+        : payload_(srook::move(other)), engaged_(true) {}
+
+    SROOK_CONSTEXPR optional_payload(bool is_engaged, const optional_payload& other)
+        : optional_payload(is_engaged ? optional_payload(ctor_tag<bool>{}, other.payload_) : optional_payload(ctor_tag<void>{})) {}
+    SROOK_CONSTEXPR optional_payload(bool is_engaged, optional_payload&& other)
+        : optional_payload(is_engaged ? optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : optional_payload(ctor_tag<void>{})) {}
+    
+    ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
+    {
+        if (engaged_) payload_.~Stored_type();
+    }
+
+    template <class... Args>
+    void construct(Args&&... args)
+    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
+    {
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
+        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...); 
+        engaged_ = true;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
+    {
+        return engaged_;
+    }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
+    {
+        engaged_ = srook::move(b);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+private:
+    bool engaged_ = false;
+    struct Empty_byte SROOK_FINAL {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
+};
+
+template <class T>
+struct optional_payload<T, false, true> {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
+    SROOK_CONSTEXPR optional_payload() : empty_() {}
+#    define DEF_CONSTRUCTOR(X)                                          \
+        template <class... Args>                                        \
+        SROOK_CONSTEXPR optional_payload(X::in_place_t, Args&&... args) \
+            : payload_(srook::forward<Args>(args)...), engaged_(true) {}
     DEF_CONSTRUCTOR(srook)
 #    if SROOK_HAS_STD_OPTIONAL
     DEF_CONSTRUCTOR(std)
@@ -119,78 +408,47 @@ struct optional_payload {
         if (other.engaged_) construct(srook::move(other.payload_));
     }
 
-    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
-    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
-    union {
-        Empty_byte empty_;
-        Stored_type payload_;
-    };
-    bool engaged_ = false;
-
-    ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
-    {
-        if (engaged_) payload_.~Stored_type();
-    }
+    // trivially destructible...
 
     template <class... Args>
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        ::new ((void*)addressof(payload_)) Stored_type(srook::forward<Args>(args)...);
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
+        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
     }
-};
-
-template <class T>
-struct optional_payload<T, false, true> {
-    SROOK_CONSTEXPR optional_payload() : empty_() {}
-#    define DEF_CONSTRUCTOR(X)                                          \
-        template <class... Args>                                        \
-        SROOK_CONSTEXPR optional_payload(X::in_place_t, Args&&... args) \
-            : payload_(srook::forward<Args>(args)...), engaged_(true) {}
-    DEF_CONSTRUCTOR(srook)
-#    if SROOK_HAS_STD_OPTIONAL
-    DEF_CONSTRUCTOR(std)
-#    endif
-#    undef DEF_CONSTRUCTOR
-
-    template <class U, class... Args>
-    SROOK_CONSTEXPR optional_payload(std::initializer_list<U> li, Args&&... args)
-        : payload_(li, srook::forward<Args>(args)...), engaged_(true) {}
-    SROOK_CONSTEXPR optional_payload(bool, const optional_payload& other)
-        : optional_payload(other) {}
-    SROOK_CONSTEXPR optional_payload(bool, optional_payload&& other)
-        : optional_payload(srook::move(other)) {}
-    SROOK_CONSTEXPR optional_payload(const optional_payload& other)
+    
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
     {
-        if (other.engaged_) construct(other.payload_);
+        return engaged_;
     }
-    SROOK_CONSTEXPR optional_payload(optional_payload&& other)
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
     {
-        if (other.engaged) construct(srook::move(other.payload_));
+        engaged_ = srook::move(b);
     }
-
-    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
-    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+private:
+    bool engaged_ = false;
+    struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
         Stored_type payload_;
     };
-    bool engaged_ = false;
-
-	// trivially destructible...
-
-    template <class... Args>
-    void construct(Args&&... args)
-    SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
-    {
-        ::new ((void*)addressof(payload_)) Stored_type(srook::forward<Args>(args)...);
-        engaged_ = true;
-    }
 };
 
 template <class T>
 struct optional_payload<T, false, false> {
+private:
+    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+public:
     SROOK_CONSTEXPR optional_payload() : empty_() {}
 #    define DEF_CONSTRUCTOR(X)                                          \
         template <class... Args>                                        \
@@ -215,34 +473,57 @@ struct optional_payload<T, false, false> {
     }
     SROOK_CONSTEXPR optional_payload(optional_payload&& other)
     {
-        if (other.engaged) construct(srook::move(other.payload_));
+        if (other.engaged_) construct(srook::move(other.payload_));
     }
-
-    typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
-    struct Empty_byte SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
-    union {
-        Empty_byte empty_;
-        Stored_type payload_;
-    };
-    bool engaged_ = false;
-
+    
     ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
         if (engaged_) payload_.~Stored_type();
     }
-
     template <class... Args>
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        ::new ((void*)addressof(payload_)) Stored_type(srook::forward<Args>(args)...);
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
+        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
     }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
+    {
+        return engaged_;
+    }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
+    {
+        engaged_ = srook::move(b);
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
+    {
+        return payload_;
+    }
+private:
+    bool engaged_ = false;
+    struct Empty_byte SROOK_FINAL {};
+    union {
+        Empty_byte empty_;
+        Stored_type payload_;
+    };
 };
 
-template <class T>
+template <class T, template <class, bool, bool> class Payload>
 class optional_base {
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+    typedef Payload<
+        T,
+        type_traits::detail::Land<
+            std::is_trivially_copy_constructible<T>, 
+            std::is_trivially_move_constructible<T> 
+        >::value,
+        std::is_trivially_destructible<T>::value
+    > payload_type;
 
 public:
     SROOK_CONSTEXPR optional_base() SROOK_NOEXCEPT_TRUE {}
@@ -263,16 +544,16 @@ public:
 #    undef DEF_CONSTRUCTOR
 
     SROOK_CONSTEXPR optional_base(const optional_base& other)
-        : payload_(other.payload_.engaged_, other.payload_) {}
+        : payload_(other.payload_.load_engaged(), other.payload_) {}
     SROOK_CONSTEXPR optional_base(optional_base&& other)
         SROOK_NOEXCEPT(is_nothrow_constructible<T>::value)
-        : payload_(other.payload_.engaged_, srook::move(other.payload_)) {}
+        : payload_(other.payload_.load_engaged(), srook::move(other.payload_)) {}
     optional_base& operator=(const optional_base& other)
     {
-        if (payload_.engaged_ && other.payload_.engaged_) {
+        if (payload_.load_engaged() && other.payload_.load_engaged()) {
             get() = other.get();
         } else {
-            if (other.payload_.engaged_) {
+            if (other.payload_.load_engaged()) {
                 construct(other.get());
             } else {
                 reset();
@@ -283,10 +564,10 @@ public:
     optional_base& operator=(optional_base&& other)
     SROOK_NOEXCEPT((type_traits::detail::Land<is_nothrow_move_constructible<T>, is_nothrow_assignable<T> >::value))
     {
-        if (payload_.engaged_ && other.payload_.engaged_) {
+        if (payload_.load_engaged() && other.payload_.load_engaged()) {
             get() = srook::move(other.get());
         } else {
-            if (other.payload_.engaged_) {
+            if (other.payload_.load_engaged()) {
                 construct(srook::move(other.get()));
             } else {
                 reset();
@@ -298,39 +579,38 @@ public:
 protected:
     SROOK_CONSTEXPR bool is_engaged() const SROOK_NOEXCEPT_TRUE
     {
-        return payload_.engaged_;
+        return payload_.load_engaged();
     }
     SROOK_CONSTEXPR T& get() SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
-        return payload_.payload_;
+        return payload_.load_payload();
     }
     SROOK_CONSTEXPR const T& get() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
-        return payload_.payload_;
+        return payload_.load_payload();
     }
     template <class... Args>
     void construct(Args&&... args)
     SROOK_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        ::new (addressof(payload_.payload_)) Stored_type(srook::forward<Args>(args)...);
-        payload_.engaged_ = true;
+        payload_.construct(srook::forward<Args>(args)...);
     }
     void destruct()
     SROOK_NOEXCEPT((is_nothrow_destructible<Stored_type>::value))
     {
-        payload_.engaged_ = false;
-        payload_.payload_.~Stored_type();
+        payload_.store_engaged(false);
+        payload_.load_payload().~Stored_type();
     }
     void reset()
     SROOK_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
-        if (payload_.engaged_) destruct();
+        if (payload_.load_engaged()) destruct();
     }
 
 private:
-    optional_payload<T> payload_;
+    payload_type payload_;
 };
 
 template <class T, class U>
@@ -356,9 +636,9 @@ using optional_relop = SROOK_DEDUCED_TYPENAME enable_if<is_convertible<T, bool>:
 
 } // namespace detail
 
-template <class T>
+template <class T, template <class, bool, bool> class Payload>
 class optional
-    : private detail::optional_base<T>,
+    : private detail::optional_base<T, Payload>,
       private enable_copy_move<
           is_copy_constructible<T>::value,
           type_traits::detail::Land<is_copy_constructible<T>, is_copy_assignable<T> >::value,
@@ -370,7 +650,7 @@ class optional
     SROOK_ST_ASSERT((type_traits::detail::Lnot<is_reference<T> >::value));
 
 private:
-    typedef detail::optional_base<T> Base_type;
+    typedef detail::optional_base<T, Payload> Base_type;
 
 public:
     typedef T value_type;
@@ -540,7 +820,7 @@ public:
         if (Base_type::is_engaged())
             Base_type::get() = srook::forward<U>(u);
         else
-            construct(srook::forward<U>(u));
+            Base_type::construct(srook::forward<U>(u));
         return *this;
     }
 
@@ -611,7 +891,7 @@ public:
     emplace(Args&&... args)
     {
         reset();
-        construct(srook::forward<Args>(args)...);
+        Base_type::construct(srook::forward<Args>(args)...);
         return Base_type::get();
     }
 
@@ -620,7 +900,7 @@ public:
     emplace(std::initializer_list<U> li, Args&&... args)
     {
         reset();
-        construct(li, srook::forward<Args>(args)...);
+        Base_type::construct(li, srook::forward<Args>(args)...);
         return Base_type::get();
     }
 
@@ -923,7 +1203,6 @@ public:
     DEF_OPERATORS(optionally, boost)
 #    endif
 #    undef DEF_OPERATORS
-#endif
 
     template <class L, class R>
     friend SROOK_CONSTEXPR auto operator==(const optional<L>& lhs, const R& rhs)
@@ -1009,6 +1288,7 @@ public:
         return !rhs || lhs >= *rhs;
     }
 };
+#endif
 
 #    define DEF_SWAP(X, Y)                                                                                                      \
         template <class T>                                                                                                      \
