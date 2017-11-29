@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_ARRAY_HPP
 #define INCLUDED_SROOK_ARRAY_HPP
 
-#include <srook/array/deprecated/array.hpp>
-#include <srook/array/deprecated/make_array.hpp>
+#include <srook/array/array.hpp>
+#include <srook/array/make_std_array.hpp>
 
 #endif
