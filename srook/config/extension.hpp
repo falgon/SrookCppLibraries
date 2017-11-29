@@ -6,5 +6,6 @@
 #include <srook/config/extension/Nullunspecified.hpp>
 #include <srook/config/extension/Nullable.hpp>
 #include <srook/config/extension/irq_control.hpp>
+#include <srook/config/extension/no_se_condition_op.hpp>
 
 #endif
