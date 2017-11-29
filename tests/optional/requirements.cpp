@@ -1,5 +1,7 @@
 #define  BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
+#include <boost/test/test_case_template.hpp>
+#include <boost/mpl/list.hpp>
 #include <srook/optional.hpp>
 
 SROOK_ST_ASSERT(srook::is_default_constructible<srook::bad_optional_access>{});
@@ -396,7 +398,7 @@ BOOST_AUTO_TEST_CASE(optional)
     {
         optional<const int> o1 { 42 };
         SROOK_ST_ASSERT((srook::is_same<SROOK_DEDUCED_TYPENAME SROOK_DECLTYPE(o1)::value_type, const int>{}));
-        assert(o1);
+        BOOST_TEST(bool(o1));
         BOOST_CHECK_EQUAL(*o1, 42);
 
         struct X {
@@ -409,28 +411,16 @@ BOOST_AUTO_TEST_CASE(optional)
         BOOST_TEST(bool(o2));
         BOOST_CHECK_EQUAL((*o2).constant_data, 32);
     }
+}
 
-    typedef optional<int&> A;
-    typedef optional<int&&> B;
-    typedef optional<srook::in_place_t> C1;
-    typedef optional<const srook::in_place_t> C2;
-    typedef optional<volatile srook::in_place_t> C3;
-    typedef optional<const volatile srook::in_place_t> C4;
-    typedef optional<srook::nullopt_t> D1;
-    typedef optional<const srook::nullopt_t> D2;
-    typedef optional<volatile srook::nullopt_t> D3;
-    typedef optional<const volatile srook::nullopt_t> D4;
-    typedef optional<int&, srook::optionally::safe_optional_payload> E;
-    typedef optional<int&&, srook::optionally::safe_optional_payload> F;
-    typedef optional<srook::in_place_t, srook::optionally::safe_optional_payload> G1;
-    typedef optional<const srook::in_place_t, srook::optionally::safe_optional_payload> G2;
-    typedef optional<volatile srook::in_place_t, srook::optionally::safe_optional_payload> G3;
-    typedef optional<const volatile srook::in_place_t, srook::optionally::safe_optional_payload> G4;
-    typedef optional<srook::nullopt_t, srook::optionally::safe_optional_payload> H1;
-    typedef optional<const srook::nullopt_t, srook::optionally::safe_optional_payload> H2;
-    typedef optional<volatile srook::nullopt_t, srook::optionally::safe_optional_payload> H3;
-    typedef optional<const volatile srook::nullopt_t, srook::optionally::safe_optional_payload> H4;
+typedef boost::mpl::list<
+    int&, int&&, 
+    srook::in_place_t, const srook::in_place_t, volatile srook::in_place_t, const volatile srook::in_place_t,    
+    srook::nullopt_t, const srook::nullopt_t, volatile srook::nullopt_t, const volatile srook::nullopt_t
+> test_types;
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(optional_test, T, test_types)
+{
     // Should not complain about 'invalid' specializations as long as they're not instantiated.
-    typedef std::tuple<A, B, C1, C2, C3, C4, D1, D2, D3, D4, E, F, G1, G2, G3, G4, H1, H2, H3, H4> X; 
+    typedef srook::optional<T> type;
 }

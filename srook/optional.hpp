@@ -129,9 +129,9 @@ public:
         : payload_(srook::move(other)), payload_ptr_(srook::addressof(payload_)) {}
 
     SROOK_CONSTEXPR safe_optional_payload(bool is_engaged, const safe_optional_payload& other)
-        : safe_optional_payload(payload_ptr_ ? safe_optional_payload(ctor_tag<bool>{}, other.payload_) : safe_optional_payload(ctor_tag<void>{})) {}
+        : safe_optional_payload(is_engaged ? safe_optional_payload(ctor_tag<bool>{}, other.payload_) : safe_optional_payload(ctor_tag<void>{})) {}
     SROOK_CONSTEXPR safe_optional_payload(bool is_engaged, safe_optional_payload&& other)
-        : safe_optional_payload(payload_ptr_ ? safe_optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : safe_optional_payload(ctor_tag<void>{})) {}
+        : safe_optional_payload(is_engaged ? safe_optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : safe_optional_payload(ctor_tag<void>{})) {}
 public:
     ~safe_optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
