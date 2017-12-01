@@ -11,6 +11,7 @@
 #    include <errno.h>
 #    include <srook/config/attribute/force_inline.hpp>
 #    include <srook/config/attribute/visibility.hpp>
+#    include <srook/config/attribute/maybe_unused.hpp>
 #    include <srook/config/feature/constexpr.hpp>
 #    include <srook/config/feature/decltype.hpp>
 #    include <srook/config/feature/explicit.hpp>
@@ -170,15 +171,15 @@ static int execute_once(exec_once_flag_type* f, void (*init_routine)())
 { 
 	return pthread_once(f, init_routine); 
 }
-static bool thread_id_equal(thread_id_type t1, thread_id_type t2) SROOK_NOEXCEPT_TRUE 
+SROOK_ATTRIBUTE_UNUSED static bool thread_id_equal(thread_id_type t1, thread_id_type t2) SROOK_NOEXCEPT_TRUE 
 { 
 	return pthread_equal(t1, t2) != 0; 
 }
-static bool thread_id_less(thread_id_type t1, thread_id_type t2) SROOK_NOEXCEPT_TRUE 
+SROOK_ATTRIBUTE_UNUSED static bool thread_id_less(thread_id_type t1, thread_id_type t2) SROOK_NOEXCEPT_TRUE 
 { 
 	return t1 < t2; 
 }
-static bool thread_isnull(const thread_type* t) 
+SROOK_ATTRIBUTE_UNUSED static bool thread_isnull(const thread_type* t) 
 { 
 	return *t == 0; 
 }
@@ -190,7 +191,7 @@ static thread_id_type thread_get_current_id()
 { 
 	return pthread_self(); 
 }
-static thread_id_type thread_get_id(const thread_type* t) 
+SROOK_ATTRIBUTE_UNUSED static thread_id_type thread_get_id(const thread_type* t) 
 { 
 	return *t; 
 }

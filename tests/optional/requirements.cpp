@@ -1,8 +1,11 @@
+// Copyright (C) 2017 roki
 #define  BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 #include <boost/mpl/list.hpp>
 #include <srook/optional.hpp>
+
+BOOST_AUTO_TEST_SUITE(sroptional_test)
 
 SROOK_ST_ASSERT(srook::is_default_constructible<srook::bad_optional_access>{});
 
@@ -31,7 +34,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O>{});
         {
             O o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O>{});
         {
@@ -41,7 +44,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -57,7 +60,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O_safe>{});
         {
@@ -67,7 +70,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -90,7 +93,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -108,7 +111,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -129,13 +132,13 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O>{});
         {
             O o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(Lnot<srook::is_copy_assignable<O> >{});
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -151,13 +154,13 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(Lnot<srook::is_copy_assignable<O_safe> >{});
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -179,7 +182,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -196,7 +199,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -217,7 +220,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O>{});
         {
             O o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O>{});
         {
@@ -227,7 +230,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -243,7 +246,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O_safe>{});
         {
@@ -253,7 +256,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -274,7 +277,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O>{});
         {
             O o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O>{});
         {
@@ -284,7 +287,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -300,7 +303,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O_safe>{});
         {
@@ -310,7 +313,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -331,7 +334,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O>{});
         {
             O o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O>{});
         {
@@ -341,7 +344,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O>{});
         {
             O o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O>{});
         {
@@ -357,7 +360,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_copy_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = o;
+            SROOK_ATTRIBUTE_UNUSED auto p = o;
         }
         SROOK_ST_ASSERT(srook::is_copy_assignable<O_safe>{});
         {
@@ -367,7 +370,7 @@ BOOST_AUTO_TEST_CASE(optional)
         SROOK_ST_ASSERT(srook::is_move_constructible<O_safe>{});
         {
             O_safe o;
-            auto p = srook::move(o);
+            SROOK_ATTRIBUTE_UNUSED auto p = srook::move(o);
         }
         SROOK_ST_ASSERT(srook::is_move_assignable<O_safe>{});
         {
@@ -422,5 +425,7 @@ typedef boost::mpl::list<
 BOOST_AUTO_TEST_CASE_TEMPLATE(optional_test, T, test_types)
 {
     // Should not complain about 'invalid' specializations as long as they're not instantiated.
-    typedef srook::optional<T> type;
+    SROOK_ATTRIBUTE_UNUSED typedef srook::optional<T> type;
 }
+
+BOOST_AUTO_TEST_SUITE_END()

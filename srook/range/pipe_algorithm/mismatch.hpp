@@ -9,7 +9,6 @@
 #include<srook/range/adaptor/adaptor_operator.hpp>
 #include<srook/config/require.hpp>
 #include<srook/type_traits/is_callable.hpp>
-#include<srook/type_traits/remove_all_reference.hpp>
 #include<srook/mpl/has_iterator.hpp>
 #include<srook/mpl/variadic_player.hpp>
 #include<algorithm>

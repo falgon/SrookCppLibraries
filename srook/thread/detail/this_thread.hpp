@@ -12,7 +12,7 @@ namespace threading {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
-SROOK_ATTRIBUTE_INLINE_VISIBILITY thread::id get_id() SROOK_NOEXCEPT_TRUE
+thread::id get_id() SROOK_NOEXCEPT_TRUE
 {
 #ifdef __GLIBC__
 	if (ext::thread_active_p()) return thread::id(1);

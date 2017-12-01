@@ -43,6 +43,13 @@ void g()
 
 int main()
 {
+    std::cout << "                                                              get lock"   << std::endl;
+    std::cout << "  f -> try to get resource but all resource is downed by g ------*----->" << std::endl;
+    std::cout << " /                                                               |"       << std::endl;
+    std::cout << "g -------------------- sleep for 3 seconds ------------------> up_all-->" << std::endl;
+    std::cout << " \\                                                               |"       << std::endl;
+    std::cout << "  f -> try to get resource but all resource is downed by g ------*----->" << std::endl;
+    std::cout << "                                                              get lock"   << std::endl;
     srook::thread th1(f), th2(f), th3(g);
     th1.join(); th2.join(); th3.join();
 }
