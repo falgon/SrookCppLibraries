@@ -101,10 +101,20 @@ struct array {
 #endif
 
 #if 0 && SROOK_HAS_INCLUDE(<compare>)
-    SROOK_CONSTEXPR std::common_comparison_category_t<SROOK_DEDUCED_TYPENAME AT::type>
-    operator<=>(const array& other)
+    // common_comparison_category_t<AT::type> always returns void if AT::type is not copyable ([class.spaceship])
+    // because the core language doesn't provide comparison if the array is not copyable in the language, to keep copying and comparison consistent.
+    // p0515r2 2.2.3 Notes
+    typedef conditional_t<
+        is_copyable_v<SROOK_DEDUCED_TYPENAME AT::type>, 
+        std::common_comparison_category_t<SROOK_DEDUCED_TYPENAME AT::type>,
+        std::common_comparison_category_t<value_type>
+    > category_type;
+    
+    SROOK_CONSTEXPR category_type operator<=>(const array& other)
     {
-        SROOK_ST_ASSERT((is_same<std::common_comparison_category_t<SROOK_DEDUCED_TYPENAME AT::type>, value_type>::value));
+        // T[N] <=> T[N] should return the same type as T's <=>. 
+        // p0515r2 2.2.3 
+        SROOK_ST_ASSERT((is_same<category_type, std::common_comparison_category_t<value_type>>::value));
         return std::lexicographical_compare_3way(cbegin(), cend(), other.cbegin(), other.cend());
     }
 #else

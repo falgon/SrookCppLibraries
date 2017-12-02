@@ -12,7 +12,6 @@
  */
 
 #include <srook/config/attribute/maybe_unused.hpp>
-
 #include <srook/range/adaptor/copied.hpp>
 #include <srook/range/adaptor/copied_backward.hpp>
 #include <srook/range/adaptor/copied_if.hpp>
@@ -97,7 +96,6 @@
 #include <srook/config/attribute.hpp>
 #include <srook/config/require.hpp>
 #include <srook/mpl/variadic_player.hpp>
-#include <srook/type_traits/remove_all_reference.hpp>
 #include <tuple>
 #include <utility>
 
@@ -175,14 +173,14 @@ private:
 template <class Tuple, class... Ranges>
 applyer<
     std::decay_t<Tuple>,
-    srook::mpl::Transfer_t<std::tuple, srook::remove_all_reference_t<Ranges...>>>
+    srook::mpl::Transfer_t<std::tuple, srook::pack<std::remove_reference_t<Ranges>...>>>
 make_applyer_impl(Tuple &&t, Ranges &&... ranges)
 {
     return applyer<
 	std::decay_t<Tuple>,
-	srook::mpl::Transfer_t<std::tuple, srook::remove_all_reference_t<Ranges...>>>(
+	srook::mpl::Transfer_t<std::tuple, srook::pack<std::remove_reference_t<Ranges>...>>> (
 	std::forward<Tuple>(t),
-	srook::mpl::Transfer_t<std::tuple, srook::remove_all_reference_t<Ranges...>>{std::forward<Ranges>(ranges)...});
+	srook::mpl::Transfer_t<std::tuple, srook::pack<std::remove_reference_t<Ranges>...>>{std::forward<Ranges>(ranges)...});
 }
 
 struct mk {

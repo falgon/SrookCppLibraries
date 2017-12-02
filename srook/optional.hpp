@@ -1,10 +1,10 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_OPTIONAL_HPP
 #define INCLUDED_SROOK_OPTIONAL_HPP
+#include <exception>
+#include <initializer_list>
 #include <srook/config/feature.hpp>
 #include <srook/type_traits.hpp>
-#include <initializer_list>
-#include <exception>
 
 namespace srook {
 namespace optionally {
@@ -61,11 +61,11 @@ SROOK_CONSTEXPR optional<T> make_optional(std::initializer_list<U>, Args&&...);
 SROOK_INLINE_NAMESPACE_END
 } // namespace optionally
 
-using optionally::optional;
-using optionally::nullopt;
-using optionally::nullopt_t;
 using optionally::bad_optional_access;
 using optionally::make_optional;
+using optionally::nullopt;
+using optionally::nullopt_t;
+using optionally::optional;
 
 } // namespace srook
 
@@ -87,7 +87,7 @@ using optionally::make_optional;
 #        define SROOK_HAS_BOOST_OPTIONAL 1
 #    endif
 #    if SROOK_HAS_INCLUDE(<compare>) // C++20 feature
-#        include <compare> 
+#        include <compare>
 #    endif
 
 namespace srook {
@@ -101,12 +101,13 @@ template <class T, bool, bool>
 struct safe_optional_payload {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
 
-#    define DEF_CONSTRUCTOR(LIB)                                          \
-        template <class... Args>                                          \
-        SROOK_CONSTEXPR safe_optional_payload(LIB::in_place_t, Args&&... args) \
+#    define DEF_CONSTRUCTOR(LIB)                                                                \
+        template <class... Args>                                                                \
+        SROOK_CONSTEXPR safe_optional_payload(LIB::in_place_t, Args&&... args)                  \
             : payload_(srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
 
     DEF_CONSTRUCTOR(srook)
@@ -119,7 +120,8 @@ public:
     SROOK_CONSTEXPR safe_optional_payload(std::initializer_list<U> li, Args&&... args)
         : payload_(li, srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
 
-    template <class U> struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+    template <class U>
+    struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
 
     SROOK_CONSTEXPR safe_optional_payload(ctor_tag<bool>, const T& other)
         : payload_(other), payload_ptr_(srook::addressof(payload_)) {}
@@ -132,6 +134,7 @@ public:
         : safe_optional_payload(is_engaged ? safe_optional_payload(ctor_tag<bool>{}, other.payload_) : safe_optional_payload(ctor_tag<void>{})) {}
     SROOK_CONSTEXPR safe_optional_payload(bool is_engaged, safe_optional_payload&& other)
         : safe_optional_payload(is_engaged ? safe_optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : safe_optional_payload(ctor_tag<void>{})) {}
+
 public:
     ~safe_optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
@@ -141,13 +144,15 @@ public:
     void construct(Args&&... args)
     SROOK_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+        payload_ptr_ = ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
-    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
-    { 
-        if (!b) payload_ptr_ = SROOK_NULLPTR;
-        else payload_ptr_ = srook::addressof(payload_);
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
+    {
+        if (!b)
+            payload_ptr_ = SROOK_NULLPTR;
+        else
+            payload_ptr_ = srook::addressof(payload_);
     }
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
@@ -157,6 +162,7 @@ public:
     {
         return *payload_ptr_;
     }
+
 private:
     struct Empty_byte SROOK_FINAL {};
     union {
@@ -168,15 +174,15 @@ private:
     Stored_type* payload_ptr_ = SROOK_NULLPTR;
 };
 
-
 template <class T>
 struct safe_optional_payload<T, false, true> {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
-#    define DEF_CONSTRUCTOR(X)                                          \
-        template <class... Args>                                        \
+#    define DEF_CONSTRUCTOR(X)                                               \
+        template <class... Args>                                             \
         SROOK_CONSTEXPR safe_optional_payload(X::in_place_t, Args&&... args) \
             : payload_(srook::forward<Args>(args)...), payload_ptr_(true) {}
     DEF_CONSTRUCTOR(srook)
@@ -201,19 +207,21 @@ public:
         if (other.load_engaged()) construct(srook::move(other.payload_));
     }
 
-	// trivially destructible...
+    // trivially destructible...
 
     template <class... Args>
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+        payload_ptr_ = ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
-    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
-    { 
-        if (!b) payload_ptr_ = SROOK_NULLPTR;
-        else payload_ptr_ = srook::addressof(payload_);
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
+    {
+        if (!b)
+            payload_ptr_ = SROOK_NULLPTR;
+        else
+            payload_ptr_ = srook::addressof(payload_);
     }
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
@@ -223,6 +231,7 @@ public:
     {
         return *payload_ptr_;
     }
+
 private:
     struct Empty_byte SROOK_FINAL {};
     union {
@@ -238,11 +247,12 @@ template <class T>
 struct safe_optional_payload<T, false, false> {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR safe_optional_payload() : empty_() {}
-#    define DEF_CONSTRUCTOR(X)                                          \
-        template <class... Args>                                        \
-        SROOK_CONSTEXPR safe_optional_payload(X::in_place_t, Args&&... args) \
+#    define DEF_CONSTRUCTOR(X)                                                                    \
+        template <class... Args>                                                                  \
+        SROOK_CONSTEXPR safe_optional_payload(X::in_place_t, Args&&... args)                      \
             : payload_(srook::forward<Args>(args)...), payload_ptr_(srook::addressof(payload_)) {}
     DEF_CONSTRUCTOR(srook)
 #    if SROOK_HAS_STD_OPTIONAL
@@ -275,13 +285,15 @@ public:
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        payload_ptr_ = ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+        payload_ptr_ = ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
-    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE 
-    { 
-        if (!b) payload_ptr_ = SROOK_NULLPTR;
-        else payload_ptr_ = srook::addressof(payload_);
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE { return payload_ptr_; }
+    SROOK_FORCE_INLINE void store_engaged(bool b) SROOK_NOEXCEPT_TRUE
+    {
+        if (!b)
+            payload_ptr_ = SROOK_NULLPTR;
+        else
+            payload_ptr_ = srook::addressof(payload_);
     }
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
@@ -291,6 +303,7 @@ public:
     {
         return *payload_ptr_;
     }
+
 private:
     struct Empty_byte SROOK_FINAL {};
     union {
@@ -306,6 +319,7 @@ template <class T, bool, bool>
 struct optional_payload {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR optional_payload() : empty_() {}
 
@@ -324,7 +338,8 @@ public:
     SROOK_CONSTEXPR optional_payload(std::initializer_list<U> li, Args&&... args)
         : payload_(li, srook::forward<Args>(args)...), engaged_(true) {}
 
-    template <class U> struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+    template <class U>
+    struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
 
     SROOK_CONSTEXPR optional_payload(ctor_tag<bool>, const T& other)
         : payload_(other), engaged_(true) {}
@@ -337,7 +352,7 @@ public:
         : optional_payload(is_engaged ? optional_payload(ctor_tag<bool>{}, other.payload_) : optional_payload(ctor_tag<void>{})) {}
     SROOK_CONSTEXPR optional_payload(bool is_engaged, optional_payload&& other)
         : optional_payload(is_engaged ? optional_payload(ctor_tag<bool>{}, srook::move(other.payload_)) : optional_payload(ctor_tag<void>{})) {}
-    
+
     ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
         if (engaged_) payload_.~Stored_type();
@@ -347,11 +362,11 @@ public:
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
-        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...); 
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member.
+        ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE
     {
         return engaged_;
     }
@@ -367,19 +382,21 @@ public:
     {
         return payload_;
     }
+
 private:
-    bool engaged_ = false;
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
         Stored_type payload_;
     };
+    bool engaged_ = false;
 };
 
 template <class T>
 struct optional_payload<T, false, true> {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR optional_payload() : empty_() {}
 #    define DEF_CONSTRUCTOR(X)                                          \
@@ -414,12 +431,12 @@ public:
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
-        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member.
+        ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
     }
-    
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
+
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE
     {
         return engaged_;
     }
@@ -435,6 +452,7 @@ public:
     {
         return payload_;
     }
+
 private:
     bool engaged_ = false;
     struct Empty_byte SROOK_FINAL {};
@@ -448,6 +466,7 @@ template <class T>
 struct optional_payload<T, false, false> {
 private:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
+
 public:
     SROOK_CONSTEXPR optional_payload() : empty_() {}
 #    define DEF_CONSTRUCTOR(X)                                          \
@@ -475,7 +494,7 @@ public:
     {
         if (other.engaged_) construct(srook::move(other.payload_));
     }
-    
+
     ~optional_payload() SROOK_MEMFN_NOEXCEPT(is_nothrow_destructible<Stored_type>::value)
     {
         if (engaged_) payload_.~Stored_type();
@@ -484,11 +503,11 @@ public:
     void construct(Args&&... args)
     SROOK_MEMFN_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))
     {
-        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member. 
-        ::new (static_cast<void*>(addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
+        // NOTE: NOT laundered. Use safe_optional_payload if Stored_type has const or reference type member.
+        ::new (static_cast<void*>(srook::addressof(payload_))) Stored_type(srook::forward<Args>(args)...);
         engaged_ = true;
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR const bool load_engaged() const SROOK_NOEXCEPT_TRUE
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool load_engaged() const SROOK_NOEXCEPT_TRUE
     {
         return engaged_;
     }
@@ -504,6 +523,7 @@ public:
     {
         return payload_;
     }
+
 private:
     bool engaged_ = false;
     struct Empty_byte SROOK_FINAL {};
@@ -519,11 +539,10 @@ class optional_base {
     typedef Payload<
         T,
         type_traits::detail::Land<
-            std::is_trivially_copy_constructible<T>, 
-            std::is_trivially_move_constructible<T> 
-        >::value,
-        std::is_trivially_destructible<T>::value
-    > payload_type;
+            std::is_trivially_copy_constructible<T>,
+            std::is_trivially_move_constructible<T> >::value,
+        std::is_trivially_destructible<T>::value>
+        payload_type;
 
 public:
     SROOK_CONSTEXPR optional_base() SROOK_NOEXCEPT_TRUE {}
@@ -658,13 +677,13 @@ public:
     SROOK_CONSTEXPR optional() SROOK_DEFAULT
 #    define DEF_CONSTRUCTOR(X) \
         SROOK_CONSTEXPR optional(X::nullopt_t) SROOK_NOEXCEPT_TRUE : Base_type(X::nullopt) {}
-        DEF_CONSTRUCTOR(optionally)
+    DEF_CONSTRUCTOR(optionally)
 #    if SROOK_HAS_STD_OPTIONAL
-        DEF_CONSTRUCTOR(std)
+    DEF_CONSTRUCTOR(std)
 #    endif
 #    undef DEF_CONSTRUCTOR
 #    if SROOK_HAS_BOOST_OPTIONAL
-        optional(boost::none_t) SROOK_NOEXCEPT_TRUE : Base_type(boost::none) {}
+    optional(boost::none_t) SROOK_NOEXCEPT_TRUE : Base_type(boost::none) {}
 #    endif
 
     template <
@@ -788,18 +807,18 @@ public:
 #    endif
 #    undef DEF_CONSTRUCTOR
 
-#    define DEF_OPERATOR(X)                                   \
-        optional& operator=(X::nullopt_t) SROOK_NOEXCEPT_TRUE \
-        {                                                     \
-            reset();                                          \
-            return *this;                                     \
+#    define DEF_OPERATOR(X)                                               \
+        optional<T, Payload>& operator=(X::nullopt_t) SROOK_NOEXCEPT_TRUE \
+        {                                                                 \
+            reset();                                                      \
+            return *this;                                                 \
         }
     DEF_OPERATOR(optionally)
 #    if SROOK_HAS_STD_OPTIONAL
     DEF_OPERATOR(std)
 #    endif
 #    if SROOK_HAS_BOOST_OPTIONAL
-    optional& operator=(boost::none_t) SROOK_NOEXCEPT_TRUE
+    optional<T, Payload>& operator=(boost::none_t) SROOK_NOEXCEPT_TRUE
     {
         reset();
         return *this;
@@ -814,7 +833,7 @@ public:
             is_constructible<T, U>,
             type_traits::detail::Lnot<type_traits::detail::Land<is_scalar<T>, is_same<T, SROOK_DEDUCED_TYPENAME decay<U>::type> > >,
             is_assignable<T&, U> >::value,
-        optional&>::type
+        optional<T, Payload>&>::type
     operator=(U&& u)
     {
         if (Base_type::is_engaged())
@@ -833,7 +852,7 @@ public:
                 is_assignable<T&, U>,                                                    \
                 type_traits::detail::Lnot<detail::converts_from_optional<T, U> >,        \
                 type_traits::detail::Lnot<detail::assign_from_optional<T, U> > >::value, \
-            optional&>::type                                                             \
+            optional<T, Payload>&>::type                                                 \
         operator=(const X::optional<U>& u)                                               \
         {                                                                                \
             if (u) {                                                                     \
@@ -864,7 +883,7 @@ public:
                 is_assignable<T&, U>,                                                    \
                 type_traits::detail::Lnot<detail::converts_from_optional<T, U> >,        \
                 type_traits::detail::Lnot<detail::assign_from_optional<T, U> > >::value, \
-            optional&>::type                                                             \
+            optional<T, Payload>&>::type                                                 \
         operator=(X::optional<U>&& u)                                                    \
         {                                                                                \
             if (u) {                                                                     \
@@ -904,7 +923,7 @@ public:
         return Base_type::get();
     }
 
-    void swap(optional& other)
+    void swap(optional<T, Payload>& other)
     SROOK_MEMFN_NOEXCEPT((type_traits::detail::Land<is_nothrow_move_constructible<T>, is_nothrow_swappable<T> >::value))
     {
         using std::swap;
@@ -920,8 +939,31 @@ public:
         }
     }
 
-    SROOK_CONSTEXPR const T* operator->() const { return addressof(Base_type::get()); }
-    T* operator->() { return addressof(Base_type::get()); }
+#define DEF_SWAP(NAMESPACE)                                     \
+    void swap(NAMESPACE::optional<T>& other)                    \
+    {                                                           \
+        using std::swap;                                        \
+        if (Base_type::is_engaged() && bool(other)) {           \
+            swap(Base_type::get(), other.value());              \
+        } else if (Base_type::is_engaged()) {                   \
+            other.emplace(srook::move(Base_type::get()));       \
+            Base_type::destruct();                              \
+        } else if (other) {                                     \
+            Base_type::construct(srook::move(other.value()));   \
+            other.reset();                                      \
+        }                                                       \
+    }
+
+#if SROOK_HAS_STD_OPTIONAL
+    DEF_SWAP(std)
+#endif
+#if SROOK_HAS_BOOST_OPTIONAL
+    DEF_SWAP(boost)
+#endif
+#undef DEF_SWAP
+
+    SROOK_CONSTEXPR const T* operator->() const { return srook::addressof(Base_type::get()); }
+    T* operator->() { return srook::addressof(Base_type::get()); }
     SROOK_CONSTEXPR const T& operator*() const& { return Base_type::get(); }
     SROOK_CONSTEXPR T& operator*() & { return Base_type::get(); }
     SROOK_CONSTEXPR T&& operator*() && { return srook::move(Base_type::get()); }
@@ -963,383 +1005,492 @@ public:
     }
     void reset() SROOK_MEMFN_NOEXCEPT(true) { Base_type::reset(); }
 
-#if 0 && SROOK_HAS_INCLUDE(<compare>) // C++20 feature
-#define DEF_COMP(NAMESPACE, NULLOP)\
-    template <class U>\
-    SROOK_CONSTEXPR auto operator<=>(const NAMESPACE::optional<U>& rhs) const\
-    -> SROOK_DECLTYPE(std::compare_3way(**this, *rhs))\
-    {\
-        if (has_value() && rhs.has_value()) {\
-            return std::compare_3way(**this, *rhs);\
-        } else {\
-            return has_value() <=> rhs.has_value();\
-        }\
-    }\
-    template <class U>\
-    SROOK_CONSTEXPR auto operator<=>(const U& rhs) const\
-    -> SROOK_DECLTYPE(std::compare_3way(**this, rhs))\
-    {\
-        if (has_value()) {\
-            return compare_3way(**this, rhs);\
-        } else {\
-            return std::strong_ordering::less;\
-        }\
-    }\
-    SROOK_CONSTEXPR std::strong_ordering operator<=>(NAMESPACE::NULLOP) const\
-    {\
-        return has_value() ? std::strong_ordering::greater : std::strong_ordering::equal;\
-    }
+#    if 0 && SROOK_HAS_INCLUDE(<compare>) // C++20 feature
+#        define DEF_COMP(NAMESPACE, NULLOP)                                                       \
+            template <class U, template <class, bool, bool> class Payload>                        \
+            SROOK_CONSTEXPR auto operator<=>(const NAMESPACE::optional<U, Payload>& rhs) const    \
+                ->std::common_comparison_category_t<value_type, U>                                \
+            {                                                                                     \
+                if (has_value() && rhs.has_value()) {                                             \
+                    return std::compare_3way(**this, *rhs);                                       \
+                } else {                                                                          \
+                    return has_value() <= > rhs.has_value();                                      \
+                }                                                                                 \
+            }                                                                                     \
+            template <class U>                                                                    \
+            SROOK_CONSTEXPR auto operator<=>(const U& rhs) const                                  \
+                ->std::common_comparison_category_t<value_type, U>                                \
+            {                                                                                     \
+                if (has_value()) {                                                                \
+                    return compare_3way(**this, rhs);                                             \
+                } else {                                                                          \
+                    return std::strong_ordering::less;                                            \
+                }                                                                                 \
+            }                                                                                     \
+            SROOK_CONSTEXPR std::strong_ordering operator<=>(NAMESPACE::NULLOP) const             \
+            {                                                                                     \
+                return has_value() ? std::strong_ordering::greater : std::strong_ordering::equal; \
+            }
     DEF_COMP(optionally, nullopt_t)
-#   if SROOK_HAS_STD_OPTIONAL
+#        if SROOK_HAS_STD_OPTIONAL
     DEF_COMP(std, nullopt_t)
-#   endif
-#   if SROOK_HAS_BOOST_OPTIONAL
+#        endif
+#        if SROOK_HAS_BOOST_OPTIONAL
     DEF_COMP(boost, none_t)
-#   endif
-#   undef DEF_COMP
-#else
-#    define DEF_OPERATORS(X, Y, NULLOP)                                                                          \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator==(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>                                \
-        {                                                                                                        \
-            return static_cast<bool>(lhs) == static_cast<bool>(rhs) && (!lhs || *lhs == *rhs);                   \
-        }                                                                                                        \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator!=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-        ->detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>                                 \
-        {                                                                                                        \
-            return static_cast<bool>(lhs) != static_cast<bool>(rhs) || (static_cast<bool>(lhs) && *lhs != *rhs); \
-        }                                                                                                        \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator<(const X::optional<L>& lhs, const Y::optional<R>& rhs)              \
-        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>                                 \
-        {                                                                                                        \
-            return static_cast<bool>(rhs) && (!lhs || *lhs < *rhs);                                              \
-        }                                                                                                        \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator>(const X::optional<L>& lhs, const Y::optional<R>& rhs)              \
-        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>                                 \
-        {                                                                                                        \
-            return static_cast<bool>(lhs) && (!rhs || *lhs > *rhs);                                              \
-        }                                                                                                        \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator<=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>                                \
-        {                                                                                                        \
-            return !lhs || (static_cast<bool>(rhs) && *lhs <= *rhs);                                             \
-        }                                                                                                        \
-        template <class L, class R>                                                                              \
-        friend SROOK_CONSTEXPR auto operator>=(const X::optional<L>& lhs, const Y::optional<R>& rhs)             \
-        -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>                                \
-        {                                                                                                        \
-            return !rhs || (static_cast<bool>(lhs) && *lhs >= *rhs);                                             \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator==(const X::optional<U>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return !lhs;                                                                                         \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator==(X::NULLOP, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return !rhs;                                                                                         \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator!=(const X::optional<T>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return static_cast<bool>(lhs);                                                                       \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator!=(X::NULLOP, const Y::optional<T>& rhs) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return static_cast<bool>(rhs);                                                                       \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator<(const X::optional<U>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE              \
-        {                                                                                                        \
-            return false;                                                                                        \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator<(X::NULLOP, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE          \
-        {                                                                                                        \
-            return static_cast<bool>(rhs);                                                                       \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator>(const X::optional<U>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE          \
-        {                                                                                                        \
-            return static_cast<bool>(lhs);                                                                       \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator>(X::NULLOP, const Y::optional<U>&) SROOK_NOEXCEPT_TRUE              \
-        {                                                                                                        \
-            return false;                                                                                        \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator<=(const X::optional<U>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return !lhs;                                                                                         \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator<=(X::NULLOP, const Y::optional<U>&) SROOK_NOEXCEPT_TRUE             \
-        {                                                                                                        \
-            return true;                                                                                         \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator>=(const X::optional<U>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE             \
-        {                                                                                                        \
-            return true;                                                                                         \
-        }                                                                                                        \
-        template <class U>                                                                                       \
-        friend SROOK_CONSTEXPR bool operator>=(X::NULLOP, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE         \
-        {                                                                                                        \
-            return !rhs;                                                                                         \
-        }
-    DEF_OPERATORS(optionally, optionally, nullopt_t)
-#    if SROOK_HAS_STD_OPTIONAL
-    DEF_OPERATORS(optionally, std, nullopt_t)
-    DEF_OPERATORS(std, optionally, nullopt_t)
+#        endif
+#        undef DEF_COMP
 #    endif
-#    if SROOK_HAS_BOOST_OPTIONAL
-#        undef DEF_OPERATORS
-#        define DEF_OPERATORS(X, Y)                                                                                  \
-            template <class L, class R>                                                                              \
-            friend auto operator==(const X::optional<L>& lhs, const Y::optional<R>& rhs)                             \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>                                \
+};
+
+#    if !SROOK_HAS_INCLUDE(<compare>)
+#        define DEF_OPERATORS(Y, NULLOP)                                                                             \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator==(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() == declval<R>()))>                                \
             {                                                                                                        \
                 return static_cast<bool>(lhs) == static_cast<bool>(rhs) && (!lhs || *lhs == *rhs);                   \
             }                                                                                                        \
-            template <class L, class R>                                                                              \
-            friend auto operator!=(const X::optional<L>& lhs, const Y::optional<R>& rhs)                             \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>                                \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator==(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<T>()))>                                \
+            {                                                                                                        \
+                return operator==(rhs, lhs);                                                                         \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator!=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() != declval<R>()))>                                \
             {                                                                                                        \
                 return static_cast<bool>(lhs) != static_cast<bool>(rhs) || (static_cast<bool>(lhs) && *lhs != *rhs); \
             }                                                                                                        \
-            template <class L, class R>                                                                              \
-            friend auto operator<(const X::optional<L>& lhs, const Y::optional<R>& rhs)                              \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>                                 \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator!=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<T>()))>                                \
+            {                                                                                                        \
+                return operator!=(rhs, lhs);                                                                         \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator<(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)               \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() < declval<R>()))>                                 \
             {                                                                                                        \
                 return static_cast<bool>(rhs) && (!lhs || *lhs < *rhs);                                              \
             }                                                                                                        \
-            template <class L, class R>                                                                              \
-            friend auto operator>(const X::optional<L>& lhs, const Y::optional<R>& rhs)                              \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>                                 \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator<(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)               \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<T>()))>                                 \
+            {                                                                                                        \
+                return !operator<(rhs, lhs);                                                                         \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator>(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)               \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() > declval<R>()))>                                 \
             {                                                                                                        \
                 return static_cast<bool>(lhs) && (!rhs || *lhs > *rhs);                                              \
             }                                                                                                        \
-            template <class L, class R>                                                                              \
-            friend auto operator<=(const X::optional<L>& lhs, const Y::optional<R>& rhs)                             \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>                                \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator>(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)               \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<T>()))>                                 \
+            {                                                                                                        \
+                return !operator>(rhs, lhs);                                                                         \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator<=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() <= declval<R>()))>                                \
             {                                                                                                        \
                 return !lhs || (static_cast<bool>(rhs) && *lhs <= *rhs);                                             \
             }                                                                                                        \
-            template <class L, class R>                                                                              \
-            friend auto operator>=(const X::optional<L>& lhs, const Y::optional<R>& rhs)                             \
-            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>                                \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator<=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<T>()))>                                \
+            {                                                                                                        \
+                return !operator<=(rhs, lhs);                                                                        \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload, class R>                                  \
+            SROOK_CONSTEXPR auto operator>=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() >= declval<R>()))>                                \
             {                                                                                                        \
                 return !rhs || (static_cast<bool>(lhs) && *lhs >= *rhs);                                             \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator==(const X::optional<U>& lhs, boost::none_t) SROOK_NOEXCEPT_TRUE                     \
+            template <class L, class T, template <class, bool, bool> class Payload>                                  \
+            SROOK_CONSTEXPR auto operator>=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)              \
+            {                                                                                                        \
+                return !operator>=(rhs, lhs);                                                                        \
+            }                                                                                                        \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator==(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return !lhs;                                                                                         \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator==(boost::none_t, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE                     \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator==(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return !rhs;                                                                                         \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator!=(const X::optional<T>& lhs, boost::none_t) SROOK_NOEXCEPT_TRUE                     \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator!=(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return static_cast<bool>(lhs);                                                                       \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator!=(boost::none_t, const Y::optional<T>& rhs) SROOK_NOEXCEPT_TRUE                     \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator!=(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return static_cast<bool>(rhs);                                                                       \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator<(const X::optional<U>&, boost::none_t) SROOK_NOEXCEPT_TRUE                          \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator<(const optional<T, Payload>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE               \
             {                                                                                                        \
                 return false;                                                                                        \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator<(boost::none_t, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE                      \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator<(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE           \
             {                                                                                                        \
                 return static_cast<bool>(rhs);                                                                       \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator>(const X::optional<U>& lhs, boost::none_t) SROOK_NOEXCEPT_TRUE                      \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator>(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE           \
             {                                                                                                        \
                 return static_cast<bool>(lhs);                                                                       \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator>(boost::none_t, const Y::optional<U>&) SROOK_NOEXCEPT_TRUE                          \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator>(Y::NULLOP, const optional<T, Payload>&) SROOK_NOEXCEPT_TRUE               \
             {                                                                                                        \
                 return false;                                                                                        \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator<=(const X::optional<U>& lhs, boost::none_t) SROOK_NOEXCEPT_TRUE                     \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator<=(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return !lhs;                                                                                         \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator<=(boost::none_t, const Y::optional<U>&) SROOK_NOEXCEPT_TRUE                         \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator<=(Y::NULLOP, const optional<T, Payload>&) SROOK_NOEXCEPT_TRUE              \
             {                                                                                                        \
                 return true;                                                                                         \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator>=(const X::optional<U>&, boost::none_t) SROOK_NOEXCEPT_TRUE                         \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator>=(const optional<T, Payload>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE              \
             {                                                                                                        \
                 return true;                                                                                         \
             }                                                                                                        \
-            template <class U>                                                                                       \
-            friend bool operator>=(boost::none_t, const Y::optional<U>& rhs) SROOK_NOEXCEPT_TRUE                     \
+            template <class T, template <class, bool, bool> class Payload>                                           \
+            SROOK_CONSTEXPR bool operator>=(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE          \
             {                                                                                                        \
                 return !rhs;                                                                                         \
             }
-    DEF_OPERATORS(boost, optionally)
-    DEF_OPERATORS(optionally, boost)
+DEF_OPERATORS(optionally, nullopt_t)
+#        if SROOK_HAS_STD_OPTIONAL
+DEF_OPERATORS(std, nullopt_t)
+#        endif
+#        if SROOK_HAS_BOOST_OPTIONAL
+#            undef DEF_OPERATORS
+#            define DEF_OPERATORS(Y, NULLOP)                                                                             \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator==(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() == declval<R>()))>                                \
+                {                                                                                                        \
+                    return static_cast<bool>(lhs) == static_cast<bool>(rhs) && (!lhs || *lhs == *rhs);                   \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator==(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<T>()))>                                \
+                {                                                                                                        \
+                    return operator==(rhs, lhs);                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator!=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() != declval<R>()))>                                \
+                {                                                                                                        \
+                    return static_cast<bool>(lhs) != static_cast<bool>(rhs) || (static_cast<bool>(lhs) && *lhs != *rhs); \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator!=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<T>()))>                                \
+                {                                                                                                        \
+                    return operator!=(rhs, lhs);                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator<(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                               \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() < declval<R>()))>                                 \
+                {                                                                                                        \
+                    return static_cast<bool>(rhs) && (!lhs || *lhs < *rhs);                                              \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator<(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                               \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<T>()))>                                 \
+                {                                                                                                        \
+                    return !operator<(rhs, lhs);                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator>(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                               \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() > declval<R>()))>                                 \
+                {                                                                                                        \
+                    return static_cast<bool>(lhs) && (!rhs || *lhs > *rhs);                                              \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator>(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                               \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<T>()))>                                 \
+                {                                                                                                        \
+                    return !operator>(rhs, lhs);                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator<=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() <= declval<R>()))>                                \
+                {                                                                                                        \
+                    return !lhs || (static_cast<bool>(rhs) && *lhs <= *rhs);                                             \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator<=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<T>()))>                                \
+                {                                                                                                        \
+                    return !operator<=(rhs, lhs);                                                                        \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload, class R>                                  \
+                auto operator>=(const optional<T, Payload>& lhs, const Y::optional<R>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() >= declval<R>()))>                                \
+                {                                                                                                        \
+                    return !rhs || (static_cast<bool>(lhs) && *lhs >= *rhs);                                             \
+                }                                                                                                        \
+                template <class L, class T, template <class, bool, bool> class Payload>                                  \
+                auto operator>=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                              \
+                {                                                                                                        \
+                    return !operator>=(rhs, lhs);                                                                        \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator==(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return !lhs;                                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator==(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return !rhs;                                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator!=(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return static_cast<bool>(lhs);                                                                       \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator!=(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return static_cast<bool>(rhs);                                                                       \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator<(const optional<T, Payload>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE                               \
+                {                                                                                                        \
+                    return false;                                                                                        \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator<(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE                           \
+                {                                                                                                        \
+                    return static_cast<bool>(rhs);                                                                       \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator>(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE                           \
+                {                                                                                                        \
+                    return static_cast<bool>(lhs);                                                                       \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator>(Y::NULLOP, const optional<T, Payload>&) SROOK_NOEXCEPT_TRUE                               \
+                {                                                                                                        \
+                    return false;                                                                                        \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator<=(const optional<T, Payload>& lhs, Y::NULLOP) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return !lhs;                                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator<=(Y::NULLOP, const optional<T, Payload>&) SROOK_NOEXCEPT_TRUE                              \
+                {                                                                                                        \
+                    return true;                                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator>=(const optional<T, Payload>&, Y::NULLOP) SROOK_NOEXCEPT_TRUE                              \
+                {                                                                                                        \
+                    return true;                                                                                         \
+                }                                                                                                        \
+                template <class T, template <class, bool, bool> class Payload>                                           \
+                bool operator>=(Y::NULLOP, const optional<T, Payload>& rhs) SROOK_NOEXCEPT_TRUE                          \
+                {                                                                                                        \
+                    return !rhs;                                                                                         \
+                }
+DEF_OPERATORS(boost, none_t)
+#        endif
+#        undef DEF_OPERATORS
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator==(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() == declval<R>()))>
+{
+    return lhs && *lhs == rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator==(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<T>()))>
+{
+    return rhs && lhs == *rhs;
+}
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator!=(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() != declval<R>()))>
+{
+    return !lhs || *lhs != rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator!=(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<T>()))>
+{
+    return !rhs || lhs != *rhs;
+}
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator<(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() < declval<R>()))>
+{
+    return !lhs || *lhs < rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator<(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<T>()))>
+{
+    return rhs && lhs < *rhs;
+}
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator>(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() > declval<R>()))>
+{
+    return lhs && *lhs > rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator>(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<T>()))>
+{
+    return !rhs || lhs > *rhs;
+}
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator<=(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() <= declval<R>()))>
+{
+    return !lhs || *lhs <= rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator<=(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<T>()))>
+{
+    return rhs && lhs <= *rhs;
+}
+
+template <class T, template <class, bool, bool> class Payload, class R>
+SROOK_CONSTEXPR auto operator>=(const optional<T, Payload>& lhs, const R& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<T>() >= declval<R>()))>
+{
+    return lhs && *lhs >= rhs;
+}
+
+template <class L, class T, template <class, bool, bool> class Payload>
+SROOK_CONSTEXPR auto operator>=(const L& lhs, const optional<T, Payload>& rhs)
+-> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<T>()))>
+{
+    return !rhs || lhs >= *rhs;
+}
 #    endif
-#    undef DEF_OPERATORS
 
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator==(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>
-    {
-        return lhs && *lhs == rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator==(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() == declval<R>()))>
-    {
-        return rhs && lhs == *rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator!=(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>
-    {
-        return !lhs || *lhs != rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator!=(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() != declval<R>()))>
-    {
-        return !rhs || lhs != *rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator<(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>
-    {
-        return !lhs || *lhs < rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator<(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() < declval<R>()))>
-    {
-        return rhs && lhs < *rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator>(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>
-    {
-        return lhs && *lhs > rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator>(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() > declval<R>()))>
-    {
-        return !rhs || lhs > *rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator<=(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>
-    {
-        return !lhs || *lhs <= rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator<=(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() <= declval<R>()))>
-    {
-        return rhs && lhs <= *rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator>=(const optional<L>& lhs, const R& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>
-    {
-        return lhs && *lhs >= rhs;
-    }
-
-    template <class L, class R>
-    friend SROOK_CONSTEXPR auto operator>=(const L& lhs, const optional<R>& rhs)
-    -> detail::optional_relop<SROOK_DECLTYPE((declval<L>() >= declval<R>()))>
-    {
-        return !rhs || lhs >= *rhs;
-    }
-};
-#endif
-
-#    define DEF_SWAP(X, Y)                                                                                                      \
-        template <class T>                                                                                                      \
-        SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME                                                                               \
-        enable_if<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> >::value>::type                           \
-        swap(X::optional<T>& lhs, Y::optional<T>& rhs)                                                                          \
-        SROOK_NOEXCEPT(lhs.swap(rhs))                                                                                           \
-        {                                                                                                                       \
-            lhs.swap(rhs);                                                                                                      \
-        }                                                                                                                       \
-        template <class T>                                                                                                      \
-        SROOK_DEDUCED_TYPENAME                                                                                                  \
-        enable_if<                                                                                                              \
-            type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> > >::value>::type     \
-        swap(X::optional<T>&, Y::optional<T>&) SROOK_EQ_DELETE
-DEF_SWAP(optionally, optionally)
+#    define DEF_SWAP(X)                                                                                                                              \
+        template <class T, template <class, bool, bool> class Payload, class R>                                                                      \
+        SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME                                                                                                    \
+        enable_if<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T>, is_move_constructible<R>, is_swappable<R> >::value>::type     \
+        swap(optional<T, Payload>& lhs, X::optional<R>& rhs)                                                                                         \
+        SROOK_NOEXCEPT(lhs.swap(rhs))                                                                                                                \
+        {                                                                                                                                            \
+            lhs.swap(rhs);                                                                                                                           \
+        }                                                                                                                                            \
+        template <class L, class T, template <class, bool, bool> class Payload>                                                                      \
+        SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME                                                                                                    \
+        enable_if<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T>, is_move_constructible<L>, is_swappable<L> >::value>::type     \
+        swap(X::optional<L>& lhs, optional<T, Payload>& rhs)                                                                                         \
+        SROOK_NOEXCEPT(swap(rhs, lhs))                                                                                                               \
+        {                                                                                                                                            \
+            swap(rhs, lhs);                                                                                                                          \
+        }                                                                                                                                            \
+        template <class T, template <class, bool, bool> class Payload, class R>                                                                      \
+        SROOK_DEDUCED_TYPENAME                                                                                                                       \
+        enable_if<                                                                                                                                   \
+            type_traits::detail::Lor<                                                                                                                \
+                type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> > >,                                   \
+                type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<R>, is_swappable<R> > > >::value                           \
+        >::type                                                                                                                                      \
+        swap(optional<T, Payload>&, X::optional<R>&) SROOK_EQ_DELETE                                                                                 \
+        template <class L, class T, template <class, bool, bool> class Payload>                                                                      \
+        SROOK_DEDUCED_TYPENAME                                                                                                                       \
+        enable_if<                                                                                                                                   \
+            type_traits::detail::Lor<                                                                                                                \
+                type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<T>, is_swappable<T> > >,                                   \
+                type_traits::detail::Lnot<type_traits::detail::Land<is_move_constructible<L>, is_swappable<L> > > >::value                           \
+        >::type                                                                                                                                      \
+        swap(X::optional<L>&, optional<T, Payload>&) SROOK_EQ_DELETE
+DEF_SWAP(optionally)
 #    if SROOK_HAS_STD_OPTIONAL
-DEF_SWAP(optionally, std)
-DEF_SWAP(std, optionally)
+DEF_SWAP(std)
 #    endif
 #    undef DEF_SWAP
 
 template <class T>
 SROOK_CONSTEXPR optional<SROOK_DEDUCED_TYPENAME decay<T>::type> make_optional(T&& t)
+SROOK_NOEXCEPT(is_nothrow_constructible<T>::value)
 {
     return optional<SROOK_DEDUCED_TYPENAME decay<T>::type>(srook::forward<T>(t));
 }
 
 template <class T, class... Args>
-SROOK_CONSTEXPR optional<T>
-make_optional(Args&&... args)
+SROOK_CONSTEXPR optional<T> make_optional(Args&&... args)
+SROOK_NOEXCEPT((is_nothrow_constructible<T, SROOK_DEDUCED_TYPENAME decay<Args>::type...>::value))
 {
     return optional<T>(in_place, srook::forward<Args>(args)...);
 }
 
 template <class T, class U, class... Args>
-SROOK_CONSTEXPR optional<T>
-make_optional(std::initializer_list<U> li, Args&&... args)
+SROOK_CONSTEXPR optional<T> make_optional(std::initializer_list<U> li, Args&&... args)
+SROOK_NOEXCEPT((is_nothrow_constructible<T, U, SROOK_DEDUCED_TYPENAME decay<Args>::type...>::value))
 {
     return optional<T>(in_place, li, srook::forward<Args>(args)...);
 }
 
+template <class T>
+SROOK_CONSTEXPR optional<SROOK_DEDUCED_TYPENAME decay<T>::type, safe_optional_payload> make_safe_optional(T&& t)
+SROOK_NOEXCEPT(is_nothrow_constructible<T>::value)
+{
+    return optional<SROOK_DEDUCED_TYPENAME decay<T>::type, safe_optional_payload>(srook::forward<T>(t));
+}
+
+template <class T, class... Args>
+SROOK_CONSTEXPR optional<T, safe_optional_payload> make_safe_optional(Args&&... args)
+SROOK_NOEXCEPT((is_nothrow_constructibleMTm SROOK_DEDUCED_TYPENAME decay<Args>::type...>::value))
+{
+    return optional<T, safe_optional_payload>(in_place, srook::forward<Args>(args)...);
+}
+
+template <class T, class U, class... Args>
+SROOK_CONSTEXPR optional<T, safe_optional_payload> make_safe_optional(std::initializer_list<U> li, Args&&... args)
+SROOK_NOEXCEPT((is_nothrow_constructible<T, U, SROOK_DEDUCED_TYPENAME decay<Args>::type...>::value))
+{
+    return optional<T, safe_optional_payload>(in_place, li, srook::forward<Args>(args)...);
+}
+
 // TASK: specialize hash
 
-//#undef SROOK_HAS_STD_OPTIONAL
-//#undef SROOK_HAS_BOOST_OPTIONAL
 SROOK_INLINE_NAMESPACE_END
 } // namespace optionally
 
-using optionally::make_optional;
 using optionally::swap;
+using optionally::make_optional;
+using optionally::make_safe_optional;
 
 } // namespace srook
 #    endif

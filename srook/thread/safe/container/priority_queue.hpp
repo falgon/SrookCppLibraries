@@ -7,11 +7,13 @@
 #    include <algorithm>
 #    include <functional>
 #    include <iterator>
+#    include <srook/condition_variable.hpp>
 #    include <srook/config.hpp>
 #    include <srook/thread/safe/container/config.hpp>
 #    include <srook/scope/unique_resource.hpp>
 #    include <srook/memory/uses_allocator.hpp>
-#    include <srook/mutex.hpp>
+#    include <srook/mutex/mutexes/mutex.hpp>
+#    include <srook/mutex/guards.hpp>
 #    include <srook/type_traits.hpp>
 #    include <vector>
 
@@ -110,20 +112,20 @@ public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty()
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
     {
-        lock_guard<mutex> lk(m_);
+        srook::lock_guard<mutex> lk(m_);
         return c.empty();
     }
 
     SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size()
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
-        lock_guard<mutex> lk(m_);
+        srook::lock_guard<mutex> lk(m_);
         return c.size();
     }
 
     void push(const value_type& x)
     {
-        lock_guard<mutex> lk(m_);
+        srook::lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         c.push_back(x);
     }
@@ -131,7 +133,7 @@ public:
 #    if SROOK_CPP_RVALUE_REFERENCES
     void push(value_type&& x)
     {
-        lock_guard<mutex> lk(m_);
+        srook::lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         c.push_back(srook::move(x));
     }
@@ -140,7 +142,7 @@ public:
     auto emplace(Args&&... args)
     -> decltype(declval<container_type>().emplace_back(declval<Args>()...))
     {
-        lock_guard<mutex> lk(m_);
+        srook::lock_guard<mutex> lk(m_);
         scoped_push_heap sh(c, push_heaper_(comp));
         return c.emplace_back(srook::forward<Args>(args)...);
     }
@@ -151,8 +153,8 @@ public:
         if (this == srook::addressof(other)) return;
         using std::swap;
 
-        lock(m_, other.m_);
-        scoped_lock<mutex, mutex> lk(adopt_lock, m_, other.m_);
+        srook::lock(m_, other.m_);
+        srook::scoped_lock<mutex, mutex> lk(adopt_lock, m_, other.m_);
         swap(c, other.c);
     }
 };
@@ -259,13 +261,13 @@ public:
     void abort()
     {
         scoped_notifier n_(cv_empty_check, notifier_());
-        lock_guard<mutex> lk(this->m_);
+        srook::lock_guard<mutex> lk(this->m_);
         is_aborted_ = true;
     }
 
     const_reference top()
     {
-        unique_lock<mutex> lk(this->m_);
+        srook::unique_lock<mutex> lk(this->m_);
         cv_empty_check.wait(lk, [this] { return !this->c.empty() || is_aborted_; });
         if (is_aborted_) throw aborted();
         return this->c.front();
@@ -273,7 +275,7 @@ public:
 
     srook::libraries::optional<value_type> pop()
     {
-        unique_lock<mutex> lk(this->m_);
+        srook::unique_lock<mutex> lk(this->m_);
         cv_empty_check.wait(lk, [this] { return !this->c.empty() || is_aborted_; });
         if (is_aborted_) throw aborted();
 
@@ -289,8 +291,8 @@ public:
         if (this == srook::addressof(other)) return;
         using std::swap;
 
-        lock(this->m_, other.m_);
-        scoped_lock<mutex> lk(adopt_lock, this->m_, other.m_);
+        srook::lock(this->m_, other.m_);
+        srook::scoped_lock<mutex> lk(adopt_lock, this->m_, other.m_);
         swap(this->c, other.c);
         swap(is_aborted_, other.is_aborted_);
     }
@@ -369,7 +371,7 @@ public:
 #    endif
     SROOK_CONSTEXPR const_reference top() const
     {
-        lock_guard<mutex> lk(this->m_);
+        srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         return this->c.front();
     }
@@ -377,7 +379,7 @@ public:
     {
         if (this->empty()) return srook::libraries::nullopt;
 
-        lock_guard<mutex> lk(this->m_);
+        srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         const value_type result(this->c.front());
         this->c.pop_front();
@@ -401,48 +403,48 @@ public:
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator==(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return lhs.c == rhs.c;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator<(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return lhs.c < rhs.c;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator!=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(lhs == rhs);
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator>(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return rhs < lhs;
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator<=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(rhs < lhs);
 }
 
 template <class T, class Container, class Compare>
 SROOK_FORCE_INLINE bool operator>=(const priority_queue<T, Container, Compare>& lhs, const priority_queue<T, Container, Compare>& rhs)
 {
-    lock(lhs.m_, rhs.m_);
-    scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
+    srook::lock(lhs.m_, rhs.m_);
+    srook::scoped_lock<mutex, mutex> lk(adopt_lock, lhs.m_, rhs.m_);
     return !(lhs < rhs);
 }
 

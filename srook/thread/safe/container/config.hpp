@@ -14,7 +14,7 @@ struct aborted : public std::exception {
     aborted() SROOK_DEFAULT
     virtual const char* what() const SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE
     {
-        return "srook::thread_safe::stack: Aborted";
+        return "srook::thread_safe: Aborted";
     }
     virtual ~aborted() SROOK_NOEXCEPT_TRUE SROOK_DEFAULT
 };

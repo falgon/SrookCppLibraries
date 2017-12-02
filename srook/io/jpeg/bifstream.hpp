@@ -15,7 +15,7 @@
 namespace srook{
 inline namespace v1{
 
-struct bifstream final : std::ifstream {
+struct bifstream final : public std::ifstream {
 	using std::ifstream::ifstream;
 
 	explicit bifstream(const char* filename,const std::ios_base::openmode& open_mode = std::ios::in | std::ios::binary)
@@ -77,6 +77,8 @@ struct bifstream final : std::ifstream {
 			return nullptr;
 		}
 	}
+
+    virtual ~bifstream() SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE SROOK_DEFAULT
 private:
 	struct tag_argument{
 		explicit constexpr tag_argument(int num):n(std::move(num)){}

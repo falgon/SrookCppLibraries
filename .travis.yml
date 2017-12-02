@@ -1,7 +1,7 @@
 language: cpp
 script:
         - g++-7 --version
-        - cd tests && make
+        - cd tests && make && make run
         - make clean
 compiler:
         - gcc-7

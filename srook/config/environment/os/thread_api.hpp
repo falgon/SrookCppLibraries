@@ -109,7 +109,7 @@
 #		define SROOK_HAS_THREAD_SAFETY_ANNOTATIONS 0
 #endif
 
-#ifndef SROOK_HAS_CPP_ATTRIBUTE(require_constant_initialization)
+#if SROOK_HAS_CPP_ATTRIBUTE(require_constant_initialization)
 #	define SROOK_SAFE_STATIC __attribute__((__require__constant_initialization__))
 #else
 #	define SROOK_SAFE_STATIC
@@ -128,7 +128,7 @@
 	__attribute__((availability(watchos, strict, introduced=3.0)))
 #endif
 
-#ifndef SROOK_AVALAIBILITY_SHARED_MUTEX
+#if SROOK_AVALAIBILITY_SHARED_MUTEX && !defined(SROOK_APPLE_AVALAIBILITY_SHARED_MUTEX)
 #	define SROOK_APPLE_AVALAIBILITY_SHARED_MUTEX
 #endif
 

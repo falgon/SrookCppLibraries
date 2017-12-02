@@ -87,7 +87,7 @@ using TUPLE_LIB::make_tuple;
 using SYSERR_LIB::error_code;
 using SYSERR_LIB::system_error;
 using SYSERR_LIB::system_category;
-#ifdef SROOK_HAS_INCLUDE(<memory>) && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#if SROOK_HAS_INCLUDE(<memory>) && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 using std::unique_ptr;
 #elif SROOK_HAS_INCLUDE(<boost/unique_ptr.hpp>) && SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT
 using boost::unique_ptr;

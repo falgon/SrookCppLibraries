@@ -77,7 +77,6 @@
 #include <srook/type_traits/is_referenceable.hpp>
 #include <srook/type_traits/is_rvalue_reference.hpp>
 #include <srook/type_traits/is_same.hpp>
-#include <srook/type_traits/is_same_all.hpp>
 #include <srook/type_traits/is_scalar.hpp>
 #include <srook/type_traits/is_standard_layout.hpp>
 #include <srook/type_traits/is_static_castable.hpp>
@@ -98,7 +97,6 @@
 #include <srook/type_traits/negation.hpp>
 #include <srook/type_traits/rank.hpp>
 #include <srook/type_traits/remove_all_extents.hpp>
-#include <srook/type_traits/remove_all_reference.hpp>
 #include <srook/type_traits/remove_const.hpp>
 #include <srook/type_traits/remove_cv.hpp>
 #include <srook/type_traits/remove_extent.hpp>

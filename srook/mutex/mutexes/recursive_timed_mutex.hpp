@@ -185,7 +185,7 @@ public:
 	void unlock()
     SROOK_THREAD_SAFETY_ANNOTATION(release_capability())
 	{
-		threadng::detail::recursive_mutex_unlock(&m);
+        threading::detail::recursive_mutex_unlock(&m);
 	}
 
     SROOK_ATTRIBUTE_INLINE_VISIBILITY 
@@ -194,7 +194,8 @@ public:
 		return &m;
 	}
 private:
-    friend class recursive_timed_mutex_base<recursive_timed_mutex>;
+    friend class recursive_mutex_base;
+    friend class timed_mutex_base<recursive_timed_mutex>;
     bool timedlock(const threading::detail::thread_time_type& ts)
 	SROOK_THREAD_SAFETY_ANNOTATION(try_acquire_capability(true))
     {
