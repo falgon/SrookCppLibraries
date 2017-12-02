@@ -1,7 +1,7 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_UNWRAP_PACK_FROM_VALUE_HPP
 #define INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_UNWRAP_PACK_FROM_VALUE_HPP
-#include <array>
+#include <srook/array.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/inline_variable.hpp>
@@ -20,7 +20,7 @@ template <class>
 struct array;
 template <class... Ts>
 struct array<pack<Ts...>> {
-    static constexpr std::array<typename First<decltype(Ts::value)...>::type, sizeof...(Ts)> value{Ts::value...};
+    static constexpr srook::array<typename First<decltype(Ts::value)...>::type, sizeof...(Ts)> value{Ts::value...};
 };
 template <class, template <class...> class = std::tuple>
 struct tuple;

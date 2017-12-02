@@ -5,7 +5,7 @@
 #include<fstream>
 #include<string_view>
 #include<type_traits>
-#include<array>
+#include<srook/array.hpp>
 #include<memory>
 #include<srook/type_traits/has_iterator.hpp>
 #include<cstring>
@@ -52,7 +52,7 @@ private:
 	srook::byte* forward_iter;
 
 	int bit_position = 7u;
-	const std::array<srook::byte,8> bit_fullmask{srook::byte(0x01),srook::byte(0x03),srook::byte(0x07),srook::byte(0x0f),srook::byte(0x1f),srook::byte(0x3f),srook::byte(0x7f),srook::byte(0xff)};
+	const srook::array<srook::byte,8> bit_fullmask{srook::byte(0x01),srook::byte(0x03),srook::byte(0x07),srook::byte(0x0f),srook::byte(0x1f),srook::byte(0x3f),srook::byte(0x7f),srook::byte(0xff)};
 	bool writable = true;
 
 	void increment_buffer()noexcept
@@ -116,7 +116,7 @@ private:
 
 	template<class T,std::size_t v>
 	friend std::pair<const decltype(Bytes)&,bofstream&>
-	operator<<(std::pair<const decltype(Bytes)&,bofstream&> p,const std::array<T,v>& ar)
+	operator<<(std::pair<const decltype(Bytes)&,bofstream&> p,const srook::array<T,v>& ar)
 	noexcept(false)
 	{
 		if(p.second.forward_iter+ar.size() < p.second.last){
