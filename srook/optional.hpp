@@ -525,12 +525,12 @@ public:
     }
 
 private:
-    bool engaged_ = false;
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
         Stored_type payload_;
     };
+    bool engaged_ = false;
 };
 
 template <class T, template <class, bool, bool> class Payload>

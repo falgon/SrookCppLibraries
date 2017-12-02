@@ -18,12 +18,12 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class T, std::size_t N>
 struct array {
     typedef T value_type;
-    typedef value_type* pointer;
-    typedef const value_type* const_pointer;
-    typedef value_type* iterator;
-    typedef const value_type* const_iterator;
-    typedef value_type& reference;
-    typedef const value_type& const_reference;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T* iterator;
+    typedef const T* const_iterator;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
     typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -135,7 +135,7 @@ array(T, Ts...)
 
 template <class T, class... Ts>
 SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
-enable_if<type_traits::detail::Land<is_same<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<Ts>::type>...>::value, array<T, sizeof...(Ts) + 1> >::type
+enable_if<type_traits::detail::Land<is_same<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<Ts>::type>...>::value, array<SROOK_DEDUCED_TYPENAME decay<T>::type, sizeof...(Ts) + 1> >::type
 make_array(T&& t, Ts&&... ts) SROOK_NOEXCEPT_TRUE
 {
     return array{srook::forward<T>(t), srook::forward<Ts>(ts)...};
