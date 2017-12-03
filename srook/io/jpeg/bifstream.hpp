@@ -13,6 +13,8 @@
 #include <type_traits>
 
 namespace srook {
+namespace io {
+namespace jpeg {
 inline namespace v1 {
 
 struct bifstream SROOK_FINAL : std::ifstream {
@@ -259,5 +261,7 @@ private:
 };
 
 } // namespace v1
+} // namespace jpeg
+} // namespace io
 } // namespace srook
 #endif
