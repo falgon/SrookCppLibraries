@@ -11,6 +11,9 @@
 #include<cstring>
 
 namespace srook{
+namespace io {
+namespace jpeg {
+inline namespace v1 {
 
 struct bofstream final : std::ofstream{
 	using std::ofstream::ofstream;
@@ -136,14 +139,6 @@ private:
 	{
 		if(p.second.writable){
 			p.second.set_fullbit();
-			/*if constexpr(
-					std::is_same_v<MARKER,std::decay_t<T>> or 
-					std::is_same_v<property::Units,std::decay_t<T>>
-			){
-				*p.second.forward_iter = static_cast<srook::byte>(src);
-			}else{
-				*p.second.forward_iter = src;
-			}*/
 			*p.second.forward_iter = srook::byte(src);
 			p.second.increment_buffer();
 		}else{
@@ -221,6 +216,8 @@ private:
 	}
 };
 
-
+} // inline namespace
+} // namespace jpeg
+} // namespace io
 } // namespace srook
 #endif
