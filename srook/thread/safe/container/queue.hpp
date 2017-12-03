@@ -55,14 +55,14 @@ protected:
 	container_type c;
     mutable mutex m_;
 public:
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty() const
+    SROOK_FORCE_INLINE bool empty() const
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
     {
         srook::lock_guard<mutex> lk(m_);
         return c.empty();
     }
 
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size() const
+    SROOK_FORCE_INLINE size_type size() const
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
 		srook::lock_guard<mutex> lk(m_);
@@ -303,28 +303,28 @@ public:
 #else
 #    define CHECK_NONEMPTY() assert(this->size())
 #endif
-    SROOK_CONSTEXPR reference front()
+    reference front()
     {
         srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         return this->c.front();
     }
 
-    SROOK_CONSTEXPR const_reference front() const
+    const_reference front() const
     {
         srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         return this->c.front();
     }
 
-    SROOK_CONSTEXPR reference back()
+    reference back()
     {
         srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
         return this->c.back();
     }
 
-    SROOK_CONSTEXPR const_reference back() const
+    const_reference back() const
     {
         srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
