@@ -4,6 +4,7 @@
 
 #include <srook/config.hpp>
 #include <srook/type_traits.hpp>
+#include <srook/cxx20/concepts/iterator/Iterator.hpp>
 #include <vector>
 
 namespace srook {
@@ -12,7 +13,7 @@ SROOK_INLINE_NAMESPACE(v1)
 
 /*
  *
- * generic function logest common substring (lcs).
+ * generic function longest common substring (lcs).
  *
  * This function is implemented by DP.
  *
@@ -22,7 +23,11 @@ SROOK_INLINE_NAMESPACE(v1)
  * 
  */
 
+#ifdef SROOK_ENABLE_CONCEPTS
+template <srook::concepts::Iterator ForwardIteartor1, srook::concepts::Iterator ForwardIterator2> 
+#else
 template <class ForwardIteartor1, class ForwardIterator2>
+#endif
 SROOK_DEDUCED_TYPENAME 
 enable_if<
     is_convertible<
@@ -40,33 +45,28 @@ lcs(ForwardIteartor1 first1, ForwardIteartor1 last1, ForwardIterator2 first2, Fo
     const size_type leftrange_size = std::distance(first1, last1), rightrange_size = std::distance(first2, last2);
     const size_type tb_x = leftrange_size + 1, tb_y = rightrange_size + 1;
 
-    vector length_table(tb_x * tb_y);
+    vector length_table(tb_x * tb_y, 0);
     size_type len = 0, row = 0, col = 0;
 
     for(size_type i = 0; i <= leftrange_size; ++i) {
         for(size_type j = 0; j <= rightrange_size; ++j) {
-            if ((!i) || (!j)) {
-                length_table[j * tb_x + i] = 0;
-            } else if (*std::next(first1, i - 1) == *std::next(first2, j - 1)) {
+            if (!((!i) || (!j)) && *std::next(first1, i - 1) == *std::next(first2, j - 1)) {
                 length_table[j * tb_x + i] = length_table[(j - 1) * tb_x + (i - 1)] + 1;
                 if (len < length_table[j * tb_x + i]) {
                     len = length_table[j * tb_x + i];
                     row = i;
                     col = j;
                 }
-            } else {
-                length_table[j * tb_x + i] = 0;
-            }
+            } 
         }
     }
 
     if (!len) return std::make_pair(last1, last1);
 
-    ForwardIteartor1 result_begin, result_end = std::next(first1, row);
+    ForwardIteartor1 result_end = std::next(first1, row);
     for (; length_table[col * tb_x + row] != 0; --row, --col);
-    result_begin = std::next(first1, row);
 
-    return std::make_pair(result_begin, result_end);
+    return std::make_pair(std::next(first1, row), result_end);
 }
 
 SROOK_INLINE_NAMESPACE_END
