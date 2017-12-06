@@ -109,14 +109,14 @@ private:
     typedef unique_resource<container_type&, push_heaper_> scoped_push_heap;
 
 public:
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR bool empty()
+    SROOK_FORCE_INLINE bool empty()
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().empty())
     {
         srook::lock_guard<mutex> lk(m_);
         return c.empty();
     }
 
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR size_type size()
+    SROOK_FORCE_INLINE size_type size()
     SROOK_MEMFN_NOEXCEPT(declval<container_type>().size())
     {
         srook::lock_guard<mutex> lk(m_);
@@ -369,7 +369,7 @@ public:
 #    else
 #        define CHECK_NONEMPTY() assert(this->c.size())
 #    endif
-    SROOK_CONSTEXPR const_reference top() const
+    const_reference top() const
     {
         srook::lock_guard<mutex> lk(this->m_);
         CHECK_NONEMPTY();
