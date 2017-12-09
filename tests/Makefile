@@ -10,6 +10,7 @@ TEST1 = cxx17/array_view/at_test.o\
 	cxx17/array_view/substr_test.o\
 	mpl/constant_sequence/constant_exp.o\
 	mpl/math/compile_time_four_arithmetic_operations_parser_test.o\
+	mpl/string/stoi.o\
 	cxx17/any_pack/meta_random_engine_test.o\
        	range/adaptor/adaptor_exp.o\
 	optional/nullopt.o\
