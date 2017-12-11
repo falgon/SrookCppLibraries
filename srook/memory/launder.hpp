@@ -19,7 +19,16 @@ SROOK_INLINE_NAMESPACE_END
 using memory::launder;
 
 } // namespace srook
-#elif __GNUC__ >= 7 || (defined(__has_builtin) && __has_builtin(__builtin_launder))
+#else
+#if __GNUC__ >= 7 
+#    define SROOK_HAS_BUILTIN_LAUNDER 1
+#elif (defined(__has_builtin)
+#    if __has_builtin(__builtin_launder)
+#        define SROOK_HAS_BUILTIN_LAUNDER 1
+#    endif
+#endif
+
+#if SROOK_HAS_BUILTIN_LAUNDER
 #    define SROOK_APPLY_LAUNDER(p) p = __builtin_launder(p);
 #    define SROOK_LAUNDER_DEPRECATED_MESSAGE
 #    define SROOK_COND_CONSTEXPR SROOK_CONSTEXPR
@@ -54,6 +63,7 @@ using memory::launder;
         SROOK_DEPRECATED_MESSAGE("launder srook::launder is not implemented for this environment")
 #    define SROOK_COND_CONSTEXPR SROOK_CONSTEXPR 
 #endif
+#endif
 
 #ifdef SROOK_APPLY_LAUNDER
 #    include <srook/config/attribute/nodiscard.hpp>
@@ -65,6 +75,9 @@ using memory::launder;
 namespace srook {
 namespace memory {
 SROOK_INLINE_NAMESPACE(v1)
+
+template <class T> SROOK_LAUNDER_DEPRECATED_MESSAGE SROOK_ATTRIBUTE_NODISCARD SROOK_ATTRIBUTE_INLINE_VISIBILITY SROOK_COND_CONSTEXPR
+T* launder(T*) SROOK_NOEXCEPT_TRUE;
 
 template <class T>
 SROOK_LAUNDER_DEPRECATED_MESSAGE 
