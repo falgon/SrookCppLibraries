@@ -19,7 +19,8 @@ TEST1 = cxx17/array_view/at_test.o\
 	optional/swap.o\
 	optional/monad.o\
 	semaphore/t.o\
-	semaphore/t1.o
+	semaphore/t1.o\
+	expected/test.o
 
 all: gcc_target1
 
@@ -38,5 +39,6 @@ run:
 	./optional/monad.o $(BOOST_TEST_OP)
 	./semaphore/t.o $(BOOST_TEST_OP)
 	./semaphore/t1.o
+	./expected/test.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)
