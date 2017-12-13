@@ -9,17 +9,27 @@ namespace memory {
 namespace memory_model {
 SROOK_INLINE_NAMESPACE(v1)
 
+#if SROOK_HAS_THREADS && defined(__ATOMIC_ACQUIRE)
+#    define SROOK_HAS_BUILTIN_ATOMIC_ACQUIRE 1
+#elif defined(__has_builtin)
+#    if __has_builtin(__atomic_load_n)
+#        define SROOK_HAS_BUILTIN_ATOMIC_ACQUIRE 1
+#    endif
+#elif _GNUC_VER >= 407
+#    define SROOK_HAS_BUILTIN_ATOMIC_ACQUIRE 1
+#endif
+
 template <typename ValueType>
 SROOK_ALWAYS_INLINE
 ValueType acquire_load(const ValueType* value) 
 {
-	return
-#if SROOK_HAS_THREADS && defined(__ATOMIC_ACQUIRE) && (__has_builtin(__atomic_load_n) || _GNUC_VER >= 407)
-		__atomic_load_n(value, __ATOMIC_ACQUIRE)
+    return
+#if SROOK_HAS_BUILTIN_ATOMIC_ACQUIRE
+        __atomic_load_n(value, __ATOMIC_ACQUIRE)
 #else
-		*value
+        *value
 #endif
-		;
+        ;
 }
 
 SROOK_INLINE_NAMESPACE_END

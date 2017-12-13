@@ -17,8 +17,10 @@ TEST1 = cxx17/array_view/at_test.o\
 	optional/requirements.o\
 	optional/make_optional.o\
 	optional/swap.o\
+	optional/monad.o\
 	semaphore/t.o\
-	semaphore/t1.o
+	semaphore/t1.o\
+	expected/test.o
 
 all: gcc_target1
 
@@ -34,7 +36,9 @@ run:
 	./optional/requirements.o $(BOOST_TEST_OP)
 	./optional/make_optional.o $(BOOST_TEST_OP)
 	./optional/swap.o $(BOOST_TEST_OP)
+	./optional/monad.o $(BOOST_TEST_OP)
 	./semaphore/t.o $(BOOST_TEST_OP)
 	./semaphore/t1.o
+	./expected/test.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)

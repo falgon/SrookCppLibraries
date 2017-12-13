@@ -163,7 +163,7 @@ public:
         return *payload_ptr_;
     }
 
-private:
+protected:
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
@@ -232,7 +232,7 @@ public:
         return *payload_ptr_;
     }
 
-private:
+protected:
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
@@ -304,7 +304,7 @@ public:
         return *payload_ptr_;
     }
 
-private:
+protected:
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
@@ -317,7 +317,7 @@ private:
 
 template <class T, bool, bool>
 struct optional_payload {
-private:
+protected:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
 
 public:
@@ -383,7 +383,7 @@ public:
         return payload_;
     }
 
-private:
+protected:
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
@@ -394,7 +394,7 @@ private:
 
 template <class T>
 struct optional_payload<T, false, true> {
-private:
+protected:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
 
 public:
@@ -453,7 +453,7 @@ public:
         return payload_;
     }
 
-private:
+protected:
     bool engaged_ = false;
     struct Empty_byte SROOK_FINAL {};
     union {
@@ -464,7 +464,7 @@ private:
 
 template <class T>
 struct optional_payload<T, false, false> {
-private:
+protected:
     typedef SROOK_DEDUCED_TYPENAME remove_const<T>::type Stored_type;
 
 public:
@@ -524,7 +524,7 @@ public:
         return payload_;
     }
 
-private:
+protected:
     struct Empty_byte SROOK_FINAL {};
     union {
         Empty_byte empty_;
@@ -1040,6 +1040,25 @@ public:
 #        endif
 #        undef DEF_COMP
 #    endif
+
+private:
+    // extension
+    //
+    // optional for monad
+    // see also: https://goo.gl/EcV2Tf
+    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
+    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR optional
+    operator>>=(const optional& this_, F&& f) SROOK_NOEXCEPT(f(value_type()))
+    {
+        return this_ ? srook::forward<F>(f)(*this_) : nullopt;
+    }
+
+    template <class U, SROOK_REQUIRES(is_same<SROOK_DEDUCED_TYPENAME optional::value_type, SROOK_DEDUCED_TYPENAME decay<U>::type>::value)>
+    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR optional
+    operator|(const optional& this_, U&& u) SROOK_NOEXCEPT(make_optional(this_.value_or(srook::forward<U>(u))))
+    {
+        return make_optional(this_.value_or(srook::forward<U>(u)));
+    }
 };
 
 #    if !SROOK_HAS_INCLUDE(<compare>)
