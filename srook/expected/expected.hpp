@@ -4,6 +4,7 @@
 
 #include <srook/optional.hpp>
 #include <srook/functional.hpp>
+#include <srook/expected/unexpected.hpp>
 #include <stdexcept>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
@@ -1210,6 +1211,12 @@ public:
     explicit SROOK_CONSTEXPR expected(in_place_t, set_error_t, std::initializer_list<U>& li, Args&&... args)
         : base_type(in_place, set_error, li, srook::forward<Args>(args)...) {}
 
+    SROOK_CONSTEXPR expected(const unexpected<error_type>& une)
+        : base_type(in_place, set_error, une.value()) {}
+
+    SROOK_CONSTEXPR expected(unexpected<error_type>&& une)
+        : base_type(in_place, set_error, srook::move(une.value())) {}
+
     template <class U = T, class Err>
     SROOK_DEDUCED_TYPENAME enable_if<
         type_traits::detail::Land<
@@ -1450,22 +1457,22 @@ public:
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
 
-    template <class U>
-    SROOK_CONSTEXPR auto value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
+    template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
+    SROOK_CONSTEXPR value_type value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
     {
         SROOK_ST_ASSERT((is_move_constructible<value_type>::value));
         SROOK_ST_ASSERT((is_move_constructible<error_type>::value));
 
-        return this->is_engaged() ? this->get() : this->is_error_engaged() ? this->get_error() : srook::forward<U>(u);
+        return this->is_engaged() ? this->get() : srook::forward<U>(u);
     }
 
-    template <class U>
-    SROOK_CONSTEXPR auto value_or(U&& u) && SROOK_NOEXCEPT_TRUE
+    template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
+    SROOK_CONSTEXPR value_type&& value_or(U&& u) && SROOK_NOEXCEPT_TRUE
     {
         SROOK_ST_ASSERT((is_move_constructible<value_type>::value));
         SROOK_ST_ASSERT((is_move_constructible<error_type>::value));
 
-        return this->is_engaged() ? srook::move(this->get()) : this->is_error_engaged() ? srook::move(this->get_error()) : srook::forward<U>(u);
+        return this->is_engaged() ? srook::move(this->get()) : srook::forward<U>(u);
     }
 
     void reset() 
@@ -1483,7 +1490,13 @@ public:
     friend SROOK_FORCE_INLINE expected
     operator>>=(const expected& this_, F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type>()))
     {
-        return this_ ? srook::forward<F>(f)(*this_) : this_;
+        return this_ ? srook::invoke(srook::forward<F>(f), *this_) : this_;
+    }
+
+    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
+    SROOK_FORCE_INLINE expected map(F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type>()))
+    {
+        return *this ? *this >>= srook::forward<F>(f) : *this;
     }
 };
 
@@ -1676,6 +1689,12 @@ public:
     template <class U, class... Args, SROOK_REQUIRES(error_constructible<std::initializer_list<U>&, Args&&...>::value)>
     explicit SROOK_CONSTEXPR expected(in_place_t, set_error_t, std::initializer_list<U>& li, Args&&... args)
         : base_type(in_place, set_error, li, srook::forward<Args>(args)...) {}
+    
+    SROOK_CONSTEXPR expected(const unexpected<error_type>& une)
+        : base_type(in_place, set_error, une.value()) {}
+
+    SROOK_CONSTEXPR expected(unexpected<error_type>&& une)
+        : base_type(in_place, set_error, srook::move(une.value())) {}
 
     template <class U = T, class Err>
     SROOK_DEDUCED_TYPENAME enable_if<
@@ -1878,25 +1897,25 @@ public:
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), srook::move(this->get())) 
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
-
-    template <class U>
-    SROOK_CONSTEXPR auto value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
+    
+    template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
+    SROOK_CONSTEXPR value_type value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
     {
         SROOK_ST_ASSERT((is_move_constructible<value_type>::value));
         SROOK_ST_ASSERT((is_move_constructible<error_type>::value));
 
-        return this->is_engaged() ? this->get() : this->is_error_engaged() ? this->get_error() : srook::forward<U>(u);
+        return this->is_engaged() ? this->get() : srook::forward<U>(u);
     }
 
-    template <class U>
-    SROOK_CONSTEXPR auto value_or(U&& u) && SROOK_NOEXCEPT_TRUE
+    template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
+    SROOK_CONSTEXPR value_type&& value_or(U&& u) && SROOK_NOEXCEPT_TRUE
     {
         SROOK_ST_ASSERT((is_move_constructible<value_type>::value));
         SROOK_ST_ASSERT((is_move_constructible<error_type>::value));
 
-        return this->is_engaged() ? srook::move(this->get()) : this->is_error_engaged() ? srook::move(this->get_error()) : srook::forward<U>(u);
+        return this->is_engaged() ? srook::move(this->get()) : srook::forward<U>(u);
     }
-
+    
     void reset() 
     SROOK_NOEXCEPT((type_traits::detail::Land<is_nothrow_destructible<value_type>, is_nothrow_destructible<error_type>>::value))
     {
@@ -1909,13 +1928,16 @@ public:
     }
 
     template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
-    friend SROOK_FORCE_INLINE auto
+    friend SROOK_FORCE_INLINE expected
     operator>>=(const expected& this_, F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type>()))
     {
-        return 
-            this_ ? srook::invoke(f, *this_) :
-            this_.any_valid() && !this_.valid() ? expected(set_error, this_.error()) :
-            expected<value_type, error_type>{ set_error, error_type{} };
+        return this_ ? srook::invoke(srook::forward<F>(f), *this_) : this_;
+    }
+
+    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
+    SROOK_FORCE_INLINE expected map(F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type>()))
+    {
+        return *this ? *this >>= srook::forward<F>(f) : *this;
     }
 };
 
@@ -1943,18 +1965,6 @@ SROOK_NOEXCEPT((
     return expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::type>{ set_value, v };
 }
 
-template <class T, class E>
-SROOK_CONSTEXPR expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::typeL> make_unexpected(const E& v)
-SROOK_NOEXCEPT((
-    type_traits::detail::Land<
-        is_nothrow_move_constructible<SROOK_DEDUCED_TYPENAME decay<E>::type>,
-        is_nothrow_copy_constructible<SROOK_DEDUCED_TYPENAME decay<E>::type>
-    >::value
-))
-{
-    return expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::type>{ set_error, v };
-}
-
 template <class T>
 SROOK_CONSTEXPR expected<SROOK_DEDUCED_TYPENAME decay<T>::type> make_expected(T&& v)
 SROOK_NOEXCEPT((
@@ -1979,18 +1989,6 @@ SROOK_NOEXCEPT((
     return expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::type>{ set_value, srook::move(v) };
 }
 
-template <class T, class E>
-SROOK_CONSTEXPR expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::type> make_unexpected(E&& v)
-SROOK_NOEXCEPT((
-    type_traits::detail::Land<
-        is_nothrow_move_constructible<SROOK_DEDUCED_TYPENAME decay<E>::type>,
-        is_nothrow_copy_constructible<SROOK_DEDUCED_TYPENAME decay<E>::type>
-    >::value
-))
-{
-    return expected<SROOK_DEDUCED_TYPENAME decay<T>::type, SROOK_DEDUCED_TYPENAME decay<E>::type>{ set_error, srook::move(v) };
-}
-
 SROOK_INLINE_NAMESPACE_END
 } // namespace exception
 
@@ -2001,7 +1999,6 @@ using exception::set_error_t;
 using exception::set_value;
 using exception::set_value_t;
 using exception::make_expected;
-using exception::make_unexpected;
 
 } // namespace srook
 

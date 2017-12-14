@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(expected4)
 BOOST_AUTO_TEST_CASE(expected5)
 {
     auto f = [](int x){ return srook::make_expected<int, std::error_code>(x); };
-    auto g = [](int){ return srook::make_unexpected<int, std::error_code>(std::error_code(static_cast<int>(std::errc::invalid_argument), std::generic_category())); };
+    auto g = [](int){ return srook::make_unexpected(std::error_code(static_cast<int>(std::errc::invalid_argument), std::generic_category())); };
 
     int a = 42;
     auto e = f(a) >>= [=](int x) {
