@@ -1,0 +1,25 @@
+GXX := g++-7
+INCLUDE_DIR := -I../
+FLAGS := -Wall -Wextra -pedantic -std=c++1z
+LIBS := -lboost_program_options -lz -pthread
+TARGET := ./algorithm/coding/zlib/zlib_test.cpp
+
+all: test
+
+test: $(TARGET)
+	$(GXX) $(TARGET) $(LIBS) $(FLAGS)
+run: test
+	./a.out -h
+	wget http://www.gutenberg.org/files/45/45-0.txt
+	head -n 15 45-0.txt
+	./a.out -c 6 -i 45-0.txt
+	file 45-0.txt_out
+	wc 45-0.txt 45-0.txt_out
+	./a.out -d -i 45-0.txt_out
+	diff -q 45-0.txt 45-0.txt_out_out	
+	gzip 45-0.txt
+	./a.out -d -i 45-0.txt.gz
+	diff -q 45-0.txt.gz_out  45-0.txt_out_out
+
+clean:
+	$(RM) a.out 45-0.txt 45-0.txt_out 45-0.txt_out_out 45-0.txt.gz 45-0.txt.gz_out

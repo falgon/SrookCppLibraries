@@ -3,6 +3,8 @@ script:
         - g++-7 --version
         - cd tests && make && make run
         - make clean
+        - make -f Makefile.zlib run
+        - make -f Makefile.zlib clean
 compiler:
         - gcc-7
 before_install:
@@ -11,7 +13,7 @@ before_install:
     - sudo apt -qq upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --allow-unauthenticated
     - sudo apt -qq dist-upgrade -y
 install:
-    - sudo apt -qq -y install build-essential software-properties-common
+    - sudo apt -qq -y install build-essential software-properties-common zlib1g-dev
     - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
     - sudo apt -qq update -y
     - sudo apt -qq install gcc-7 g++-7 -y
