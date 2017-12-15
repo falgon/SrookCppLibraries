@@ -15,12 +15,12 @@ class ostream : public std::ostream {
 public:
     typedef std::ostream base_type;
     ostream(std::ostream& os, compress_level lv = compress_level::level6) 
-        : osbuf(os.rdbuf(), srook::move(lv)), base_type(srook::addressof(osbuf))
+        : base_type(srook::addressof(osbuf)), osbuf(os.rdbuf(), srook::move(lv))
     {
         exceptions(std::ios_base::badbit);
     }
     explicit ostream(std::streambuf* sbufptr, compress_level lv = compress_level::level6) 
-        : osbuf(sbufptr, srook::move(lv)), base_type(srook::addressof(osbuf))
+        : base_type(srook::addressof(osbuf)), osbuf(sbufptr, srook::move(lv))
     {
         exceptions(std::ios_base::badbit);
     }

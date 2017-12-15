@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_STRING_STRERROR_HPP
 
 #include <srook/config.hpp>
+#include <srook/type_traits.hpp>
 #include <string>
 #include <utility>
 #include <cstring>
@@ -24,7 +25,7 @@ static std::string strerror()
     }
 #else
     auto p = strerror_r(errno, &s[0], s.size());
-    std::string(p, std::char_traits<SROOK_DECLTYPE(p)>::length(p)).swap(s);
+    std::string(p, std::char_traits<SROOK_DEDUCED_TYPENAME remove_pointer<SROOK_DECLTYPE(p)>::type>::length(p)).swap(s);
 #endif
     s.resize(s.find('\0'));
     return s;
