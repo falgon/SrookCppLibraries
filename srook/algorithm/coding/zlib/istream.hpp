@@ -15,11 +15,11 @@ SROOK_INLINE_NAMESPACE(v1)
 class istream : public std::istream {
 public:
     typedef std::istream base_type;
-    istream(std::istream& is) : isbuf(is.rdbuf()), base_type(srook::addressof(isbuf))
+    istream(std::istream& is) : base_type(srook::addressof(isbuf)), isbuf(is.rdbuf())
     {
         exceptions(std::ios_base::badbit);
     }
-    explicit istream(std::streambuf* sbufptr) : isbuf(sbufptr), base_type(srook::addressof(isbuf))
+    explicit istream(std::streambuf* sbufptr) : base_type(srook::addressof(isbuf)), isbuf(sbufptr)
     {
         exceptions(std::ios_base::badbit);
     }

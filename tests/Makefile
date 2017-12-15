@@ -1,5 +1,5 @@
 FLAGS := -Wall -Wextra -pedantic -std=c++1z -pthread
-INCLUDE_PATH := -I../
+INCLUDE_PATH := -I../ -I../include -L../lib
 GXX = g++-7
 BOOST_TEST_OP := --show_progress=yes --build_info=yes --detect_memory_leak=1 --result_code=yes --log_level=all
 

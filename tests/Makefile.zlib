@@ -1,13 +1,13 @@
 GXX := g++-7
-INCLUDE_DIR := -I../
+INCLUDE_DIR := -I../ -I../include
 FLAGS := -Wall -Wextra -pedantic -std=c++1z
-LIBS := -lboost_program_options -lz -pthread
+LIBS := -L../lib -lboost_program_options -lz -pthread
 TARGET := ./algorithm/coding/zlib/zlib_test.cpp
 
 all: test
 
 test: $(TARGET)
-	$(GXX) $(TARGET) $(LIBS) $(FLAGS)
+	$(GXX) $(INCLUDE_DIR) $(TARGET) $(LIBS) $(FLAGS)
 run: test
 	./a.out -h
 	wget http://www.gutenberg.org/files/45/45-0.txt

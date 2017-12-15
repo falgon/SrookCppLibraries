@@ -16,9 +16,6 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class S, class SP, class V>
-inline S as_string(SP, S, const SROOK_DEDUCED_TYPENAME S::value_type*) SROOK_ATTRIBUTE_FORMAT(printf, 3, 4);
-
-template <class S, class SP, class V>
 S as_string(SP sprintf, S s, const SROOK_DEDUCED_TYPENAME S::value_type* fmt, V a)
 {
     typedef SROOK_DEDUCED_TYPENAME S::size_type size_type;
