@@ -4,6 +4,7 @@
 
 #include <srook/algorithm/coding/zlib/ifstream.hpp>
 #include <srook/io/fstream/ofstream.hpp>
+#include <srook/memory/utility/checked_delete.hpp>
 #include <string>
 #include <fstream>
 
@@ -31,7 +32,7 @@ public:
 
     virtual ~ofstream() SROOK_OVERRIDE
     {
-        if (rdbuf()) delete rdbuf();
+        checked_delete(rdbuf());
     }
 };
 
