@@ -34,6 +34,7 @@
 
 namespace srook {
 namespace brainfk{
+SROOK_INLINE_NAMESPACE(v1)
 
 template <class String, class FileStream, class BYTE, std::size_t BUFFER_SIZE = 300000>
 struct brainfk_syntax_llvm_compiler_core : brainfk_syntax_core<String, FileStream, BYTE, BUFFER_SIZE> {
@@ -251,6 +252,7 @@ struct brainfk_syntax_llvm_compiler<std::wstring, BYTE, size> final : brainfk_sy
     using brainfk_syntax_llvm_compiler_core<std::wstring, std::wifstream, BYTE, size>::brainfk_syntax_llvm_compiler_core;
 };
 
+SROOK_INLINE_NAMESPACE_END
 } // namespace brainfk
 } // namespace srook
 #endif

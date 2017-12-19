@@ -1,7 +1,6 @@
 // Copyright (C) 2017 roki
 #ifndef INCLUDED_SROOK_BRAINFXXK_INTERPINTER_HPP
 #define INCLUDED_SROOK_BRAINFXXK_INTERPINTER_HPP
-#include <array>
 #include <codecvt>
 #include <cstdio>
 #include <fstream>
@@ -22,12 +21,13 @@
 #if __has_include(<boost/parameter/name.hpp>)
 #include <boost/parameter/name.hpp>
 #endif
-
-#include <srook/config/require.hpp>
+#include <srook/array.hpp>
+#include <srook/config.hpp>
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
 namespace brainfk {
+SROOK_INLINE_NAMESPACE(v1)
 
     template <class String, class FileStream, class BYTE, std::size_t BUFFER_SIZE = 300000>
     struct brainfk_syntax_core {
@@ -37,8 +37,7 @@ namespace brainfk {
         brainfk_syntax_core(const std::array<String, 8>& tokens)
             : token(tokens)
             , token_syn{ { Syn::LEFT_ARROW, Syn::RIGHT_ARROW, Syn::PLUS, Syn::MINUS, Syn::DOT, Syn::CAMMA, Syn::LEFT_BRACE, Syn::RIGHT_BRACE } }
-        {
-        }
+        {}
 
         const OPTIONAL<String>& file_open(std::string file_name)
         {
@@ -185,13 +184,14 @@ namespace brainfk {
                     buff[buff_ptr] = std::getchar();
                     break;
                 case Syn::LEFT_BRACE:
-                    if (buff[buff_ptr] == 0)
+                    if (!buff[buff_ptr]) {
                         for (++i; loop_b > 0 || tokenizer[i] != Syn::RIGHT_BRACE; ++i) {
                             if (tokenizer[i] == Syn::LEFT_BRACE)
                                 ++loop_b;
                             else if (tokenizer[i] == Syn::RIGHT_BRACE)
                                 --loop_b;
                         }
+                    }
                     break;
                 case Syn::RIGHT_BRACE:
                     if (buff[buff_ptr] != 0) {
@@ -259,6 +259,7 @@ constexpr decltype(auto) make_keywords(const ArgPack& args)
 }
 #endif
 
+SROOK_INLINE_NAMESPACE_END
 } // namespace brainfk
 } // namespace srook
 #endif
