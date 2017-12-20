@@ -6,6 +6,7 @@
 #include <srook/config.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/utility.hpp>
+#include <srook/memory_resource/config.hpp>
 #include <srook/memory_resource/memory_resource.hpp>
 
 namespace srook {
@@ -42,11 +43,8 @@ protected:
         aligned_alloc_type(alloc_).deallocate(static_cast<pointer>(p), new_size);
     }
 
-#if SROOK_HAS_STD_MEMORY_RESOURCE
-    virtual bool do_is_equal(const std::pmr::memory_resource& other) const SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE
-#elif defined(SROOK_HAS_STD_EXPERIMENTAL_MEMORY_RESOURCE)
-    virtual bool do_is_equal(const std::experimental::pmr::memory_resource& other) const SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE
-#endif
+    virtual bool do_is_equal(const SROOK_DEDUCED_TYPENAME detail::core_type<detail::has_base_type<memory_resource>::value>::type& other) 
+    const SROOK_NOEXCEPT_TRUE SROOK_OVERRIDE
     {
         auto p = dynamic_cast<const resource_adaptor*>(&other);
         return p ? (alloc_ == p->alloc_) : false;

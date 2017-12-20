@@ -15,7 +15,7 @@
 #   include <map>
 #   include <set>
 #   include <unordered_map>
-#   include <unorded_set>
+#   include <unordered_set>
 #   include <regex>
 #   if SROOK_HAS_INCLUDE(<boost/container/pmr/flat_map.hpp>)
 #       include <boost/container/pmr/flat_map.hpp>
@@ -158,7 +158,7 @@ template <class Key, class Hash = std::hash<Key>, class Pred = std::equal_to<Key
 using unordered_set = std::unordered_set<Key, Hash, Pred, polymorphic_allocator<Key>>;
 
 // unordered_multiset
-template <class Key, class Hash = std::hash<Key>, class Pred = Std::equal_to<Key>>
+template <class Key, class Hash = std::hash<Key>, class Pred = std::equal_to<Key>>
 using unordered_multiset = std::unordered_multiset<Key, Hash, Pred, polymorphic_allocator<Key>>;
 #endif
 

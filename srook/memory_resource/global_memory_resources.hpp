@@ -5,20 +5,12 @@
 #include <srook/config.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <atomic>
+#include <srook/memory_resource/config.hpp>
 #include <srook/memory_resource/resource_adaptor.hpp>
 
 namespace srook {
 namespace pmr {
 SROOK_INLINE_NAMESPACE(v1)
-
-namespace detail {
-
-template <bool>
-struct core_type : type_constant<memory_resource> {};
-template <>
-struct core_type<true> : type_constant<SROOK_DEDUCED_TYPENAME memory_resource::base_type> {};
-
-} // namespace detail
 
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME 
 add_pointer<SROOK_DEDUCED_TYPENAME detail::core_type<detail::has_base_type<memory_resource>::value>::type>::type 

@@ -99,13 +99,6 @@ SROOK_FORCE_INLINE bool operator!=(const memory_resource& lhs, const memory_reso
 #endif
 #endif
 
-namespace detail {
-
-SROOK_TT_DEF_HAS_TYPE_IMPL(base_type);
-SROOK_TT_DEF_HAS_TYPE(base_type);
-
-} // namespace detail
-
 SROOK_INLINE_NAMESPACE_END
 } // namespace pmr
 } // namespace srook

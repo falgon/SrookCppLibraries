@@ -1009,12 +1009,12 @@ public:
 #        define DEF_COMP(NAMESPACE, NULLOP)                                                       \
             template <class U, template <class, bool, bool> class Payload>                        \
             SROOK_CONSTEXPR auto operator<=>(const NAMESPACE::optional<U, Payload>& rhs) const    \
-                ->std::common_comparison_category_t<value_type, U>                                \
+            -> std::common_comparison_category_t<value_type, U>                                   \
             {                                                                                     \
                 if (has_value() && rhs.has_value()) {                                             \
                     return std::compare_3way(**this, *rhs);                                       \
                 } else {                                                                          \
-                    return has_value() <= > rhs.has_value();                                      \
+                    return has_value() <=> rhs.has_value();                                       \
                 }                                                                                 \
             }                                                                                     \
             template <class U>                                                                    \

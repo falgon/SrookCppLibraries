@@ -4,6 +4,7 @@
 #include <srook/config/feature/alignas.hpp>
 #include <srook/config/feature/alignof.hpp>
 #include <srook/config/feature/constexpr.hpp>
+#include <srook/config/feature/current_function.hpp>
 #include <srook/config/feature/decltype.hpp>
 #include <srook/config/feature/deduced_typename.hpp>
 #include <srook/config/feature/default.hpp>
