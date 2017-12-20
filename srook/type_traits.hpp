@@ -31,6 +31,7 @@
 #include <srook/type_traits/is_abstract.hpp>
 #include <srook/type_traits/is_arithmetic.hpp>
 #include <srook/type_traits/is_array.hpp>
+#include <srook/type_traits/is_less_than_comparable.hpp>
 #include <srook/type_traits/is_assignable.hpp>
 #include <srook/type_traits/is_base_of.hpp>
 #include <srook/type_traits/is_callable.hpp>
@@ -48,6 +49,7 @@
 #include <srook/type_traits/is_empty.hpp>
 #include <srook/type_traits/is_enum.hpp>
 #include <srook/type_traits/is_equal.hpp>
+#include <srook/type_traits/is_equality_comparable.hpp>
 #include <srook/type_traits/is_final.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_function.hpp>

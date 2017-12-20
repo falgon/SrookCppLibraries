@@ -3,5 +3,6 @@
 #define INCLUDED_SROOK_COMPARE_HPP
 
 #include <srook/compare/categories.hpp>
+#include <srook/compare/comparison_functions.hpp>
 
 #endif

@@ -1,0 +1,7 @@
+// Copyright (C) 2017 roki
+#ifndef INCLUDED_SROOK_CONTAINER_POLYMORPHIC_ALLOCATE_CONTAINERS_HPP
+#define INCLUDED_SROOK_CONTAINER_POLYMORPHIC_ALLOCATE_CONTAINERS_HPP
+
+#include <srook/memory_resource/pmrlib.hpp>
+
+#endif
