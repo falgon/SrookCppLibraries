@@ -35,9 +35,8 @@ public:
         std::experimental::pmr::memory_resource
 #endif
         base_type;
-protected:
-    static SROOK_CONSTEXPR std::size_t max_align = SROOK_ALIGN_OF(std::max_align_t);
 public:
+    static SROOK_CONSTEXPR std::size_t max_align = SROOK_ALIGN_OF(std::max_align_t);
     virtual ~memory_resource() SROOK_OVERRIDE {}
     using base_type::allocate;
     using base_type::deallocate;
@@ -55,9 +54,8 @@ protected:
 };
 #else
 class memory_resource {
-protected:
-    static SROOK_CONSTEXPR std::size_t max_align = SROOK_ALIGN_OF(std::max_align_t);
 public:
+    static SROOK_CONSTEXPR std::size_t max_align = SROOK_ALIGN_OF(std::max_align_t);
     virtual ~memory_resource() {}
 
     SROOK_FORCE_INLINE void* allocate(std::size_t bytes, std::size_t alignment = max_align)
