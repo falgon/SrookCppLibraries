@@ -13,6 +13,5 @@
 #include <srook/memory/uses_allocator.hpp>
 #include <srook/memory/utility/aggregate_adaptor.hpp>
 #include <srook/memory/utility/checked_delete.hpp>
-#include <srook/memory/utility/load.hpp>
 #include <srook/memory/weak_ptr.hpp>
 #endif

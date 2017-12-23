@@ -19,7 +19,7 @@ struct aligned_membuf {
 	SROOK_FORCE_INLINE const T* ptr() const SROOK_NOEXCEPT_TRUE { return static_cast<const T*>(addr()); }
 public:
 	struct Type { T t_; };
-	SROOK_ATTRIBUTE_ALIGNED_X(SROOK_ALIGN_OF(Type::t_)) unsigned char storage_[sizeof(T)];
+	SROOK_ATTRIBUTE_ALIGNED_X(SROOK_ALIGN_OF(SROOK_DEDUCED_TYPENAME Type::T)) unsigned char storage_[sizeof(T)];
 };
 
 SROOK_INLINE_NAMESPACE_END

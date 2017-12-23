@@ -2,7 +2,8 @@
 #ifndef INCLUDED_SROOK_EXPECTED_EXPECTED_HPP
 #define INCLUDED_SROOK_EXPECTED_EXPECTED_HPP
 
-#include <srook/optional.hpp>
+#include <srook/optional/optional_payload.hpp>
+#include <srook/optional/safe_optional_payload.hpp>
 #include <srook/functional.hpp>
 #include <srook/expected/unexpected.hpp>
 #include <stdexcept>
