@@ -10,7 +10,7 @@ SROOK_INLINE_NAMESPACE(v1)
 
 SROOK_CONSTEXPR struct in_place_t {
 	explicit in_place_t() SROOK_DEFAULT
-}in_place;
+} in_place{};
 
 template<class T>
 struct in_place_type_t{

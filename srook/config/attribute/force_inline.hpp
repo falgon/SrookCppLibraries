@@ -4,13 +4,14 @@
 
 #if defined(_MSC_VER)
 #	define SROOK_FORCE_INLINE __force_inline
-#	define SROOK_ALWAYS_INLINE SROOK_FORCE_INLINE
 #elif (defined(__GNUC__) && (__GNUC__ > 3)) || defined(__clang__)
 #	define SROOK_FORCE_INLINE inline __attribute__((__always_inline__))
-#	define SROOK_ALWAYS_INLINE SROOK_FORCE_INLINE
+#elif (defined(__BORLANDC__) || defined(__WATCOMC__))
+#   define SROOK_FORCE_INLINE __inline
 #else
 #	define SROOK_FORCE_INLINE inline
-#	define SROOK_ALWAYS_INLINE SROOK_FORCE_INLINE
 #endif
+
+#define SROOK_ALWAYS_INLINE SROOK_FORCE_INLINE
 
 #endif

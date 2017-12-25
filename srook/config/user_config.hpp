@@ -93,5 +93,14 @@
 // #define SROOK_CONFIG_PMR_STD_UNORDERED_SET_INCLUDE 1
 // #define SROOK_CONFIG_PMR_STD_REGEX 1
 
+/*
+ *
+ * memcpy configure.
+ * When set, the library checks the memory space with a call to memcpy.
+ *
+ */
+//#define SROOK_CONFIG_CHECK_MEMCPY 1
+//#define SROOK_CONFIG_ENABLE_AVX_MEMCPY 1
+//#define SROOK_CONFIG_ENABLE_AVX512_MEMCPY 1
 
 #endif

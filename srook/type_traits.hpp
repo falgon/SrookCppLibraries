@@ -39,6 +39,7 @@
 #include <srook/type_traits/is_class.hpp>
 #include <srook/type_traits/is_constexpr_function.hpp>
 #include <srook/type_traits/is_constructible.hpp>
+#include <srook/type_traits/is_const.hpp>
 #include <srook/type_traits/is_convertible.hpp>
 #include <srook/type_traits/is_copy_assignable.hpp>
 #include <srook/type_traits/is_copy_constructible.hpp>
@@ -94,6 +95,7 @@
 #include <srook/type_traits/is_trivially_move_constructible.hpp>
 #include <srook/type_traits/is_tuple.hpp>
 #include <srook/type_traits/is_union.hpp>
+#include <srook/type_traits/is_volatile.hpp>
 #include <srook/type_traits/is_void.hpp>
 #include <srook/type_traits/library_concepts.hpp>
 #include <srook/type_traits/negation.hpp>

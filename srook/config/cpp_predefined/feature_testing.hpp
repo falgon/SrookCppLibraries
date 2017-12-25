@@ -461,4 +461,12 @@
 #    define SROOK_CPP_LIB_SHARED_MUTEX 0
 #    define SROOK_CPP_LIB_SCOPED_LOCK 0
 #endif
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
+#   ifdef __cpp_concepts
+#       define SROOK_CPP_CONCEPTS __cpp_concepts
+#   else
+#       define SROOK_CPP_CONCEPTS 0
+#   endif
+#endif
 #endif

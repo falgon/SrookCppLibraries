@@ -22,7 +22,7 @@ using memory::launder;
 #else
 #if __GNUC__ >= 7 
 #    define SROOK_HAS_BUILTIN_LAUNDER 1
-#elif (defined(__has_builtin)
+#elif defined(__has_builtin)
 #    if __has_builtin(__builtin_launder)
 #        define SROOK_HAS_BUILTIN_LAUNDER 1
 #    endif
