@@ -5,7 +5,9 @@
 #include <srook/memory_resource/memory_resource.hpp>
 #include <srook/memory_resource/global_memory_resources.hpp>
 #include <srook/type_traits.hpp>
-#include <srook/memory.hpp>
+#include <srook/memory/addressof.hpp>
+#include <srook/memory/launder.hpp>
+#include <srook/mpl/variadic_types.hpp>
 #include <srook/utility.hpp>
 #include <cassert>
 
@@ -44,7 +46,7 @@ struct uses_alloca<true, T, Allocator, Args...>
 {
     SROOK_STATIC_ASSERT((
         type_traits::detail::Lor<
-            is_constructible<T, allocator_arg_t, Allocator, Args...>, 
+            is_constructible<T, std::allocator_arg_t, Allocator, Args...>, 
             is_constructible<T, std::allocator_arg_t, Allocator, Args...>, 
             is_constructible<T, Args..., Allocator>
         >::value),
@@ -53,7 +55,7 @@ struct uses_alloca<true, T, Allocator, Args...>
 
 
 template <class T, class Allocator, class... Args>
-SROOK_FORCE_INLINE uses_alloca<uses_allocator<T, Allocator>::value, T, Allocator, Args...> use_alloc(const Allocator& a)
+SROOK_FORCE_INLINE uses_alloca<std::uses_allocator<T, Allocator>::value, T, Allocator, Args...> use_alloc(const Allocator& a)
 {
     uses_alloca<std::uses_allocator<T, Allocator>::value, T, Allocator, Args...> ret;
     ret.a_ = srook::addressof(a);
@@ -134,7 +136,7 @@ public:
         : resource_(other.resource()) {}
 
     SROOK_FORCE_INLINE T* allocate(std::size_t n) { return static_cast<T*>(resource_->allocate(n * sizeof(T), SROOK_ALIGN_OF(T))); }
-    SROOK_FORCE_INLINE T* deallocate(T* p, std::size_t n) { resource_->deallocate(p, n * sizeof(T), SROOK_ALIGN_OF(T)); }
+    SROOK_FORCE_INLINE void deallocate(T* p, std::size_t n) { resource_->deallocate(p, n * sizeof(T), SROOK_ALIGN_OF(T)); }
     
     template <class U, class... Args>
     void construct(U* p, Args&&... args)

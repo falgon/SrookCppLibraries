@@ -8,6 +8,10 @@
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/utility/void_t.hpp>
 
+#ifdef SROOK_CONFIG_SUPURESS_VARIADIC_MACROS_WARNING
+#   pragma GCC system_header
+#endif
+
 /*
  *
  * @SROOK_TT_TYPE_TRAITS_DEF_HAS_TYPE_VARIABLE_TEMPLATES_XX
@@ -51,9 +55,11 @@
 #define SROOK_TT_DEF_HAS_TYPE_VARIABLE_TEMPLATES(...)\
     SROOK_TT_DEF_HAS_TYPE_VARIABLE_TEMPLATES_XX(__VA_ARGS__)
 
-#define SROOK_TT_DEF_HAS_TYPE_ALL(TYPE)\
-    SROOK_TT_DEF_HAS_TYPE_IMPL(TYPE);\
-    SROOK_TT_DEF_HAS_TYPE(TYPE);\
-    SROOK_TT_DEF_HAS_TYPE_VARIABLE_TEMPLATES(TYPE)
-            
+#define SROOK_TT_DEF_HAS_TYPE_ALL(...)\
+    SROOK_TT_DEF_HAS_TYPE_IMPL(__VA_ARGS__);\
+    SROOK_TT_DEF_HAS_TYPE(__VA_ARGS__);\
+    SROOK_TT_DEF_HAS_TYPE_VARIABLE_TEMPLATES(__VA_ARGS__)
+ 
+#pragma GCC diagnostic pop
+
 #endif

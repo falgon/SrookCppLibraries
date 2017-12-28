@@ -12,8 +12,18 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
+#ifdef SROOK_CONFIG_SUPURESS_VARIADIC_MACROS_WARNING
+#   ifdef __GNUC__
+#       pragma GCC system_header
+#   endif
+#endif
+
+#include <srook/config/disable_warnings/push/Wvariadic-macros.hpp>
+
 SROOK_TT_DEF_HAS_TYPE_IMPL(base_type);
 SROOK_TT_DEF_HAS_TYPE(base_type);
+
+#include <srook/config/disable_warnings/pop.hpp>
 
 template <bool>
 struct core_type : type_constant<memory_resource> {};

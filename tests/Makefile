@@ -20,7 +20,8 @@ TEST1 = cxx17/array_view/at_test.o\
 	optional/monad.o\
 	semaphore/t.o\
 	semaphore/t1.o\
-	expected/test.o
+	expected/test.o\
+	memory/singleton/singleton.o
 
 all: gcc_target1
 
@@ -40,5 +41,6 @@ run:
 	./semaphore/t.o $(BOOST_TEST_OP)
 	./semaphore/t1.o
 	./expected/test.o $(BOOST_TEST_OP)
+	./memory/singleton/singleton.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)
