@@ -5,7 +5,6 @@
 #   pragma once
 #endif
 
-#include <cstdlib>
 #include <srook/config.hpp>
 #include <srook/utility.hpp>
 #include <srook/memory/unique_ptr.hpp>
@@ -82,7 +81,6 @@ private:
     {
         SROOK_TRY {
             ptr_ = traits_type::allocate(*alloc_ptr_, 1);
-            std::atexit(&destroy);
         } SROOK_CATCH (const std::bad_alloc& e) {
             SROOK_THROW e;
         } SROOK_CATCH (...) {
@@ -159,7 +157,6 @@ private:
     {
         SROOK_TRY {
             ptr_ = traits_type::allocate(*alloc_ptr_, 1);
-            std::atexit(&destroy);
         } SROOK_CATCH (const std::bad_alloc& e) {
             SROOK_THROW e;
         } SROOK_CATCH (...) {
@@ -234,8 +231,8 @@ protected:
     }
 
     template <class... Ts>
-    SROOK_FORCE_INLINE static 
-    SROOK_DEDUCED_TYPENAME enable_if<is_constructible<value_type, Ts&&...>::value, reference>::type
+    SROOK_FORCE_INLINE static SROOK_DEDUCED_TYPENAME 
+    enable_if<base_type::template special_constructible<Ts&&...>::value, reference>::type
     instance(const allocator_type& alloc = allocator_type(), Ts&&... ts) 
     {
         if (!base_type::alloc_ptr_) {
@@ -257,8 +254,8 @@ protected:
 
 template <class T, class Allocator = std::allocator<T>, class Policy = singleton_policy::use_default_ctors>
 class singleton : protected detail::singleton_base<T, Allocator, Policy> {
-public:
     typedef detail::singleton_base<T, Allocator, Policy> base_type;
+public:
     typedef SROOK_DEDUCED_TYPENAME base_type::base_type friend_type; 
     typedef SROOK_DEDUCED_TYPENAME base_type::allocator_type friend_allocator_type;
     typedef SROOK_DEDUCED_TYPENAME base_type::allocator_type allocator_type;
