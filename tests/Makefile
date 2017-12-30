@@ -12,7 +12,7 @@ TEST1 = cxx17/array_view/at_test.o\
 	mpl/math/compile_time_four_arithmetic_operations_parser_test.o\
 	mpl/string/stoi.o\
 	cxx17/any_pack/meta_random_engine_test.o\
-       	range/adaptor/adaptor_exp.o\
+    range/adaptor/adaptor_exp.o\
 	optional/nullopt.o\
 	optional/requirements.o\
 	optional/make_optional.o\
@@ -21,7 +21,8 @@ TEST1 = cxx17/array_view/at_test.o\
 	semaphore/t.o\
 	semaphore/t1.o\
 	expected/test.o\
-	memory/singleton/singleton.o
+	memory/singleton/singleton.o\
+	thread/safe/memory/singleton/test1.o
 
 all: gcc_target1
 
@@ -42,5 +43,6 @@ run:
 	./semaphore/t1.o
 	./expected/test.o $(BOOST_TEST_OP)
 	./memory/singleton/singleton.o $(BOOST_TEST_OP)
+	./thread/safe/memory/singleton/test1.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)

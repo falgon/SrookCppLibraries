@@ -17,6 +17,7 @@ public:
     typedef const T* const_pointer;
     typedef T& reference;
     typedef const T& const_reference;
+    typedef mayers_singleton friend_type;
 
     template <class... Ts>
     SROOK_ATTRIBUTE_NODISCARD SROOK_FORCE_INLINE static reference

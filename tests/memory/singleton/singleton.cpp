@@ -10,7 +10,7 @@
 #include <random>
 #include <srook/memory/singleton.hpp>
 
-BOOST_AUTO_TEST_SUITE(singleton_test)
+BOOST_AUTO_TEST_SUITE(srsingleton_test)
 
 struct dummy_resource {};
 
