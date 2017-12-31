@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #include <srook/algorithm/clustering/k_means.hpp>
 #include <srook/plot/gnu/ploter.hpp>
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_PARTIAL_SORT_COPY
 #define INCLUDED_SROOK_RANGE_ADAPTOR_PARTIAL_SORT_COPY
 #if __has_include(<boost/range/algorithm/partial_sort_copy.hpp>)

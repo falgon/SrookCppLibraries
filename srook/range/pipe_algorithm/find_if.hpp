@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INLCLUDED_SROOK_RANGE_ADAPTOR_FIND_IF_HPP
 #define INLCLUDED_SROOK_RANGE_ADAPTOR_FIND_IF_HPP
 #include<utility>

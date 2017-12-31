@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_SKIPPING_ITERATOR_VALUE_CORE_HPP
 #define INCLUDED_SROOK_SKIPPING_ITERATOR_VALUE_CORE_HPP
 #include <iterator>

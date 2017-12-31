@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDE_SROOK_MPL_HAS_ITERATOR
 #define INCLUDE_SROOK_MPL_HAS_ITERATOR
 #include<type_traits>

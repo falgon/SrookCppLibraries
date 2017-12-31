@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ALGORITHM_VECTOR_CALCULATOR_HPP
 #define INCLUDED_SROOK_RANGE_ALGORITHM_VECTOR_CALCULATOR_HPP
 #if __has_include(<type_traits>) and __cplusplus <= 201703L

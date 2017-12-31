@@ -25,5 +25,5 @@ Boost C++ Libraries version 1.5.8 or later
 If addition of a library is stabilized, wiki may be written.
 
 ## Copyrights
-Copyright (C) 2011-2017 Roki.
+Copyright (C) 2011-2018 Roki.
 Distributed under the MIT License

@@ -43,7 +43,7 @@ protected:
     bool do_is_equal(const srook::pmr::memory_resource::other_type& other) const noexcept override { return this == &other; }
 };
 
-SROOK_CONSTEXPR std::size_t max = 32;
+SROOK_CONSTEXPR std::size_t max = 4;
 typedef srook::thread_safe::memory::singleton_adaptor<srook::pmr::singleton<int>> safe_singleton;
 typedef srook::thread_safe::memory::singleton_adaptor<srook::mayers_singleton<int>> safe_mayers_singleton; // It is thread-safe without wrapping with adapter.
 

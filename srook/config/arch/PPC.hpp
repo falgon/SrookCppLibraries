@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 // Detecting to pre-defined macro of [PowerPC architecture](http://en.wikipedia.org/wiki/PowerPC).
 #ifndef INCLUDED_SROOK_CONFIG_ARCH_PPC_HPP
 #define INCLUDED_SROOK_CONFIG_ARCH_PPC_HPP

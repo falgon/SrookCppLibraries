@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_STABLE_PARTITION_HPP
 #define INCLUDED_SROOK_RANGE_PIPE_ALGORITHM_STABLE_PARTITION_HPP
 #include<srook/type_traits/has_iterator.hpp>

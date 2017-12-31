@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_PREV_ROTATE_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_PREV_ROTATE_HPP
 #include<srook/mpl/constant_sequence/algorithm/pop_front.hpp>

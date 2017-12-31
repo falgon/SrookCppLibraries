@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 // Inspired from 
 // http://www.fluentcpp.com/2017/02/09/set-aggregate-set-seggregate-higher-level-algorithms-on-sets/
 // https://github.com/joboccara/sets/blob/master/set_seggregate.hpp

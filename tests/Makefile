@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2011-2017 Roki. Distributed under the MIT License
+#
+
 FLAGS := -Wall -Wextra -pedantic -std=c++1z -pthread
 INCLUDE_PATH := -I../ -I../include -L../lib
 GXX = g++-7

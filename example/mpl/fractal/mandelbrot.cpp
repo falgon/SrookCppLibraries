@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 //
 // This is a mandelbrot fractal ploter by C++ template MetaProgramming. 
 // However, this ploter unfortunately DOES NOT work on practial machines, because it needs huge amount of memories.

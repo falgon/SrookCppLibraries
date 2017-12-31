@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2011-2018 Roki. Distributed under the MIT License.
+#
+
 GXX := g++-7
 INCLUDE_DIR := -I../ -I../include
 FLAGS := -Wall -Wextra -pedantic -std=c++1z

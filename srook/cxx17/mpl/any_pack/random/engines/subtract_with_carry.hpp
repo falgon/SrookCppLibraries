@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CXX17_MPL_RANDOM_SUBTRACT_CARRY_ENGINE_HPP
 #define INCLUDED_SROOK_CXX17_MPL_RANDOM_SUBTRACT_CARRY_ENGINE_HPP
 #include<cstdint>

@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_TYPE_TRAITS_IS_COPYABLE_HPP
 #define INCLUDED_TYPE_TRAITS_IS_COPYABLE_HPP
 #include <srook/config/cpp_predefined/feature_testing.hpp>

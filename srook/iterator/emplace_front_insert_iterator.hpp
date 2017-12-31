@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_EMPLACE_FRONT_INSERT_ITERATOR
 #define INCLUDED_EMPLACE_FRONT_INSERT_ITERATOR
 #ifdef __GXX_EXPERIMENTAL_CXX0X__

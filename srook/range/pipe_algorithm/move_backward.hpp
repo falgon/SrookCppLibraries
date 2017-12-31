@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef SROOK_INCLUDED_MOVE_BACKWARD_HPP
 #define SROOK_INCLUDED_MOVE_BACKWARD_HPP
 #include<srook/range/adaptor/adaptor_operator.hpp>

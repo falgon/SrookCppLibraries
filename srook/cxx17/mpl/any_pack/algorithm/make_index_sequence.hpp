@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CXX17_MPL_ANY_PACK_MAKE_INDEX_SEQUENCE_HPP
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_MAKE_INDEX_SEQUENCE_HPP
 #include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>

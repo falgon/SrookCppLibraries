@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CSTDDEF_BYTE_HPP
 #define INCLUDED_SROOK_CSTDDEF_BYTE_HPP
 #include <srook/config/cpp_predefined.hpp>

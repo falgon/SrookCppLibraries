@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 // resource_adaptor is NOT standart included
 #ifndef INCLUDED_SROOK_MEMORY_RESOURCE_RESOURCE_ADAPTOR_HPP
 #define INCLUDED_SROOK_MEMORY_RESOURCE_RESOURCE_ADAPTOR_HPP

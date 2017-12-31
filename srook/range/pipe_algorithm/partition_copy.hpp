@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDE_SROOK_RANGE_ADAPTOR_PARTITION_COPY
 #define INCLUDE_SROOK_RANGE_ADAPTOR_PARTITION_COPY
 #include<srook/range/adaptor/adaptor_operator.hpp>

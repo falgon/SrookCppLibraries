@@ -1,4 +1,4 @@
-// Copyright (C) 2017 roki
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_FILTERD_ITERATOR_HPP
 #define INCLUDED_FILTERD_ITERATOR_HPP
 #include <iterator>
