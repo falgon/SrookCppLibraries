@@ -3,5 +3,6 @@
 
 #include <srook/memory/singleton/singleton.hpp>
 #include <srook/memory/singleton/mayers_singleton.hpp>
+#include <srook/memory/singleton/singleton_traits.hpp>
 
 #endif

@@ -559,6 +559,33 @@ public:
 
 } // namespace safe
 } // namespace thread
+
+namespace memory {
+SROOK_INLINE_NAMESPACE(v1)
+
+template <class Singleton>
+struct singleton_traits<srook::threading::safe::singleton_adaptor<Singleton>> : protected singleton_traits<Singleton> {
+private:
+    typedef singleton_traits<Singleton> base_type;
+public:
+    typedef SROOK_DEDUCED_TYPENAME base_type::friend_type friend_type;
+    typedef SROOK_DEDUCED_TYPENAME base_type::allocator_type allocator_type;
+    typedef SROOK_DEDUCED_TYPENAME base_type::traits_type traits_type;
+    typedef SROOK_DEDUCED_TYPENAME base_type::value_type value_type;
+    typedef SROOK_DEDUCED_TYPENAME base_type::pointer pointer;
+    typedef SROOK_DEDUCED_TYPENAME base_type::const_pointer const_pointer;
+    typedef SROOK_DEDUCED_TYPENAME base_type::reference reference;
+    typedef SROOK_DEDUCED_TYPENAME base_type::const_reference const_reference;
+
+    using base_type::instance;
+    using base_type::destroy;
+    using base_type::thread_local_instance;
+    using base_type::rebind_singleton;
+    using base_type::rebind_traits;
+};
+
+SROOK_INLINE_NAMESPACE_END
+} // namespace memory
 } // namespace srook
 
 #endif

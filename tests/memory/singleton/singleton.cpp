@@ -1,5 +1,7 @@
 #define BOOST_TEST_MAIN
 #define SROOK_CONFIG_SUPURESS_VARIADIC_MACROS_WARNING 1
+#include <srook/config.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <boost/test/included/unit_test.hpp>
 #include <boost/range/algorithm/equal.hpp>
 #include <srook/scope/unique_resource.hpp>
@@ -84,3 +86,5 @@ BOOST_AUTO_TEST_CASE(singleton_check4)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+#endif
