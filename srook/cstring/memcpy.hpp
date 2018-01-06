@@ -2,18 +2,14 @@
 #ifndef INCLUDED_CSTRING_MEMCPY_HPP
 #define INCLUDED_CSTRING_MEMCPY_HPP
 
-#include <srook/config.hpp>
-#include <srook/type_traits.hpp>
+#include <srook/config/user_config.hpp>
 
-#if (defined(SROOK_CONFIG_ENABLE_AVX512_MEMCPY) || defined(SROOK_CONFIG_ENABLE_AVX_MEMCPY)) &&\
-    !defined(SROOK_MEMCPY) &&\
-    !defined(SROOK_MEMCPY_NONCONST) &&\
-    SROOK_HAS_INCLUDE(<immintrin.h>)
+#if (defined(SROOK_CONFIG_ENABLE_AVX512_MEMCPY) || defined(SROOK_CONFIG_ENABLE_AVX_MEMCPY)) && !defined(SROOK_MEMCPY) && !defined(SROOK_MEMCPY_NONCONST)
 #   include <srook/cstring/avx/algorithm/memcpy/memcpy.hpp>
 #   define SROOK_MEMCPY_NONCONST(x, y, z) srook::cstring::avx::memcpy(x, y, z)
 #endif
 
-#if !defined(SROOK_CONFIG_CHECK_MEMCPY) && !defined(SROOK_MEMCPY)
+#if !defined(SROOK_CONFIG_CHECK_MEMCPY) && !defined(SROOK_MEMCPY) && !defined(SROOK_MEMCPY_NONCONST)
 #   if defined(__GNUC__) || defined(__IBMCPP__)
 #       define SROOK_MEMCPY(x, y, z) __builtin_memcpy(x, y, z)
 #   elif defined(__INTEL_COMPILER) && !defined(SROOK_CONFIG_ENABLE_AVX512_MEMCPY)
@@ -32,15 +28,20 @@
 #   endif
 #endif
 
-#if !defined(SROOK_MEMCPY) || !defined(SROOK_MEMCPY_NONCONST)
+#if !defined(SROOK_MEMCPY_NONCONST)
 #   if defined(__x86_64__) && defined(__linux__) && !defined(__CYGWIN__)
-        extern "C" void* memcpy(void*, void*, std::size_t);
+#       include <cstdint>
+#       include <unistd.h>
+#       include <features.h>
+#       include <string.h>
 #       define SROOK_MEMCPY_NONCONST(x, y, z) ::memcpy(x, y, z)
 #   else
 #       include <cstring>
 #       define SROOK_MEMCPY_NONCONST(x, y, z) std::memcpy(x, y, z)
 #   endif
 #endif
+
+#include <srook/type_traits.hpp>
 
 namespace srook {
 namespace cstring {
@@ -69,6 +70,7 @@ memcpy(T p1, U p2, std::size_t n)
 }
 
 #endif
+//#undef SROOK_MEMCPY_NONCONST
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace cstring

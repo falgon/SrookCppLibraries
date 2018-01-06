@@ -14,7 +14,7 @@ test: $(TARGET)
 	$(GXX) $(INCLUDE_DIR) $(TARGET) $(LIBS) $(FLAGS)
 run: test
 	./a.out -h
-	wget http://www.gutenberg.org/files/45/45-0.txt
+	wget -q http://www.gutenberg.org/files/45/45-0.txt
 	head -n 15 45-0.txt
 	./a.out -c 6 -i 45-0.txt
 	file 45-0.txt_out

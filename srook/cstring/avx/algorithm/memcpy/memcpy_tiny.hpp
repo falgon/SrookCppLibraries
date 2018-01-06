@@ -19,7 +19,7 @@ SROOK_FORCE_INLINE T& assign(U* p1, V* p2, std::ptrdiff_t x = 0) SROOK_NOEXCEPT_
 
 template <typename T, typename U>
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME enable_if<is_convertible<T, U>::value, SROOK_DEDUCED_TYPENAME std::common_type<T, U>::type>::type
-prev_assign(T* p1, U* p2)
+prev_assign(T* p1, U* p2) SROOK_NOEXCEPT_TRUE
 {
     return *(p1 - 1) = *(p2 - 1);
 }

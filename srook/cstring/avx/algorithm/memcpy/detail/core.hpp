@@ -112,8 +112,8 @@ static SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME detail::memcpy_impl_return_type
 memcpy_avx_256(T dst, const U src)
 {
     if (has_intel_knl_features()) {
-        SROOK_PP_LOOP_DELIM(DEF_512UNROLL, 3, DELIMITOR);
-        SROOK_PP_LOOP_DELIM(STORE_512UNROLL, 3, DELIMITOR);
+        SROOK_PP_LOOP_DELIM(DEF_512UNROLL, 4, DELIMITOR);
+        SROOK_PP_LOOP_DELIM(STORE_512UNROLL, 4, DELIMITOR);
     } else {
         detail::memcpy_avx_256_impl(dst, src);
     }
