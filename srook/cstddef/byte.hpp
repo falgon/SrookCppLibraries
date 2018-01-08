@@ -13,7 +13,7 @@ enum class byte : unsigned char {};
 namespace literals {
 namespace byte_literals {
 
-byte operator"" _byte(unsigned long long b)
+SROOK_CONSTEXPR byte operator"" _byte(unsigned long long b)
 {
     return byte(b);
 }
