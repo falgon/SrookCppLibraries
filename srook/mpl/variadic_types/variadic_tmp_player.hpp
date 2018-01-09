@@ -8,6 +8,7 @@
 #include<srook/mpl/variadic_types/pack.hpp>
 #include<srook/mpl/variadic_types/algorithm/first.hpp>
 #include<srook/mpl/variadic_types/algorithm/concat.hpp>
+#include<srook/mpl/variadic_types/algorithm/is_contained_in.hpp>
 #include<srook/mpl/variadic_types/algorithm/length.hpp>
 #include<srook/mpl/variadic_types/algorithm/size.hpp>
 #include<srook/mpl/variadic_types/algorithm/transfer.hpp>

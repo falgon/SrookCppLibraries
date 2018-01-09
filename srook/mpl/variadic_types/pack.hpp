@@ -8,6 +8,15 @@
 #include <srook/config/feature/inline_variable.hpp>
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/feature/nested_namespace.hpp>
+
+SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
+SROOK_INLINE_NAMESPACE(v1)
+
+template <class...> struct packer;
+
+SROOK_INLINE_NAMESPACE_END
+} SROOK_NESTED_NAMESPACE_END(vt, tmpl, srook)
 
 namespace srook {
 SROOK_INLINE_NAMESPACE(mpl)
@@ -16,6 +25,7 @@ namespace detail {
 template <class... T>
 struct pack {
     SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR_OR_CONST std::size_t size = sizeof...(T);
+    typedef srook::tmpl::vt::packer<T...> rebind_packer;
 };
 } // namespace detail
 

@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
-#ifndef INCLUDED_SROOK_MPL_VARIADIC_TYPES_VARIADIC_TMP_PLAYER_HPP
-#define INCLUDED_SROOK_MPL_VARIADIC_TYPES_VARIADIC_TMP_PLAYER_HPP
+#ifndef INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_SWAP_AT_HPP
+#define INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_SWAP_AT_HPP
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/mpl/variadic_types/algorithm/concat.hpp>
