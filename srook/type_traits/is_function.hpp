@@ -7,6 +7,11 @@
 #include <srook/config/feature/inline_variable.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wambiguous-ellipsis"
+#endif
+
 namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
@@ -50,5 +55,8 @@ static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_function_v = is_function<T>
 #endif
 
 } // namespace srook
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
 
 #endif

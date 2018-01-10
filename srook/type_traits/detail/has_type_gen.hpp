@@ -60,6 +60,4 @@
     SROOK_TT_DEF_HAS_TYPE(__VA_ARGS__);\
     SROOK_TT_DEF_HAS_TYPE_VARIABLE_TEMPLATES(__VA_ARGS__)
  
-#pragma GCC diagnostic pop
-
 #endif

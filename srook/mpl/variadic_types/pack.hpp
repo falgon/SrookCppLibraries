@@ -10,6 +10,11 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/nested_namespace.hpp>
 
+#ifdef __clang__
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#endif
+
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
@@ -34,5 +39,9 @@ using detail::pack;
 SROOK_INLINE_NAMESPACE_END
 SROOK_INLINE_NAMESPACE_END
 } // namespace srook
+#ifdef __clang__
+#   pragma clang diagnostic pop
+#endif
+
 #endif
 #endif

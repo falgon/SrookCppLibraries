@@ -99,8 +99,16 @@
  * When set, the library checks the memory space with a call to memcpy.
  *
  */
-//#define SROOK_CONFIG_CHECK_MEMCPY 1
-//#define SROOK_CONFIG_ENABLE_AVX_MEMCPY 1
-//#define SROOK_CONFIG_ENABLE_AVX512_MEMCPY 1
+// #define SROOK_CONFIG_CHECK_MEMCPY 1
+// #define SROOK_CONFIG_ENABLE_AVX_MEMCPY 1
+// #define SROOK_CONFIG_ENABLE_AVX512_MEMCPY 1
+
+
+/*
+ *
+ * srook/tmpl/vr/at.hpp limit settings.
+ *
+ */
+#define SROOK_CONFIG_TMPL_AT_LIMIT 128
 
 #endif

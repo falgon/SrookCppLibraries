@@ -7,7 +7,7 @@
 #if defined(_MSC_VER)
 #    define SROOK_PP_DUMMY_VA(...) dummy, __VA_ARGS__
 #else
-#    define SROOK_PP_DUMMY_VA(...) dummy, ##__VA_ARGS__
+#    define SROOK_PP_DUMMY_VA(...) dummy, __VA_ARGS__
 #endif
 
 #define SROOK_PP_VA_COUNT(...) SROOK_PP_INDIRECT(SROOK_PP_VA_COUNT_INTERNAL_0((SROOK_PP_DUMMY_VA(__VA_ARGS__), \
