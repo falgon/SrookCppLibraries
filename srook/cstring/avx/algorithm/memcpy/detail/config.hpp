@@ -3,14 +3,26 @@
 #define INCLUDED_SROOK_CSTRING_AVX_MEMCPY_CONFIG_DETAIL_HPP
 
 #include <srook/config.hpp>
-#if SROOK_HAS_INCLUDE(<immintrin.h>)
+#ifdef _MSC_VER
+#   include <intrin.h>
+#elif defined(__GNUC__)
+#   include <x86intrin.h>
+#elif deifned(__clang__)
+#   include <x86intrin.h>
+#elif !defined(SROOK_CONFIG_ENABLE_AVX512_MEMCPY) && SROOK_HAS_INCLUDE(<immintrin.h>)
 #   include <immintrin.h>
+#elif defined(SROOK_CONFIG_ENABLE_AVX512_MEMCPY) && SROOK_HAS_INCLUDE(<immintrin.h>) && SROOK_HAS_INCLUDE(<zmmintrin.h>)
+#   include <immintrin.h>
+#   include <zmmintrin.h>
+#elif !define(SROOK_CONFIG_ENABLE_AVX512_MEMCPY)
+#   error "This feature needs <immintrin.h>"
 #else
-#   error This feature needs <immintrin.h>
+#   error "This feature needs <immintrin.h> and <zmmintrin.h>"
 #endif
+
 #include <srook/type_traits.hpp>
+#include <srook/cstdint.hpp>
 #include <cstddef>
-#include <cstdint>
 
 namespace srook {
 namespace cstring {

@@ -7,6 +7,7 @@
 #include <srook/config/byte.hpp>
 #include <srook/config/compiler.hpp>
 #include <srook/config/compiler_version.hpp>
+#include <srook/config/disable_warnings/default_disable.hpp>
 #include <srook/config/env.hpp>
 #include <srook/config/extension.hpp>
 #include <srook/config/feature.hpp>
