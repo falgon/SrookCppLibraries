@@ -17,6 +17,7 @@
 
 namespace srook {
 namespace algorithm {
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <bool, class>
@@ -231,7 +232,7 @@ constexpr bool equal(LInputIterator &&lbegin, LInputIterator lend, RInputIterato
 {
     return std::equal(std::forward<LInputIterator>(lbegin), std::forward<LInputIterator>(lend), std::forward<RInputIterator>(rbegin), std::forward<RInputIterator>(rend), pred);
 }
-
+SROOK_INLINE_NAMESPACE_END
 } // namespace algorithm
 
 using algorithm::equal;

@@ -111,4 +111,11 @@
  */
 #define SROOK_CONFIG_TMPL_AT_LIMIT 128
 
+/*
+ *
+ * When compiling functions that receive Range, compile the Boost.Range library to take precedence. 
+ *
+ */
+// #define SROOK_CONFIG_ENABLE_BOOST_RANGE_ITERATOR 1
+
 #endif

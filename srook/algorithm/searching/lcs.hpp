@@ -2,6 +2,12 @@
 #ifndef INCLUDED_SROOK_ALGORITHM_SEARCHING_LCS_HPP
 #define INCLUDED_SROOK_ALGORITHM_SEARCHING_LCS_HPP
 
+#ifdef _MSC_VER
+#   if _MSC_VER > 1000
+#       pragma once
+#   endif
+#endif
+
 #include <srook/config.hpp>
 #include <srook/type_traits.hpp>
 #include <srook/cxx20/concepts/iterator/Iterator.hpp>

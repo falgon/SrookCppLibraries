@@ -19,6 +19,7 @@
     std::remove_reference_t<std::remove_cv_t<x> >
 
 namespace srook {
+namespace algorithm {
 inline namespace v1 {
 
 template <
@@ -312,6 +313,10 @@ auto for_each(std::initializer_list<T> init_list, Functor&& functor) -> decltype
 }
 
 } // namespace v1
+} // namespace algorithm
+
+using algorithm::for_each;
+
 } // namespace srook
 
 #    undef remove_cv_t

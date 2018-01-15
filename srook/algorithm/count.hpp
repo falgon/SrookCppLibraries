@@ -12,6 +12,7 @@
 
 namespace srook {
 namespace algorithm {
+SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 struct Apply_Counter {
@@ -76,7 +77,7 @@ constexpr std::size_t count(Iter &&first, Iter &&last, Target &&target)
 {
     return std::count(srook::forward<Iter>(first), srook::forward<Iter>(last), srook::forward<Target>(target));
 }
-
+SROOK_INLINE_NAMESPACE_END
 } // namespace algorithm
 
 using algorithm::count;
