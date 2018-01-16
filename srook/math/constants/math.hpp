@@ -7,6 +7,7 @@
 #include <srook/math/constants/algorithm/fabs.hpp>
 #include <srook/math/constants/algorithm/factorial.hpp>
 #include <srook/math/constants/algorithm/fmod.hpp>
+#include <srook/math/constants/algorithm/gcd.hpp>
 #include <srook/math/constants/algorithm/hypot.hpp>
 #include <srook/math/constants/algorithm/is_integer.hpp>
 #include <srook/math/constants/algorithm/is_odd.hpp>

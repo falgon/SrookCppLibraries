@@ -8,21 +8,12 @@
 #   endif
 #endif
 
-#include <srook/config.hpp>
-#include <srook/cxx20/concepts/iterator/Iterator.hpp>
+#include <srook/algorithm/searching/detail/config.hpp>
 #include <srook/type_traits/is_convertible.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/disable_if.hpp>
-#include <srook/iterator/range_iterator.hpp>
 #include <vector>
 #include <iterator>
-
-#if SROOK_HAS_INCLUDE(<boost/range/begin.hpp>) && SROOK_HAS_INCLUDE(<boost/range/end.hpp>)
-#   include <boost/range/begin.hpp>
-#   include <boost/range/end.hpp>
-#   define SROOK_HAS_BOOST_RANGE_BEGIN_HPP 1
-#   define SROOK_HAS_BOOST_RANGE_END_HPP 1
-#endif
 
 SROOK_NESTED_NAMESPACE(srook, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -117,6 +108,11 @@ private:
     std::vector<difference_type> skip;
 };
 
+#if SROOK_CPP_DEDUCTION_GUIDES
+template <class PatternIterator>
+knuth_morris_pratt(PatternIterator, PatternIterator) -> knuth_morris_pratt<PatternIterator>;
+#endif
+
 #if SROOK_HAS_CPP_CONCEPTS
 #   define SROOK_KNUTH_MORRIS_PRATT_CONCEPTS_ITERATOR srook::concepts::Iterator 
 #else
@@ -175,6 +171,36 @@ knuth_morris_pratt_search(CorpusRange& corpus, const PatternRange& pattern)
 {
     typedef SROOK_DEDUCED_TYPENAME srook::range_iterator<const PatternRange>::type pattern_iterator;
     return knuth_morris_pratt<pattern_iterator>(std::begin(pattern), std::end(pattern))(std::begin(corpus), std::end(corpus));
+}
+#endif
+
+template <class Range>
+#if SROOK_CONFIG_ENABLE_BOOST_RANGE_ITERATOR && SROOK_HAS_BOOST_RANGE_BEGIN_HPP && SROOK_HAS_BOOST_RANGE_END_HPP
+SROOK_DEDUCED_TYPENAME srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME boost::range_iterator<const Range>::type>
+make_knuth_morris_pratt(const Range& range)
+{
+    return srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME boost::range_iterator<const Range>::type>(boost::begin(range), boost::end(range));
+}
+#else
+SROOK_DEDUCED_TYPENAME srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME srook::range_iterator<const Range>::type>
+make_knuth_morris_pratt(const Range& range)
+{
+    return srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME srook::range_iterator<const Range>::type>(std::begin(range), std::end(range));
+}
+#endif
+
+template <class Range>
+#if SROOK_CONFIG_ENABLE_BOOST_RANGE_ITERATOR && SROOK_HAS_BOOST_RANGE_BEGIN_HPP && SROOK_HAS_BOOST_RANGE_END_HPP
+SROOK_DEDUCED_TYPENAME srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME boost::range_iterator<Range>::type>
+make_knuth_morris_pratt(Range& r)
+{
+    return srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME boost::range_iterator<Range>::type>(boost::begin(r), boost::end(r));
+}
+#else
+SROOK_DEDUCED_TYPENAME srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME srook::range_iterator<Range>::type>
+make_knuth_morris_pratt(Range& r)
+{
+    return srook::algorithm::knuth_morris_pratt<SROOK_DEDUCED_TYPENAME srook::range_iterator<Range>::type>(std::begin(r), std::end(r));
 }
 #endif
 

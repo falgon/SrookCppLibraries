@@ -1,3 +1,4 @@
+#if 0
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_DIGITS_VALUES
 #define INCLUDED_SROOK_DIGITS_VALUES
@@ -173,3 +174,4 @@ using digits_values=srook_adl::digits_values<_Tp>;
 
 } // namespace srook
 #endif // include guard
+#endif
