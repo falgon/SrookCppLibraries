@@ -2,9 +2,7 @@
 #ifndef INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SQRT_HPP
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SQRT_HPP
 
-#include <srook/config/attribute/force_inline.hpp>
-#include <srook/config/noexcept_detection.hpp>
-#include <srook/config/require.hpp>
+#include <srook/config.hpp>
 #include <srook/limits/numeric_limits.hpp>
 #include <srook/math/config/builtin.hpp>
 #include <srook/math/constants/algorithm/isnan.hpp>
@@ -36,17 +34,17 @@ SROOK_FORCE_INLINE constexpr long double builtin_sqrt(long double x) SROOK_NOEXC
 #endif
 
 template <typename T>
-inline T sqrt_impl2(T x, T s, T s2)
+SROOK_CONSTEXPR inline T sqrt_impl2(T x, T s, T s2)
 {
     return !(s < s2) ? s2 : sqrt_impl2(x, (x / s + s) / 2, s);
 }
 template <typename T>
-inline T sqrt_impl1(T x, T s)
+SROOK_CONSTEXPR inline T sqrt_impl1(T x, T s)
 {
     return sqrt_impl2(x, (x / s + s) / 2, s);
 }
 template <typename T>
-inline T sqrt_impl(T x)
+SROOK_CONSTEXPR inline T sqrt_impl(T x)
 {
     return sqrt_impl1(x, x > 1 ? x : T(1));
 }

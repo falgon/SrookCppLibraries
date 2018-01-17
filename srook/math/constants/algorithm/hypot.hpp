@@ -63,9 +63,9 @@ constexpr FloatType hypot(FloatType x,FloatType y)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 				:detail::builtin_hypot(x,y)
 #else
-				:y == 0 ? math::fabs(x)
-				:x == 0 ? math::fabs(y)
-				: static_cast<FloatType>(detail::hypot_impl(static_cast<typename detail::float_compute<FloatType>::type>(x),static_cast<typename detail::float_compute<FloatType>::type(y)))
+				: y == 0 ? math::fabs(x)
+				: x == 0 ? math::fabs(y)
+				: static_cast<FloatType>(detail::hypot_impl(static_cast<typename detail::float_compute<FloatType>::type>(x), static_cast<typename detail::float_compute<FloatType>::type>(y)))
 #endif
 				;
 }

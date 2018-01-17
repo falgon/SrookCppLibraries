@@ -1,8 +1,6 @@
 #ifndef INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SIN_HPP
 #define INCLUDED_SROOK_MATH_CONSTANTS_ALGORITHM_SIN_HPP
 
-#include<cmath>
-
 #include <srook/config/attribute/force_inline.hpp>
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/config/require.hpp>
@@ -15,6 +13,7 @@
 #include <srook/math/constants/algorithm/pow.hpp>
 #include <srook/math/constants/pi.hpp>
 #include <srook/math/detail/float_compute.hpp>
+#include <srook/type_traits/is_integral.hpp>
 
 namespace srook {
 namespace math {
@@ -37,23 +36,22 @@ SROOK_FORCE_INLINE constexpr long double builtin_sin(long double x) SROOK_NOEXCE
 template <typename T, class U>
 inline constexpr T sin_impl2(T x, U y)
 {
-    return y == (10 * 2 - 1) ? std::pow(x, y) / math::factorial(y) : std::pow(x, y) / math::factorial(y) - sin_impl2(x, y + 2);
+    return y == (10 * 2 - 1) ? pow(x, y) / math::factorial(y) : pow(x, y) / math::factorial(y) - sin_impl2(x, y + 2);
 }
 template <typename T>
 inline constexpr T sin_impl1(T x) SROOK_NOEXCEPT(sin_impl2(math::fmod(math::PI<T>::value() - x, math::PI<T>::value())))
 {
-    return std::fabs(x) > math::PI<T>::value() / 2 ? sin_impl2(std::fmod(math::PI<T>::value() - x, math::PI<T>::value()) * static_cast<int>(x * 2 / math::PI<T>::value()), 1) : sin_impl2(x, 1);
+    return fabs(x) > math::PI<T>::value() / 2 ? sin_impl2(fmod(math::PI<T>::value() - x, math::PI<T>::value()) * static_cast<int>(x * 2 / math::PI<T>::value()), 1) : sin_impl2(x, 1);
 }
 
 template <typename T>
 inline constexpr typename float_compute<T>::type sin_impl(T x) SROOK_NOEXCEPT(math::fmod(x, math::PI<typename detail::float_compute<T>::type>::value()))
 {
-    return 
-		static_cast<int>(x / math::PI<T>::value()) % 2 == 0 ? sin_impl1(std::fmod(x, math::PI<T>::value())) : -sin_impl1(std::fmod(x, math::PI<T>::value()));
+    return static_cast<int>(x / math::PI<T>::value()) % 2 == 0 ? sin_impl1(fmod(x, math::PI<T>::value())) : -sin_impl1(fmod(x, math::PI<T>::value()));
 }
 } // namespace detail
 
-template <typename FloatType, REQUIRES(std::is_floating_point<FloatType>::value)>
+template <typename FloatType, REQUIRES(is_floating_point<FloatType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 SROOK_FORCE_INLINE 
 #else
@@ -75,7 +73,7 @@ constexpr FloatType sin(FloatType x)
 	;
 }
 
-template <typename IntType, REQUIRES(std::is_integral<IntType>::value)>
+template <typename IntType, REQUIRES(is_integral<IntType>::value)>
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 SROOK_FORCE_INLINE 
 #else
