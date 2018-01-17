@@ -25,6 +25,8 @@
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/enable_if.hpp>
+#include <srook/type_traits/decay.hpp>
+#include <srook/tmpl/vt/size_eq.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, math, geometory) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -101,9 +103,35 @@ private:
 
 template <typename FloatType>
 SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<is_floating_point<FloatType>::value, FloatType>::type
-min_area_polygon(FloatType x1, FloatType y1, FloatType x2, FloatType y2, FloatType x3, FloatType y3)
+min_area_polygon(FloatType&& x1, FloatType&& y1, FloatType&& x2, FloatType&& y2, FloatType&& x3, FloatType&& y3)
 {
-    return detail::map_is_valid(x1, y1, x2, y2, x3, y3) ? detail::min_area_polygon_calc<FloatType>(x1, y1, x2, y2, x3, y3)() : numeric_limits<FloatType>::quiet_NaN();
+    return 
+        detail::map_is_valid(x1, y1, x2, y2, x3, y3) ? 
+        detail::min_area_polygon_calc<SROOK_DEDUCED_TYPENAME decay<FloatType>::type>(
+                srook::forward<FloatType>(x1), 
+                srook::forward<FloatType>(y1), 
+                srook::forward<FloatType>(x2), 
+                srook::forward<FloatType>(y2), 
+                srook::forward<FloatType>(x3), 
+                srook::forward<FloatType>(y3)
+        )()
+        : numeric_limits<FloatType>::quiet_NaN();
+}
+
+template <typename IntegralType>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<is_integral<IntegralType>::value, IntegralType>::type
+min_area_polygon(IntegralType x1, IntegralType y1, IntegralType x2, IntegralType y2, IntegralType x3, IntegralType y3)
+{
+    typedef double type;
+    return min_area_polygon(static_cast<type>(x1), static_cast<type>(y1), static_cast<type>(x2), static_cast<type>(y2), static_cast<type>(x3), static_cast<type>(y3));
+}
+
+template <typename... Ts>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<type_traits::detail::Land<is_arithmetic<Ts>...>, tmpl::vt::size_eq<6, Ts...>>::value, double>::type
+min_area_polygon(Ts&&... ts)
+{
+    typedef SROOK_DEDUCED_TYPENAME std::common_type<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>::type type;
+    return min_area_polygon(static_cast<type>(ts)...);
 }
 
 SROOK_INLINE_NAMESPACE_END
