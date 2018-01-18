@@ -171,10 +171,24 @@ min_area_polygon(const std::tuple<Ts...>& ts)
 
 template <typename... ArithmeticType>
 SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
-enable_if<type_traits::detail::Land<is_arithmetic<ArithmeticType>...>::value, SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type>::type
+enable_if<
+    type_traits::detail::Land<tmpl::vt::size_eq<6, ArithmeticType...>, type_traits::detail::Land<is_arithmetic<ArithmeticType>...>>::value, 
+    SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type
+>::type
 min_area_polygon(ArithmeticType&&... ints)
 {
     return min_area_polygon(detail::remove_integer(srook::forward<ArithmeticType>(ints)...));
+}
+
+template <typename A1, typename A2, typename A3, typename A4, typename A5, typename A6>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+enable_if<
+    type_traits::detail::Land<is_arithmetic<A1>, is_arithmetic<A2>, is_arithmetic<A3>, is_arithmetic<A4>, is_arithmetic<A5>, is_arithmetic<A6>>::value,
+    detail::do_remove_integer<false>::value_type
+>::type
+min_area_polygon(const std::pair<A1, A2>& one, const std::pair<A3, A4>& two, const std::pair<A5, A6>& three)
+{
+    return min_area_polygon(detail::remove_integer(one.first, one.second, two.first, two.second, three.first, three.second));
 }
 
 SROOK_INLINE_NAMESPACE_END

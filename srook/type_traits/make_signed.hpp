@@ -10,6 +10,10 @@
 
 #include <srook/type_traits/make_unsigned.hpp>
 #include <srook/cstdint.hpp>
+#include <srook/type_traits/type_constant.hpp>
+#include <srook/type_traits/is_integral.hpp>
+#include <srook/type_traits/is_enum.hpp>
+#include <srook/type_traits/match_cv_qualifiers.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
