@@ -9,37 +9,43 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-template <bool, template <class> class, class...>
+template <bool, template <class...> class, class...>
 struct is_contained_in_like_impl2;
 
-template <template <class> class Likea, class... Ts>
+template <template <class...> class Likea, class... Ts>
 struct is_contained_in_like_impl2<true, Likea, Ts...> : public SROOK_TRUE_TYPE {};
 
-template <template <class> class Likea, class Head, class... Ts>
+template <template <class...> class Likea, class Head, class... Ts>
 struct is_contained_in_like_impl2<false, Likea, Head, Ts...> : public is_contained_in_like_impl2<Likea<Head>::value, Likea, Ts...> {};
 
-template <template <class> class Likea>
+template <template <class...> class Likea, class... Elem, class... Ts>
+struct is_contained_in_like_impl2<false, Likea, packer<Elem...>, Ts...> : public is_contained_in_like_impl2<Likea<Elem...>::value, Likea, Ts...> {};
+
+template <template <class...> class Likea>
 struct is_contained_in_like_impl2<false, Likea> : public SROOK_FALSE_TYPE {};
 
-template <template <class> class, class...>
+template <template <class...> class, class...>
 struct is_contained_in_like_impl1;
 
-template <template <class> class Likea, class Head, class... Ts>
+template <template <class...> class Likea, class... Elem, class... Ts>
+struct is_contained_in_like_impl1<Likea, packer<Elem...>, Ts...> : public is_contained_in_like_impl2<Likea<Elem...>::value, Likea, Ts...> {};
+
+template <template <class...> class Likea, class Head, class... Ts>
 struct is_contained_in_like_impl1<Likea, Head, Ts...> : public is_contained_in_like_impl2<Likea<Head>::value, Likea, Ts...> {};
 
-template <template <class> class Likea>
+template <template <class...> class Likea>
 struct is_contained_in_like_impl1<Likea> : public SROOK_FALSE_TYPE {};
 
 } // namespace detail
 
-template <template <class> class Likea, class... Ts>
+template <template <class...> class Likea, class... Ts>
 struct is_contained_in_like : public detail::is_contained_in_like_impl1<Likea, Ts...> {};
 
-template <template <class> class Likea, class... Ts>
-struct is_contained_in_like<Likea, packer<Ts...>> : public is_contained_in_like<Likea, Ts...> {};
+template <template <class...> class Likea, class... Ts>
+struct is_contained_in_like<Likea, packer<Ts...>> : public detail::is_contained_in_like_impl1<Likea, Ts...> {};
 
 #if SROOK_CPP_VARIADIC_TEMPLATES
-template <template <class> class Likea, class... Ts>
+template <template <class...> class Likea, class... Ts>
 SROOK_CONSTEXPR bool is_contained_in_like_v = is_contained_in_like<Likea, Ts...>::value;
 #endif
 

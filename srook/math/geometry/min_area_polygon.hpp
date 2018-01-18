@@ -16,6 +16,9 @@
 #define SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION 1
 
 #include <srook/config.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+#include <tuple>
+#include <srook/tuple/algorithm/apply.hpp>
 #include <srook/math/constants/pi.hpp>
 #include <srook/math/constants/algorithm/gcd.hpp>
 #include <srook/math/constants/algorithm/sqrt.hpp>
@@ -24,9 +27,12 @@
 #include <srook/math/constants/algorithm/pow.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_integral.hpp>
+#include <srook/type_traits/is_arithmetic.hpp>
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/type_traits/decay.hpp>
 #include <srook/tmpl/vt/size_eq.hpp>
+#include <srook/tmpl/vt/replace_all_like.hpp>
+#include <srook/tmpl/vt/transfer.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, math, geometory) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -99,39 +105,76 @@ private:
     FloatType a_, b_, c_, radius_, n_;
 };
 
-} // namespace detail
+template <bool>
+struct do_remove_integer {
+    template <class FloatType>
+    SROOK_CONSTEXPR FloatType operator()(FloatType x) const { return x; }
+};
 
-template <typename FloatType>
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<is_floating_point<FloatType>::value, FloatType>::type
-min_area_polygon(FloatType&& x1, FloatType&& y1, FloatType&& x2, FloatType&& y2, FloatType&& x3, FloatType&& y3)
+template <>
+struct do_remove_integer<false> {
+    typedef double value_type;
+    template <class IntegralType>
+    SROOK_CONSTEXPR value_type operator()(IntegralType x) const { return static_cast<value_type>(x); }
+};
+
+template <class... Tps>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME std::tuple<Tps...> remove_integer(std::tuple<Tps...> tps)
+{
+    return tps;
+}
+
+template <class... Tps, class T, class... Ts>
+SROOK_CONSTEXPR auto
+remove_integer(std::tuple<Tps...> tp, T&& t, Ts&&... ts)
 {
     return 
-        detail::map_is_valid(x1, y1, x2, y2, x3, y3) ? 
-        detail::min_area_polygon_calc<SROOK_DEDUCED_TYPENAME decay<FloatType>::type>(
-                srook::forward<FloatType>(x1), 
-                srook::forward<FloatType>(y1), 
-                srook::forward<FloatType>(x2), 
-                srook::forward<FloatType>(y2), 
-                srook::forward<FloatType>(x3), 
-                srook::forward<FloatType>(y3)
-        )()
-        : numeric_limits<FloatType>::quiet_NaN();
+        remove_integer(
+            std::tuple_cat(tp, std::make_tuple(do_remove_integer<is_floating_point<SROOK_DEDUCED_TYPENAME decay<T>::type>::value>()(t))), 
+            srook::forward<Ts>(ts)...
+        );
 }
 
-template <typename IntegralType>
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<is_integral<IntegralType>::value, IntegralType>::type
-min_area_polygon(IntegralType x1, IntegralType y1, IntegralType x2, IntegralType y2, IntegralType x3, IntegralType y3)
+template <class... Ts>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+enable_if<
+    type_traits::detail::Land<is_arithmetic<Ts>...>::value,
+    SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<
+        std::tuple, 
+        SROOK_DEDUCED_TYPENAME tmpl::vt::replace_all_like<is_integral, double, Ts...>::type
+    >::type
+>::type
+remove_integer(Ts&&... ts)
 {
-    typedef double type;
-    return min_area_polygon(static_cast<type>(x1), static_cast<type>(y1), static_cast<type>(x2), static_cast<type>(y2), static_cast<type>(x3), static_cast<type>(y3));
+    return remove_integer(std::make_tuple(), srook::forward<Ts>(ts)...);
 }
+
+} // namespace detail
 
 template <typename... Ts>
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<type_traits::detail::Land<is_arithmetic<Ts>...>, tmpl::vt::size_eq<6, Ts...>>::value, double>::type
-min_area_polygon(Ts&&... ts)
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+enable_if<
+    type_traits::detail::Land<
+        type_traits::detail::Land<is_floating_point<Ts>...>, 
+        tmpl::vt::size_eq<6, Ts...>
+    >::value, 
+    SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type
+>::type
+min_area_polygon(const std::tuple<Ts...>& ts)
 {
-    typedef SROOK_DEDUCED_TYPENAME std::common_type<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>::type type;
-    return min_area_polygon(static_cast<type>(ts)...);
+    typedef SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type value_type;
+    return 
+        srook::apply([](auto... xs) -> bool { return detail::map_is_valid(xs...); }, ts) ?
+        srook::apply([](auto&&... xs) -> value_type { return detail::min_area_polygon_calc<value_type>(srook::forward<SROOK_DECLTYPE(xs)>(xs)...)(); }, ts)
+        : numeric_limits<value_type>::quiet_NaN();
+}
+
+template <typename... ArithmeticType>
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+enable_if<type_traits::detail::Land<is_arithmetic<ArithmeticType>...>::value, SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type>::type
+min_area_polygon(ArithmeticType&&... ints)
+{
+    return min_area_polygon(detail::remove_integer(srook::forward<ArithmeticType>(ints)...));
 }
 
 SROOK_INLINE_NAMESPACE_END
@@ -141,4 +184,5 @@ SROOK_INLINE_NAMESPACE_END
 #   undef SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION
 #endif
 
+#endif
 #endif
