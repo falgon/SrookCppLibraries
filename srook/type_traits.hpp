@@ -26,6 +26,9 @@
 #include <srook/type_traits/float_promote.hpp>
 #include <srook/type_traits/has_iterator.hpp>
 #include <srook/type_traits/has_virtual_destructor.hpp>
+#include <srook/type_traits/make_signed.hpp>
+#include <srook/type_traits/make_unsigned.hpp>
+#include <srook/type_traits/match_cv_qualifiers.hpp>
 #include <srook/type_traits/integral_constant.hpp>
 #include <srook/type_traits/invoke_result.hpp>
 #include <srook/type_traits/is_abstract.hpp>
@@ -81,6 +84,7 @@
 #include <srook/type_traits/is_rvalue_reference.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/is_scalar.hpp>
+#include <srook/type_traits/is_signed.hpp>
 #include <srook/type_traits/is_standard_layout.hpp>
 #include <srook/type_traits/is_static_castable.hpp>
 #include <srook/type_traits/is_swappable.hpp>
@@ -94,6 +98,7 @@
 #include <srook/type_traits/is_trivially_move_assignable.hpp>
 #include <srook/type_traits/is_trivially_move_constructible.hpp>
 #include <srook/type_traits/is_tuple.hpp>
+#include <srook/type_traits/is_unsigned.hpp>
 #include <srook/type_traits/is_union.hpp>
 #include <srook/type_traits/is_volatile.hpp>
 #include <srook/type_traits/is_void.hpp>

@@ -21,7 +21,7 @@ namespace srook {
 namespace string {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class charT, class Traits>
+template <class charT, class Traits = std::char_traits<charT> >
 class basic_string_view {
 public:
 #if SROOK_HAS_CONCEPT

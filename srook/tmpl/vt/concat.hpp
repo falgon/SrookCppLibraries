@@ -11,8 +11,14 @@ template <class... Ts>
 struct concat 
     : public type_constant<SROOK_DEDUCED_TYPENAME detail::Concat<Ts...>::type::rebind_packer> {};
 
-template <class... Ts>
-struct concat<packer<Ts...>> : public concat<Ts...> {};
+template <class... L, class... R>
+struct concat<packer<L...>, R...> : public concat<L..., R...> {};
+
+template <class... L, class... R>
+struct concat<packer<L...>, packer<R...>> : public concat<L..., R...> {};
+
+template <class T, class... Ts>
+struct concat<T, packer<Ts...>> : public concat<T, Ts...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <class... Ts>
