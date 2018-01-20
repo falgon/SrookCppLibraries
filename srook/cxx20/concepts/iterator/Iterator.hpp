@@ -11,6 +11,7 @@
 #include <srook/type_traits/is_lvalue_reference.hpp>
 #include <iterator>
 
+#if SROOK_HAS_CONCEPTS
 namespace srook {
 namespace concepts {
 SROOK_INLINE_NAMESPACE(v1)
@@ -27,7 +28,7 @@ SROOK_CONCEPT Iterator = requires (Iter iter) {
 	{ ++iter } -> Iter&;
 } && is_copy_constructible<Iter>::value
 && is_destructible<Iter>::value
-&& is_copy_assignable<Iter>::value
+&& is_copy_assignable<Iter&>::value
 && conditional<is_lvalue_reference<Iter>::value, is_swappable<Iter>, SROOK_TRUE_TYPE>::type::value;
 
 SROOK_INLINE_NAMESPACE_END
@@ -35,4 +36,5 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace concepts
 } // namespace srook
 
+#endif
 #endif

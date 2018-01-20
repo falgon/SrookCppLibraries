@@ -4,6 +4,7 @@
 #include <srook/cxx20/concepts/workaround/workaround.hpp>
 #include <srook/cxx20/concepts/Constructible.hpp>
 #include <srook/cxx20/concepts/ConvertibleTo.hpp>
+#if SROOK_HAS_CONCEPTS
 
 namespace srook {
 namespace concepts {
@@ -16,4 +17,5 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace concepts
 } // namespace srook
 
+#endif
 #endif

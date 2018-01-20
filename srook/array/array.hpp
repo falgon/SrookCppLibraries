@@ -80,49 +80,58 @@ struct array {
     SROOK_DEDUCED_TYPENAME AT::type elem_;
 
     // aggregate type...
-
     SROOK_CXX14_CONSTEXPR pointer data() SROOK_NOEXCEPT_TRUE
     {
         return AT::ptr(elem_);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CXX14_CONSTEXPR const_pointer data() const SROOK_NOEXCEPT_TRUE
     {
         return AT::ptr(elem_);
     }
+#endif
     SROOK_CXX14_CONSTEXPR iterator begin() SROOK_NOEXCEPT_TRUE
     {
         return iterator(data());
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CXX14_CONSTEXPR const_iterator begin() const SROOK_NOEXCEPT_TRUE
     {
         return const_iterator(data());
     }
+#endif
     SROOK_CXX14_CONSTEXPR iterator end() SROOK_NOEXCEPT_TRUE
     {
         return iterator(data() + N);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CXX14_CONSTEXPR const_iterator end() const SROOK_NOEXCEPT_TRUE
     {
         return const_iterator(data() + N);
     }
+#endif
     SROOK_CXX14_CONSTEXPR reverse_iterator rbegin() SROOK_NOEXCEPT_TRUE
     {
         return reverse_iterator(end());
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CXX14_CONSTEXPR const_reverse_iterator
     rbegin() const SROOK_NOEXCEPT_TRUE
     {
         return const_reverse_iterator(end());
     }
+#endif
     SROOK_CXX14_CONSTEXPR reverse_iterator rend() SROOK_NOEXCEPT_TRUE
     {
         return reverse_iterator(begin());
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CXX14_CONSTEXPR const_reverse_iterator
     rend() const SROOK_NOEXCEPT_TRUE
     {
         return const_reverse_iterator(begin());
     }
+#endif
     SROOK_CXX14_CONSTEXPR const_iterator cbegin() const SROOK_NOEXCEPT_TRUE
     {
         return const_iterator(data());
@@ -151,35 +160,43 @@ struct array {
     {
         return AT::ref(elem_, n);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const_reference
     operator[](size_type n) const SROOK_NOEXCEPT_TRUE
     {
         return AT::ref(elem_, n);
     }
+#endif
     SROOK_CONSTEXPR reference at(size_type n)
     {
         return n >= N ? SROOK_THROW std::out_of_range("srook::array::at: index is out of range"), operator[](n) : operator[](n);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const_reference at(size_type n) const
     {
         return n >= N ? SROOK_THROW std::out_of_range("srook::array::at: index is out of range"), operator[](n) : operator[](n);
     }
+#endif
     SROOK_CONSTEXPR reference front() SROOK_NOEXCEPT_TRUE
     {
         return operator[](0);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const_reference front() const SROOK_NOEXCEPT_TRUE
     {
         return operator[](0);
     }
+#endif
     SROOK_CONSTEXPR reference back() SROOK_NOEXCEPT_TRUE
     {
         return N ? operator[](N - 1) : operator[](N);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const_reference back() const SROOK_NOEXCEPT_TRUE
     {
         return N ? operator[](N - 1) : operator[](N);
     }
+#endif
     void fill(const value_type& v) { std::fill_n(begin(), size(), v); }
     void swap(array& other) SROOK_NOEXCEPT(AT::is_nothrow_swappable)
     {

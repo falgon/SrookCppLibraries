@@ -9,7 +9,7 @@
 #endif
 
 #include <srook/config.hpp>
-#include <srook/cxx20/concepts/iterator/Iterator.hpp>
+#include <srook/cxx20/concepts/iterator/ForwardIterator.hpp>
 #include <srook/iterator/range_iterator.hpp>
 
 #ifdef BOOST_RANGE_BEGIN_HPP

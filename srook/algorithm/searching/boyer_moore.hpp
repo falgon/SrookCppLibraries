@@ -47,7 +47,7 @@ protected:
 };
 
 #if SROOK_HAS_CPP_CONCEPTS
-#   define SROOK_BOYER_MOORE_CONCEPTS_ITERATOR srook::concepts::Iterator 
+#   define SROOK_BOYER_MOORE_CONCEPTS_ITERATOR srook::concepts::ForwardIterator 
 #else
 #   define SROOK_BOYER_MOORE_CONCEPTS_ITERATOR class
 #endif

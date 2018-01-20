@@ -10,7 +10,7 @@
 
 #include <srook/config.hpp>
 #include <srook/type_traits.hpp>
-#include <srook/cxx20/concepts/iterator/Iterator.hpp>
+#include <srook/cxx20/concepts/iterator/ForwardIterator.hpp>
 #include <vector>
 
 namespace srook {
@@ -33,8 +33,8 @@ namespace detail {
 
 class longest_common_subsequence_performer_impl {
 protected:
-#ifdef SROOK_ENABLE_CONCEPTS
-    template <typename DiffType, srook::concepts::Iterator ForwardIterator1, srook::concepts::Iterator ForwardIterator2> 
+#if SROOK_HAS_CONCEPTS
+    template <typename DiffType, srook::concepts::ForwardIterator ForwardIterator1, srook::concepts::ForwardIterator ForwardIterator2> 
 #else
     template <typename DiffType, class ForwardIterator1, class ForwardIterator2>
 #endif
@@ -113,8 +113,9 @@ class longest_common_subsequence {
 public:
     SROOK_CONSTEXPR longest_common_subsequence(ForwardIterator1 first, ForwardIterator1 last) : first_(first), last_(last), distance_(std::distance(first_, last_)) {}
 
-#ifdef SROOK_ENABLE_CONCEPTS
-    template <srook::concepts::Iterator ForwardIterator2> 
+#ifdef SROOK_HAS_CONCEPTS
+    SROOK_ST_ASSERT(srook::concepts::ForwardIterator<ForwardIterator1>);
+    template <srook::concepts::ForwardIterator ForwardIterator2> 
 #else
     template <class ForwardIterator2>
 #endif
@@ -139,7 +140,11 @@ template <class ForwardIterator>
 longest_common_subsequence(ForwardIterator, ForwardIterator) -> longest_common_subsequence<ForwardIterator>;
 #endif
 
+#if SROOK_HAS_CONCEPTS
+template <srook::concepts::ForwardIterator ForwardIterator1, srook::concepts::ForwardIterator ForwardIterator2>
+#else
 template <class ForwardIterator1, class ForwardIterator2>
+#endif
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME 
 enable_if<
     is_convertible<
@@ -153,7 +158,11 @@ longest_common_subsequence_search(ForwardIterator1 first1, ForwardIterator1 last
     return longest_common_subsequence<ForwardIterator1>(first1, last1)(first2, last2);
 }
 
+#if SROOK_HAS_CONCEPTS
+template <srook::concepts::ForwardIterator ForwardIterator1, class Range>
+#else
 template <class ForwardIterator1, class Range>
+#endif
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME
 enable_if<
     type_traits::detail::Land<
@@ -170,7 +179,11 @@ longest_common_subsequence_search(ForwardIterator1 first1, ForwardIterator1 last
     return longest_common_subsequence<ForwardIterator1>(first1, last1)(std::begin(range), std::end(range));
 }
 
+#if SROOK_HAS_CONCEPTS
+template <class Range, srook::concepts::ForwardIterator ForwardIterator2>
+#else
 template <class Range, class ForwardIterator2>
+#endif
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME
 enable_if<
     type_traits::detail::Land<
@@ -188,7 +201,11 @@ longest_common_subsequence_search(const Range& range, ForwardIterator2 first2, F
     return longest_common_subsequence<iter_type>(std::begin(range), std::end(range))(first2, last2);
 }
 
+#if SROOK_HAS_CONCEPTS
+template <srook::concepts::ForwardIterator ForwardIterator>
+#else
 template <class ForwardIterator>
+#endif
 SROOK_FORCE_INLINE SROOK_CONSTEXPR 
 SROOK_DEDUCED_TYPENAME enable_if<detail::is_accessible_iterator_category<std::iterator_traits<ForwardIterator>>::value, longest_common_subsequence<ForwardIterator>>::type
 make_longest_common_subsequence(ForwardIterator first, ForwardIterator last) SROOK_NOEXCEPT_TRUE

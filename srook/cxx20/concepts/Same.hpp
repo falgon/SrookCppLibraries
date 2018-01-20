@@ -3,7 +3,7 @@
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/cxx20/concepts/workaround/workaround.hpp>
 #include <srook/type_traits/is_same.hpp>
-
+#if SROOK_HAS_CONCEPTS
 namespace srook {
 namespace concepts {
 SROOK_INLINE_NAMESPACE(v1)
@@ -15,4 +15,5 @@ SROOK_INLINE_NAMESPACE_END
 } // namespace concepts
 } // namespace srook
 
+#endif
 #endif

@@ -7,4 +7,8 @@
 #include <srook/algorithm/equal.hpp>
 #include <srook/algorithm/for_each.hpp>
 #include <srook/algorithm/searching.hpp>
+#include <srook/algorithm/min.hpp>
+#include <srook/algorithm/max.hpp>
+#include <srook/algorithm/rotate.hpp>
+#include <srook/algorithm/iter_swap.hpp>
 #endif
