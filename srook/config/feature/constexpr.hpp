@@ -4,24 +4,45 @@
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>
 #include <srook/config/cpp_predefined/macro_names.hpp>
 
-#if !(SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT) && !defined(SROOK_NO_CONSTTEXPR)
-#    define SROOK_NO_CONSTEXPR
-#    define SROOK_NO_CXX11_CONSTEXPR
-#    define SROOK_NO_CXX14_CONSTEXPR
+#ifdef _MSC_VER
+#   if _MSC_VER > 1000
+#       pragma once
+#   endif
 #endif
 
-#if defined(SROOK_NO_CXX11_CONSTEXPR) || defined(SROOK_NO_CONSTEXPR)
-#    define SROOK_CONSTEXPR
-#    define SROOK_CONSTEXPR_OR_CONST const
-#else
-#    define SROOK_CONSTEXPR constexpr
-#    define SROOK_CONSTEXPR_OR_CONST constexpr
+#if SROOK_CPLUSPLUS < SROOK_CPLUSPLUS11_CONSTANT || defined(SROOK_NO_CONSTEXPR)
+#   define SROOK_NO_CONSTEXPR
+#   define SROOK_NO_CXX11_CONSTEXPR
+#   define SROOK_NO_CXX14_CONSTEXPR
+#   define SROOK_NO_CXX17_CONSTEXPR
 #endif
 
-#if defined(SROOK_NO_CXX14_CONSTEXPR)
-#    define SROOK_CXX14_CONSTEXPR
+#if !defined(SROOK_NO_CONSTEXPR) && (SROOK_CPLUSPLUS < SROOK_CPLUSPLUS14_CONSTANT)
+#   define SROOK_NO_CXX14_CONSTEXPR
+#endif
+
+#if !defined(SROOK_NO_CONSTEXPR) && (SROOK_CPLUSPLUS < SROOK_CPLUSPLUS17_CONSTANT)
+#   define SROOK_NO_CXX17_CONSTEXPR
+#endif
+
+#ifdef SROOK_NO_CONSTEXPR
+#   define SROOK_CONSTEXPR
+#   define SROOK_CONSTEXPR_OR_CONST const
+#   define SROOK_CXX14_CONSTEXPR
+#   define SROOK_CXX17_CONSTEXPR
 #else
-#    define SROOK_CXX14_CONSTEXPR constexpr
+#   define SROOK_CONSTEXPR constexpr
+#   define SROOK_CONSTEXPR_OR_CONST constexpr
+#   ifndef SROOK_NO_CXX14_CONSTEXPR
+#       define SROOK_CXX14_CONSTEXPR constexpr
+#   else
+#       define SROOK_CXX14_CONSTEXPR
+#   endif
+#   ifndef SROOK_NO_CXX17_CONSTEXPR
+#       define SROOK_CXX17_CONSTEXPR constexpr
+#   else
+#       define SROOK_CXX17_CONSTEXPR
+#   endif
 #endif
 
 #endif
