@@ -109,8 +109,7 @@ private: // murmur3_impl1
 private:
     Integral hash_value;
 };
-    
-    
+   
  template <typename Integral, typename CharType>   
 SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<is_character<SROOK_DEDUCED_TYPENAME decay<CharType>::type>::value, Integral>::type
 murmur3_impl(const CharType* s, std::size_t len, Integral seed)

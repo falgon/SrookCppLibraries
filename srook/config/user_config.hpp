@@ -118,4 +118,12 @@
  */
 // #define SROOK_CONFIG_ENABLE_BOOST_RANGE_ITERATOR 1
 
+/*
+ *
+ * By setting the flag, srook/memory_resource/polymorphic_allocator and srook::pmr::XX will be prioritized 
+ * in the inclusion of polymorphic allocator components.
+ *
+ */
+// #define SROOK_CONFIG_ENABLE_PMR_PRIORITY 1
+
 #endif

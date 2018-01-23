@@ -6,6 +6,7 @@
 #include <srook/algorithm/emplace_backer.hpp>
 #include <srook/algorithm/equal.hpp>
 #include <srook/algorithm/for_each.hpp>
+#include <srook/algorithm/fill.hpp>
 #include <srook/algorithm/searching.hpp>
 #include <srook/algorithm/min.hpp>
 #include <srook/algorithm/max.hpp>

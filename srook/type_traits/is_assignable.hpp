@@ -24,7 +24,7 @@ public:
 
 } // namespace detail
 
-#ifdef _GLIBCXX_RELEASE || defined(SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE)
+#if defined(_GLIBCXX_RELEASE) || defined(SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE)
 #   ifdef __GLIBCXX__
 #       if __GLIBCXX__ >= 20171118 
 // see also: https://github.com/gcc-mirror/gcc/blob/da8dff89fa9398f04b107e388cb706517ced9505/libstdc%2B%2B-v3/ChangeLog-2017#L2546

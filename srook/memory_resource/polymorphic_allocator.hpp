@@ -69,6 +69,23 @@ void use_alloc(const Alloc&&) SROOK_EQ_DELETE
 
 template <class T>
 class polymorphic_allocator {
+public:
+    typedef std::size_t size_type;
+    typedef std::ptrdiff_t difference_type;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
+
+#if SROOK_CPP_ALIAS_TEMPLATES
+    template <class U>
+    struct rebind {
+        using other = polymorphic_allocator<U>;
+    };
+#endif
+
+
+private:
     typedef SROOK_DEDUCED_TYPENAME add_pointer<SROOK_DEDUCED_TYPENAME detail::core_type<detail::has_base_type<memory_resource>::value>::type>::type core_resource_pointer_type;
     typedef detail::alloc_b1<core_resource_pointer_type> uses_alloc1;
     typedef detail::alloc_b2<core_resource_pointer_type> uses_alloc2;
@@ -184,6 +201,18 @@ public:
 private:
     core_resource_pointer_type resource_;
 };
+
+template <class T1, class T2>
+SROOK_FORCE_INLINE bool operator==(const polymorphic_allocator<T1>& lhs, const polymorphic_allocator<T2>& rhs) SROOK_NOEXCEPT_TRUE
+{
+    return *lhs.resource() == *rhs.resource();
+}
+
+template <class T1, class T2>
+SROOK_FORCE_INLINE bool operator!=(const polymorphic_allocator<T1>& lhs, const polymorphic_allocator<T2> rhs) SROOK_NOEXCEPT_TRUE
+{
+    return !(lhs == rhs);
+}
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace pmr

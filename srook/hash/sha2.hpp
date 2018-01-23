@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
-#ifndef INCLUDED_SROOK_HASH_HPP
-#define INCLUDED_SROOK_HASH_HPP
+#ifndef INCLUDED_SROOK_HASH_SHA2_HPP
+#define INCLUDED_SROOK_HASH_SHA2_HPP
 
 #ifdef _MSC_VER
 #   if _MSC_VER > 1000
@@ -8,7 +8,6 @@
 #   endif
 #endif
 
-#include <srook/hash/murmur3.hpp>
-#include <srook/hash/sha2.hpp>
+#include <srook/hash/sha2/sha2_impl.hpp>
 
 #endif
