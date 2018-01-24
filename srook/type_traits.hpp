@@ -4,6 +4,7 @@
 #include <srook/type_traits/add_const.hpp>
 #include <srook/type_traits/add_cv.hpp>
 #include <srook/type_traits/add_pointer.hpp>
+#include <srook/type_traits/add_lvalue_reference.hpp>
 #include <srook/type_traits/add_rvalue_reference.hpp>
 #include <srook/type_traits/add_volatile.hpp>
 #include <srook/type_traits/aligned_storage.hpp>
