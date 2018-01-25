@@ -14,4 +14,5 @@
 #include <srook/algorithm/iter_swap.hpp>
 #include <srook/algorithm/copy.hpp>
 #include <srook/algorithm/copy_if.hpp>
+#include <srook/algorithm/transform.hpp>
 #endif

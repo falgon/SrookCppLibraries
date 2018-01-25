@@ -15,6 +15,7 @@
 #include <srook/algorithm/rotate.hpp>
 #include <srook/algorithm/copy.hpp>
 #include <srook/algorithm/fill.hpp>
+#include <srook/algorithm/transform.hpp>
 #include <srook/type_traits/detail/sfinae_types.hpp>
 #include <srook/iterator/range_access.hpp>
 #include <srook/mutex.hpp>
@@ -86,7 +87,7 @@ public:
     }
 
     template <class SinglePassRange, SROOK_REQUIRES(detail::is_callable_begin_end<SinglePassRange>::value)>
-    SROOK_CONSTEXPR sha2(const SinglePassRange& range)
+    SROOK_CONSTEXPR explicit sha2(const SinglePassRange& range)
         : sha2(srook::begin(range), srook::end(range)) {}
 
     SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR sha2& assign(InputIter first, InputIter last)
@@ -302,11 +303,8 @@ private:
             if (!s) {
                 std::ostringstream oss;
                 oss.setf(std::ios::hex, std::ios::basefield);
-                for (SROOK_DEDUCED_TYPENAME internal_container_type::const_iterator iter = cbegin(); iter != cend(); ++iter) {
-                    oss.width(2);
-                    oss.fill('0');
-                    oss << static_cast<integer_type>(*iter);
-                }
+                srook::algorithm::transform(digest_, std::ostream_iterator<integer_type>(oss), 
+                        [&oss](const SROOK_DEDUCED_TYPENAME internal_container_type::value_type& e) -> integer_type { oss.width(2); oss.fill('0'); return static_cast<integer_type>(e); });
                 oss.setf(std::ios::dec, std::ios::basefield);
                 s = new std::string(oss.str());
                 s_.store(s, std::memory_order_release);
@@ -324,11 +322,8 @@ private:
             if (!s) {
                 std::ostringstream oss;
                 oss.setf(std::ios::hex, std::ios::basefield);
-                for (SROOK_DEDUCED_TYPENAME internal_container_type::const_iterator iter = cbegin(); iter != cend(); ++iter) {
-                    oss.width(2);
-                    oss.fill('0');
-                    oss << static_cast<integer_type>(*iter);
-                }
+                srook::algorithm::transform(digest_, std::ostream_iterator<integer_type>(oss),
+                        [&oss](const SROOK_DEDUCED_TYPENAME internal_container_type::value_type& e) -> integer_type { oss.width(2); oss.fill('0'); return static_cast<integer_type>(e); });
                 oss.setf(std::ios::dec, std::ios::basefield);
                 s = new std::string(oss.str());
                 s_.store(s, std::memory_order_release);
