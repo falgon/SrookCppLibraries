@@ -16,6 +16,7 @@
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/algorithm/rotate.hpp>
 #include <srook/iterator/range_access.hpp>
+#include <srook/bit/algorithm/reverse.hpp>
 #include <cassert>
 
 SROOK_NESTED_NAMESPACE(srook, hash) {
@@ -32,6 +33,9 @@ protected:
     template <class Integral>
     static SROOK_CONSTEXPR sum_type& rotate(sum_type& s, const Integral& t1, const Integral& t2)
     {
+#if SROOK_LITTLE_ENDIAN
+
+#endif
         typedef std::reverse_iterator<SROOK_DEDUCED_TYPENAME sum_type::iterator> riter;
         srook::algorithm::rotate(riter(srook::end(s)), std::next(riter(srook::end(s)), 1), riter(srook::begin(s)));
         s[s.size() / 2] += t1;

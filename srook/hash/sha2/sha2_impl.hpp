@@ -361,7 +361,7 @@ private:
     template <class Iter>
     SROOK_CXX14_CONSTEXPR void sha2_compute(context& ctx_, const Iter message, std::size_t block_nb)
     {
-        srook::array<integer_type, traits_type::round_size> w{};
+        srook::array<integer_type, traits_type::k_size> w{};
         srook::array<integer_type, CHAR_BIT> wv{};
         Iter sub_block{};
 

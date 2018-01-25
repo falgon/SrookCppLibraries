@@ -81,6 +81,6 @@ transform(const SinglePassRange& range, InputIter2 first2, OutputIter oiter, Bin
 }
 
 SROOK_INLINE_NAMESPACE_END
-} // namespace srook
+} SROOK_NESTED_NAMESPACE_END(algorithm, srook) // namespace srook
 
 #endif

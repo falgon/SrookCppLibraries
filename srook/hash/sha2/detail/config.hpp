@@ -38,7 +38,7 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 // FIPS 180-4 4.2.2 SHA-224 and SHA-256 Constants
-SROOK_CONSTEXPR_OR_CONST srook::array<srook::uint32_t, 64> round_32 {
+SROOK_CONSTEXPR_OR_CONST srook::array<srook::uint32_t, 64> k_32 {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -58,7 +58,7 @@ SROOK_CONSTEXPR_OR_CONST srook::array<srook::uint32_t, 64> round_32 {
 };
 
 // FIPS 180-4 4.2.3 SHA-384, SHA-512, SHA-512/224 and SHA-512/256 Constants
-SROOK_CONSTEXPR_OR_CONST srook::array<srook::uint64_t, 80> round_64 {
+SROOK_CONSTEXPR_OR_CONST srook::array<srook::uint64_t, 80> k_64 {
     0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc,
     0x3956c25bf348b538, 0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118,
     0xd807aa98a3030242, 0x12835b0145706fbe, 0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2,
