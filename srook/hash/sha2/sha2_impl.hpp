@@ -10,6 +10,7 @@
 
 #include <srook/hash/sha2/detail/sha2_traits.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#include <srook/hash/sha2/detail/is_callable_begin_end.hpp>
 #include <srook/cxx20/concepts/iterator/InputIterator.hpp>
 #include <srook/algorithm/min.hpp>
 #include <srook/algorithm/rotate.hpp>
@@ -45,17 +46,6 @@
 
 SROOK_NESTED_NAMESPACE(srook, hash) {
 SROOK_INLINE_NAMESPACE(v1)
-
-namespace detail {
-
-template <class T>
-struct is_callable_begin_end : protected type_traits::detail::sfinae_types {
-    static one test(SROOK_DEDUCED_TYPENAME T::const_iterator, SROOK_DEDUCED_TYPENAME T::const_iterator);
-    static two test(...);
-    static SROOK_CONSTEXPR bool value = sizeof(test(declval<T>().cbegin(), declval<T>().cend())) == sizeof(one);
-};
-
-} // namespace detail
 
 #if SROOK_HAS_CONCEPTS
 template <std::size_t B1, std::size_t B2 = 0, srook::concepts::InputIterator InputIter = std::string::const_iterator>

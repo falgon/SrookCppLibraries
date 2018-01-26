@@ -9,6 +9,7 @@
 #endif
 
 #include <srook/config.hpp>
+#include <srook/hash/sha2/detail/is_callable_begin_end.hpp>
 #include <srook/cxx20/concepts/iterator/InputIterator.hpp>
 #include <srook/cxx20/concepts/iterator/OutputIterator.hpp>
 #include <srook/type_traits/enable_if.hpp>
@@ -34,7 +35,7 @@ transform(InputIter first1, InputIter last1, OutputIter d_first, UnaryOperation 
 -> SROOK_DEDUCED_TYPENAME enable_if<is_assignable<SROOK_DECLTYPE(*d_first), SROOK_DEDUCED_TYPENAME invoke_result<UnaryOperation, SROOK_DECLTYPE(*first1)>::type>::value, OutputIter>::type
 #endif
 {
-    return first1 == last1 ? d_first : (*d_first = unary_op(*first1), transform(++first1, last1, ++d_first, unary_op));
+    return first1 == last1 ? d_first : (*d_first = unary_op(*first1), ::srook::algorithm::transform(++first1, last1, ++d_first, unary_op));
 }
 
 #if SROOK_HAS_CONCEPTS
@@ -55,7 +56,7 @@ transform(InputIter1 first1, InputIter1 last1, InputIter2 first2, OutputIter d_f
 >::type
 #endif
 {
-    return first1 == last1 ? d_first : (*d_first = binary_op(*first1, *first2), transform(++first1, last1, ++first2, d_first, binary_op));
+    return first1 == last1 ? d_first : (*d_first = binary_op(*first1, *first2), ::srook::algorithm::transform(++first1, last1, ++first2, d_first, binary_op));
 }
 
 #if SROOK_HAS_CONCEPTS
@@ -74,7 +75,7 @@ template <class SinglePassRange, srook::concepts::InputIterator InputIter2, sroo
 #else
 template <class SinglePassRange, class InputIter2, class OutputIter, class BinaryOperation>
 #endif
-SROOK_FORCE_INLINE SROOK_CONSTEXPR OutputIter
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<srook::hash::detail::is_callable_begin_end<SinglePassRange>::value, OutputIter>::type
 transform(const SinglePassRange& range, InputIter2 first2, OutputIter oiter, BinaryOperation binary_op)
 {
     return ::srook::algorithm::transform(srook::begin(range), srook::end(range), first2, oiter, binary_op);
