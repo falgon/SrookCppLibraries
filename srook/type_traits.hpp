@@ -50,6 +50,7 @@
 #include <srook/type_traits/is_copyable.hpp>
 #include <srook/type_traits/is_default_constructible.hpp>
 #include <srook/type_traits/is_destructible.hpp>
+#include <srook/type_traits/is_dereferenceable.hpp>
 #include <srook/type_traits/is_duration.hpp>
 #include <srook/type_traits/is_empty.hpp>
 #include <srook/type_traits/is_enum.hpp>
@@ -60,6 +61,9 @@
 #include <srook/type_traits/is_function.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/is_invocable.hpp>
+#include <srook/type_traits/iterator/is_iterator.hpp>
+#include <srook/type_traits/is_preincrementable.hpp>
+#include <srook/type_traits/is_postincrementable.hpp>
 #include <srook/type_traits/is_literal.hpp>
 #include <srook/type_traits/is_lvalue_reference.hpp>
 #include <srook/type_traits/is_member_function_pointer.hpp>
