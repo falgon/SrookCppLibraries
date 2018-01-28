@@ -2,6 +2,8 @@
 #ifndef INCLUDED_ALGORITHM_HPP
 #define INCLUDED_ALGORITHM_HPP
 #include <srook/algorithm/back.hpp>
+#include <srook/algorithm/cat_max.hpp>
+#include <srook/algorithm/cat_min.hpp>
 #include <srook/algorithm/count.hpp>
 #include <srook/algorithm/emplace_backer.hpp>
 #include <srook/algorithm/equal.hpp>

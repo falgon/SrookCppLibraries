@@ -10,12 +10,48 @@
 #include <srook/config.hpp>
 #include <srook/type_traits/iterator/is_iterator.hpp>
 #include <srook/type_traits/is_equality_comparable.hpp>
-#include <srook/type_traits/is_postincrementable.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
+
+template <class T>
+struct equality_compare_to_bool {
+private:
+    template <class U>
+    static SROOK_DEDUCED_TYPENAME is_convertible<SROOK_DECLTYPE(declval<U&>() != declval<U&>()), bool>::type test(const U&);
+    static SROOK_FALSE_TYPE test(...);
+public:
+    static SROOK_CONSTEXPR bool value = SROOK_DECLTYPE(test(declval<T>()))::value;
+};
+
+template <class T>
+struct dereferenceable_to_ref {
+private:
+    template <class U>
+    static SROOK_DEDUCED_TYPENAME 
+    type_traits::detail::Land<
+        is_same<SROOK_DECLTYPE(*declval<U&>()), SROOK_DEDUCED_TYPENAME std::iterator_traits<U>::reference>,
+        is_convertible<SROOK_DECLTYPE(*declval<U&>()), SROOK_DEDUCED_TYPENAME std::iterator_traits<U>::value_type>
+    >::type
+    test(const U&);
+
+    static SROOK_FALSE_TYPE test(...);
+public:
+    static SROOK_CONSTEXPR bool value = SROOK_DECLTYPE(test(declval<T>()))::value;
+};
+
+template <class T>
+struct postincrement_to_value_type {
+private:
+    template <class U>
+    static SROOK_DEDUCED_TYPENAME is_convertible<SROOK_DECLTYPE(*declval<U&>()++), SROOK_DEDUCED_TYPENAME std::iterator_traits<U>::value_type>::type
+    test(const U&);
+    static SROOK_FALSE_TYPE test(...);
+public:
+    static SROOK_CONSTEXPR bool value = SROOK_DECLTYPE(test(declval<T>()))::value;
+};
 
 template <class T>
 struct is_inputiterator_requires {
@@ -24,7 +60,14 @@ private:
     static SROOK_DECLTYPE(*declval<U&>()++, SROOK_TRUE_TYPE()) test(const U&);
     static SROOK_FALSE_TYPE test(...);
 public:
-    typedef type_traits::detail::Land<SROOK_DECLTYPE(test(declval<T>())), is_preincrementable<T>, is_postincrementable<T>, is_dereferenceable<T>> type;
+    typedef 
+        type_traits::detail::Land<
+            is_iterator<T>,
+            SROOK_DECLTYPE(test(declval<T>())), 
+            equality_compare_to_bool<T>,
+            dereferenceable_to_ref<T>
+        >
+    type;
 };
 
 } // namespace detail

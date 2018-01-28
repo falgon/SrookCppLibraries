@@ -9,7 +9,6 @@
 
 #include <srook/config.hpp>
 #include <srook/type_traits/is_dereferenceable.hpp>
-#include <srook/type_traits/is_preincrementable.hpp>
 #include <srook/type_traits/is_copy_constructible.hpp>
 #include <srook/type_traits/is_copy_assignable.hpp>
 #include <srook/type_traits/is_destructible.hpp>
@@ -40,15 +39,28 @@ public:
     typedef SROOK_DECLTYPE(test(declval<T>())) type;
 };
 
+template <class T>
+struct preincrementable_to_ref {
+private:
+    template <class U>
+    static SROOK_DEDUCED_TYPENAME is_same<SROOK_DECLTYPE(++declval<U&>()), U&>::type test(const U&);
+    static SROOK_FALSE_TYPE test(...);
+public:
+    typedef SROOK_DECLTYPE(test(declval<T>())) type;
+};
+
 } // namespace detail
 
 template <class T>
 struct is_iterator
-    : type_traits::detail::Land<
-        is_dereferenceable<T>, is_preincrementable<T>, is_same<SROOK_DECLTYPE(++declval<T&>()), T&>,
-        is_copy_assignable<T>, is_destructible<T>,
-        SROOK_DEDUCED_TYPENAME conditional<is_lvalue_reference<T>::value, is_swappable<T>, SROOK_TRUE_TYPE>::type,
-        SROOK_DEDUCED_TYPENAME detail::is_iterator_accessible_require<T>::type
+    : type_traits::detail::Lor<
+        is_pointer<T>,
+        type_traits::detail::Land<
+            is_dereferenceable<T>, SROOK_DEDUCED_TYPENAME detail::preincrementable_to_ref<T>::type,
+            is_copy_assignable<T>, is_destructible<T>,
+            SROOK_DEDUCED_TYPENAME conditional<is_lvalue_reference<T>::value, is_swappable<T>, SROOK_TRUE_TYPE>::type,
+            SROOK_DEDUCED_TYPENAME detail::is_iterator_accessible_require<T>::type
+        >
       > {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES

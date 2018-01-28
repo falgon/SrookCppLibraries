@@ -11,7 +11,7 @@ namespace concepts {
 SROOK_INLINE_NAMESPACE(v1)
 
 template<class T>
-SROOK_CONCEPT CopyConstructible = MoveConstructible<T> && is_copy_constructible<T>::value;
+SROOK_CONCEPT CopyConstructible = MoveConstructible<T&> && is_copy_constructible<T>::value;
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace concepts

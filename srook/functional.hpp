@@ -10,5 +10,6 @@
 #include <srook/functional/deduction_plus.hpp>
 #include <srook/functional/invoke.hpp>
 #include <srook/functional/overload.hpp>
+#include <srook/functional/not_fn.hpp>
 
 #endif
