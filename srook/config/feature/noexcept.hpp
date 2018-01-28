@@ -13,7 +13,7 @@
 #    else
 // for this issue : https://gcc.gnu.org/bugzilla/show_bug.cgi?id=52869
 #        if defined(__GNUC__) or defined(__GNUG__)
-#            define SROOK_NOEXCEPT(x) noexcept(false)
+#            define SROOK_NOEXCEPT(...) noexcept(false)
 #            define SROOK_MEMFN_NOEXCEPT(...) SROOK_NOEXCEPT(__VA_ARGS__)
 #        else
 #            define SROOK_NOEXCEPT(...) noexcept(noexcept(__VA_ARGS__))
