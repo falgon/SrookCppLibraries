@@ -31,9 +31,6 @@ public:
         : fn_(srook::forward<Fn2>(f)) {}
     not_fnfn(const not_fnfn&) SROOK_DEFAULT
     not_fnfn(not_fnfn&&) SROOK_DEFAULT
-    //SROOK_DEDUCED_TYPENAME srook::invoke_result<Fn QUALS, Args...>::type\
-    //SROOK_NOEXCEPT(not_decl<SROOK_DEDUCED_TYPENAME srook::invoke_result<Fn QUALS, Args...>::type>())\
-
 #define SROOK_NOT_FN_CALL_OP(QUALS)\
     template <class... Args>\
     SROOK_DEDUCED_TYPENAME srook::invoke_result<Fn, Args...>::type operator()(Args&&... args) QUALS\
