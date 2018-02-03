@@ -20,6 +20,9 @@ struct concat<packer<L...>, packer<R...>> : public concat<L..., R...> {};
 template <class T, class... Ts>
 struct concat<T, packer<Ts...>> : public concat<T, Ts...> {};
 
+template <>
+struct concat<> : type_constant<packer<>> {};
+
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <class... Ts>
 using concat_t = SROOK_DEDUCED_TYPENAME concat<Ts...>::type;
