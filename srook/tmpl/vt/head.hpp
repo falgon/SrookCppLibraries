@@ -13,8 +13,17 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class... Ts>
-struct head : first<Ts...> {};
+//template <class... Ts>
+//struct head : first<Ts...> {};
+
+template <class...>
+struct head;
+
+template <class X, class... Xs>
+struct head<X, Xs...> : type_constant<X> {};
+
+template <class... Xs>
+struct head<packer<Xs...>> : head<Xs...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <class... Ts>

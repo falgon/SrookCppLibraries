@@ -17,17 +17,11 @@
 #endif
 #if !defined(BOOST_TYPE_INDEX_HPP) && SROOK_HAS_INCLUDE(<boost/type_index.hpp>)
 #   include <boost/type_index.hpp>
+#   include <string>
 #   define SROOK_HAS_BOOST_TYPE_INDEX 1
 #endif
 #if defined(BOOST_TYPE_INDEX_HPP) && !defined(SROOK_HAS_BOOST_TYPE_INDEX)
 #   define SROOK_HAS_BOOST_TYPE_INDEX 1
-#endif
-#ifdef SROOK_HAS_BOOST_TYPE_INDEX
-#   include <iostream>
-#endif
-#if 0 && SROOK_HAS_INCLUDE(<syncstream>) // C++20 Synchronized Buffered Ostream (p0053)
-#   include <syncstream>
-#   define SROOK_HAS_CXX20_SYNCSTREAM 1
 #endif
 
 #include <srook/mpl/variadic_types.hpp>
@@ -89,10 +83,11 @@ struct packer
 #endif
 
 #ifdef SROOK_HAS_BOOST_TYPE_INDEX
-    SROOK_FORCE_INLINE std::ostream& pretty_name(std::ostream& os = std::cout) { return os << boost::typeindex::type_id<packer<Ts...>>().pretty_name(); }
-#ifdef SROOK_HAS_CXX20_SYNCSTREAM
-    SROOK_FORCE_INLINE std::osyncstream& pretty_name(std::osyncstream& os) { return os << boost::typeindex::type_id<packer<Ts...>>().pretty_name(); }
-#endif
+    SROOK_FORCE_INLINE static std::string& pretty_name()
+    {
+        static std::string name(boost::typeindex::type_id<packer<Ts...>>().pretty_name());
+        return name;
+    }
 #endif
 };
 

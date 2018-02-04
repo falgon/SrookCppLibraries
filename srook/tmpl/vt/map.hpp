@@ -9,7 +9,9 @@
 #endif
 
 #include <srook/tmpl/vt/detail/config.hpp>
-#include <srook/tmpl/vt/concat.hpp>
+#include <srook/tmpl/vt/cons.hpp>
+#include <srook/tmpl/vt/cons.hpp>
+#include <srook/type_traits/type_constant.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -23,10 +25,12 @@ template <template <class...> class F>
 struct map_impl<F> : type_constant<packer<>> {};
 
 template <template <class...> class F, class X, class... Xs>
-struct map_impl<F, X, Xs...> : concat<SROOK_DEDUCED_TYPENAME F<X>::type, SROOK_DEDUCED_TYPENAME map_impl<F, Xs...>::type> {};
+struct map_impl<F, X, Xs...> 
+    : cons<SROOK_DEDUCED_TYPENAME F<X>::type, SROOK_DEDUCED_TYPENAME map_impl<F, Xs...>::type> {};
 
 template <template <class...> class F, class... XsH, class... XsL>
-struct map_impl<F, packer<XsH...>, XsL...> : concat<SROOK_DEDUCED_TYPENAME F<XsH...>::type, SROOK_DEDUCED_TYPENAME map_impl<F, XsL...>::type> {};
+struct map_impl<F, packer<XsH...>, XsL...> 
+    : cons<SROOK_DEDUCED_TYPENAME F<XsH...>::type, SROOK_DEDUCED_TYPENAME map_impl<F, XsL...>::type> {};
 
 } // namespace detail
 
