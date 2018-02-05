@@ -6,6 +6,13 @@
 #include <srook/type_traits/detail/sfinae_types.hpp>
 #include <srook/type_traits/bool_constant.hpp>
 #include <srook/utility/declval.hpp>
+
+#ifdef __GNUC__
+#   if __GNUC__ >= 8
+#       define SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE 1 // see also: https://github.com/gcc-mirror/gcc/blob/da8dff89fa9398f04b107e388cb706517ced9505/libstdc%2B%2B-v3/ChangeLog-2017#L2546
+#   endif
+#endif
+
 namespace srook {
 namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
@@ -24,20 +31,10 @@ public:
 
 } // namespace detail
 
-#if defined(_GLIBCXX_RELEASE) || defined(SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE)
-#   ifdef __GLIBCXX__
-#       if __GLIBCXX__ >= 20171118 
-// see also: https://github.com/gcc-mirror/gcc/blob/da8dff89fa9398f04b107e388cb706517ced9505/libstdc%2B%2B-v3/ChangeLog-2017#L2546
+#ifdef SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE
 template <class T, class U>
 struct is_assignable : public bool_constant <__is_assignable(T, U)> {};
-#           ifndef SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE
-#               define SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE 1
-#           endif
-#       endif
-#   endif
-#endif
-
-#ifndef SROOK_HAS_GLIBCXX_INTRINSICS_IS_ASSIGNABLE
+#else
 template <class T, class U>
 struct is_assignable : public bool_constant<detail::is_assignable_impl<T, U>::value> {};
 #endif
