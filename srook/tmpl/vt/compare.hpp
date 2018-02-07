@@ -11,6 +11,8 @@
 #include <srook/tmpl/vt/compare/lt.hpp>
 #include <srook/tmpl/vt/compare/gt.hpp>
 #include <srook/tmpl/vt/compare/eq.hpp>
+#include <srook/tmpl/vt/compare/leq.hpp>
+#include <srook/tmpl/vt/compare/geq.hpp>
 #include <srook/tmpl/vt/compare/neq.hpp>
 
 #endif
