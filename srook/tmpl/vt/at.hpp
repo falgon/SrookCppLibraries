@@ -18,33 +18,34 @@ SROOK_INLINE_NAMESPACE(v1)
 
 // Non recursive implementation.
 
+namespace detail {
+
 template <std::size_t, class...>
-struct at;
+struct at_impl;
 
-template <class T>
-struct at<0, T> : public type_constant<T> {};
-
-template <class T>
-struct at<0, packer<T>> : public at<0, T> {};
+template <class T, class... Ts>
+struct at_impl<0, T, Ts...> : public type_constant<T> {};
 
 #define CLASS_DECL(N) class T##N
 #define LOOP_CNT(N) T##N
 
 #define DEF_AT(N)\
     template <class T, SROOK_PP_LOOP_COMMA(CLASS_DECL, N), class... Ts>\
-    struct at<N, T, SROOK_PP_LOOP_COMMA(LOOP_CNT, N), Ts...> : public type_constant<LOOP_CNT(N)> {};
-
-#define DEF_PACK_AT(N)\
-    template <class T, SROOK_PP_LOOP_COMMA(CLASS_DECL, N), class... Ts>\
-    struct at<N, packer<T, SROOK_PP_LOOP_COMMA(LOOP_CNT, N), Ts...>> : public at<N, T, SROOK_PP_LOOP_COMMA(LOOP_CNT, N), Ts...> {};
+    struct at_impl<N, T, SROOK_PP_LOOP_COMMA(LOOP_CNT, N), Ts...> : public type_constant<LOOP_CNT(N)> {};
 
 SROOK_PP_ITERATE(DEF_AT, 128)
-SROOK_PP_ITERATE(DEF_PACK_AT, 128)
 
 #undef CLASS_DECL
 #undef LOOP_CNT
 #undef DEF_AT
-#undef DEF_PACK_AT
+
+} // namespace detail
+
+template <std::size_t x, class... Ts>
+struct at : detail::at_impl<x, Ts...> {};
+
+template <std::size_t x, class... Ts>
+struct at<x, packer<Ts...>> : at<x, Ts...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <std::size_t t, class... Ts>

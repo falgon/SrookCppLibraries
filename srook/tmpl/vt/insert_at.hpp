@@ -36,7 +36,7 @@ struct insert_at
     : conditional<
         (x < sizeof...(Xs)), 
         detail::insert_at_impl<x, bool(x), T, Xs...>,
-        packer<Xs..., T>
+        type_constant<packer<Xs..., T>>
      >::type {};
 
 template <std::size_t x, class T, class... Xs>
