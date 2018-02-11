@@ -11,7 +11,11 @@
 #include <srook/algorithm/fill.hpp>
 #include <srook/algorithm/searching.hpp>
 #include <srook/algorithm/min.hpp>
+#include <srook/algorithm/min_iter.hpp>
+#include <srook/algorithm/med.hpp>
+#include <srook/algorithm/med_element.hpp>
 #include <srook/algorithm/max.hpp>
+#include <srook/algorithm/max_iter.hpp>
 #include <srook/algorithm/rotate.hpp>
 #include <srook/algorithm/iter_swap.hpp>
 #include <srook/algorithm/copy.hpp>
