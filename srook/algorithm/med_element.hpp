@@ -3,7 +3,7 @@
  * @file med_element.hpp
  * @brief Finds the median element in the range [first, last).
  * @author roki
- * @date 2018 02 11
+ * @date 2018/02/11
  */
 
 #ifndef INCLUDED_SROOK_ALGORITHM_MED_ELEMENT_HPP
@@ -46,17 +46,12 @@ struct med_element_comp {
 
 
 /**
- *
- * @fn
- * 
- *
  * @return Iterator to the median element in the range [first, last). If several elements in the range are equivalent to the smallest element, returns the iterator to the first such element. Returns last if the range is empty.
  * 
  * @param (first) the random access iterator defining first of the range to examine
  * @param (last) the random access iterator defining last of the range to examine
  * 
  * @detailsFinds the median element in the range [first, last). Elements are compared using the given binary comparison function comp. The time complexity is O(N). The space complexity is O(N). 
- *
  */
 
 #if SROOK_HAS_CONCEPTS
@@ -80,11 +75,9 @@ med_element(RandomAccessIter first, RandomAccessIter last, Compare comp)
 {
     //! Copy to not affect the original range.
     std::vector<RandomAccessIter> v(std::distance(first, last));
-    {
-        SROOK_DEDUCED_TYPENAME std::vector<RandomAccessIter>::iterator viter = srook::begin(v);
-        for (SROOK_DEDUCED_TYPENAME std::vector<RandomAccessIter>::iterator it = srook::begin(v); first != last;) 
-            *viter++ = first++;
-    }
+    for (SROOK_DEDUCED_TYPENAME std::vector<RandomAccessIter>::iterator it = srook::begin(v); first != last;) 
+        *it++ = first++;
+
     auto f = std::bind(detail::med_element_comp<RandomAccessIter, Compare>::f, std::placeholders::_1, std::placeholders::_2, comp);
     std::nth_element(srook::begin(v), std::next(srook::begin(v), v.size() / 2), srook::end(v), srook::move(f));
     return v[v.size() / 2];
