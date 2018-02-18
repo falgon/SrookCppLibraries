@@ -76,6 +76,20 @@ public:
         sieve(n, [&inserter](value_type p){ *inserter++ = p; });
         return rs;
     }
+
+    template <class T, class F1, class F2>
+    SROOK_FORCE_INLINE void operator()(T n, F1&& PrimeF, F2&& NPrimeF)
+    {
+        NPrimeF(0);
+        NPrimeF(1);
+        if (n < 2) return ;
+        PrimeF(2);
+        if (n < 3) return ;
+        PrimeF(3);
+        if (n < 4) return ;
+        NPrimeF(4);
+        sieve(n, srook::forward<F1>(PrimeF), srook::forward<F2>(NPrimeF));
+    }
 protected:
     template <class T, class F>
     SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME enable_if<is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, T&>::value>::type 
@@ -123,6 +137,55 @@ protected:
             if (is_prime[i]) f(i);
         }
     }
+    
+    template <class T, class F1, class F2>
+    SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME 
+    enable_if<type_traits::detail::Land<is_invocable<SROOK_DEDUCED_TYPENAME decay<F1>::type, T&>, is_invocable<SROOK_DEDUCED_TYPENAME decay<F2>::type, T&>>::value>::type 
+    sieve(const T n, F1&& f1, F2&& f2)
+    {
+        std::vector<bool> is_prime(n, false);
+        const std::size_t sqrtn = srook::math::sqrt(n);
+        std::size_t in = 0;
+        
+        for (std::size_t i = 1; i <= 5; i += 4) {
+            for (std::size_t j = i; j <= sqrtn; j += 6) {
+                for (std::size_t k = 1; k <= sqrtn && (in = (k * k << 2) + j * j) <= n; ++k) {
+                    is_prime[in].flip();
+                }
+                for (std::size_t k = j + 1; k <= sqrtn && (in = 3 * k * k - j * j) <= n; k += 2) {
+                    is_prime[in].flip();
+                }
+            }
+        }
+        for (std::size_t i = 2; i <= 4; i += 2) {
+            for (std::size_t j = i; j <= sqrtn; j += 6) {
+                for (std::size_t k = 1; k <= sqrtn && (in = 3 * k * k + j * j) <= n; k += 2) {
+                    is_prime[in].flip();
+                }
+                for (std::size_t k = j + 1; k <= sqrtn && (in = 3 * k * k - j * j) <= n; k += 2) {
+                    is_prime[in].flip();
+                }
+            }
+        }
+        for (std::size_t i = 3; i <= sqrtn; i += 6) {
+            for (std::size_t j = 1; j <= 2; ++j) {
+                for (std::size_t k = j; k <= sqrtn && (in = (k * k << 2) + i * i) <= n; k += 3) {
+                    is_prime[in].flip();
+                }
+            }
+        }
+        for (std::size_t i = 5; i <= sqrtn; ++i) {
+            if (is_prime[i]) {
+                for (std::size_t j = i * i; j <= n; j += i * i) {
+                    is_prime[j] = false;
+                }
+            }
+        }
+        for (std::size_t i = 5; i < n; ++i) {
+            if (is_prime[i]) f1(i);
+            else f2(i);
+        }
+    }
 };
 
 template <class Integral, template <class...> class Container = std::vector>
@@ -130,6 +193,12 @@ SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME std::enable_if<is_integral<Integral>::
 compute_sieve_atkin(Integral x)
 {
     return sieve_atkin<Container>()(srook::move(x));
+}
+
+template <class Integral, class F1, class F2>
+SROOK_FORCE_INLINE void compute_sieve_atkin_if(Integral x, F1&& PrimeF, F2&& NPrimeF)
+{
+    return sieve_atkin<>()(srook::move(x), srook::forward<F1>(PrimeF), srook::forward<F2>(NPrimeF));
 }
 
 SROOK_INLINE_NAMESPACE_END
