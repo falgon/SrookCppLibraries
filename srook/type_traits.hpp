@@ -12,6 +12,7 @@
 #include <srook/type_traits/alignment_of.hpp>
 #include <srook/type_traits/any_constant.hpp>
 #include <srook/type_traits/bool_constant.hpp>
+#include <srook/type_traits/clock.hpp>
 #include <srook/type_traits/concepts.hpp>
 #include <srook/type_traits/conditional.hpp>
 #include <srook/type_traits/conjunction.hpp>
@@ -61,7 +62,7 @@
 #include <srook/type_traits/is_function.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/is_invocable.hpp>
-#include <srook/type_traits/iterator/is_iterator.hpp>
+#include <srook/type_traits/iterator.hpp>
 #include <srook/type_traits/is_preincrementable.hpp>
 #include <srook/type_traits/is_postincrementable.hpp>
 #include <srook/type_traits/is_literal.hpp>
@@ -79,6 +80,7 @@
 #include <srook/type_traits/is_nothrow_invocable.hpp>
 #include <srook/type_traits/is_nothrow_invocable_r.hpp>
 #include <srook/type_traits/is_nothrow_move_constructible.hpp>
+#include <srook/type_traits/is_numeric_type.hpp>
 #include <srook/type_traits/is_nullptr.hpp>
 #include <srook/type_traits/is_object.hpp>
 #include <srook/type_traits/is_pod.hpp>

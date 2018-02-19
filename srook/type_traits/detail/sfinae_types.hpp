@@ -8,7 +8,7 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 struct sfinae_types {
 	typedef char one;
-	typedef struct { char c[2];} two;
+	typedef struct { char c[2]; } two;
 };
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END

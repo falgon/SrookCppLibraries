@@ -14,12 +14,10 @@ template <class T, bool = is_referenceable<T>::value>
 struct is_copy_assignable_impl;
 
 template <class T>
-struct is_copy_assignable_impl<T, false> : SROOK_FALSE_TYPE {
-};
+struct is_copy_assignable_impl<T, false> : SROOK_FALSE_TYPE {};
 
 template <class T>
-struct is_copy_assignable_impl<T, true> : public is_assignable<T, const T&> {
-};
+struct is_copy_assignable_impl<T, true> : public is_assignable<T, const T&> {};
 
 } // namespace detail
 

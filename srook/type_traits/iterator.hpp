@@ -10,5 +10,9 @@
 
 #include <srook/type_traits/iterator/is_iterator.hpp>
 #include <srook/type_traits/iterator/is_inputiterator.hpp>
+#include <srook/type_traits/iterator/is_outputiterator.hpp>
+#include <srook/type_traits/iterator/is_forwarditerator.hpp>
+#include <srook/type_traits/iterator/is_bidirectionaliterator.hpp>
+#include <srook/type_traits/iterator/is_randomaccessiterator.hpp>
 
 #endif

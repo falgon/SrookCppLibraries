@@ -24,13 +24,15 @@ struct is_swappable_with;
 template <class T>
 struct is_nothrow_swappable_with;
 
+using std::swap;
+
 template <class T>
 SROOK_INLINE_VARIABLE typename std::enable_if<std::is_move_constructible<T>::value && std::is_move_assignable<T>::value>::type
-swap(T&, T&) noexcept(std::is_nothrow_move_constructible<T>() && std::is_nothrow_move_assignable<T>());
+swap(T&, T&) noexcept(std::is_nothrow_move_constructible<T>::value && std::is_nothrow_move_assignable<T>::value);
 
 template <class T, std::size_t n>
 SROOK_INLINE_VARIABLE typename std::enable_if<is_swappable<T>::value>::type
-    swap(T (&a)[n], T (&b)[n]) noexcept(is_nothrow_swappable<T>::value);
+swap(T (&a)[n], T (&b)[n]) noexcept(is_nothrow_swappable<T>::value);
 
 struct detect_is_swappable {
     template <class T, class = decltype(swap(std::declval<T&>(), std::declval<T&>()))>

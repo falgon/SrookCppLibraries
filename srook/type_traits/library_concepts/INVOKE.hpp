@@ -73,6 +73,13 @@ auto INVOKE(F&& f, Args&&... args)
 	decltype(srook::forward<F>(f)(srook::forward<Args>(args)...))
 >::type;
 
+template <class F, class... Args>
+auto INVOKE(F&& f, Args&&... args)
+-> typename enable_if<
+    !std::is_member_pointer<typename decay<F>::type>::value,
+    decltype(srook::forward<F>(f)()(srook::forward<Args>(args)...))
+>::type;
+
 } // namespace library_concept
 } // namespace type_traits
 } // namespace srook
