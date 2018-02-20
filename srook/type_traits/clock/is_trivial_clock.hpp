@@ -32,7 +32,7 @@ struct trivially_requires
         type_traits::detail::Land<is_copy_assignable<Ts&>...>,
         type_traits::detail::Land<is_destructible<Ts>...>,
         type_traits::detail::Land<is_numeric_type<Ts>...>,
-        type_traits::detail::Land<std::is_swappable<Ts&>...>
+        type_traits::detail::Land<srook::is_swappable<Ts&>...>
       > {};
 
 template <class T>
