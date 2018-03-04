@@ -27,7 +27,12 @@ TEST1 = cxx17/array_view/at_test.o\
 	expected/test.o\
 	memory/singleton/singleton.o\
 	thread/safe/memory/singleton/test1.o\
-	hash/sha2/sha2_test.o
+	hash/sha2/sha2_test.o\
+	numeric/fixed_point/allpattern.o\
+	numeric/fixed_point/cast_test.o\
+	numeric/fixed_point/compare_test.o\
+	numeric/fixed_point/construct_test.o\
+	numeric/fixed_point/operator_test.o
 
 all: gcc_target1
 
@@ -50,5 +55,10 @@ run:
 	./memory/singleton/singleton.o $(BOOST_TEST_OP)
 	./thread/safe/memory/singleton/test1.o $(BOOST_TEST_OP)
 	./hash/sha2/sha2_test.o $(BOOST_TEST_OP)
+	./numeric/fixed_point/allpattern.o $(BOOST_TEST_OP)
+	./numeric/fixed_point/compare_test.o $(BOOST_TEST_OP)
+	./numeric/fixed_point/cast_test.o $(BOOST_TEST_OP)
+	./numeric/fixed_point/construct_test.o $(BOOST_TEST_OP)
+	./numeric/fixed_point/operator_test.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)

@@ -11,13 +11,6 @@
 #   endif
 #endif
 
-#ifdef __GNUC__
-#   pragma GCC system_header
-#elif defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang ignored "-Wvariadic-macros"
-#endif
-
 #include <srook/config.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #if ((defined(_MSC_VER) && SROOK_ARCH_IS_X86_64) || defined(__GNUC__))

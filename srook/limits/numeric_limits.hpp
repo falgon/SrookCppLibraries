@@ -116,8 +116,7 @@ template <typename T>
 class numeric_limits<volatile T> : public numeric_limits<T> {};
 
 template <typename T>
-class numeric_limits<const volatile T> : public numeric_limits<T> {
-};
+class numeric_limits<const volatile T> : public numeric_limits<T> {};
 
 #    define SROOK_DEFINE_NUMERIC_LIMITS_INTEGER_SPECIALIZED(TYPE, MIN, MAX)                             \
         template <>                                                                                     \
@@ -235,19 +234,132 @@ SROOK_DEFINE_NUMERIC_LIMITS_FLOAT_SPECIALIZED(long double, LDBL_MIN, LDBL_MAX, L
 SROOK_DEFINE_NUMERIC_LIMITS_FLOAT_SPECIALIZED(long double, LDBL_MIN, LDBL_MAX, LDBL_EPSILON, 0.5l, __builtin_huge_vall(), __builtin_nanl(""), __builtin_nansl(""), __LDBL_DENORM_MIN__);
 #    endif
 
+#   if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+template <>
+struct numeric_limits<srook::int128_t> : numeric_limits<long long> {
+    static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST int digits = CHAR_BIT * sizeof(srook::int128_t) - 1;
+    static const int digits10 = 38;
+private:
+    struct s {
+        SROOK_CONSTEXPR s(srook::uint64_t upper, srook::uint64_t lower) : value(lower + (srook::int128_t(upper) << 64)) {}
+        SROOK_CONSTEXPR operator srook::int128_t() const { return value; }
+        srook::int128_t value;
+    };
+public:
+    static SROOK_CONSTEXPR srook::int128_t min()
+    {
+        return s(0x8000000000000000, 0x0000000000000000);
+    }
+
+    static SROOK_CONSTEXPR srook::int128_t max()
+    {
+        return s(0x7fffffffffffffff, 0xffffffffffffffff);
+    }
+
+    static SROOK_CONSTEXPR lowest()
+    {
+        return min();
+    }
+};
+
+template <>
+struct numeric_limits<srook::uint128_t> : numeric_limits<long long> {
+    static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST int digits = CHAR_BIT * sizeof(srook::uint128_t);
+    static const int digits10 = 38;
+private:
+    struct s {
+        SROOK_CONSTEXPR s(srook::uint64_t upper, srook::uint64_t lower) : value(lower + (srook::uint128_t(upper) << 64)) {}
+        SROOK_CONSTEXPR operator srook::uint128_t() const { return value; }
+        srook::uint128_t value;
+    };
+public:
+    static SROOK_CONSTEXPR srook::uint128_t min()
+    {
+        return 0;
+    }
+
+    static SROOK_CONSTEXPR srook::uint128_t max()
+    {
+        return s(0xffffffffffffffff, 0xffffffffffffffff);
+    }
+
+    static SROOK_CONSTEXPR lowest()
+    {
+        return min();
+    }
+};
+
+
+#   endif
+
 #    undef SROOK_DEFINE_NUMERIC_LIMITS_INTEGER_SPECIALIZED
 #    undef SROOK_DEFINE_NUMERIC_LIMITS_FLOAT_SPECIALIZED
 
 #else
 
-#    if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-template <typename T>
-using numeric_limits = std::numeric_limits<T>;
-#    else
 template <typename T>
 class numeric_limits : public std::numeric_limits<T> {};
-#    endif
+
 #endif
 } // namespace srook
+
+#if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+namespace std {
+
+template <>
+struct numeric_limits<srook::int128_t> : numeric_limits<long long> {
+    static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST int digits = CHAR_BIT * sizeof(srook::int128_t) - 1;
+    static const int digits10 = 38;
+private:
+    struct s {
+        SROOK_CONSTEXPR s(srook::uint64_t upper, srook::uint64_t lower) : value(lower + (srook::int128_t(upper) << 64)) {}
+        SROOK_CONSTEXPR operator srook::int128_t() const { return value; }
+        srook::int128_t value;
+    };
+public:
+    static SROOK_CONSTEXPR srook::int128_t min()
+    {
+        return s(0x8000000000000000, 0x0000000000000000);
+    }
+
+    static SROOK_CONSTEXPR srook::int128_t max()
+    {
+        return s(0x7fffffffffffffff, 0xffffffffffffffff);
+    }
+
+    static SROOK_CONSTEXPR lowest()
+    {
+        return min();
+    }
+};
+
+template <>
+struct numeric_limits<srook::uint128_t> : numeric_limits<long long> {
+    static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST int digits = CHAR_BIT * sizeof(srook::uint128_t);
+    static const int digits10 = 38;
+private:
+    struct s {
+        SROOK_CONSTEXPR s(srook::uint64_t upper, srook::uint64_t lower) : value(lower + (srook::uint128_t(upper) << 64)) {}
+        SROOK_CONSTEXPR operator srook::uint128_t() const { return value; }
+        srook::uint128_t value;
+    };
+public:
+    static SROOK_CONSTEXPR srook::uint128_t min()
+    {
+        return 0;
+    }
+
+    static SROOK_CONSTEXPR srook::uint128_t max()
+    {
+        return s(0xffffffffffffffff, 0xffffffffffffffff);
+    }
+
+    static SROOK_CONSTEXPR lowest()
+    {
+        return min();
+    }
+};
+} // namespace std
+#endif
 
 #endif

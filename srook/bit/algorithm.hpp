@@ -4,6 +4,7 @@
 
 #include <srook/bit/algorithm/next_permutation.hpp>
 #include <srook/bit/algorithm/ntz.hpp>
+#include <srook/bit/algorithm/nlz.hpp>
 #include <srook/bit/algorithm/popcnt.hpp>
 #include <srook/bit/algorithm/reverse.hpp>
 #include <srook/bit/algorithm/hamming.hpp>

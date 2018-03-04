@@ -9,7 +9,7 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
-template <bool, class>
+template <bool, class = void>
 struct disable_if;
 
 template <class T>

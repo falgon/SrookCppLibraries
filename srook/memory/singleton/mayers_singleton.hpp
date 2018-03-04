@@ -33,7 +33,7 @@ public:
     thread_local_instance(Ts&&... ts) SROOK_NOEXCEPT(is_nothrow_constructible<value_type>::value)
     {
         // Explicitly put the keyword `static`
-        thread_local static value_type v{srook::forward<Ts>(ts)...};
+        SROOK_TLS static value_type v{srook::forward<Ts>(ts)...};
         return v;
     }
 protected:

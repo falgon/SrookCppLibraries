@@ -15,6 +15,9 @@
 #include <srook/type_traits/remove_cv.hpp>
 #include <srook/type_traits/conditional.hpp>
 #include <srook/type_traits/match_cv_qualifiers.hpp>
+#if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+#   include <srook/cstdint.hpp>
+#endif
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -23,6 +26,11 @@ namespace detail {
 
 template <class T>
 struct make_unsigned_impl : public type_constant<T> {};
+
+#if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+template <> struct make_unsigned_impl<srook::int128_t> : public type_constant<srook::uint128_t> {};
+template <> struct make_unsigned_impl<srook::uint128_t> : public type_constant<srook::uint128_t> {};
+#endif
 
 #define DEF_MAKE_UNSIGNED_IMPL(X) template <> struct make_unsigned_impl<X> : public type_constant<unsigned X> {}
 

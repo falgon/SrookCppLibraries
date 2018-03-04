@@ -5,6 +5,8 @@
 #include <srook/config/compiler/longlong_type.hpp>
 #include <srook/config/compiler/version.hpp>
 #include <srook/config/compiler/ILE.hpp>
+#include <srook/config/compiler/gcc.hpp>
+#include <srook/config/compiler/msvc.hpp>
 #include <srook/config/compiler/pragma.hpp>
 
 #endif

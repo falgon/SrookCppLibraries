@@ -46,6 +46,7 @@
 #include <srook/type_traits/is_constructible.hpp>
 #include <srook/type_traits/is_const.hpp>
 #include <srook/type_traits/is_convertible.hpp>
+#include <srook/type_traits/is_composite.hpp>
 #include <srook/type_traits/is_copy_assignable.hpp>
 #include <srook/type_traits/is_copy_constructible.hpp>
 #include <srook/type_traits/is_copyable.hpp>

@@ -1,0 +1,11 @@
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+#ifndef INCLUDED_SROOK_CONFIG_COMPILER_MSVC_CORE_HPP
+#define INCLUDED_SROOK_CONFIG_COMPILER_MSVC_CORE_HPP
+#ifdef _MSC_VER
+
+#define SROOK_FUNC_NAME __FUNCTION__
+#define SROOK_FUNCD_NAME __FUNCDNAME__
+#define SROOK_PRETTY_FUNCTION __FUNCSIG__
+
+#endif
+#endif

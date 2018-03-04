@@ -20,6 +20,13 @@ namespace detail {
 template <class T>
 struct make_signed_impl : public type_constant<T> {};
 
+#if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+template <>
+struct make_signed_impl<srook::int128_t> : public type_constant<srook::int128_t> {};
+template <>
+struct make_signed_impl<srook::uint128_t> : public type_constant<srook::int128_t> {};
+#endif
+
 #define DEF_MAKE_SIGNED_IMPL(X) template <> struct make_signed_impl<unsigned X> : public type_constant<signed X> {}
 
 DEF_MAKE_SIGNED_IMPL(char);
