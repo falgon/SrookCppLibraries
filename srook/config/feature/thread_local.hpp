@@ -5,7 +5,10 @@
 #include <srook/config/compiler.hpp>
 #include <srook/config/cpp_predefined.hpp>
 
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+// Note fails on Mingw, see https://sourceforge.net/p/mingw-w64/bugs/527/
+#if defined(__MINGW32__) || defined(BOOST_NO_CXX11_THREAD_LOCAL) 
+#   define SROOK_TLS 
+#elif SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #    define SROOK_TLS thread_local
 #elif defined(_GLIBCXX_HAVE_TLS) || SROOK_COMPILER_IS_ILE || defined(__GNUC__)
 #    define SROOK_TLS __thread

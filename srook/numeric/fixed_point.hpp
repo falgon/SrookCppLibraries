@@ -9,5 +9,6 @@
 #endif
 
 #include <srook/numeric/fixed_point/fixed_point.hpp>
+#include <srook/numeric/fixed_point/typedefs.hpp>
 
 #endif

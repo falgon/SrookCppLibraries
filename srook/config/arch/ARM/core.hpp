@@ -129,6 +129,11 @@
 #		define SROOK_ARM_TARGET_IS_THUMB1 0
 #		define SROOK_ARM_TARGET_IS_THUMB2 1
 #	endif
+// Ref: 4.1.2 Half-precision floating-point
+// http://infocenter.arm.com/help/topic/com.arm.doc.ihi0053c/IHI0053C_acle_2_0.pdf
+#   if defined(__ARM_FP16_FORMAT_IEEE) || defined(__ARM_FP16_FORMAT_ALTERNATIVE)
+#       define SROOK_ARM_HAS_FP16 1
+#   endif
 #else
 #	define SROOK_ARCH_IS_ARM 0
 #	define SROOK_TARGET_ARCH_ARM 0
@@ -155,5 +160,6 @@
 #	define SROOK_THUMB2_COMPATIBLE 0
 #	define SROOK_ARM_TARGET_IS_THUMB1 0
 #	define SROOK_ARM_TARGET_IS_THUMB2 0
+#   define SROOK_ARM_HAS_FP16 0
 #endif
 #endif

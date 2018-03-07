@@ -11,7 +11,12 @@
 #   define SROOK_FUNC_NAME __FUNCTION__
 #endif
 #define SROOK_PRETTY_FUNCTION __PRETTY_FUNCTION__
-
+#if defined(__SIZEOF_FLOAT80__) || !defined(__STRICT_ANSI__)
+#   define SROOK_HAS_FLOAT80
+#endif
+#if !defined(__STRICT_ANSI__) && defined(_GLIBCXX_USE_DECIMAL_FLOAT)
+#   define SROOK_HAS_DECIMAL_FLOATS
+#endif
 #if SROOK_HAS_INCLUDE(<boost/config/compiler/gcc.hpp>)
 #include <boost/config/compiler/gcc.hpp>
 #define SROOK_HAS_INCLUDE_SROOK_CONFIG_COMPILER_GCC 1
@@ -47,6 +52,21 @@
 #endif
 #if defined(BOOST_HAS_LONG_LONG) && !defined(SROOK_HAS_LONG_LONG)
 #   define SROOK_HAS_LONG_LONG BOOST_HAS_LONG_LONG
+#endif
+#ifdef BOOST_HAS_NRVO
+#   define SROOK_HAS_NRVO BOOST_HAS_NRVO
+#endif
+#if GCC_VERSION <= 20096
+#   ifdef __builtin_expect
+#       undef __builtin_expect
+#   endif
+#   define __builtin_expect(x, e) (x)
+#endif
+#ifdef BOOST_LIKELY
+#   define SROOK_LIKELY(x) BOOST_LIKELY(x)
+#endif
+#ifdef BOOST_UNLIKELY
+#   define SROOK_UNLIKELY(x) BOOST_UNLIKELY(x)
 #endif
 #ifdef BOOST_HAS_DECLSPEC
 #   define SROOK_HAS_DECLSPEC BOOST_HAS_DECLSPEC
@@ -273,8 +293,14 @@
 #   define SROOK_HAS_LONG_LONG
 #endif
 #define SROOK_HAS_NRVO
-#define SROOK_LIKELY(x) __builtin_expect(x, 1)
-#define SROOK_UNLIKELY(x) __builtin_expect(x, 0)
+#if GCC_VERSION <= 20096
+#   ifdef __builtin_expect
+#       undef __builtin_expect
+#   endif
+#   define __builtin_expect(x, e) (x)
+#endif
+#define SROOK_LIKELY(x) __builtin_expect(!!(x), 1)
+#define SROOK_UNLIKELY(x) __builtin_expect(!!(x), 0)
 
 #if __GNUC__ >= 4
 #   if (defined(_WIN32) || defined(__WIN32__) || defined(WIN32)) && !defined(__CYGWIN__)
@@ -318,7 +344,7 @@
 #else
 #   include <stddef.h>
 #endif
-#if defined(_GLIBCXX_USE_FLOAT128) && !defined(__STRICT_ANSI__) && !defined(SROOK_NVCC_CXX03)
+#if (defined(_GLIBCXX_USE_FLOAT128) || defined(__SIZEOF_FLOAT128__)) && !defined(__STRICT_ANSI__) && !defined(SROOK_NVCC_CXX03)
 #   define SROOK_HAS_FLOAT128
 #endif
 

@@ -15,9 +15,9 @@
 #include <srook/config/feature/final.hpp>
 #include <srook/config/feature/fixed_for.hpp>
 #include <srook/config/feature/if_constexpr.hpp>
-#include <srook/config/feature/nested_namespace.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/config/feature/inline_variable.hpp>
+#include <srook/config/feature/nested_namespace.hpp>
 #include <srook/config/feature/noexcept.hpp>
 #include <srook/config/feature/override.hpp>
 #include <srook/config/feature/static_assert.hpp>

@@ -69,7 +69,7 @@ constexpr bool isnan(FloatType &&x)
 #if SROOK_USE_BUILTIN_CMATH_FUNCTION && SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 	detail::builtin_isnan(std::forward<FloatType>(x))
 #else
-	!(x == x)
+	SROOK_UNLIKELY(!(x == x))
 #endif
 	    ;
 #include<srook/config/disable_warnings/pop.hpp>

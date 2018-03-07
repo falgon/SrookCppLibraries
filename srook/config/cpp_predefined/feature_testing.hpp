@@ -196,7 +196,7 @@
 #        define SROOK_HAS_INCLUDE(header)
 #    endif
 
-#    define SROOK_HAS_CPP_ATTRIBUTE(attributes)
+#    define SROOK_HAS_CPP_ATTRIBUTE(attributes) 0
 
 #    if defined(__clang__)
 #        define SROOK_CPP_RTTI __has_feature(cxx_rtti)

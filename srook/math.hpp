@@ -11,5 +11,6 @@
 #include <srook/math/constants.hpp>
 #include <srook/math/geometry.hpp>
 #include <srook/math/primes.hpp>
+#include <srook/math/complex.hpp>
 
 #endif
