@@ -3,5 +3,6 @@
 #define INCLUDED_SROOK_CFENV_HPP
 
 #include <srook/cfenv/disable_nan.hpp>
+#include <srook/cfenv/round_switch.hpp>
 
 #endif
