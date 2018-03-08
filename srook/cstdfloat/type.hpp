@@ -454,15 +454,6 @@ typedef _Decimal64 decimal64_t;
 typedef _Decimal128 decimal28_t
 #endif
 
-#if defined(SROOK_GCC) && defined(__STDC_IEC_559__)
-typedef _Float32 float32_t;
-typedef _Float64 float64_t;
-#endif
-
-#if defined(SROOK_GCC) && (SROOK_ARCH_IS_ARM64)
-typedef _Float16 float16_t;
-#endif
-
 #if SROOK_ARCH_IS_ARM && SROOK_ARM_HAS_FP16
 #   ifdef SROOK_GCC
 __extension__ typedef __fp16 arm_fp16_t;
