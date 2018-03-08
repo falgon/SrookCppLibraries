@@ -32,7 +32,9 @@ TEST1 = cxx17/array_view/at_test.o\
 	numeric/fixed_point/cast_test.o\
 	numeric/fixed_point/compare_test.o\
 	numeric/fixed_point/construct_test.o\
-	numeric/fixed_point/operator_test.o
+	numeric/fixed_point/operator_test.o\
+	cfenv/round_switch/test1.o
+
 
 all: gcc_target1
 
@@ -60,5 +62,6 @@ run:
 	./numeric/fixed_point/cast_test.o $(BOOST_TEST_OP)
 	./numeric/fixed_point/construct_test.o $(BOOST_TEST_OP)
 	./numeric/fixed_point/operator_test.o $(BOOST_TEST_OP)
+	./cfenv/round_switch/test1.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)
