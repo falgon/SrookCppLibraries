@@ -3,7 +3,7 @@
 #
 
 GXX := g++-7
-INCLUDE_DIR := -I../ -I../include
+INCLUDE_DIR := -I../ -isystem ../include
 FLAGS := -Wall -Wextra -pedantic -std=c++1z
 LIBS := -L../lib -lboost_program_options -lz -pthread
 TARGET1 := ./algorithm/coding/zlib/zlib_test.cpp
