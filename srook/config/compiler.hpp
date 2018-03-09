@@ -6,9 +6,11 @@
 #include <srook/config/compiler/version.hpp>
 #include <srook/config/compiler/ILE.hpp>
 #include <srook/config/compiler/gcc.hpp>
+#include <srook/config/compiler/clang.hpp>
 #include <srook/config/compiler/msvc.hpp>
 #include <srook/config/compiler/intel.hpp>
 #include <srook/config/compiler/common_edg.hpp>
+#include <srook/config/compiler/pathscale.hpp>
 #include <srook/config/compiler/pragma.hpp>
 
 #endif
