@@ -9,9 +9,17 @@
 #endif
 
 #ifdef __cplusplus
-#   include <cfenv>
+#   ifndef SROOK_NO_FENV_H
+#       include <cfenv>
+#   else
+#       error This feature needs to cfenv
+#   endif
 #else
-#   include <fenv.h>
+#   ifndef SROOK_NO_FENV_H
+#       include <fenv.h>
+#   else
+#       error This feature needs to fenv.h
+#   endif
 #endif
 #include <srook/config.hpp>
 

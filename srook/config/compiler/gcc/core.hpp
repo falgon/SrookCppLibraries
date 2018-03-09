@@ -19,7 +19,7 @@
 #endif
 #if SROOK_HAS_INCLUDE(<boost/config/compiler/gcc.hpp>)
 #include <boost/config/compiler/gcc.hpp>
-#define SROOK_HAS_INCLUDE_SROOK_CONFIG_COMPILER_GCC 1
+#define SROOK_HAS_INCLUDE_BOOST_CONFIG_COMPILER_GCC 1
 #ifndef SROOK_GCC_VERSION
 #   define SROOK_GCC_VERSION BOOST_GCC_VERSION
 #endif
