@@ -24,7 +24,7 @@ SROOK_FORCE_INLINE SROOK_CONSTEXPR const T& max(const T& a, const T& b)
 }
 
 template <class T, class Compare>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR const SROOK_DEDUCED_TYPENAME enable_if<is_invocable<Compare, T, T>::value, T&>::type
+SROOK_FORCE_INLINE SROOK_CONSTEXPR const SROOK_DEDUCED_TYPENAME enable_if<is_invocable<Compare, T, T>::value, const T&>::type
 max(const T& a, const T& b, Compare comp)
 {
     return comp(a, b) ? a : b;

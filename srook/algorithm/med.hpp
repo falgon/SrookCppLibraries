@@ -12,15 +12,27 @@
 #include <srook/algorithm/med_element.hpp>
 #include <srook/algorithm/min.hpp>
 #include <srook/algorithm/max.hpp>
-#include <srook/cxx20/concepts/iterator/RandomAccessIterator.hpp>
+#include <srook/functional/op/deduction_less.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+template <class T, class Compare, SROOK_REQUIRES(is_invocable<Compare, T&, T&>::value)>
+#else
+template <class T, class Compare>
+#endif
+SROOK_FORCE_INLINE SROOK_CONSTEXPR const T& med(const T& x, const T& y, const T& z, Compare comp)
+SROOK_NOEXCEPT(is_nothrow_invocable<Compare, T&, T&>::value)
+{
+    return srook::algorithm::max(srook::algorithm::min(x, y, comp), srook::algorithm::min(srook::algorithm::max(x, y, comp), z, comp), comp);
+}
+
 template <class T>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR const T& med(const T& x, const T& y, const T& z)
+SROOK_NOEXCEPT(srook::algorithm::max(srook::algorithm::min(x, y), srook::algorithm::min(srook::algorithm::max(x, y), z)))
 {
-    return srook::algorithm::max(srook::algorithm::min(x, y), srook::algorithm::min(srook::algorithm::max(x, y), z));
+    return srook::algorithm::med(x, y, z, srook::functional::deduction_less());
 }
 
 template <class T>

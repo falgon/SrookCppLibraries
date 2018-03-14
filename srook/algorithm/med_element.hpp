@@ -19,6 +19,8 @@
 #include <srook/cxx20/concepts/iterator/RandomAccessIterator.hpp>
 #include <srook/type_traits/iterator/is_randomaccessiterator.hpp>
 #include <srook/type_traits/enable_if.hpp>
+#include <srook/type_traits/is_invocable.hpp>
+#include <srook/iterator/range_access.hpp>
 #include <iterator>
 
 SROOK_NESTED_NAMESPACE(srook, algorithm) {

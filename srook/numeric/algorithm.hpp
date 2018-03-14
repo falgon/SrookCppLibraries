@@ -10,5 +10,6 @@
 
 #include <srook/numeric/algorithm/accumulate.hpp>
 #include <srook/numeric/algorithm/inner_product.hpp>
+#include <srook/numeric/algorithm/iota.hpp>
 
 #endif

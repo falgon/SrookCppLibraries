@@ -303,6 +303,7 @@ class numeric_limits : public std::numeric_limits<T> {};
 #endif
 } // namespace srook
 
+#if 0
 #if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
 namespace std {
 
@@ -360,6 +361,7 @@ public:
     }
 };
 } // namespace std
+#endif
 #endif
 
 #endif

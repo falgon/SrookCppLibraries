@@ -85,11 +85,13 @@ protected:
         assert(is_engaged());
         return payload_.load_payload();
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const T& get() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
         return payload_.load_payload();
     }
+#endif
     template <class... Args>
     void construct(Args&&... args)
     SROOK_NOEXCEPT((is_nothrow_constructible<Stored_type, Args...>::value))

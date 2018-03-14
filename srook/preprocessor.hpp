@@ -11,5 +11,6 @@
 #include <srook/preprocessor/control/iif.hpp>
 #include <srook/preprocessor/comparison/equal.hpp>
 #include <srook/preprocessor/comparison/not_equal.hpp>
+#include <srook/preprocessor/is_typename.hpp>
 
 #endif

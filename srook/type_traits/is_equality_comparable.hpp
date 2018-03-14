@@ -21,20 +21,37 @@ struct is_equality_comparable_impl<T, SROOK_DEDUCED_TYPENAME voider<SROOK_DECLTY
     : type_traits::detail::Land<
         is_convertible<SROOK_DECLTYPE(declval<T>() == declval<T>()), bool>
       >::type {};
+
+template <class, class = SROOK_DEDUCED_TYPENAME voider<>::type>
+struct is_nothrow_equality_comparable_impl
+    : SROOK_FALSE_TYPE {};
+
+template <class T>
+struct is_nothrow_equality_comparable_impl<T, SROOK_DEDUCED_TYPENAME voider<SROOK_DECLTYPE(declval<T>() == declval<T>())>::type>
+    : type_traits::detail::Land<
+        is_convertible<SROOK_DECLTYPE(declval<T>() == declval<T>()), bool>,
+        bool_constant<noexcept(declval<T>() == declval<T>())>
+    >::type {};
             
 } // namespace detail
 
 template <class T>
 struct is_equality_comparable : public detail::is_equality_comparable_impl<T> {};
 
+template <class T>
+struct is_nothrow_equality_comparable : public detail::is_nothrow_equality_comparable_impl<T> {};
+
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
 
 using type_traits::is_equality_comparable;
+using type_traits::is_nothrow_equality_comparable;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>
 SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_equality_comparable_v = is_equality_comparable<T>::value;
+template <class T>
+SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_nothrow_equality_comparable_v = is_nothrow_equality_comparable<T>::value;
 #endif
 
 } // namespace srook

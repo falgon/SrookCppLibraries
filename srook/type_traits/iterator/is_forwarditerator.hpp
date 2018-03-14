@@ -55,7 +55,6 @@ SROOK_INLINE_NAMESPACE_END
 namespace srook {
 
 using type_traits::is_forwarditerator;
-using type_traits::is_forwarditerator_v;
 
 } // namespace srook
 

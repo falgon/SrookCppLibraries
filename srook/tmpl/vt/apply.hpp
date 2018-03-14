@@ -16,7 +16,7 @@ SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <template <class...> class F, class... Xs>
-struct apply : bool_constant<F<Xs...>::value> {};
+struct apply : F<Xs...> {};
 
 template <template <class...> class F, class... Xs>
 struct apply<F, packer<Xs...>> : apply<F, Xs...> {};

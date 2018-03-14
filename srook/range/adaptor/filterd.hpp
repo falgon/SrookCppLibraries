@@ -2,7 +2,7 @@
 #ifndef INCLUDED_ADAPTOR_FILTERD_HPP
 #define INCLUDED_ADAPTOR_FILTERD_HPP
 #include<srook/iterator/range_iterator.hpp>
-#include<srook/iterator/filterd_iterator.hpp>
+#include<srook/iterator/range_iterators/filterd_iterator.hpp>
 #include<srook/type_traits/is_callable.hpp>
 #include<srook/config/require.hpp>
 #include<type_traits>

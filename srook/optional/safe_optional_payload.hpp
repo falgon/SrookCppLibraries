@@ -73,10 +73,12 @@ public:
         else
             payload_ptr_ = srook::addressof(payload_);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;
@@ -117,11 +119,11 @@ public:
         : safe_optional_payload(other) {}
     SROOK_CONSTEXPR safe_optional_payload(bool, safe_optional_payload&& other)
         : safe_optional_payload(srook::move(other)) {}
-    SROOK_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
+    SROOK_CXX14_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
     {
         if (other.load_engaged()) construct(other.payload_);
     }
-    SROOK_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
+    SROOK_CXX14_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
     {
         if (other.load_engaged()) construct(srook::move(other.payload_));
     }
@@ -142,10 +144,12 @@ public:
         else
             payload_ptr_ = srook::addressof(payload_);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;
@@ -186,11 +190,11 @@ public:
         : safe_optional_payload(other) {}
     SROOK_CONSTEXPR safe_optional_payload(bool, safe_optional_payload&& other)
         : safe_optional_payload(srook::move(other)) {}
-    SROOK_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
+    SROOK_CXX14_CONSTEXPR safe_optional_payload(const safe_optional_payload& other)
     {
         if (other.load_engaged()) construct(other.payload_);
     }
-    SROOK_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
+    SROOK_CXX14_CONSTEXPR safe_optional_payload(safe_optional_payload&& other)
     {
         if (other.load_engaged()) construct(srook::move(other.payload_));
     }
@@ -214,10 +218,12 @@ public:
         else
             payload_ptr_ = srook::addressof(payload_);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return *payload_ptr_;

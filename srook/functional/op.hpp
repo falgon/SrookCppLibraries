@@ -15,4 +15,8 @@
 #include <srook/functional/op/deduction_multiplies.hpp>
 #include <srook/functional/op/deduction_negate.hpp>
 #include <srook/functional/op/deduction_plus.hpp>
+#include <srook/functional/op/deduction_less.hpp>
+#include <srook/functional/op/deduction_greater.hpp>
+#include <srook/functional/op/deduction_less_equal.hpp>
+#include <srook/functional/op/deduction_greater_equal.hpp>
 #endif

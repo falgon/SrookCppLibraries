@@ -45,6 +45,7 @@ template <>
 struct make_signed_impl<char32_t> : make_signed_impl<uint_least32_t> {};
 #endif
 
+#if 0
 #ifdef __GLIBCXX_TYPE_INT_N_0
 DEF_MAKE_SIGNED_IMPL(__GLIBCXX_TYPE_INT_N_0);
 #endif
@@ -56,6 +57,7 @@ DEF_MAKE_SIGNED_IMPL(__GLIBCXX_TYPE_INT_N_2);
 #endif
 #ifdef __GLIBCXX_TYPE_INT_N_3
 DEF_MAKE_SIGNED_IMPL(__GLIBCXX_TYPE_INT_N_3);
+#endif
 #endif
 #undef DEF_MAKE_SIGNED_IMPL
 

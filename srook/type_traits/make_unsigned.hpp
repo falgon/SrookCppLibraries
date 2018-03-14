@@ -43,6 +43,7 @@ DEF_MAKE_UNSIGNED_IMPL(long long);
 #ifndef __WCHAR_UNSIGNED__
 template <> struct make_unsigned_impl<wchar_t> : public make_unsigned_impl<__WCHAR_TYPE__> {};
 #endif
+#if 0
 #ifdef __GLIBCXX_TYPE_INT_N_0
 DEF_MAKE_UNSIGNED_IMPL(__GLIBCXX_TYPE_INT_N_0);
 #endif
@@ -54,6 +55,7 @@ DEF_MAKE_UNSIGNED_IMPL(__GLIBCXX_TYPE_INT_N_2);
 #endif
 #ifdef __GLIBCXX_TYPE_INT_N_3
 DEF_MAKE_UNSIGNED_IMPL(__GLIBCXX_TYPE_INT_N_3);
+#endif
 #endif
 #undef DEF_MAKE_UNSIGNED_IMPL
 

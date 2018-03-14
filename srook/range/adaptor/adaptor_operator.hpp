@@ -22,20 +22,5 @@ constexpr typename srook::invoke_result<Function,Range>::type operator|(Range&& 
 } // inline namespace
 } // namespace detail
 } // namespace adaptors
-
-namespace pipealgo{
-namespace detail{
-inline namespace v1{
-
-template<class Range,class Function>
-constexpr typename srook::invoke_result<Function,Range>::type operator|(Range&& r,Function&& f) SROOK_NOEXCEPT(f(std::declval<Range>()))
-{
-	return std::forward<Function>(f)(std::forward<Range>(r));
-}
-
-} // inline namespace v1
-} // namespace algo
-} // namespace detail
-
 } // namespace roki
 #endif

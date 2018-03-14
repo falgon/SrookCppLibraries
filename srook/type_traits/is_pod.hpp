@@ -2,49 +2,60 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_POD_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_POD_HPP
 
-#if (defined(__GNUC__) && __GNUC__ >= 5 || __GNUC__ >= 4 && (__GNUC_MINOR__ >= 5 && __GNUC_PATCH_LEVEL__ >= 4)) || (defined(_MSC_VER) && _MSC_VER >= 1800) || defined(__clang__)
-#    define SROOK_HAS_BUILTIN_IS_POD
-#elif defined(__has_builtin)
-#    if __has_builtin(__is_pod)
-#        define SROOK_HAS_BUILTIN_IS_POD
-#    endif
-#elif defined(__has_feature)
-#    if __has_feature(is_pod)
-#        define SROOK_HAS_BUILTIN_IS_POD
-#    endif
-#elif defined(__clang__)
-#    if !(__clang_major__ >= 4 || (__clang_major__ >= 3 && __clang_minor__ >= 2))
-#        undef SROOK_HAS_BUILTIN_IS_POD
-#    endif
+#include <cstddef>
+#include <srook/type_traits/detail/config.hpp>
+#include <srook/type_traits/detail/logical.hpp>
+#include <srook/type_traits/bool_constant.hpp>
+#include <srook/type_traits/intrinsics.hpp>
+#include <srook/type_traits/is_scalar.hpp>
+#include <srook/type_traits/is_void.hpp>
+
+#ifdef __SUNPRO_CC
+#   include <srook/type_traits/is_function.hpp>
 #endif
 
-#ifdef SROOK_HAS_BUILTIN_IS_POD
-#    include <srook/config/cpp_predefined.hpp>
-#    include <srook/config/feature.hpp>
-#    include <srook/type_traits/bool_constant.hpp>
+#ifndef SROOK_IS_POD
+#   define SROOK_INTERNAL_IS_POD(T) false
+#else
+#   define SROOK_INTERNAL_IS_POD(T) SROOK_IS_POD(T)
+#endif
 
-namespace srook {
-namespace type_traits {
+SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
-struct is_pod : public bool_constant<__is_pod(T)> {};
+struct is_pod
+    : type_traits::detail::Lor<is_scalar<T>, is_void<T>, bool_constant<SROOK_INTERNAL_IS_POD(T)>> {};
 
-SROOK_INLINE_NAMESPACE_END
-} // namespace type_traits
+#ifndef SROOK_NO_ARRAY_TYPE_SPECIALIZATIONS
+template <class T, std::size_t N>
+struct is_pod<T[N]> : is_pod<T> {};
+#endif
 
-using type_traits::is_pod;
+#define SROOK_IS_POD_TRUE_DEF(T)\
+template <> struct is_pod<T> : SROOK_TRUE_TYPE {}
 
-#    if SROOK_CPP_VARIABLE_TEMPLATES
+SROOK_IS_POD_TRUE_DEF(void);
+#if SROOK_NO_CV_VOID_SPECIALIZATIONS
+SROOK_IS_POD_TRUE_DEF(void const);
+SROOK_IS_POD_TRUE_DEF(void const volatile);
+SROOK_IS_POD_TRUE_DEF(void volatile);
+#endif
+#undef SROOK_IS_POD_TRUE_DEF
+#undef SROOK_INTERNAL_IS_POD
+
+#if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>
 SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool is_pod_v = is_pod<T>::value;
-#    endif
+#endif
+
+SROOK_INLINE_NAMESPACE_END
+} SROOK_NESTED_NAMESPACE_END(type_traits, srook)
+
+namespace srook {
+
+using srook::type_traits::is_pod;
 
 } // namespace srook
-
-#        undef SROOK_HAS_BUILTIN_IS_POD
-#    else
-#        error is_pod: This environment is not supported.
-#    endif
 
 #endif

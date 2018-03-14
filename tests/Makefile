@@ -16,7 +16,6 @@ TEST1 = cxx17/array_view/at_test.o\
 	mpl/math/compile_time_four_arithmetic_operations_parser_test.o\
 	mpl/string/stoi.o\
 	cxx17/any_pack/meta_random_engine_test.o\
-    range/adaptor/adaptor_exp.o\
 	optional/nullopt.o\
 	optional/requirements.o\
 	optional/make_optional.o\
@@ -45,7 +44,6 @@ $(TEST1): %.o: %.cpp
 	$(GXX) $(FLAGS) $(INCLUDE_PATH) $< -o $@
 run:
 	./cxx17/array_view/at_test.o
-	./range/adaptor/adaptor_exp.o $(BOOST_TEST_OP)
 	./optional/nullopt.o $(BOOST_TEST_OP)
 	./optional/requirements.o $(BOOST_TEST_OP)
 	./optional/make_optional.o $(BOOST_TEST_OP)

@@ -285,7 +285,7 @@
 #    if defined(__clang__)
 #        define SROOK_CPP_VARIADIC_TEMPLATES __has_feature(cxx_variadic_templates)
 #    else
-#        define SROOK_CPP_VARIADIC_TEMPLATES __cpp_variable_templates
+#        define SROOK_CPP_VARIADIC_TEMPLATES __cpp_variadic_templates
 #    endif
 
 #    if defined(__clang__)

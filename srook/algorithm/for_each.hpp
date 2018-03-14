@@ -27,7 +27,7 @@ template <
     class Functor,
     REQUIRES(
         !has_iterator<remove_ref_cv(Iterator)>::value && is_callable<remove_ref_cv(Functor)>::value)>
-auto for_each(Iterator&& first, Iterator&& last, Functor&& functor) -> decltype(srook::forward<Iterator>(first))
+SROOK_FORCE_INLINE auto for_each(Iterator&& first, Iterator&& last, Functor&& functor) -> decltype(srook::forward<Iterator>(first))
 {
     std::for_each(srook::forward<Iterator>(first), srook::forward<Iterator>(last), srook::forward<Functor>(functor));
     return srook::forward<Iterator>(first);
@@ -38,7 +38,7 @@ template <
     class Functor,
     REQUIRES(
         (has_iterator<remove_ref_cv(Range)>::value or is_range_iterator_v<remove_ref_cv(Range)>) && is_callable<remove_ref_cv(Functor)>::value)>
-auto for_each(Range&& r, Functor&& functor) -> decltype(srook::forward<Range>(r))
+SROOK_FORCE_INLINE auto for_each(Range&& r, Functor&& functor) -> decltype(srook::forward<Range>(r))
 {
     std::for_each(std::begin(r), std::end(r), srook::forward<Functor>(functor));
     return srook::forward<Range>(r);
@@ -77,7 +77,7 @@ template <
     class Functor,
     REQUIRES(
         is_callable<remove_ref_cv(Functor)>::value && !std::is_const<Tuple>::value && (std::tuple_size<typename remove_reference<Tuple>::type>::value or !std::tuple_size<typename remove_reference<Tuple>::type>::value))>
-auto for_each(Tuple&& t, Functor&& functor)
+SROOK_FORCE_INLINE auto for_each(Tuple&& t, Functor&& functor)
     SROOK_NOEXCEPT(
         tuple_for_eacher(
             std::declval<decltype(static_cast<Tuple&&>(t))>(),
@@ -97,7 +97,7 @@ template <
     class... Ts,
     class Functor,
     REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
-auto for_each(const std::tuple<Ts...>& t, Functor&& functor)
+SROOK_FORCE_INLINE auto for_each(const std::tuple<Ts...>& t, Functor&& functor)
     SROOK_NOEXCEPT(
         tuple_for_eacher(t, std::declval<decltype(srook::forward<Functor>(functor))>(),
                          std::declval<SROOK_MAKE_INDEX_SEQUENCE(std::tuple_size<std::tuple<Ts...> >::value)>()))
@@ -236,14 +236,14 @@ constexpr auto make_counter(std::array<T, s>& ar, std::size_t value = 0)
     return counter<decltype(ar)>(ar, std::move(value));
 }
 
-template <class Tuple, REQUIRES(!has_iterator_v<remove_ref_cv(Tuple)>)>
+template <class Tuple, REQUIRES(!has_iterator<remove_ref_cv(Tuple)>::value)>
 constexpr auto make_counter(Tuple&& t, std::size_t value = 0)
     -> typename enable_if<!has_iterator<remove_ref_cv(Tuple)>::value or !is_range_iterator_v<remove_ref_cv(Tuple)>, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple> >::type
 {
     return counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple>(srook::forward<Tuple>(t), std::move(value));
 }
 
-template <class Range, REQUIRES(has_iterator_v<remove_ref_cv(Range)> or is_range_iterator_v<remove_ref_cv(Range)>)>
+template <class Range, REQUIRES(has_iterator<remove_ref_cv(Range)>::value or is_range_iterator_v<remove_ref_cv(Range)>)>
 constexpr auto make_counter(Range&& r, std::size_t value = 0) -> counter<decltype(srook::forward<Range>(r))>
 {
     return counter<decltype(srook::forward<Range>(r))>(srook::forward<Range>(r), std::move(value));
@@ -255,7 +255,7 @@ constexpr auto make_counter(const std::initializer_list<T>& init_list, std::size
     return counter<const std::initializer_list<T>&>(init_list, std::move(value));
 }
 
-template <class Iterator, REQUIRES(not has_iterator_v<remove_ref_cv(Iterator)>)>
+template <class Iterator, REQUIRES(not has_iterator<remove_ref_cv(Iterator)>::value)>
 constexpr auto make_counter(Iterator&& first, Iterator&& last, std::size_t value = 0) -> counter_iters<remove_ref_cv(Iterator)>
 {
     return counter_iters<Iterator>(srook::forward<Iterator>(first), srook::forward<Iterator>(last), std::move(value));

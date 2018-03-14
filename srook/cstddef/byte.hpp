@@ -4,7 +4,7 @@
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature.hpp>
 #include <srook/config/require.hpp>
-#include <type_traits>
+#include <srook/type_traits/underlying_type.hpp>
 
 namespace srook {
 
@@ -29,13 +29,13 @@ SROOK_CONSTEXPR IntegerType to_integer(byte b) SROOK_NOEXCEPT_TRUE
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT
 SROOK_CONSTEXPR std::byte to_stdbyte(byte b) SROOK_NOEXCEPT_TRUE
 {
-    return std::byte(static_cast<typename std::underlying_type<byte>::type>(b));
+    return std::byte(static_cast<typename srook::underlying_type<byte>::type>(b));
 }
 #endif
 
 SROOK_CONSTEXPR byte operator+(const byte& l, const byte& r)
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) + static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) + static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 template <class Value>
 SROOK_CONSTEXPR Value operator+(byte l, Value v)
@@ -50,74 +50,74 @@ SROOK_CONSTEXPR Value operator+(Value v, byte l)
 
 SROOK_CONSTEXPR byte operator-(const byte& l, const byte& r)
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) - static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) - static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 SROOK_CONSTEXPR byte operator*(const byte& l, const byte& r)
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) * static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) * static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 SROOK_CONSTEXPR byte operator/(const byte& l, const byte& r)
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) / static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) / static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
 template <class IntegerType, REQUIRES(std::is_integral<IntegerType>::value)>
 SROOK_CONSTEXPR byte& operator<<=(byte& b, IntegerType shift) SROOK_NOEXCEPT_TRUE
 {
-    return b = byte(static_cast<typename std::underlying_type<byte>::type>(b) << shift);
+    return b = byte(static_cast<typename srook::underlying_type<byte>::type>(b) << shift);
 }
 
 template <class IntegerType, REQUIRES(std::is_integral<IntegerType>::value)>
 SROOK_CONSTEXPR byte& operator>>=(byte& b, IntegerType shift) SROOK_NOEXCEPT_TRUE
 {
-    return b = byte(static_cast<typename std::underlying_type<byte>::type>(b) >> shift);
+    return b = byte(static_cast<typename srook::underlying_type<byte>::type>(b) >> shift);
 }
 
 template <class IntegerType, REQUIRES(std::is_integral<IntegerType>::value)>
 SROOK_CONSTEXPR byte operator<<(byte b, IntegerType shift) SROOK_NOEXCEPT_TRUE
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(b) << shift);
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(b) << shift);
 }
 
 template <class IntegerType, REQUIRES(std::is_integral<IntegerType>::value)>
 SROOK_CONSTEXPR byte operator>>(byte b, IntegerType shift) SROOK_NOEXCEPT_TRUE
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(b) >> shift);
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(b) >> shift);
 }
 
-SROOK_CONSTEXPR byte& operator|=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
+SROOK_CXX14_CONSTEXPR byte& operator|=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
 {
-    return l = byte(static_cast<typename std::underlying_type<byte>::type>(l) | static_cast<typename std::underlying_type<byte>::type>(r));
+    return l = byte(static_cast<typename srook::underlying_type<byte>::type>(l) | static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
-SROOK_CONSTEXPR byte& operator&=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
+SROOK_CXX14_CONSTEXPR byte& operator&=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
 {
-    return l = byte(static_cast<typename std::underlying_type<byte>::type>(l) & static_cast<typename std::underlying_type<byte>::type>(r));
+    return l = byte(static_cast<typename srook::underlying_type<byte>::type>(l) & static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
-SROOK_CONSTEXPR byte& operator^=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
+SROOK_CXX14_CONSTEXPR byte& operator^=(byte& l, byte r) SROOK_NOEXCEPT_TRUE
 {
-    return l = byte(static_cast<typename std::underlying_type<byte>::type>(l) ^ static_cast<typename std::underlying_type<byte>::type>(r));
+    return l = byte(static_cast<typename srook::underlying_type<byte>::type>(l) ^ static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
 SROOK_CONSTEXPR byte operator|(byte l, byte r) SROOK_NOEXCEPT_TRUE
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) | static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) | static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
 SROOK_CONSTEXPR byte operator&(byte l, byte r)SROOK_NOEXCEPT_TRUE
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) & static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) & static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
 SROOK_CONSTEXPR byte operator^(byte l, byte r) SROOK_NOEXCEPT_TRUE
 {
-    return byte(static_cast<typename std::underlying_type<byte>::type>(l) ^ static_cast<typename std::underlying_type<byte>::type>(r));
+    return byte(static_cast<typename srook::underlying_type<byte>::type>(l) ^ static_cast<typename srook::underlying_type<byte>::type>(r));
 }
 
 SROOK_CONSTEXPR byte operator~(byte b)SROOK_NOEXCEPT_TRUE
 {
-    return byte(~static_cast<typename std::underlying_type<byte>::type>(b));
+    return byte(~static_cast<typename srook::underlying_type<byte>::type>(b));
 }
 
 } // namespace srook

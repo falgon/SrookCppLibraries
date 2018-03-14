@@ -3,12 +3,13 @@
 #define INCLUDED_SROOK_CONSTANTS_MATH_HPP
 
 #ifdef _MSC_VER
-#   if _MSC_VER > 1000
-#       pragma once
-#   endif
+#    if _MSC_VER > 1000
+#        pragma once
+#    endif
 #endif
 
 #include <srook/math/constants/algorithm/abs.hpp>
+#include <srook/math/constants/algorithm/approximate.hpp>
 #include <srook/math/constants/algorithm/asin.hpp>
 #include <srook/math/constants/algorithm/copysign.hpp>
 #include <srook/math/constants/algorithm/cos.hpp>
@@ -28,6 +29,5 @@
 #include <srook/math/constants/algorithm/sin.hpp>
 #include <srook/math/constants/algorithm/sqrt.hpp>
 #include <srook/math/constants/algorithm/trunc.hpp>
-#include <srook/math/constants/algorithm/approximate.hpp>
 
 #endif

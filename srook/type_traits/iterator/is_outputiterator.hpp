@@ -49,7 +49,6 @@ SROOK_INLINE_NAMESPACE_END
 namespace srook {
 
 using type_traits::is_outputiterator;
-using type_traits::is_outputiterator_v;
 
 } // namespace srook
 

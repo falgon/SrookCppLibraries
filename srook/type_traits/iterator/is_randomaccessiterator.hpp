@@ -59,7 +59,6 @@ SROOK_INLINE_NAMESPACE_END
 namespace srook {
 
 using type_traits::is_randomaccessiterator;
-using type_traits::is_randomaccessiterator_v;
 
 } // namespace srook
 

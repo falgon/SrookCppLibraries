@@ -73,10 +73,12 @@ public:
     {
         engaged_ = srook::move(b);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return payload_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return payload_;
@@ -115,11 +117,11 @@ public:
         : optional_payload(other) {}
     SROOK_CONSTEXPR optional_payload(bool, optional_payload&& other)
         : optional_payload(srook::move(other)) {}
-    SROOK_CONSTEXPR optional_payload(const optional_payload& other)
+    SROOK_CXX14_CONSTEXPR optional_payload(const optional_payload& other)
     {
         if (other.engaged_) construct(other.payload_);
     }
-    SROOK_CONSTEXPR optional_payload(optional_payload&& other)
+    SROOK_CXX14_CONSTEXPR optional_payload(optional_payload&& other)
     {
         if (other.engaged_) construct(srook::move(other.payload_));
     }
@@ -143,10 +145,12 @@ public:
     {
         engaged_ = srook::move(b);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return payload_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return payload_;
@@ -185,11 +189,11 @@ public:
         : optional_payload(other) {}
     SROOK_CONSTEXPR optional_payload(bool, optional_payload&& other)
         : optional_payload(srook::move(other)) {}
-    SROOK_CONSTEXPR optional_payload(const optional_payload& other)
+    SROOK_CXX14_CONSTEXPR optional_payload(const optional_payload& other)
     {
         if (other.engaged_) construct(other.payload_);
     }
-    SROOK_CONSTEXPR optional_payload(optional_payload&& other)
+    SROOK_CXX14_CONSTEXPR optional_payload(optional_payload&& other)
     {
         if (other.engaged_) construct(srook::move(other.payload_));
     }
@@ -214,10 +218,12 @@ public:
     {
         engaged_ = srook::move(b);
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR const Stored_type& load_payload() const SROOK_NOEXCEPT_TRUE
     {
         return payload_;
     }
+#endif
     SROOK_FORCE_INLINE SROOK_CONSTEXPR Stored_type& load_payload() SROOK_NOEXCEPT_TRUE
     {
         return payload_;

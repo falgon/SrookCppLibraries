@@ -16,8 +16,7 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class, class = typename voider<>::type>
-struct is_tuple : SROOK_FALSE_TYPE {
-};
+struct is_tuple : SROOK_FALSE_TYPE {};
 
 template <class T>
 struct is_tuple<T, typename voider<decltype(std::tuple_size<typename decay<T>::type >::value)>::type> : SROOK_TRUE_TYPE {

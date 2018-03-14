@@ -27,9 +27,7 @@ struct iter_pointer_value_type<Iter, SROOK_DEDUCED_TYPENAME voider<SROOK_DEDUCED
 
 template <class Iter>
 SROOK_CONCEPT OutputIterator = srook::concepts::Iterator<Iter> || type_traits::detail::Lor<is_class<Iter>, is_pointer<Iter>>::value
-&& requires (Iter r, SROOK_DEDUCED_TYPENAME detail::iter_pointer_value_type<Iter>::type o) {
-    *r = o;
-    *r++ = o;
+&& requires (Iter r) {
     { ++r } -> Iter&;
     { r++ } -> Iter&;
     { *r++ } -> const Iter&;

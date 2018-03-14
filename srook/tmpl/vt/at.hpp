@@ -9,40 +9,37 @@
 #endif
 
 #include <srook/tmpl/vt/detail/config.hpp>
-#include <srook/preprocessor/detail/loop_comma.hpp>
-#include <srook/preprocessor/detail/iterate_def.hpp>
 #include <srook/type_traits/type_constant.hpp>
+#include <srook/type_traits/integral_constant.hpp>
+#include <srook/type_traits/add_pointer.hpp>
+#include <srook/utility/index_sequence.hpp>
+#include <srook/utility/void_t.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
-// Non recursive implementation.
-
 namespace detail {
 
-template <std::size_t, class...>
+template <class>
 struct at_impl;
 
-template <class T, class... Ts>
-struct at_impl<0, T, Ts...> : public type_constant<T> {};
-
-#define CLASS_DECL(N) class T##N
-#define LOOP_CNT(N) T##N
-
-#define DEF_AT(N)\
-    template <class T, SROOK_PP_LOOP_COMMA(CLASS_DECL, N), class... Ts>\
-    struct at_impl<N, T, SROOK_PP_LOOP_COMMA(LOOP_CNT, N), Ts...> : public type_constant<LOOP_CNT(N)> {};
-
-SROOK_PP_ITERATE(DEF_AT, 128)
-
-#undef CLASS_DECL
-#undef LOOP_CNT
-#undef DEF_AT
+template <std::size_t... x>
+struct at_impl<srook::utility::index_sequence<x...> > {
+    template <class T>
+    static T get(SROOK_DEDUCED_TYPENAME voider<integral_constant<std::size_t, x> >::type*..., T*, ...);
+};
 
 } // namespace detail
 
 template <std::size_t x, class... Ts>
-struct at : detail::at_impl<x, Ts...> {};
+struct at 
+    : type_constant<
+        SROOK_DECLTYPE(
+            detail::at_impl<
+                SROOK_DEDUCED_TYPENAME srook::utility::make_index_sequence_type<x>::type
+            >::get(SROOK_DEDUCED_TYPENAME add_pointer<Ts>::type()...)
+        )
+    > {};
 
 template <std::size_t x, class... Ts>
 struct at<x, packer<Ts...>> : at<x, Ts...> {};

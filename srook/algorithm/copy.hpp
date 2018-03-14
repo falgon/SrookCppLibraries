@@ -29,7 +29,7 @@ template <srook::concepts::InputIterator InputIter, srook::concepts::OutputItera
 #else
 template <class InputIter, class OutputIter>
 #endif
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value, OutputIter>::type 
+OutputIter//SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value, OutputIter>::type 
 copy(InputIter first, InputIter last, OutputIter d_first)
 {
     return first == last ? d_first : (*d_first = *first, srook::algorithm::copy(++first, last, ++d_first));

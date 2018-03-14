@@ -1,19 +1,17 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
-#include <srook/config/cpp_predefined.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#if 0
 #include <iterator>
 #include <srook/config/compiler_version.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
-#include <srook/experimental/is_iterator.hpp>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/conditional.hpp>
 #include <srook/type_traits/is_base_of.hpp>
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/utility/void_t.hpp>
 #include <type_traits>
-
 namespace srook {
 SROOK_INLINE_NAMESPACE(mpl)
 SROOK_INLINE_NAMESPACE(v1)
@@ -62,6 +60,53 @@ constexpr bool has_iterator_v = detail::has_iterator<T, Default>::value;
 
 SROOK_INLINE_NAMESPACE_END
 SROOK_INLINE_NAMESPACE_END
+} // namespace srooka
+#else
+
+#include <srook/config.hpp>
+#include <srook/type_traits/iterator/is_iterator.hpp>
+#include <srook/type_traits/detail/sfinae_types.hpp>
+#include <srook/type_traits/conditional.hpp>
+
+SROOK_NESTED_NAMESPACE(srook, type_traits) {
+SROOK_INLINE_NAMESPACE(v1)
+
+namespace detail {
+
+template <class T>
+struct has_iterator : sfinae_types {
+private:
+    template <class U>
+    static SROOK_DEDUCED_TYPENAME conditional<
+        srook::type_traits::is_iterator<SROOK_DEDUCED_TYPENAME U::iterator>::value, one, two
+    >::type
+    test(SROOK_DEDUCED_TYPENAME U::iterator*);
+    
+    template <class U>
+    static two test(...);
+public:
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR bool value = sizeof(test<T>(0)) == sizeof(one);
+};
+
+} // namespace detail
+
+template <class T>
+struct has_iterator : detail::has_iterator<T> {};
+
+#if SROOK_CPP_VARIABLE_TEMPLATES
+template <class T>
+SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool has_iterator_v = has_iterator<T>::value;
+#endif
+
+SROOK_INLINE_NAMESPACE_END
+} SROOK_NESTED_NAMESPACE_END(type_traits, srook)
+
+namespace srook {
+
+using srook::type_traits::has_iterator;
+
 } // namespace srook
+
+#endif
 #endif
 #endif

@@ -124,7 +124,7 @@ public:
 #    define DEPEND_INIT = SROOK_NULLPTR
 #endif
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#    define THREAD_CTOR_PARAMS , class... Args, REQUIRES(is_invocable<Callable, Args...>::value)
+#    define THREAD_CTOR_PARAMS , class... Args
 #    define THREAD_CTOR_PARAMS_DECL Callable &&f, Args &&... args
 #    define THREAD_CTOR_GEN_INVOKER \
         make_invoker(srook::forward<Callable>(f), srook::forward<Args>(args)...)

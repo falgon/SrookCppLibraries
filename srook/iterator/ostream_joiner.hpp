@@ -14,6 +14,10 @@
 #	include <srook/config/noexcept_detection.hpp>
 #	include <srook/config/attribute/force_inline.hpp>
 #	include <srook/config/feature/inline_namespace.hpp>
+#   include <srook/memory/addressof.hpp>
+#   include <srook/utility/move.hpp>
+#   include <srook/utility/forward.hpp>
+#   include <srook/type_traits/decay.hpp>
 
 namespace srook {
 namespace iterator {
@@ -30,36 +34,40 @@ struct ostream_joiner {
     typedef void pointer;
     typedef void reference;
 
-    ostream_joiner(ostream_type &os, const Delim &delimiter) SROOK_NOEXCEPT(std::is_nothrow_copy_constructible<Delim>::value)
-	: out(std::addressof(os)), delim(delimiter) {}
-    ostream_joiner(ostream_type &os, Delim &&delimiter) SROOK_NOEXCEPT(std::is_nothrow_move_constructible<Delim>::value)
-	: out(std::addressof(os)), delim(std::move(delimiter)) {}
+    ostream_joiner(ostream_type& os, Delim delimiter) SROOK_NOEXCEPT(std::is_nothrow_copy_constructible<Delim>::value)
+	    : out(srook::addressof(os)), delim(srook::move(delimiter)) {}
 
     template <typename T>
-    ostream_joiner<Delim, CharT, Traits> &operator=(const T &value)
+    ostream_joiner<Delim, CharT, Traits>& operator=(const T &value)
+    SROOK_NOEXCEPT(declval<std::basic_ostream<CharT, Traits>*>() << declval<Delim>())
     {
-	if (!first) *out << delim;
-	first = false;
-	*out << value;
-	return *this;
+        if (!first) *out << delim;
+        first = false;
+        *out << value;
+        return *this;
     }
 
-    ostream_joiner<Delim, CharT, Traits> &operator*() SROOK_NOEXCEPT_TRUE { return *this; }
-    ostream_joiner<Delim, CharT, Traits> &operator++() SROOK_NOEXCEPT_TRUE { return *this; }
-    ostream_joiner<Delim, CharT, Traits> &operator++(int) SROOK_NOEXCEPT_TRUE { return *this; }
-
+    ostream_joiner<Delim, CharT, Traits>& operator*() SROOK_NOEXCEPT_TRUE { return *this; }
+    ostream_joiner<Delim, CharT, Traits>& operator++() SROOK_NOEXCEPT_TRUE { return *this; }
+    ostream_joiner<Delim, CharT, Traits>& operator++(int) SROOK_NOEXCEPT_TRUE { return *this; }
 private:
 	bool first = true;
-    std::basic_ostream<CharT, Traits> *out;
-    Delim delim;
+    std::basic_ostream<CharT, Traits>* out;
+    const Delim delim;
 };
 
 template <typename CharT, class Traits, class Delim>
-SROOK_FORCE_INLINE ostream_joiner<std::decay_t<Delim>, CharT, Traits> 
-make_ostream_joiner(std::basic_ostream<CharT, Traits> &os, Delim &&delimiter)
+SROOK_FORCE_INLINE ostream_joiner<SROOK_DEDUCED_TYPENAME decay<Delim>::type, CharT, Traits> 
+make_ostream_joiner(std::basic_ostream<CharT, Traits>& os, Delim&& delimiter)
 {
-    return {os, std::forward<Delim>(delimiter)};
+    return ostream_joiner<SROOK_DEDUCED_TYPENAME decay<Delim>::type>(os, srook::forward<Delim>(delimiter));
 }
+
+#if SROOK_CPP_DEDUCTION_GUIDES
+template <class Delim, class CharT>
+ostream_joiner(SROOK_DEDUCED_TYPENAME ostream_joiner<Delim, CharT>::ostream_type&, Delim) 
+-> ostream_joiner<Delim>;
+#endif
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace iterator

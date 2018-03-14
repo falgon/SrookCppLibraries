@@ -7,8 +7,18 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
+namespace detail {
+
+template <class...>
+struct first_impl;
+
+template <class H, class... Ts>
+struct first_impl<H, Ts...> : type_constant<H> {};
+
+} // namespace detail
+
 template <class... Ts>
-struct first : public detail::First<Ts...> {};
+struct first : public detail::first_impl<Ts...> {};
 
 template <class... Ts>
 struct first<packer<Ts...>> : public first<Ts...> {};

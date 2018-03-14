@@ -317,21 +317,25 @@ public:
 
     SROOK_CONSTEXPR const T* operator->() const { return srook::addressof(Base_type::get()); }
     T* operator->() { return srook::addressof(Base_type::get()); }
-    SROOK_CONSTEXPR const T& operator*() const& { return Base_type::get(); }
     SROOK_CONSTEXPR T& operator*() & { return Base_type::get(); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+    SROOK_CONSTEXPR const T& operator*() const& { return Base_type::get(); }
     SROOK_CONSTEXPR T&& operator*() && { return srook::move(Base_type::get()); }
     SROOK_CONSTEXPR T&& operator*() const&& { return srook::move(Base_type::get()); }
+#endif
     SROOK_CONSTEXPR SROOK_EXPLICIT operator bool() const SROOK_NOEXCEPT_TRUE { return Base_type::is_engaged(); }
     SROOK_CONSTEXPR bool has_value() const SROOK_NOEXCEPT_TRUE { return Base_type::is_engaged(); }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const T& value() const&
     {
         return Base_type::is_engaged() ? Base_type::get() : (detail::throw_bad_optional_access(), Base_type::get());
     }
+#endif
     SROOK_CONSTEXPR T& value() &
     {
         return Base_type::is_engaged() ? Base_type::get() : (detail::throw_bad_optional_access(), Base_type::get());
     }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR T&& value() &&
     {
         return Base_type::is_engaged() ? srook::move(Base_type::get()) : (detail::throw_bad_optional_access(), srook::move(Base_type::get()));
@@ -340,6 +344,7 @@ public:
     {
         return Base_type::is_engaged() ? srook::move(Base_type::get()) : (detail::throw_bad_optional_access(), srook::move(Base_type::get()));
     }
+#endif
     template <class U>
     SROOK_CONSTEXPR T value_or(U&& u) const&
     {
@@ -484,6 +489,7 @@ private:
             }                                                                                                        \
             template <class L, class T, template <class, bool, bool> class Payload>                                  \
             SROOK_CONSTEXPR auto operator>=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)              \
+            -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() >= declval<L>()))>                                \
             {                                                                                                        \
                 return !operator>=(rhs, lhs);                                                                        \
             }                                                                                                        \
@@ -622,6 +628,7 @@ DEF_OPERATORS(std, nullopt_t)
                 }                                                                                                        \
                 template <class L, class T, template <class, bool, bool> class Payload>                                  \
                 auto operator>=(const Y::optional<L>& lhs, const optional<T, Payload>& rhs)                              \
+                -> detail::optional_relop<SROOK_DECLTYPE((declval<T>() >= declval<L>()))>                                \
                 {                                                                                                        \
                     return !operator>=(rhs, lhs);                                                                        \
                 }                                                                                                        \

@@ -165,6 +165,7 @@
 #        ifdef BOOST_NO_CXX14_GENERIC_LAMBDAS
 #            define SROOK_NO_CXX14_GENERIC_LAMBDAS BOOST_NO_CXX14_GENERIC_LAMBDAS
 #        endif
+#        define SROOK_CLANG 1
 #    else
 #        define SROOK_HAS_PRAGMA_ONCE
 #        if defined(_MSC_VER) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 4))
