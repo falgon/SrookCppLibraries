@@ -47,7 +47,7 @@ SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_dereferenceable<ForwardIter>
 #endif
     typedef SROOK_DEDUCED_TYPENAME std::iterator_traits<ForwardIter>::difference_type diff_type;
 
-    for (diff_type len = std::distance(first, last); len > 0;) {
+    for (diff_type len = srook::iterator::distance(first, last); len > 0;) {
         diff_type half = len >> 1;
         ForwardIter mid = first;
         srook::advance(mid, half);

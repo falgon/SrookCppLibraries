@@ -8,7 +8,10 @@
 #   endif
 #endif
 
-#include <srook/config.hpp>
+#include <srook/config/feature/nested_namespace.hpp>
+#include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/compiler.hpp>
+#include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/type_traits/type_constant.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/detail/logical.hpp>
@@ -18,7 +21,7 @@ SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
 struct underlying_type 
-#if defined(SROOK_GCC) || (defined(SROOK_CLANG) && __has_feature(underlying_type))
+#if defined(SROOK_GCC)
     : type_constant<__underlying_type(T)> {}
 #else
 {
