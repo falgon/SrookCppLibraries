@@ -10,12 +10,16 @@
 
 #include <srook/tmpl/vt/detail/config.hpp>
 #include <srook/tmpl/vt/concat.hpp>
+#include <srook/tmpl/vt/partial_tail.hpp>
+#include <srook/tmpl/vt/at.hpp>
 #include <srook/type_traits/type_constant.hpp>
 #include <srook/type_traits/conditional.hpp>
+#include <srook/utility/index_sequence.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
+#if 0
 namespace detail {
 
 template <std::size_t, bool, class, class...>
@@ -41,6 +45,30 @@ struct insert_at
 
 template <std::size_t x, class T, class... Xs>
 struct insert_at<x, T, packer<Xs...>> : insert_at<x, T, Xs...> {};
+#else
+
+namespace detail {
+
+template <class, std::size_t, class, class...> struct insert_at;
+
+template <class T, std::size_t t, std::size_t... x, class... Xs>
+struct insert_at<T, t, srook::utility::index_sequence<x...>, Xs...> 
+    : concat<SROOK_DEDUCED_TYPENAME concat<SROOK_DEDUCED_TYPENAME at<x, Xs...>::type..., T>::type, SROOK_DEDUCED_TYPENAME srook::tmpl::vt::partial_tail<t - 1, Xs...>::type> {};
+
+template <class T, class... Xs>
+struct insert_at<T, 0, srook::utility::index_sequence<>, Xs...>
+    : concat<T, Xs...> {};
+
+} // namespace detail
+
+template <std::size_t x, class T, class... Xs>
+struct insert_at 
+    : detail::insert_at<T, x, SROOK_DEDUCED_TYPENAME make_index_sequence_type<x>::type, Xs...> {};
+
+template <std::size_t x, class T, class... Xs>
+struct insert_at<x, T, packer<Xs...>> : insert_at<x, T, Xs...> {};
+
+#endif
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <std::size_t x, class T, class... Xs>
