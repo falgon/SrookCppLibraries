@@ -49,21 +49,21 @@ struct insert_at<x, T, packer<Xs...>> : insert_at<x, T, Xs...> {};
 
 namespace detail {
 
-template <class, std::size_t, class, class...> struct insert_at;
+template <class, std::size_t, class, class...> struct insert_at_impl;
 
 template <class T, std::size_t t, std::size_t... x, class... Xs>
-struct insert_at<T, t, srook::utility::index_sequence<x...>, Xs...> 
+struct insert_at_impl<T, t, srook::utility::index_sequence<x...>, Xs...> 
     : concat<SROOK_DEDUCED_TYPENAME concat<SROOK_DEDUCED_TYPENAME at<x, Xs...>::type..., T>::type, SROOK_DEDUCED_TYPENAME srook::tmpl::vt::partial_tail<t - 1, Xs...>::type> {};
 
 template <class T, class... Xs>
-struct insert_at<T, 0, srook::utility::index_sequence<>, Xs...>
+struct insert_at_impl<T, 0, srook::utility::index_sequence<>, Xs...>
     : concat<T, Xs...> {};
 
 } // namespace detail
 
 template <std::size_t x, class T, class... Xs>
 struct insert_at 
-    : detail::insert_at<T, x, SROOK_DEDUCED_TYPENAME make_index_sequence_type<x>::type, Xs...> {};
+    : detail::insert_at_impl<T, x, SROOK_DEDUCED_TYPENAME make_index_sequence_type<x>::type, Xs...> {};
 
 template <std::size_t x, class T, class... Xs>
 struct insert_at<x, T, packer<Xs...>> : insert_at<x, T, Xs...> {};

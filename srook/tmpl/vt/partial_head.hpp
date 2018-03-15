@@ -20,21 +20,21 @@ struct partial_head<k, packer<Ts...>> : public partial_head<k, Ts...> {};
 
 namespace detail {
 
-template <class, class...> struct partial_head;
+template <class, class...> struct partial_head_impl;
 
 template <std::size_t... x, class... Ts>
-struct partial_head<srook::utility::index_sequence<x...>, Ts...>
+struct partial_head_impl<srook::utility::index_sequence<x...>, Ts...>
     : type_constant<packer<SROOK_DEDUCED_TYPENAME at<x, Ts...>::type...> > {};
 
 template <class... Ts>
-struct partial_head<srook::utility::index_sequence<>, Ts...>
+struct partial_head_impl<srook::utility::index_sequence<>, Ts...>
     : type_constant<packer<Ts...>> {};
 
 } // namespace detail
 
 template <std::size_t k, class... Ts>
 struct partial_head 
-    : detail::partial_head<SROOK_DEDUCED_TYPENAME make_index_sequence_type<k>::type, Ts...> {};
+    : detail::partial_head_impl<SROOK_DEDUCED_TYPENAME make_index_sequence_type<k>::type, Ts...> {};
 
 template <std::size_t k, class... Ts>
 struct partial_head<k, packer<Ts...>> 

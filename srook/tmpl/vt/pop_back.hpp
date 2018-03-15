@@ -20,20 +20,20 @@ struct pop_back<packer<Ts...>> : public pop_back<Ts...> {};
 
 namespace detail {
 
-template <class, class...> struct pop_back;
+template <class, class...> struct pop_back_impl;
 template <std::size_t... x, class... Xs>
-struct pop_back<srook::utility::index_sequence<x...>, Xs...> 
+struct pop_back_impl<srook::utility::index_sequence<x...>, Xs...> 
     : type_constant<packer<SROOK_DEDUCED_TYPENAME at<x, Xs...>::type...>> {};
 
 template <>
-struct pop_back<srook::utility::index_sequence<> >
+struct pop_back_impl<srook::utility::index_sequence<> >
     : type_constant<packer<> > {};
 
 } // namespace detail
 
 template <class... Ts>
 struct pop_back
-    : detail::pop_back<SROOK_DEDUCED_TYPENAME make_index_sequence_type<sizeof...(Ts) ? sizeof...(Ts) - 1 : 0>::type, Ts...> {};
+    : detail::pop_back_impl<SROOK_DEDUCED_TYPENAME make_index_sequence_type<sizeof...(Ts) ? sizeof...(Ts) - 1 : 0>::type, Ts...> {};
 
 template <class... Ts>
 struct pop_back<packer<Ts...>> : pop_back<Ts...> {};

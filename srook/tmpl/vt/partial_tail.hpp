@@ -20,10 +20,10 @@ struct partial_tail<k, packer<Ts...>> : public partial_tail<k, Ts...> {};
 
 namespace detail {
 
-template <class> struct partial_tail;
+template <class> struct partial_tail_impl;
 
 template <std::size_t... x>
-struct partial_tail<srook::utility::index_sequence<x...> > {
+struct partial_tail_impl<srook::utility::index_sequence<x...> > {
     template <class... Ts>
     static packer<Ts...> 
     get(SROOK_DEDUCED_TYPENAME voider<integral_constant<std::size_t, x> >::type*..., Ts*..., ...);
@@ -35,7 +35,7 @@ template <std::size_t k, class... Ts>
 struct partial_tail
     : type_constant<
         SROOK_DECLTYPE(
-            detail::partial_tail<
+            detail::partial_tail_impl<
                 SROOK_DEDUCED_TYPENAME make_index_sequence_type<k + 1>::type
             >::get(SROOK_DEDUCED_TYPENAME add_pointer<Ts>::type()...)
         )

@@ -27,16 +27,16 @@ struct tail<packer<Xs...>> : tail<Xs...> {};
 
 namespace detail {
 
-template <class> struct tail;
+template <class> struct tail_impl;
 
 template <std::size_t... x>
-struct tail<srook::utility::index_sequence<x...> > {
+struct tail_impl<srook::utility::index_sequence<x...> > {
     template <class T>
     static T get(SROOK_DEDUCED_TYPENAME voider<integral_constant<std::size_t, x> >::type*..., T*);
 };
 
 template <>
-struct tail<srook::utility::index_sequence<> > {
+struct tail_impl<srook::utility::index_sequence<> > {
     static packer<> get();
 };
 
@@ -46,7 +46,7 @@ template <class... Ts>
 struct tail
     : type_constant<
         SROOK_DECLTYPE(
-            detail::tail<
+            detail::tail_impl<
                 SROOK_DEDUCED_TYPENAME make_index_sequence_type<sizeof...(Ts) ? sizeof...(Ts) - 1 : 0>::type
             >::get(SROOK_DEDUCED_TYPENAME add_pointer<Ts>::type()...)
         )
