@@ -13,7 +13,7 @@
 #include <random>
 #include <type_traits>
 
-SROOK_NESTED_NAMESPACE(srook, random, shuffle) {
+SROOK_NESTED_NAMESPACE(srook, random, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 
 #if SROOK_HAS_CONCEPTS
@@ -55,11 +55,11 @@ SROOK_FORCE_INLINE void fisher_yates(Range&& range, UniformRandomNumberGen&& gen
 SROOK_FORCE_INLINE void fisher_yates(Range& range, UniformRandomNumberGen& gen)
 #endif
 {
-    srook::random::shuffle::fisher_yates(srook::begin(range), srook::end(range), srook::forward<UniformRandomNumberGen>(gen));
+    srook::random::algorithm::fisher_yates(srook::begin(range), srook::end(range), srook::forward<UniformRandomNumberGen>(gen));
 }
 
 
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(shuffle, random, srook)
+} SROOK_NESTED_NAMESPACE_END(algorithm, random, srook)
 
 #endif

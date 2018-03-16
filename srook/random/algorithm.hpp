@@ -3,5 +3,6 @@
 #define INCLUDED_SROOK_RANDOM_ALGORITHM_HPP
 
 #include <srook/random/algorithm/shuffle.hpp>
+#include <srook/random/algorithm/sample.hpp>
 
 #endif
