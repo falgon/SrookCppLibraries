@@ -24,6 +24,7 @@ struct SwapAt<pack<LT, L...>, pack<RT, R...>, 0, LHeads, RHeads> {
     using L_type = Concat_t<LHeads, pack<RT, L...>>;
     using R_type = Concat_t<RHeads, pack<LT, R...>>;
 };
+
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
 } // namespace variadic_types

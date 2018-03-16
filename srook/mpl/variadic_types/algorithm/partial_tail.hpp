@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_PARTIAL_TAIL_HPP
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/libraries/optional.hpp>
+//#include <srook/config/libraries/optional.hpp>
 #include <srook/mpl/variadic_types/algorithm/concat.hpp>
 #include <srook/mpl/variadic_types/pack.hpp>
 

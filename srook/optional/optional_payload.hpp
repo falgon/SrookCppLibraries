@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <srook/config/feature.hpp>
 #include <srook/type_traits.hpp>
-#include <srook/memory.hpp>
+#include <srook/memory/addressof.hpp>
 #include <srook/optional/nullopt.hpp>
 #include <srook/optional/exception.hpp>
 

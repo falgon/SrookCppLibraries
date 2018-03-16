@@ -6,7 +6,6 @@
 #include <cstddef>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/libraries/optional.hpp>
 #include <srook/mpl/variadic_types/pack.hpp>
 
 namespace srook {

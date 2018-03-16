@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_MPL_VARIADIC_TYPES_ALGORITHM_FIRST_HPP
 #include <cstddef>
 #include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/libraries/optional.hpp>
+//#include <srook/config/libraries/optional.hpp>
 #include <srook/mpl/variadic_types/pack.hpp>
 
 namespace srook {
@@ -20,7 +20,7 @@ struct First<Head, Tail...> {
 };
 template <>
 struct First<> {
-    using type = srook::libraries::nullopt_t;
+    using type = pack<>;
 };
 template <class Head, class... Tail>
 struct First<pack<Head, Tail...>> : First<Head> {

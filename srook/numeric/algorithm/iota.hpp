@@ -12,6 +12,7 @@
 #include <srook/type_traits/is_incrementable.hpp>
 #include <srook/type_traits/is_range.hpp>
 #include <srook/algorithm/for_each.hpp>
+#include <srook/iterator/range_access.hpp>
 #if SROOK_HAS_THREADS
 #   include <srook/thread.hpp>
 #endif
@@ -294,7 +295,29 @@ SROOK_FORCE_INLINE void iota(std::experimental::parallel::parallel_vector_execut
 
 #endif // SROOK_HAS_STD_EXPERIMENTAL_EXECUTION_POLICY
 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+template <class ExecutionPolicy, class Range, class T,
+    SROOK_REQUIRES(
+        type_traits::detail::Land<
+            is_range<SROOK_DEDUCED_TYPENAME decay<Range>::type>, 
+            execution::is_execution_policy<SROOK_DEDUCED_TYPENAME decay<ExecutionPolicy>::type>,
+            is_assignable<SROOK_DEDUCED_TYPENAME decay<Range>::type::value_type&, T&>
+        >::value
+    )
+>
+#else
+template <class ExecutionPolicy, class Range, class T>
+#endif
+#if SROOK_CPP_RVALUE_REFERENCES
+SROOK_FORCE_INLINE void iota(ExecutionPolicy&& policy, Range&& range, T value)
+#else
+SROOK_FORCE_INLINE void iota(const ExecutionPolicy& policy, Range& range, T value)
+#endif
+{
+    srook::numeric::algorithm::iota(srook::forward<ExecutionPolicy>(policy), srook::begin(range), srook::end(range), srook::move(value));
+}
+
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(numeric, srook)
+} SROOK_NESTED_NAMESPACE_END(algorithm, numeric, srook)
 
 #endif
