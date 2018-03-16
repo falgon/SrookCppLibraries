@@ -1,17 +1,10 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_IS_INVOCABLE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_INVOCABLE_HPP
-#include <srook/config/cpp_predefined.hpp>
-#include <srook/config/feature/constexpr.hpp>
-#include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/feature/inline_variable.hpp>
-#include <srook/type_traits/detail/logical.hpp>
-#include <srook/type_traits/integral_constant.hpp>
-#include <srook/type_traits/invoke_result.hpp>
-#include <srook/type_traits/is_convertible.hpp>
+#include <srook/type_traits/detail/config.hpp>
 #include <srook/type_traits/true_false_type.hpp>
+#include <srook/type_traits/library_concepts/INVOKE.hpp>
 #include <srook/utility/declval.hpp>
-#include <srook/utility/void_t.hpp>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
@@ -21,17 +14,23 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-template <class, class, typename = typename voider<>::type>
-struct is_invocable_impl : SROOK_FALSE_TYPE {};
+template <class Fn, class... Args>
+struct is_invocable_impl {
+private:
+    template <class X, class... Xs>
+    static SROOK_DECLTYPE(library_concepts::INVOKE(declval<X>(), declval<Xs>()...), SROOK_TRUE_TYPE())
+    test(int);
 
-template <class Result, class Ret>
-struct is_invocable_impl<Result, Ret, typename voider<typename Result::type>::type> 
-	: Lor<is_void<Ret>, is_convertible<typename Result::type, Ret> >::type {};
+    template <class, class...>
+    static SROOK_FALSE_TYPE test(...);
+public:
+    typedef SROOK_DECLTYPE(test<Fn, Args...>(0)) type;
+};
 
 } // namespace detail
 
 template <class Fn, class... Args>
-struct is_invocable : public detail::is_invocable_impl<invoke_result<Fn, Args...>, typename voider<>::type>::type {};
+struct is_invocable : public detail::is_invocable_impl<Fn, Args...>::type {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

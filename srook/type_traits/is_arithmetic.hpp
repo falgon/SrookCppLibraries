@@ -15,8 +15,7 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
-struct is_arithmetic : public integral_constant<bool, is_integral<T>::value || is_floating_point<T>::value> {
-};
+struct is_arithmetic : public integral_constant<bool, is_integral<T>::value || is_floating_point<T>::value> {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

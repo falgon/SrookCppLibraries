@@ -6,5 +6,6 @@
 #include <srook/type_traits/library_concepts/is_mutex.hpp>
 #include <srook/type_traits/library_concepts/INVOKE.hpp>
 #include <srook/type_traits/library_concepts/Semaphore.hpp>
+#include <srook/type_traits/library_concepts/Hash.hpp>
 
 #endif

@@ -17,8 +17,6 @@
 #include <srook/algorithm/min.hpp>
 #include <cassert>
 
-#include <iostream>
-
 SROOK_NESTED_NAMESPACE(srook, random, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 

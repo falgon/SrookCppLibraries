@@ -7,6 +7,7 @@
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_VARIADIC_TEMPLATES
 #include <srook/config/feature/inline_namespace.hpp>
 #include <srook/type_traits/library_concepts/INVOKE.hpp>
+#include <srook/type_traits/type_constant.hpp>
 #include <srook/utility/void_t.hpp>
 #include <srook/utility/declval.hpp>
 
@@ -15,18 +16,17 @@ namespace type_traits {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
-template <class, class, class...>
-struct invoke_result;
+template <class, class, class...> struct invoke_result_impl;
 
 template <class F, class... Args>
-struct invoke_result<typename voider<decltype(library_concepts::INVOKE(declval<F>(), declval<Args>()...))>::type, F, Args...> {
+struct invoke_result_impl<typename voider<decltype(library_concepts::INVOKE(declval<F>(), declval<Args>()...))>::type, F, Args...> {
 	typedef decltype(library_concepts::INVOKE(declval<F>(), declval<Args>()...)) type;
 };
 
 } // namespace detail
 
 template <class F, class... ArgTypes>
-struct invoke_result : detail::invoke_result<void, F, ArgTypes...> {};
+struct invoke_result : detail::invoke_result_impl<void, F, ArgTypes...> {};
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits

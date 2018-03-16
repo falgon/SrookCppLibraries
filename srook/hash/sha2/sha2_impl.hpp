@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
-#ifndef INCLUDED_SROOK_HASH_SHA_256_DETAIL_SHA2_IMPL_HPP
-#define INCLUDED_SROOK_HASH_SHA_256_DETAIL_SHA2_IMPL_HPP
+#ifndef INCLUDED_SROOK_HASH_SHA2_SHA2_IMPL_HPP
+#define INCLUDED_SROOK_HASH_SHA2_SHA2_IMPL_HPP
 
 #ifdef _MSC_VER
 #   if _MSC_VER > 1000
@@ -64,6 +64,7 @@ public:
     static SROOK_CONSTEXPR std::size_t message_digest_size = traits_type::message_digest_size;
 private:
     typedef srook::array<value_type, message_digest_size> internal_container_type;
+    friend class std::hash<sha2>;
 public:
     SROOK_CONSTEXPR sha2(InputIter first, InputIter last)
         : message_(first), 
@@ -80,7 +81,7 @@ public:
     SROOK_CONSTEXPR explicit sha2(const SinglePassRange& range)
         : sha2(srook::begin(range), srook::end(range)) {}
 
-    SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR sha2& assign(InputIter first, InputIter last)
+    SROOK_FORCE_INLINE sha2& assign(InputIter first, InputIter last)
     {
         destroy_str();
         srook::lock_guard<srook::mutex> lk(m_);
@@ -124,7 +125,7 @@ public:
     }
 
     template <class Container>
-    SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR Container&
+    SROOK_FORCE_INLINE Container&
     operator()(Container& c, to_character)
     {
         std::string s(str());

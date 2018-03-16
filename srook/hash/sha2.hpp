@@ -9,5 +9,6 @@
 #endif
 
 #include <srook/hash/sha2/sha2_impl.hpp>
+#include <srook/hash/sha2/hash_concept_style.hpp>
 
 #endif

@@ -4,7 +4,6 @@
 #include <srook/type_traits/add_const.hpp>
 #include <srook/type_traits/add_cv.hpp>
 #include <srook/type_traits/add_lvalue_reference.hpp>
-#include <srook/type_traits/random.hpp>
 #include <srook/type_traits/add_pointer.hpp>
 #include <srook/type_traits/add_rvalue_reference.hpp>
 #include <srook/type_traits/add_volatile.hpp>
@@ -63,6 +62,8 @@
 #include <srook/type_traits/is_final.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_function.hpp>
+#include <srook/type_traits/is_function_object.hpp>
+#include <srook/type_traits/is_hash.hpp>
 #include <srook/type_traits/is_incrementable.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/is_invocable.hpp>
@@ -122,6 +123,7 @@
 #include <srook/type_traits/make_unsigned.hpp>
 #include <srook/type_traits/match_cv_qualifiers.hpp>
 #include <srook/type_traits/negation.hpp>
+#include <srook/type_traits/random.hpp>
 #include <srook/type_traits/rank.hpp>
 #include <srook/type_traits/remove_all_extents.hpp>
 #include <srook/type_traits/remove_const.hpp>
