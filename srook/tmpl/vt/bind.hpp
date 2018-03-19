@@ -18,6 +18,7 @@
 #include <srook/mpl/constant_sequence/algorithm/concat.hpp>
 #include <srook/type_traits/bool_constant.hpp>
 #include <srook/type_traits/conditional.hpp>
+#include <srook/type_traits/detail/sfinae_types.hpp>
 #include <srook/preprocessor/detail/iterate_def.hpp>
 #include <srook/utility/enable_copy_move.hpp>
 #include <srook/utility/integer_sequence.hpp>
@@ -69,14 +70,54 @@ struct placeholders_indexes_impl<x>
 template <class... Xs>
 struct placeholders_indexes : placeholders_indexes_impl<0, Xs...> {};
 
+// Since instantiation by templates is delayed until actual use, implementation of `is_accessible_to_type` and `is_accessible_to_value` is not necessarily required, 
+// but there is an advantage that the compiler outputs a better error message by using these.
+
+template <class T>
+struct is_accessible_to_type : type_traits::detail::sfinae_types {
+private:
+    template <class U>
+    static one test(SROOK_DEDUCED_TYPENAME U::type*);
+    template <class>
+    static two test(...);
+public:
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR bool value = sizeof(one) == sizeof(test<T>(0));
+};
+
+template <class T>
+struct is_accessible_to_value : type_traits::detail::sfinae_types {
+private:
+    template <class U, bool = U::value>
+    static one test(U*);
+    template <class>
+    static two test(...);
+public:
+    SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR bool value = sizeof(one) == sizeof(test<T>(0));
+};
+
+#define DEF_DELAYED_DEDUCED_X(NAME, TRUE_DEFINITION)\
+template <bool b, template <class...> class, class...>\
+struct delayed_deduce_##NAME {};\
+template <template <class...> class F, class... All>\
+struct delayed_deduce_##NAME <true, F, All...> {\
+    TRUE_DEFINITION;\
+}
+
+DEF_DELAYED_DEDUCED_X(type, typedef SROOK_DEDUCED_TYPENAME F<All...>::type result_type);
+DEF_DELAYED_DEDUCED_X(value, SROOK_INLINE_VARIABLE static SROOK_CONSTEXPR bool value = F<All...>::value);
+
+#undef DEF_DELAYED_DEDUCED_X
+
 template <class, template <class...> class, class...>
 struct bind_impl;
 
 template <template <class...> class F, class... Xs>
-struct bind_impl<integer_sequence<std::size_t>, F, Xs...> {
+struct bind_impl<integer_sequence<std::size_t>, F, Xs...> { // specialization for no placeholders
 protected:
     template <class... U>
-    struct type : bool_constant<F<Xs..., U...>::value> {};
+    struct type 
+        : delayed_deduce_type<is_accessible_to_type<F<Xs..., U...>>::value, F, Xs..., U...>, 
+          delayed_deduce_value<is_accessible_to_value<F<Xs..., U...>>::value, F, Xs..., U...> {};
 };
 
 template <std::size_t x, class T>
@@ -125,15 +166,15 @@ private:
     typedef SROOK_DEDUCED_TYPENAME filter<not_fn<is_placeholders>::template type, Xs...>::type filterd;
     typedef SROOK_DEDUCED_TYPENAME make_arguments<filterd, bind_pairlist>::type arguments;
 public:
+    typedef SROOK_DEDUCED_TYPENAME srook::tmpl::vt::apply<F, arguments>::type result_type;
     static SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool value = srook::tmpl::vt::apply<F, arguments>::value;
 };
 
 template <std::size_t x, std::size_t... xs, template <class...> class F, class... Xs>
-struct bind_impl<integer_sequence<std::size_t, x, xs...>, F, Xs...> {
+struct bind_impl<integer_sequence<std::size_t, x, xs...>, F, Xs...> { // for mixed placeholders specialization
 protected:
     template <class... U>
-    struct type 
-        : splited_invoke<F, packer<Xs...>, packer<U...>> {}; 
+    struct type : splited_invoke<F, packer<Xs...>, packer<U...>> {}; 
 };
 
 } // namespace detail
@@ -148,8 +189,6 @@ private:
 public:
     using base_type::type;
 };
-
-// qsort は右側に入れるため第二引数をバインド
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(vt, tmpl, srook)

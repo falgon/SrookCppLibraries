@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_TMPL_VT_DETAIL_CONFIG_HPP
 
 #include <srook/config.hpp>
-#if SROOK_CPP_VARIADIC_TEMPLATES 
+#ifdef SROOK_CPP_VARIADIC_TEMPLATES 
 #if SROOK_HAS_INCLUDE(<tuple>)
 #   include <tuple>
 #   ifndef SROOK_HAS_STD_TUPLE

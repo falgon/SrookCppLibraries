@@ -43,8 +43,7 @@ struct sha2_hash_impl<T, x, y, Iter, false> {
 
 template <class T, std::size_t x, std::size_t y = 0, class Iter = std::string::const_iterator>
 struct sha2_hash : srook::hash::detail::sha2_hash_impl<T, x, y, Iter> {
-private:
-    SROOK_ST_ASSERT(is_hash<sha2_hash>::value);
+    SROOK_ST_ASSERT(is_hash<srook::hash::detail::sha2_hash_impl<T, x, y, Iter>>::value);
 };
 
 SROOK_INLINE_NAMESPACE_END

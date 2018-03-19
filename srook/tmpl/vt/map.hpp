@@ -10,7 +10,6 @@
 
 #include <srook/tmpl/vt/detail/config.hpp>
 #include <srook/tmpl/vt/cons.hpp>
-#include <srook/tmpl/vt/cons.hpp>
 #include <srook/type_traits/type_constant.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {

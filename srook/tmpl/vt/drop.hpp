@@ -22,7 +22,7 @@ template <bool, std::size_t, class... Xs>
 struct drop_enable_type : type_constant<packer<>> {};
 
 template <std::size_t x, class... Xs>
-struct drop_enable_type<false, x, Xs...> : partial_tail<x, Xs...> {};
+struct drop_enable_type<false, x, Xs...> : srook::tmpl::vt::partial_tail<x, Xs...> {};
 
 } // namespace detail
 
