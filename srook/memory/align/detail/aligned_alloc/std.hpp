@@ -8,7 +8,11 @@
 SROOK_NESTED_NAMESPACE(srook, memory, alignment) {
 SROOK_INLINE_NAMESPACE(v1)
 
+#if 0 && (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT)
 using std::aligned_alloc;
+#else
+using ::aligned_alloc;
+#endif
 
 SROOK_FORCE_INLINE void aligned_free(void* pt) SROOK_NOEXCEPT_TRUE
 {
