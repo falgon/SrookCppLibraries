@@ -68,6 +68,9 @@ public:
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace memory
+
+using memory::singleton_traits;
+
 } // namespace srook
 
 #endif

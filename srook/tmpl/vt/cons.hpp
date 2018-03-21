@@ -14,8 +14,8 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class, class>
-struct cons;
+template <class... Xs>
+struct cons : type_constant<packer<Xs...>> {};
 
 template <class T, class... Xs>
 struct cons<T, packer<Xs...>> : type_constant<packer<T, Xs...>> {};

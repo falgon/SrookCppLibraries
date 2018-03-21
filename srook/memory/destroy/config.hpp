@@ -8,18 +8,15 @@
 #   pragma once
 #endif
 
+#include <srook/iterator/range_access/advance.hpp>
 #include <srook/type_traits/is_nothrow_destructible.hpp>
 #include <srook/type_traits/has_trivial_destructor.hpp>
 #include <srook/type_traits/is_incrementable.hpp>
 #include <srook/type_traits/is_decrementable.hpp>
 #include <srook/type_traits/is_equality_comparable.hpp>
 #include <srook/type_traits/is_gt_comparable.hpp>
-#include <srook/iterator/range_access.hpp>
 #include <srook/algorithm/detail/config.hpp>
 #include <srook/memory/addressof.hpp>
-
-SROOK_NESTED_NAMESPACE(srook, memory) {
-SROOK_INLINE_NAMESPACE(v1)
 
 #if SROOK_HAS_CONCEPTS
 #   include <srook/cxx20/concepts/iterator/ForwardIterator.hpp>
@@ -39,6 +36,9 @@ SROOK_INLINE_NAMESPACE(v1)
 #   define SROOK_FORWARDITER_REQUIRE_TEMPLATE_WITH_SIZE(X, S)\
     template <class X, typename S>
 #endif
+
+SROOK_NESTED_NAMESPACE(srook, memory) {
+SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 

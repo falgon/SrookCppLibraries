@@ -7,7 +7,7 @@
 #include <srook/config/feature.hpp>
 #include <srook/memory/addressof.hpp>
 #include <srook/memory/to_address.hpp>
-#include <srook/mpl/variadic_types.hpp>
+#include <srook/tmpl/vt/first.hpp>
 #include <srook/type_traits.hpp>
 
 namespace srook {
@@ -21,7 +21,7 @@ struct invalid {};
 template <class T>
 struct get_first_arg : disable_special_functions<get_first_arg<T>>, type_constant<invalid> {};
 template <template <class...> class Template, class... Ts>
-struct get_first_arg<Template<Ts...>> : disable_special_functions<get_first_arg<Template<Ts...>>>, First<Ts...> {};
+struct get_first_arg<Template<Ts...>> : disable_special_functions<get_first_arg<Template<Ts...>>>, srook::tmpl::vt::first<Ts...> {};
 template <class T> using get_first_arg_t = SROOK_DEDUCED_TYPENAME get_first_arg<T>::type;
 
 template <class T, class U>

@@ -36,6 +36,9 @@
 #include <srook/tmpl/vt/map.hpp>
 #include <srook/tmpl/vt/max.hpp>
 #include <srook/tmpl/vt/min.hpp>
+#include <srook/tmpl/vt/move_at.hpp>
+#include <srook/tmpl/vt/move_head.hpp>
+#include <srook/tmpl/vt/move_tail.hpp>
 #include <srook/tmpl/vt/not_fn.hpp>
 #include <srook/tmpl/vt/null.hpp>
 #include <srook/tmpl/vt/partial_head.hpp>
@@ -46,6 +49,7 @@
 #include <srook/tmpl/vt/replace_all.hpp>
 #include <srook/tmpl/vt/replace_all_like.hpp>
 #include <srook/tmpl/vt/reverse.hpp>
+#include <srook/tmpl/vt/select.hpp>
 #include <srook/tmpl/vt/set_difference.hpp>
 #include <srook/tmpl/vt/set_product.hpp>
 #include <srook/tmpl/vt/set_union.hpp>

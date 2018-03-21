@@ -72,7 +72,6 @@ struct placeholders_indexes : placeholders_indexes_impl<0, Xs...> {};
 
 // Since instantiation by templates is delayed until actual use, implementation of `is_accessible_to_type` and `is_accessible_to_value` is not necessarily required, 
 // but there is an advantage that the compiler outputs a better error message by using these.
-
 template <class T>
 struct is_accessible_to_type : type_traits::detail::sfinae_types {
 private:

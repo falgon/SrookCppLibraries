@@ -5,7 +5,6 @@
 #include <srook/tmpl/vt/detail/config.hpp>
 #include <srook/tmpl/vt/unique.hpp>
 #include <srook/tmpl/vt/concat.hpp>
-#include <srook/tmpl/vt/mapD.hpp>
 #include <srook/tmpl/vt/not_fn.hpp>
 #include <srook/tmpl/vt/bind.hpp>
 #include <srook/tmpl/vt/is_contained_in.hpp>
