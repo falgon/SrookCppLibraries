@@ -26,7 +26,17 @@
 
 #include <srook/mpl/variadic_types.hpp>
 #include <srook/type_traits/type_constant.hpp>
+#include <srook/utility/index_sequence.hpp>
+#include <srook/type_traits/integral_constant.hpp>
+#include <srook/iterator/ostream_joiner.hpp>
 #include <utility>
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_TEMPLATE_AUTO
+#   include <srook/cxx17/mpl/any_pack.hpp>
+#endif
+#if !SROOK_CPP_FOLD_EXPRESSIONS
+#   include <srook/mpl/constant_sequence/algorithm/reverse.hpp>
+#endif
 
 namespace srook {
 namespace tmpl {
@@ -61,9 +71,22 @@ using srook::variadic_types::detail::Transfer;
 } // namespace detail
 
 // Inspired by N4115
+template <class T>
+struct packer_base {
+protected:
+#ifdef SROOK_HAS_BOOST_TYPE_INDEX
+    SROOK_FORCE_INLINE static std::string& pretty_name()
+    {
+        static std::string name(boost::typeindex::type_id<T>().pretty_name());
+        return name;
+    }
+#endif
+};
+
 template <class... Ts>
 struct packer 
     : public srook::pack<Ts...>
+    , protected packer_base<packer<Ts...>>
 #if SROOK_HAS_STD_TUPLE
     , public std::tuple<Ts...>
 #elif SROOK_HAS_BOOST_TUPLE
@@ -83,13 +106,95 @@ struct packer
 #endif
 
 #ifdef SROOK_HAS_BOOST_TYPE_INDEX
-    SROOK_FORCE_INLINE static std::string& pretty_name()
-    {
-        static std::string name(boost::typeindex::type_id<packer<Ts...>>().pretty_name());
-        return name;
-    }
+    using packer_base<packer<Ts...>>::pretty_name;
 #endif
 };
+
+template <class Integral, Integral x>
+struct packer<srook::integral_constant<Integral, x>>
+    : protected packer_base<packer<srook::integral_constant<Integral, x>>> {
+        typedef srook::integral_constant<Integral, x> pack_type;
+#ifdef SROOK_HAS_BOOST_TYPE_INDEX
+        using packer_base<packer<srook::integral_constant<Integral, x>>>::pretty_name;
+#endif
+        SROOK_FORCE_INLINE friend std::ostream& operator<<(std::ostream& os, const packer<srook::integral_constant<Integral, x>>&)
+        {
+            return os << x;
+        }
+};
+
+    
+#if !SROOK_CPP_FOLD_EXPRESSIONS
+template <class T, class Integral, Integral... val>
+SROOK_FORCE_INLINE void output_impl(srook::ostream_joiner<T>& os, const std::integer_sequence<Integral, val...>&)
+{
+#if SROOK_CPP_LAMBDAS
+    [](...){}([](srook::ostream_joiner<T>& j, Integral v) -> srook::ostream_joiner<T>& { return j = v; }(os, val)...);
+#else
+    struct jt {
+        SROOK_FORCE_INLINE jt(srook::ostream_joiner<char*>& oi, Integral x) { oi = x; }
+    };
+    struct nothingtodo { SROOK_CONSTEXPR SROOK_FORCE_INLINE nothingtodo(...) {} } ntd(jt(os, val)...);
+#endif
+}
+#endif
+template <class Integral, Integral... val>
+SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<srook::utility::integer_sequence<Integral, val...>>&)
+{
+    srook::ostream_joiner<char*> joiner(os, ",");
+#if SROOK_CPP_FOLD_EXPRESSIONS
+    ((joiner = val), ...);
+    return os;
+#else
+    typedef SROOK_DEDUCED_TYPENAME srook::constant_sequence::reverse<std::integer_sequence<Integral, val...>>::type revtype;
+    output_impl(joiner, revtype());
+    return os;
+#endif
+}
+
+template <class Integral, Integral... val>
+struct packer<srook::utility::integer_sequence<Integral, val...>> 
+    : protected packer_base<packer<srook::utility::integer_sequence<Integral, val...>>> {
+    typedef srook::utility::integer_sequence<Integral, val...> pack_type;
+#ifdef SROOK_HAS_BOOST_TYPE_INDEX
+    using packer_base<packer<srook::utility::integer_sequence<Integral, val...>>>::pretty_name;
+#endif
+};
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_TEMPLATE_AUTO
+template <auto... vals>
+struct packer<any_pack<vals...>> 
+    : protected packer_base<packer<any_pack<vals...>>> {
+    typedef any_pack<vals...> pack_type;
+#ifdef SROOK_HAS_BOOST_TYPE_INDEX
+    using packer_base<packer<any_pack<vals...>>>::pretty_name;
+#endif
+};
+#if !SROOK_CPP_FOLD_EXPRESSIONS 
+struct nofold_lambda {
+    template <class CharType, class T, class... Ts>
+    SROOK_FORCE_INLINE static void dojoin(srook::ostream_joiner<CharType>& os, T&& x, Ts&&... val)
+    {
+        dojoin(os = x, srook::forward<Ts>(val)...);
+    }
+    template <class CharType>
+    SROOK_FORCE_INLINE static void dojoin(srook::ostream_joiner<CharType>&) {}
+};  
+#endif
+
+template <auto... val>
+SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<any_pack<val...>>&)
+{
+    srook::ostream_joiner<char*> joiner(os, ",");
+#if SROOK_CPP_FOLD_EXPRESSIONS
+    ((joiner = val), ...);
+    return os;
+#else
+    nofold::dojoin(joiner, val...);
+    return os;
+#endif
+}
+#endif
 
 #if SROOK_CPP_DEDUCTION_GUIDES
 template <class... Ts> packer(Ts...) -> packer<Ts...>;
