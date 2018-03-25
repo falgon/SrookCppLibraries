@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_TYPE_TRAITS_IS_EQUALITY_COMPARABLE_HPP
 
 #include <srook/config.hpp>
-#include <srook/utility.hpp>
+#include <srook/utility/declval.hpp>
 #include <srook/type_traits/is_convertible.hpp>
 
 namespace srook {

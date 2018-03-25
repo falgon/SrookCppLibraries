@@ -63,11 +63,6 @@ make_ostream_joiner(std::basic_ostream<CharT, Traits>& os, Delim&& delimiter)
     return ostream_joiner<SROOK_DEDUCED_TYPENAME decay<Delim>::type>(os, srook::forward<Delim>(delimiter));
 }
 
-#if SROOK_CPP_DEDUCTION_GUIDES
-template <class Delim, class CharT>
-ostream_joiner(SROOK_DEDUCED_TYPENAME ostream_joiner<Delim, CharT>::ostream_type&, Delim) 
--> ostream_joiner<Delim>;
-#endif
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace iterator

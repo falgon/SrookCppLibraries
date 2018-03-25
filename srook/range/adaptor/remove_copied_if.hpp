@@ -1,7 +1,7 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_REMOVE_COPIED_IF_HPP
-#include<srook/iterator/remove_copied_if_range_iterator.hpp>
+#include <srook/iterator/range_iterators/remove_copied_if_range_iterator.hpp>
 
 namespace srook{
 namespace adaptors{

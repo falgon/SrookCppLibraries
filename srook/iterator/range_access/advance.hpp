@@ -14,7 +14,7 @@ SROOK_CONSTEXPR InputIter
 advance(InputIter& iter, Distance n, std::input_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
-#ifdef SROOK_GCC
+#ifdef __GNU_LIBRARY__
     __glibcxx_function_requires(_InputIteratorConcept<InputIter>)
     __glibcxx_assert(n >= 0);
 #else
@@ -28,7 +28,7 @@ SROOK_CONSTEXPR BidirectionalIter
 advance(BidirectionalIter& iter, Distance n, std::bidirectional_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
-#ifdef SROOK_GCC
+#ifdef __GNU_LIBRARY__
     __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
 #endif
     return n > 0 ? detail::advance(++iter, n - 1, srook::move(tag)) : !n ? iter : detail::advance(--iter, n + 1, srook::move(tag));
@@ -40,7 +40,7 @@ SROOK_FORCE_INLINE SROOK_CONSTEXPR RandomAccessIter
 advance(RandomAccessIter& iter, Distance n, std::random_access_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
-#ifdef SROOK_GCC
+#ifdef __GNU_LIBRARY__
     __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
     return __builtin_constant_p(n) && n == 1 ? ++iter : __builtin_constant_p(n) && n == -1 ? --iter : iter += n;
 #else

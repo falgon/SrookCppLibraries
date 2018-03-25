@@ -17,7 +17,7 @@ SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME std::iterator_traits<InputIter>::differen
 distance(InputIter first, InputIter last, std::input_iterator_tag tag, SROOK_DEDUCED_TYPENAME std::iterator_traits<InputIter>::difference_type n = 0)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
-#ifdef SROOK_GCC
+#ifdef __GNU_LIBRARY__
     __glibcxx_function_requires(_InputIteratorConcept<InputIter>)
 #endif
    return first == last ? n : detail::distance(++first, last, srook::move(tag), n + 1);
@@ -28,7 +28,7 @@ SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME std::iterator_traits<RandomAccessIter>::d
 distance(RandomAccessIter first, RandomAccessIter last, std::random_access_iterator_tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
-#ifdef SROOK_GCC
+#ifdef __GNU_LIBRARY__
     __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
 #endif
     return last - first;
