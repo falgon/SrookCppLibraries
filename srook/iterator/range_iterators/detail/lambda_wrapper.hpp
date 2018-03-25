@@ -7,6 +7,7 @@
 #include <srook/type_traits/detail/logical.hpp>
 #include <srook/memory/destroy/destroy_at.hpp>
 #include <srook/memory/addressof.hpp>
+#include <new>
 
 #if SROOK_CPP_VARIADIC_TEMPLATES
 
@@ -26,13 +27,19 @@ public:
         return reset(t);
     }
 
+    SROOK_FORCE_INLINE ~lambda_wrapper()
+    SROOK_NOEXCEPT(is_nothrow_destructible<FObj>::value)
+    {
+        srook::destroy_at(lambda_);
+    }
+
 #if SROOK_CPP_RVALUE_REFERENCES
     template <class T, SROOK_REQUIRES(is_function_object<SROOK_DEDUCED_TYPENAME decay<T>::type>::value)>
     SROOK_FORCE_INLINE lambda_wrapper& reset(T&& t)
     SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_destructible<FObj>, is_nothrow_constructible<FObj>::value)
     {
         srook::destroy_at(lambda_);
-        new (srook::addressof(lambda_)) T(srook::forward<T>(t));
+        ::new (srook::addressof(lambda_)) T(srook::forward<T>(t));
         return *this;
     }
 #else
@@ -41,7 +48,7 @@ public:
     SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_destructible<FObj>, is_nothrow_constructible<FObj>>::value)
     {
         srook::destroy_at(lambda_);
-        new (srook::addressof(lambda_)) T(t);
+        ::new (srook::addressof(lambda_)) T(t);
         return *this;
     }
 #endif
