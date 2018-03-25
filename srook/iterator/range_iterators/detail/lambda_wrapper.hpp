@@ -19,7 +19,7 @@ template <class FObj>
 class lambda_wrapper {
 public:
     explicit SROOK_CONSTEXPR lambda_wrapper(const FObj& inv) SROOK_NOEXCEPT(is_nothrow_constructible<FObj&, FObj>::value) 
-        : lambda_(inv) {}
+        : lambda_(inv), replaced_(false) {}
 
     template <class T, SROOK_REQUIRES(is_function_object<T>::value)>
     SROOK_FORCE_INLINE lambda_wrapper& operator=(const T& t) SROOK_NOEXCEPT(reset(t))
@@ -30,7 +30,7 @@ public:
     SROOK_FORCE_INLINE ~lambda_wrapper()
     SROOK_NOEXCEPT(is_nothrow_destructible<FObj>::value)
     {
-        srook::destroy_at(lambda_);
+        if (replaced_) srook::destroy_at(lambda_);
     }
 
 #if SROOK_CPP_RVALUE_REFERENCES
@@ -40,6 +40,7 @@ public:
     {
         srook::destroy_at(lambda_);
         ::new (srook::addressof(lambda_)) T(srook::forward<T>(t));
+        replaced_ = true;
         return *this;
     }
 #else
@@ -49,6 +50,7 @@ public:
     {
         srook::destroy_at(lambda_);
         ::new (srook::addressof(lambda_)) T(t);
+        replaced_ = true;
         return *this;
     }
 #endif
@@ -61,6 +63,7 @@ public:
     }
 private:
     FObj lambda_;
+    bool replaced_;
 };
 
 template <class FObj>
