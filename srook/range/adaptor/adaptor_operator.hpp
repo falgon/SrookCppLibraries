@@ -30,6 +30,7 @@ constexpr typename srook::invoke_result<Function,Range>::type operator|(Range&& 
 
 SROOK_NESTED_NAMESPACE(srook, range, adaptors) {
 SROOK_INLINE_NAMESPACE(v1)
+namespace detail {
 
 template <class F, class Range, SROOK_REQUIRES(is_range<SROOK_DEDUCED_TYPENAME decay<Range>::type>::value)>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME srook::invoke_result<F, Range&&>::type
@@ -37,6 +38,10 @@ operator|(Range&& range, F&& f) SROOK_NOEXCEPT(is_nothrow_invocable<F, Range&&>:
 {
     return srook::forward<F>(f)(srook::forward<Range>(range));
 }
+
+} // namespace detail
+
+using detail::operator|;
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(adaptors, range, srook)

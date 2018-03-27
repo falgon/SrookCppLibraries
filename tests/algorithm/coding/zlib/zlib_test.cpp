@@ -109,7 +109,7 @@ void decompress(const std::vector<std::string>& in_file, const std::vector<std::
 
 std::vector<std::string> addsuffix_out(const std::vector<std::string>& s)
 {
-    std::vector<std::string> r = s | boost::adaptors::transformed([](const std::string& s){ return s + "_out"; }) | srook::adaptors::copied;
+    std::vector<std::string> r = s | boost::adaptors::transformed([](const std::string& s){ return s + "_out"; }) | srook::range::adaptors::copied;
     return r;
 }
 

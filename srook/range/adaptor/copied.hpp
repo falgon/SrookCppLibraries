@@ -55,6 +55,7 @@ SROOK_NESTED_NAMESPACE(srook, range, adaptors) {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
+
 template <class Iterator>
 class copied_t : srook::iterator_traits<Iterator> {
     SROOK_STATIC_ASSERT(is_iterator<Iterator>::value, "Type must be iterator");
