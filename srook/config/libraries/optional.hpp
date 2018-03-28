@@ -1,10 +1,10 @@
-#ifndef INCLUDED_SROOK_CONFIG_LIBRARIES_OPTIONALL_HPP
-#define INCLUDED_SROOK_CONFIG_LIBRARIES_OPTIONALL_HPP
+#ifndef INCLUDED_SROOK_CONFIG_LIBRARIES_OPTIONAL_HPP
+#define INCLUDED_SROOK_CONFIG_LIBRARIES_OPTIONAL_HPP
 
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
 
-#if SROOK_HAS_INCLUDE(<optional>) // && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_LIB_OPTIONAL
+#if SROOK_HAS_INCLUDE(<optional>) //&& SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_LIB_OPTIONAL
 #	include <optional>
 #	define OPTIONAL std::optional
 #	define NULLOPT_T std::nullopt_t

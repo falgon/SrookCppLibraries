@@ -2,6 +2,7 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
 #include <srook/optional.hpp>
+#include <srook/type_traits/is_empty.hpp>
 
 BOOST_AUTO_TEST_SUITE(sroptional_test)
 BOOST_AUTO_TEST_CASE(optional)

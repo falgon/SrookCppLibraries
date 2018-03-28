@@ -4,7 +4,6 @@
 #include <srook/optional/optional.h>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <initializer_list>
-#include <srook/type_traits.hpp>
 #include <srook/optional/safe_optional_payload.hpp>
 #include <srook/optional/optional_payload.hpp>
 

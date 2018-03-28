@@ -4,10 +4,21 @@
 #include <exception>
 #include <initializer_list>
 #include <srook/config/feature.hpp>
-#include <srook/type_traits.hpp>
 #include <srook/memory/addressof.hpp>
 #include <srook/optional/nullopt.hpp>
 #include <srook/optional/exception.hpp>
+#include <srook/type_traits/is_swappable.hpp>
+#include <srook/type_traits/is_nothrow_constructible.hpp>
+#include <srook/type_traits/is_nothrow_destructible.hpp>
+#include <srook/type_traits/is_copy_constructible.hpp>
+#include <srook/type_traits/is_copy_assignable.hpp>
+#include <srook/type_traits/is_convertible.hpp>
+#include <srook/type_traits/is_invocable.hpp>
+#include <srook/utility/enable_copy_move.hpp>
+#include <srook/utility/in_place.hpp>
+#include <srook/utility/move.hpp>
+#include <srook/utility/forward.hpp>
+#include <type_traits>
 
 namespace srook {
 namespace optionally {

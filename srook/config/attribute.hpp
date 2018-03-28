@@ -15,5 +15,6 @@
 #include <srook/config/attribute/returns_nonnull.hpp>
 #include <srook/config/attribute/diagnose.hpp>
 #include <srook/config/attribute/preferred_overload.hpp>
+#include <srook/config/attribute/weak.hpp>
 #include <srook/config/attribute/zero_init.hpp>
 #endif

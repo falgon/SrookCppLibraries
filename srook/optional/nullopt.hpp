@@ -4,7 +4,6 @@
 #include <exception>
 #include <initializer_list>
 #include <srook/config/feature.hpp>
-#include <srook/type_traits.hpp>
 
 namespace srook {
 namespace optionally {

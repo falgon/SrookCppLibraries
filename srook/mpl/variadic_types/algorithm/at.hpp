@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
-#include <srook/config/libraries/optional.hpp>
 #include <srook/mpl/variadic_types/pack.hpp>
 
 namespace srook {
@@ -30,7 +29,7 @@ struct At<0, Target, Tail...> {
 };
 template <std::size_t index>
 struct At<index> {
-    using type = NULLOPT_T;
+    using type = pack<>;
 };
 template <std::size_t index, class Head, class... Tail>
 struct At<index, pack<Head, Tail...>> : At<index, Head, Tail...> {

@@ -8,7 +8,10 @@
 #    include <new>
 #    include <srook/config/attribute.hpp>
 #    include <srook/memory/addressof.hpp>
-#    include <srook/utility.hpp>
+#    include <srook/utility/forward.hpp>
+#    include <srook/utility/move.hpp>
+#    include <srook/utility/in_place.hpp>
+#    include <srook/utility/enable_copy_move.hpp>
 #    include <type_traits>
 
 namespace srook {

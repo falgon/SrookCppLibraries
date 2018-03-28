@@ -14,7 +14,7 @@
 #   include <compare>
 #endif
 
-#include <srook/type_traits.hpp>
+#include <srook/type_traits/decay.hpp>
 #include <srook/optional/nullopt.hpp>
 #include <srook/optional/exception.hpp>
 #include <initializer_list>
