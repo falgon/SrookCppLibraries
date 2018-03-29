@@ -11,7 +11,7 @@ namespace detail {
 
 template <class InputIter, class Distance>
 SROOK_CONSTEXPR InputIter 
-advance(InputIter& iter, Distance n, std::input_iterator_tag)
+advance(InputIter& iter, Distance n, std::input_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
 #ifdef __GNU_LIBRARY__
@@ -25,7 +25,7 @@ SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 
 template <class BidirectionalIter, class Distance>
 SROOK_CONSTEXPR BidirectionalIter
-advance(BidirectionalIter& iter, Distance n, std::bidirectional_iterator_tag)
+advance(BidirectionalIter& iter, Distance n, std::bidirectional_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
 #ifdef __GNU_LIBRARY__
@@ -37,7 +37,7 @@ SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 
 template <class RandomAccessIter, class Distance>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR RandomAccessIter
-advance(RandomAccessIter& iter, Distance n, std::random_access_iterator_tag)
+advance(RandomAccessIter& iter, Distance n, std::random_access_iterator_tag tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
 #ifdef __GNU_LIBRARY__
