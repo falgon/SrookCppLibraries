@@ -2,7 +2,7 @@
 # Copyright (C) 2011-2017 Roki. Distributed under the MIT License
 #
 
-FLAGS := -Wall -Wextra -pedantic -std=c++1z -pthread
+FLAGS := -Wall -Wextra -pedantic -std=c++1z -pthread -O3
 INCLUDE_PATH := -I../ -isystem ../include -L../lib
 GXX = g++-7
 BOOST_TEST_OP := --show_progress=yes --build_info=yes --detect_memory_leak=1 --result_code=yes --log_level=all
@@ -27,7 +27,8 @@ TEST1 = mpl/constant_sequence/constant_exp.o\
 	numeric/fixed_point/compare_test.o\
 	numeric/fixed_point/construct_test.o\
 	numeric/fixed_point/operator_test.o\
-	cfenv/round_switch/test1.o
+	cfenv/round_switch/test1.o\
+	algorithm/sort/intro.o
 
 
 all: gcc_target1
@@ -55,5 +56,6 @@ run:
 	./numeric/fixed_point/construct_test.o $(BOOST_TEST_OP)
 	./numeric/fixed_point/operator_test.o $(BOOST_TEST_OP)
 	./cfenv/round_switch/test1.o $(BOOST_TEST_OP)
+	./algorithm/sort/intro.o $(BOOST_TEST_OP)
 clean:
 	$(RM) $(TEST1)

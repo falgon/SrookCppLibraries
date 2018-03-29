@@ -226,7 +226,7 @@ private:
     template <class RandomAccessIter, class Compare>
     void do_introsort(RandomAccessIter first, RandomAccessIter last, size_type depth_limit, Compare comp) const
     {
-        while (last - first > threshold_) {
+        while (static_cast<size_type>(last - first) > threshold_) {
             if (!depth_limit) {
                 srook::algorithm::heap_sort(first, last, comp);
                 return;
