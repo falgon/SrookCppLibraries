@@ -8,6 +8,7 @@
 #include<srook/utility/lg.hpp>
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 namespace random{
 inline namespace v1{
@@ -67,6 +68,7 @@ using minstd_rand = linear_congruential<std::uint_fast32_t,seed,48271UL,0UL,2147
 } // inline namespace v1
 } // namespace random
 } // inline namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

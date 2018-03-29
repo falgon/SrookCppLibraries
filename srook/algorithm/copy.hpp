@@ -14,50 +14,74 @@
 #include <srook/cxx20/concepts/iterator/OutputIterator.hpp>
 #include <srook/type_traits/is_invocable.hpp>
 #include <srook/type_traits/enable_if.hpp>
-#include <srook/type_traits/disable_if.hpp>
+#include <srook/type_traits/is_preincrementable.hpp>
 #include <srook/type_traits/detail/logical.hpp>
 #include <srook/type_traits/iterator/is_inputiterator.hpp>
 #include <srook/type_traits/iterator/is_outputiterator.hpp>
+#include <srook/type_traits/is_equality_comparable.hpp>
+#include <srook/type_traits/is_dereferenceable.hpp>
+#include <srook/type_traits/is_range.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#if SROOK_CPP_CONSTEXPR && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
 #if SROOK_HAS_CONCEPTS
 template <srook::concepts::InputIterator InputIter, srook::concepts::OutputIterator OutputIter>
 #else
-template <class InputIter, class OutputIter>
+template <class InputIter, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value)>
 #endif
-OutputIter//SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value, OutputIter>::type 
-copy(InputIter first, InputIter last, OutputIter d_first)
+SROOK_CONSTEXPR OutputIter copy(InputIter first, InputIter last, OutputIter d_first)
+SROOK_NOEXCEPT(
+    type_traits::detail::Land<
+        is_nothrow_preincrementable<InputIter>, 
+        is_nothrow_preincrementable<OutputIter>, 
+        is_nothrow_dereferenceable<InputIter>, 
+        is_nohtorw_dereferenceable<OutputIter>,
+        is_nothrow_equality_comparable<InputIter>
+    >::value
+)
 {
-    return first == last ? d_first : (*d_first = *first, srook::algorithm::copy(++first, last, ++d_first));
+    return first != last ? (*d_first++ = *first++, srook::algorithm::copy(first, last, d_first)) : d_first;
 }
 
+#else
+    
 #if SROOK_HAS_CONCEPTS
-template <class SinglePassRange, srook::concepts::OutputIterator OutputIter>
+template <srook::concepts::InputIterator InputIter, srook::concepts::OutputIterator OutputIter>
 #else
-template <class SinglePassRange, class OutputIter>
+template <class InputIter, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value)>
 #endif
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME disable_if<is_iterator<SinglePassRange>::value, OutputIter>::type
-copy(const SinglePassRange& range, OutputIter d_first)
-{
-    return srook::algorithm::copy(srook::begin(range), srook::end(range), d_first);
-}
-
-#else
-
-template <class InputIter, class OutputIter>
-OutputIter copy(InputIter first, InputIter last, OutputIter d_first)
+SROOK_FORCE_INLINE OutputIter
+copy(InputIter first, InputIter last, OutputIter d_first)
+SROOK_NOEXCEPT(
+    type_traits::detail::Land<
+        is_nothrow_preincrementable<InputIter>, 
+        is_nothrow_preincrementable<OutputIter>, 
+        is_nothrow_dereferenceable<InputIter>, 
+        is_nohtorw_dereferenceable<OutputIter>,
+        is_nothrow_equality_comparable<InputIter>
+    >::value
+)
 {
     while (first != last) *d_first++ = *first++;
     return d_first;
 }
-
 #endif
+
+#if SROOK_HAS_CONCEPTS
+template <class SinglePassRange, srook::concepts::OutputIterator OutputIter>
+#else
+template <class SinglePassRange, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_range<SROOK_DEDUCED_TYPENAME decay<SinglePassRange>::type>, is_outputiterator<OutputIter>>::value)>
+#endif
+SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME enable_if<is_range<SinglePassRange>::value, OutputIter>::type
+copy(const SinglePassRange& range, OutputIter d_first)
+SROOK_NOEXCEPT(srook::algorithm::copy(srook::begin(range), srook::end(range), d_first))
+{
+    return srook::algorithm::copy(srook::begin(range), srook::end(range), d_first);
+}
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(algorithm, srook)
-
 #endif

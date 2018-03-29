@@ -10,6 +10,7 @@
 #include <srook/type_traits/is_callable.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -154,6 +155,7 @@ using for_cut_until_t = typename for_<begin, end, Invokable, Crease, std::condit
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

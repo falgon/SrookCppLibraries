@@ -6,6 +6,7 @@
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -36,6 +37,7 @@ using erase_if_elements_t = typename erase_if_elements<Predicate, v...>::type;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

@@ -5,6 +5,7 @@
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -40,6 +41,7 @@ using filter_t = typename filter<Cond, Seq>::type;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

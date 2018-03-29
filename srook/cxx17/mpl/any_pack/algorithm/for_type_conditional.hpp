@@ -8,6 +8,7 @@
 #include <srook/type_traits/is_callable.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -92,6 +93,7 @@ using for_type_conditional_cut_t = typename for_type_conditional_<begin, conditi
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

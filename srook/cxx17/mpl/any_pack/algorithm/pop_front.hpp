@@ -6,6 +6,7 @@
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -26,6 +27,7 @@ using pop_front_t = typename pop_front<v...>::type;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

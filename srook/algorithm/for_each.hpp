@@ -37,7 +37,7 @@ template <
     class Range,
     class Functor,
     REQUIRES(
-        (has_iterator<remove_ref_cv(Range)>::value or is_range_iterator_v<remove_ref_cv(Range)>) && is_callable<remove_ref_cv(Functor)>::value)>
+        (has_iterator<remove_ref_cv(Range)>::value /*or is_range_iterator_v<remove_ref_cv(Range)>*/) && is_callable<remove_ref_cv(Functor)>::value)>
 SROOK_FORCE_INLINE auto for_each(Range&& r, Functor&& functor) -> decltype(srook::forward<Range>(r))
 {
     std::for_each(std::begin(r), std::end(r), srook::forward<Functor>(functor));
@@ -238,12 +238,12 @@ constexpr auto make_counter(std::array<T, s>& ar, std::size_t value = 0)
 
 template <class Tuple, REQUIRES(!has_iterator<remove_ref_cv(Tuple)>::value)>
 constexpr auto make_counter(Tuple&& t, std::size_t value = 0)
-    -> typename enable_if<!has_iterator<remove_ref_cv(Tuple)>::value or !is_range_iterator_v<remove_ref_cv(Tuple)>, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple> >::type
+-> typename enable_if<!has_iterator<remove_ref_cv(Tuple)>::value /*or !is_range_iterator_v<remove_ref_cv(Tuple)>*/, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple> >::type
 {
     return counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple>(srook::forward<Tuple>(t), std::move(value));
 }
 
-template <class Range, REQUIRES(has_iterator<remove_ref_cv(Range)>::value or is_range_iterator_v<remove_ref_cv(Range)>)>
+template <class Range, REQUIRES(has_iterator<remove_ref_cv(Range)>::value /*or is_range_iterator_v<remove_ref_cv(Range)>*/)>
 constexpr auto make_counter(Range&& r, std::size_t value = 0) -> counter<decltype(srook::forward<Range>(r))>
 {
     return counter<decltype(srook::forward<Range>(r))>(srook::forward<Range>(r), std::move(value));
@@ -279,7 +279,7 @@ template <
     class Range,
     class Functor,
     REQUIRES(
-        (has_iterator<remove_ref_cv(Range)>::value or is_range_iterator_v<remove_ref_cv(Range)>) && is_callable<remove_ref_cv(Functor)>::value)>
+        (has_iterator<remove_ref_cv(Range)>::value /*or is_range_iterator_v<remove_ref_cv(Range)>*/) && is_callable<remove_ref_cv(Functor)>::value)>
 auto for_each(counter<Range> cr, Functor&& functor) -> typename counter<Range>::reference_type
 {
     for (decltype(std::begin(cr)) iter = std::begin(cr); iter != std::end(cr); ++iter) {

@@ -9,6 +9,7 @@
 
 #include <srook/config.hpp>
 #include <srook/type_traits/iterator/is_bidirectionaliterator.hpp>
+#include <srook/type_traits/is_pointer.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -37,16 +38,20 @@ private:
 
     static SROOK_FALSE_TYPE test(...);
 public:
-    typedef type_traits::detail::Land<
-        is_bidirectionaliterator<T>, 
-        SROOK_DECLTYPE(test(declval<T>()))
-    > type;
+    typedef type_traits::detail::Lor<
+        is_pointer<T>,
+        type_traits::detail::Land<
+            is_bidirectionaliterator<T>, 
+            SROOK_DECLTYPE(test(declval<T>()))
+        >
+    >
+    type;
 };
 
 } // namespace detail
 
 template <class T>
-struct is_randomaccessiterator : detail::is_randomaccessiterator_requires<T>::type {};
+struct is_randomaccessiterator : type_traits::detail::Lor<is_pointer<T>, SROOK_DEDUCED_TYPENAME detail::is_randomaccessiterator_requires<T>::type> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

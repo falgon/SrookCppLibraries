@@ -4,6 +4,7 @@
 #include <type_traits>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -24,6 +25,7 @@ constexpr int find_if_v = find_if<0, Predicate, v...>::value;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

@@ -3,6 +3,7 @@
 #include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 #include <type_traits>
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -20,6 +21,7 @@ static constexpr std::size_t size = size_impl<AnyPack>::value;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

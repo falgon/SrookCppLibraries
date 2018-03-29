@@ -4,6 +4,7 @@
 #include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -24,6 +25,7 @@ using make_index_sequence = typename make_index_sequence_impl<n, Seq>::type;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

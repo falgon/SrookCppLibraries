@@ -6,6 +6,7 @@
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -25,6 +26,7 @@ constexpr bool equal_v = std::conditional_t<L::size() == R::size(), equal<L, R>,
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

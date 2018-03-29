@@ -36,7 +36,7 @@ public:
 } // namespace detail
 
 template <class T>
-struct is_outputiterator : detail::is_outputiterator_requires<T>::type {};
+struct is_outputiterator : type_traits::detail::Lor<is_pointer<T>, SROOK_DEDUCED_TYPENAME detail::is_outputiterator_requires<T>::type> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

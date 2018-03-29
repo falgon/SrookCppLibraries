@@ -2,13 +2,14 @@
 #define INCLUDED_SROOK_CXX20_CONCEPTS_ITERATOR_RANDOM_ACCESS_ITERATOR_HPP
 #include <srook/cxx20/concepts/iterator/BidirectionalIterator.hpp>
 #include <srook/cxx20/concepts/iterator/OutputIterator.hpp>
+#include <srook/type_traits/is_pointer.hpp>
 #if SROOK_HAS_CONCEPTS
 namespace srook {
 namespace concepts {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class Iter>
-SROOK_CONCEPT RandomAccessIterator = srook::concepts::BidirectionalIterator<Iter> && 
+SROOK_CONCEPT RandomAccessIterator = is_pointer<Iter>::value || srook::concepts::BidirectionalIterator<Iter> && 
 requires (Iter i, Iter a, Iter b, const Iter ci, const Iter ca, const Iter cb, Iter& r, SROOK_DEDUCED_TYPENAME std::iterator_traits<Iter>::difference_type n) {
     { r += n } -> Iter&;
     { a + n } -> Iter;

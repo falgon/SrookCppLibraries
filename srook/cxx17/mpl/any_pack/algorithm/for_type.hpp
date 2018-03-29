@@ -6,6 +6,7 @@
 #include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -91,6 +92,7 @@ using for_type_cut_until_t = typename for_type_<begin, end, Invokable, Crease, s
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

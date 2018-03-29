@@ -8,6 +8,7 @@
 #endif
 
 #include <srook/config.hpp>
+#include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/iterator/is_forwarditerator.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
@@ -29,9 +30,12 @@ private:
 
     static SROOK_FALSE_TYPE test(...);
 public:
-    typedef type_traits::detail::Land<
-        is_forwarditerator<T>, 
-        SROOK_DECLTYPE(test(declval<T>()))
+    typedef type_traits::detail::Lor<
+        is_pointer<T>,
+        type_traits::detail::Land<
+            is_forwarditerator<T>, 
+            SROOK_DECLTYPE(test(declval<T>()))
+        >
     > type;
 };
 

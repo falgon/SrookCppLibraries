@@ -8,6 +8,7 @@
 #endif
 
 #include <srook/config.hpp>
+#include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/iterator/is_iterator.hpp>
 #include <srook/type_traits/is_equality_comparable.hpp>
 
@@ -73,7 +74,7 @@ public:
 } // namespace detail
 
 template <class T>
-struct is_inputiterator : detail::is_inputiterator_requires<T>::type {};
+struct is_inputiterator : type_traits::detail::Lor<is_pointer<T>, SROOK_DEDUCED_TYPENAME detail::is_inputiterator_requires<T>::type> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

@@ -12,7 +12,7 @@ struct partial_tail;
 
 template <std::size_t index, auto... v>
 struct partial_tail<index, any_pack<v...>> {
-    using type = srook::mpl::v1::detail::partial_tail_t<index, v...>;
+    using type = srook::vmpl::detail::partial_tail_t<index, v...>;
 };
 
 } // namespace detail

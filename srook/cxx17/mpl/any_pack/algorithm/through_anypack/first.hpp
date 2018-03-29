@@ -12,7 +12,7 @@ struct first;
 
 template <auto... v>
 struct first<any_pack<v...>> {
-    static constexpr decltype(auto) value = srook::detail::first_v<v...>;
+    static constexpr decltype(auto) value = srook::detail::vmpl::first<v...>::value;
 };
 
 } // namespace detail

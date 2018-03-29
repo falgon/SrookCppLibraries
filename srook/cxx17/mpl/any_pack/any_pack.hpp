@@ -40,6 +40,7 @@
 #include <srook/type_traits/is_invocable.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 
@@ -153,7 +154,7 @@ struct any_pack {
     using for_type_conditional_cut = detail::for_type_conditional_cut_t<begin, conditional_End, Applyer, Crease, Parameter, any_pack<v...>, TypePack>;
 
     template <std::size_t N, class RandomEngine>
-    using make_random_sequence = srook::random::make_random_sequence<N, RandomEngine, any_pack<v...>>;
+    using make_random_sequence = srook::vmpl::random::make_random_sequence<N, RandomEngine, any_pack<v...>>;
 };
 
 template <auto... v>
@@ -162,6 +163,10 @@ decltype(detail::transfer<Range, Transformer()(v)...>::value) any_pack<v...>::ra
 
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
+
+using vmpl::any_pack;
+
 } // namespace srook
 
 #endif

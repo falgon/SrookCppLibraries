@@ -5,6 +5,7 @@
 #include<type_traits>
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 namespace random{
 inline namespace v1{
@@ -29,6 +30,7 @@ using ranlux48_base = subtract_with_carry<std::uint_fast32_t,48,5,12>;
 } // inline namespace v1
 } // namespace random
 } // inline namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

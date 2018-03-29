@@ -4,6 +4,7 @@
 #include<srook/cxx17/mpl/any_pack/any_pack.hpp>
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 inline namespace v1{
 
@@ -54,6 +55,10 @@ struct run_length_impl<any_pack<>>{
 
 template<class Anypack>
 using run_length=typename detail::run_length_impl<Anypack>::type;
+
+} // namespace vmpl
+
+using vmpl::run_length;
 
 } // namespace srook
 

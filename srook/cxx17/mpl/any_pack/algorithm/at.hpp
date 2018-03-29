@@ -4,6 +4,7 @@
 #include <srook/config/libraries/optional.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 
@@ -30,6 +31,7 @@ constexpr decltype(auto) at_v = at<n, v...>::value;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

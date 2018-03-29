@@ -2,6 +2,7 @@
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_RANDOM_ALGORITHM_DISCARD_HPP
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 namespace random{
 inline namespace v1{
@@ -21,6 +22,7 @@ using discard_t = typename discard<z,RandomEngine>::type;
 } // inline namespace v1
 } // namespace random
 } // inline namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

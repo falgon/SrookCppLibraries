@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_CXX17_MPL_ANY_PACK_FIND_INDEX_HPP
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -27,6 +28,7 @@ constexpr int find_index_v = find_index<0, target, v...>::value;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

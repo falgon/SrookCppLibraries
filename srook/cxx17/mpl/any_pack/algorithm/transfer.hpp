@@ -5,6 +5,7 @@
 #include <tuple>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -26,6 +27,7 @@ std::tuple<std::decay_t<decltype(v)>...> transfer<std::tuple, v...>::value{v...}
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

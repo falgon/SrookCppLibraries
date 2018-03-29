@@ -4,6 +4,7 @@
 #include <type_traits>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -23,6 +24,7 @@ constexpr std::size_t count_v = count<target, v...>::value;
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

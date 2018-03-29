@@ -7,6 +7,7 @@
 #include<srook/cxx17/mpl/any_pack/random/engines/algorithm/discard.hpp>
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 namespace random{
 inline namespace v1{
@@ -80,6 +81,7 @@ public:
 } // inline namespace v1
 } // namespace random
 } // inline namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

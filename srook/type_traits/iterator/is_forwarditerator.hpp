@@ -8,6 +8,7 @@
 #endif
 
 #include <srook/config.hpp>
+#include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/iterator/is_inputiterator.hpp>
 #include <srook/type_traits/iterator/is_outputiterator.hpp>
 #include <srook/type_traits/is_default_constructible.hpp>
@@ -42,7 +43,7 @@ public:
 } // namespace detail
 
 template <class T>
-struct is_forwarditerator : detail::is_forwarditerator_requires<T>::type {};
+struct is_forwarditerator : type_traits::detail::Lor<is_pointer<T>, SROOK_DEDUCED_TYPENAME detail::is_forwarditerator_requires<T>::type> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

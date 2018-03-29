@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_CXX17_ANY_PACK_RANDOM_UNIFORM_INT_DISTRIBUTION_HPP
 
 namespace srook{
+namespace vmpl {
 inline namespace mpl{
 namespace random{
 inline namespace v1{
@@ -24,6 +25,7 @@ public:
 } // inline namespace v1
 } // namespace random
 } // inline namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

@@ -163,11 +163,11 @@ struct packer<srook::utility::integer_sequence<Integral, val...>>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS17_CONSTANT && SROOK_CPP_TEMPLATE_AUTO
 template <auto... vals>
-struct packer<any_pack<vals...>> 
-    : protected packer_base<packer<any_pack<vals...>>> {
-    typedef any_pack<vals...> pack_type;
+struct packer<srook::vmpl::any_pack<vals...>> 
+    : protected packer_base<packer<srook::vmpl::any_pack<vals...>>> {
+    typedef srook::vmpl::any_pack<vals...> pack_type;
 #ifdef SROOK_HAS_BOOST_TYPE_INDEX
-    using packer_base<packer<any_pack<vals...>>>::pretty_name;
+    using packer_base<packer<srook::vmpl::any_pack<vals...>>>::pretty_name;
 #endif
 };
 #if !SROOK_CPP_FOLD_EXPRESSIONS 
@@ -183,7 +183,7 @@ struct nofold_lambda {
 #endif
 
 template <auto... val>
-SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<any_pack<val...>>&)
+SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<srook::vmpl::any_pack<val...>>&)
 {
     srook::ostream_joiner<char*> joiner(os, ",");
 #if SROOK_CPP_FOLD_EXPRESSIONS

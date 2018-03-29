@@ -4,6 +4,7 @@
 #include <srook/mpl/variadic_player.hpp>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 
@@ -30,6 +31,7 @@ constexpr std::conditional_t<!sizeof...(v), NULLOPT_T, Last_t<decltype(v)...>> l
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 
 #endif

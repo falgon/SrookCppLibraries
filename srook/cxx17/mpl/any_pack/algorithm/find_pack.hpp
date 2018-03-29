@@ -5,6 +5,7 @@
 #include <srook/cxx17/mpl/any_pack/core/any_pack_declare.h>
 
 namespace srook {
+namespace vmpl {
 inline namespace mpl {
 inline namespace v1 {
 namespace detail {
@@ -38,5 +39,6 @@ static constexpr long int find_pack_v = size<Pattern> <= size<AnyPack> ? find_pa
 } // namespace detail
 } // namespace v1
 } // namespace mpl
+} // namespace vmpl
 } // namespace srook
 #endif

@@ -12,7 +12,7 @@ struct partial_head;
 
 template <std::size_t index, auto... v>
 struct partial_head<index, any_pack<v...>> {
-    using type = srook::mpl::v1::detail::partial_head_t<index, v...>;
+    using type = srook::vmpl::detail::partial_head_t<index, v...>;
 };
 
 } // namespace detail
