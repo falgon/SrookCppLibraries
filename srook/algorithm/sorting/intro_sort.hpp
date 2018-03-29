@@ -56,9 +56,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
         if (SROOK_UNLIKELY(first == last || srook::iterator::next(first) == last)) return;
         do_introsort(first, last, depth_limit_ ? depth_limit_ : static_cast<size_type>(srook::math::log2(last - first)) << 1, comp);
         intro_insertion_sort(first, last, comp);
@@ -74,9 +71,6 @@ public:
     SROOK_FORCE_INLINE void operator()(RandomAccessIter first, RandomAccessIter last) const
     SROOK_NOEXCEPT(operator()(first, last, srook::functional::deduction_less()))
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
         return operator()(first, last, srook::functional::deduction_less());
     }
 
@@ -110,9 +104,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
         operator()(first, last, srook::move(comp));
     }
 
@@ -133,9 +124,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
         operator()(srook::execution::par, first, last, srook::move(comp)); // TODO
     }
 
@@ -156,9 +144,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
         if (SROOK_UNLIKELY(first == last || srook::iterator::next(first) == last)) return;
         
         const size_type hardware_concurrency = srook::thread::hardware_concurrency();
@@ -292,9 +277,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     srook::algorithm::intro_sorting()(srook::forward<ExecutionPolicy>(exp), first, last, srook::move(comp));
 }
 
@@ -320,9 +302,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     srook::algorithm::intro_sorting()(srook::forward<ExecutionPolicy>(exp), first, last, srook::functional::deduction_less());
 }
 #endif
@@ -352,9 +331,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     srook::algorithm::intro_sorting()(first, last, srook::move(comp));
 }
 
@@ -368,9 +344,6 @@ template <class RandomAccessIter>
 SROOK_FORCE_INLINE void intro_sort(RandomAccessIter first, RandomAccessIter last)
 SROOK_NOEXCEPT(srook::algorithm::intro_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     srook::algorithm::intro_sort(first, last, srook::functional::deduction_less());
 }
 

@@ -46,9 +46,6 @@ SROOK_NOEXCEPT(type_traits::detail::Land<
     is_nothrow_incrementable<BidirectionalIter>
 >::value)
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept(BidirectionalIter>)
-#endif
     for (BidirectionalIter i = srook::iterator::next(first); i != last; ++i) {
         if (!comp(*srook::iterator::prev(i), *i)) {
             search_inserter(first, i, comp);
@@ -66,9 +63,6 @@ template <class BidirectionalIter, class Compare>
 SROOK_FORCE_INLINE void insertion_sort(BidirectionalIter first, BidirectionalIter last, Compare comp)
 SROOK_NOEXCEPT(srook::algorithm::insertion_sort(first, last, comp, srook::algorithm::binary_search_inserter()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::insertion_sort(first, last, comp, srook::algorithm::binary_search_inserter());
 }
 
@@ -82,9 +76,6 @@ template <class BidirectionalIter>
 SROOK_FORCE_INLINE void insertion_sort(BidirectionalIter first, BidirectionalIter last)
 SROOK_NOEXCEPT(srook::algorithm::insertion_sort(first, last, srook::functional::deduction_less(), srook::algorithm::binary_search_inserter()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::insertion_sort(first, last, srook::functional::deduction_less(), srook::algorithm::binary_search_inserter());
 }
 
