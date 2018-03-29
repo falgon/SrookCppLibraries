@@ -43,9 +43,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     if (first == last) return;
     
     BidirectionalIter end = srook::iterator::prev(last);
@@ -78,9 +75,6 @@ template <class BidirectionalIter, SROOK_REQUIRES(is_forwarditerator<Bidirection
 SROOK_FORCE_INLINE void shaker_sort(BidirectionalIter first, BidirectionalIter last)
 SROOK_NOEXCEPT(srook::algorithm::shaker_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::shaker_sort(first, last, srook::functional::deduction_less());
 }
 

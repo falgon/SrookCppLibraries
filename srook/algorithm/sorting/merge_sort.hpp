@@ -24,9 +24,6 @@ template <class RandomAccessIter, class Compare>
 void merge_sort(RandomAccessIter first, RandomAccessIter last, Compare comp)
 SROOK_NOEXCEPT(srook::algorithm::inplace_merge(first, first, last, comp))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     typedef SROOK_DEDUCED_TYPENAME std::iterator_traits<RandomAccessIter>::difference_type diff_type;
     const diff_type diff = srook::iterator::distance(last, first);
     if (last - first > 1) {
@@ -47,9 +44,6 @@ template <class RandomAccessIter>
 SROOK_FORCE_INLINE void merge_sort(RandomAccessIter first, RandomAccessIter last)
 SROOK_NOEXCEPT(srook::algorithm::merge_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     return srook::algorithm::merge_sort(first, last, srook::functional::deduction_less());
 }
 

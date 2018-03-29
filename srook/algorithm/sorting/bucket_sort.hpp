@@ -50,9 +50,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     if (first == last || srook::iterator::next(first) == last) return;
     
     std::vector<int> buckets(srook::iterator::distance(first, last), 0);

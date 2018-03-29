@@ -26,9 +26,6 @@ template <class RandomAccessIter, class Compare>
 SROOK_FORCE_INLINE void heap_sort(RandomAccessIter first, RandomAccessIter last, Compare comp)
 SROOK_NOEXCEPT(type_traits::detail::Land<bool_constant<noexcept(std::make_heap(first, last, comp))>, bool_constant<noexcept(std::sort_heap(first, last, comp))>>::value)
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     std::make_heap(first, last, comp), std::sort_heap(first, last, comp);
 }
 
@@ -42,9 +39,6 @@ template <class RandomAccessIter>
 SROOK_FORCE_INLINE void heap_sort(RandomAccessIter first, RandomAccessIter last)
 SROOK_NOEXCEPT(srook::algorithm::heap_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBARRY__
-    __glibcxx_function_requires(_RandomAccessIteratorConcept<RandomAccessIter>)
-#endif
     return srook::algorithm::heap_sort(first, last, srook::functional::deduction_less());
 }
 

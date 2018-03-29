@@ -43,9 +43,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     for (ForwardIter i = first; i != last; ++i) {
         for (ForwardIter j = first; j < i; ++j) {
             if (comp(*i, *j)) std::iter_swap(i, j);

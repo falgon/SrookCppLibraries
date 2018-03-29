@@ -71,9 +71,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     srook::algorithm::detail::shell_sort_impl(first, last, srook::move(comp));
 }
 
@@ -85,9 +82,6 @@ template <class ForwardIter, SROOK_REQUIRES(is_forwarditerator<ForwardIter>::val
 SROOK_FORCE_INLINE void shell_sort(ForwardIter first, ForwardIter last)
 SROOK_NOEXCEPT(srook::algorithm::shell_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     srook::algorithm::shell_sort(first, last, srook::functional::deduction_less());
 }
 

@@ -49,9 +49,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     if (first == last || srook::iterator::next(first) == last) return;
 
     const std::pair<ForwardIter, ForwardIter> minmax = std::minmax_element(first, last);
@@ -76,9 +73,6 @@ template <class ForwardIter, SROOK_REQUIRES(is_forwarditerator<ForwardIter>::val
 SROOK_FORCE_INLINE void counting_sort(ForwardIter first, ForwardIter last)
 SROOK_NOEXCEPT(srook::algorithm::counting_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     srook::algorithm::counting_sort(first, last, srook::functional::deduction_less());
 }
 

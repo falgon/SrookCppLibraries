@@ -61,9 +61,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
         do_qsort(first, last, srook::move(xs), comp, SROOK_DEDUCED_TYPENAME std::iterator_traits<BidirectionalIter>::iterator_category());
         std::get<2>(xs)(first, last, comp);
     }
@@ -78,9 +75,6 @@ public:
     operator()(BidirectionalIter first, BidirectionalIter last, std::tuple<Fn1, Integral1, Fn2, Integral2> xs) const
     SROOK_NOEXCEPT(operator()(first, last, srook::move(xs), srook::functional::deduction_less()))
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
         operator()(first, last, srook::move(xs), srook::functional::deduction_less());
     }
 private:
@@ -162,9 +156,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::quick_x_sorting()(first, last, srook::move(xs), comp);
 }
 
@@ -178,9 +169,6 @@ template <class BidirectionalIter, class Fn1, class Fn2, typename Integral1, typ
 SROOK_FORCE_INLINE void quick_x_sort(BidirectionalIter first, BidirectionalIter last, std::tuple<Fn1, Integral1, Fn2, Integral2> xs)
 SROOK_NOEXCEPT(srook::algorithm::quick_x_sort(first, last, srook::move(xs), srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::quick_x_sort(first, last, srook::move(xs), srook::functional::deduction_less());
 }
 

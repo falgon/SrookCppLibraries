@@ -55,9 +55,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_ForwardIteratorConcept<ForwardIter>)
-#endif
     srook::algorithm::detail::selection_sort_impl(first, last, srook::move(comp));
 }
 

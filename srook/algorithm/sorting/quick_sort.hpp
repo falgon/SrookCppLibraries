@@ -51,9 +51,6 @@ public:
         >::value
     )
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
         do_qsort(first, last, comp, SROOK_DEDUCED_TYPENAME std::iterator_traits<BidirectionalIter>::iterator_category());
     }
 #if SROOK_HAS_CONCEPTS
@@ -67,9 +64,6 @@ public:
     operator()(BidirectionalIter first, BidirectionalIter last) const
     SROOK_NOEXCEPT(operator()(first, last, srook::functional::deduction_less()))
     {
-#ifdef __GNU_LIBRARY__
-        __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
         operator()(first, last, srook::functional::deduction_less());
     }
 private:
@@ -126,9 +120,6 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::quick_sorting()(first, last, comp);
 }
 
@@ -140,9 +131,6 @@ template <class BidirectionalIter, SROOK_REQUIRES(is_bidirectionaliterator<Bidir
 SROOK_FORCE_INLINE void quick_sort(BidirectionalIter first, BidirectionalIter last)
 SROOK_NOEXCEPT(srook::algorithm::quick_sort(first, last, srook::functional::deduction_less()))
 {
-#ifdef __GNU_LIBRARY__
-    __glibcxx_function_requires(_BidirectionalIteratorConcept<BidirectionalIter>)
-#endif
     srook::algorithm::quick_sort(first, last, srook::functional::deduction_less());
 }
 
