@@ -9,6 +9,7 @@
 #endif
 
 #include <srook/iterator/range_access/advance.hpp>
+#include <srook/iterator/range_access/next.hpp>
 #include <srook/type_traits/is_nothrow_destructible.hpp>
 #include <srook/type_traits/has_trivial_destructor.hpp>
 #include <srook/type_traits/is_incrementable.hpp>
@@ -138,6 +139,33 @@ SROOK_FORCE_INLINE void destroy_impl(ForwardIter first, ForwardIter last, std::a
 SROOK_NOEXCEPT(destroy_impl(first, last))
 {
     destroy_impl(first, last);
+}
+
+
+#if SROOK_HAS_CONCEPTS
+template <srook::concepts::ForwardIterator ForwardIter>
+#elif SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+template <class ForwardIter, SROOK_REQUIRES(is_forwarditerator<ForwardIter>::value)>
+#else
+template <class ForwardIter>
+#endif
+SROOK_FORCE_INLINE void destroy_impl(ForwardIter iter)
+SROOK_NOEXCEPT(detail::exec_destroy(iter))
+{
+    detail::exec_destroy(iter);
+}
+
+#if SROOK_HAS_CONCEPTS
+template <srook::concepts::ForwardIterator ForwardIter, class Allocator>
+#elif SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+template <class ForwardIter, class Allocator, SROOK_REQUIRES(is_forwarditerator<ForwardIter>::value)>
+#else
+template <class ForwardIter, class Allocator>
+#endif
+SROOK_FORCE_INLINE void destroy_impl(ForwardIter iter, Allocator alloc)
+SROOK_NOEXCEPT(destroy_impl(iter, srook::next(iter), alloc))
+{
+    destroy_impl(iter, srook::next(iter), alloc);
 }
 
 #undef SROOK_FORWARDITER_REQUIRE_TEMPLATE

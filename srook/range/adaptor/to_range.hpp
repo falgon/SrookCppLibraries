@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_RANGE_ADAPTOR_TO_RANGE
 #include<srook/mpl/variadic_player.hpp>
 #include<srook/type_traits/has_iterator.hpp>
-#include<srook/iterator/range_iterator.hpp>
+#include<srook/iterator/range_iterators/range_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<array>
 #include<tuple>

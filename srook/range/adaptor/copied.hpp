@@ -1,51 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef SROOK_INCLUDED_RANGE_ADAPTOR_COPIED
 #define SROOK_INCLUDED_RANGE_ADAPTOR_COPIED
-#if 0
-#include<srook/range/adaptor/adaptor_operator.hpp>
-#include<srook/iterator/range_iterator.hpp>
-#include<type_traits>
-
-namespace srook{
-namespace adaptors{
-namespace detail{
-inline namespace v1{
-
-template<class Iterator>
-struct copied_t{
-	using value_type=typename std::iterator_traits<Iterator>::value_type;
-	using pointer=typename std::iterator_traits<Iterator>::pointer;
-	using difference_type=typename std::iterator_traits<Iterator>::difference_type;
-	using reference=typename std::iterator_traits<Iterator>::reference;
-
-	explicit constexpr copied_t(Iterator& first,Iterator last)noexcept
-		:first_(first),last_(last){}
-	explicit constexpr copied_t(Iterator&& first,Iterator&& last)noexcept
-		:first_(std::move(first)),last_(std::move(last)){}
-	template<class Range>
-	constexpr operator Range()
-	{
-		return Range(first_,last_);
-	}
-private:
-	const Iterator first_,last_;
-};
-template<class Iterator>
-copied_t<std::remove_reference_t<Iterator>> make_copied_t(Iterator&& first,Iterator&& last)
-{
-	return copied_t<std::remove_reference_t<Iterator>>(std::forward<Iterator>(first),std::forward<Iterator>(last));
-}
-const auto copied=[](auto&& r)noexcept{return make_copied_t(std::begin(r),std::end(r));};
-
-
-} // inline namespace v1
-} // namespace detail
-
-using detail::copied;
-
-} // namespace adaptors
-} // namespace srook
-#else
 #include <srook/range/adaptor/adaptor_operator.hpp>
 #include <srook/iterator/range_iterators/range_iterator.hpp>
 #include <srook/iterator/range_access.hpp>
@@ -96,5 +51,4 @@ SROOK_INLINE_VARIABLE SROOK_CONSTEXPR_OR_CONST detail::copied_forward copied = {
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(adaptors, range, srook)
 
-#endif
 #endif

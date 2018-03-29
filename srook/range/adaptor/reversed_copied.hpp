@@ -1,7 +1,7 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ALGORITHM_REVERSED_COPIED_HPP
 #define INCLUDED_SROOK_RANGE_ALGORITHM_REVERSED_COPIED_HPP
-#include<srook/iterator/range_iterator.hpp>
+#include<srook/iterator/range_iterators/range_iterator.hpp>
 #include<srook/type_traits/has_iterator.hpp>
 #include<srook/config/require.hpp>
 #include<iterator>
