@@ -1,6 +1,7 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
 #ifndef INCLUDED_ADAPTOR_FILTERED_HPP
 #define INCLUDED_ADAPTOR_FILTERED_HPP
+#include <srook/range/adaptor/adaptor_operator.hpp>
 #include <srook/iterator/range_iterators/range_iterator.hpp>
 #include <srook/iterator/range_iterators/filter_iterator.hpp>
 #include <srook/iterator/range_access.hpp>

@@ -28,8 +28,14 @@ TEST1 = mpl/constant_sequence/constant_exp.o\
 	numeric/fixed_point/construct_test.o\
 	numeric/fixed_point/operator_test.o\
 	cfenv/round_switch/test1.o\
-	algorithm/sort/intro.o
-
+	algorithm/sort/intro.o\
+	range/adaptor/drop.o\
+	range/adaptor/drop_while.o\
+	range/adaptor/filtered.o\
+	range/adaptor/reversed.o\
+	range/adaptor/take.o\
+	range/adaptor/take_while.o\
+	range/adaptor/transformed.o
 
 all: gcc_target1
 
@@ -57,5 +63,13 @@ run:
 	./numeric/fixed_point/operator_test.o $(BOOST_TEST_OP)
 	./cfenv/round_switch/test1.o $(BOOST_TEST_OP)
 	./algorithm/sort/intro.o $(BOOST_TEST_OP)
+	./range/adaptor/drop.o $(BOOST_TEST_OP)
+	./range/adaptor/drop_while.o $(BOOST_TEST_OP)
+	./range/adaptor/filtered.o $(BOOST_TEST_OP)
+	./range/adaptor/reversed.o $(BOOST_TEST_OP)
+	./range/adaptor/take.o $(BOOST_TEST_OP)
+	./range/adaptor/take_while.o $(BOOST_TEST_OP)
+	./range/adaptor/transformed.o $(BOOST_TEST_OP)
+
 clean:
 	$(RM) $(TEST1)

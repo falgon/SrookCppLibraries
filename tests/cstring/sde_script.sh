@@ -6,7 +6,7 @@ check_avx512 () {
     else
         FLAG=""
     fi
-    g++ ${FLAG} -I../ -I../include -S -std=c++14 ./cstring/memcpy/avx512_test.cpp
+    g++ ${FLAG} -I../ -isystem ../include -S -std=c++14 ./cstring/memcpy/avx512_test.cpp
     I=`cat avx512_test.s | grep vmovdqu | wc -l`
 
     rm avx512_test.s

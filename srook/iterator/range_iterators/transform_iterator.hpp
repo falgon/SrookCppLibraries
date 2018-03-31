@@ -57,8 +57,8 @@ private:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR friend bool operator!=(const transform_iterator& lhs, const transform_iterator& rhs)
     SROOK_NOEXCEPT(lhs == rhs) { return !(lhs == rhs); }
 private:
-    detail::lambda_wrapper<Pred> pred_;
     iterator first_, last_;
+    detail::lambda_wrapper<Pred> pred_;
 };
 
 #if SROOK_HAS_CONCEPTS

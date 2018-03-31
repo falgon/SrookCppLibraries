@@ -74,8 +74,8 @@ private:
     SROOK_CONSTEXPR SROOK_FORCE_INLINE friend bool operator!=(const take_iterator& lhs, const take_iterator& rhs)
     SROOK_NOEXCEPT(lhs == rhs) { return !(lhs == rhs); }
 private:
-    std::size_t n_;
     iterator first_, last_;
+    std::size_t n_;
 };
 
 #if SROOK_HAS_CONCEPTS
