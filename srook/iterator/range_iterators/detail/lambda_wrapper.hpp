@@ -58,7 +58,7 @@ public:
     SROOK_CONSTEXPR SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME srook::invoke_result<F, Args&&...>::type
     operator()(Args&&... args) const SROOK_NOEXCEPT(is_nothrow_invocable<F, Args&&...>::value)
     {
-        return srook::invoke(lambda_, srook::forward<Args>(args)...); //lambda_(srook::forward<Args>(args)...);
+        return srook::invoke(lambda_, srook::forward<Args>(args)...); 
     }
 private:
     F lambda_;
@@ -71,7 +71,6 @@ SROOK_NOEXCEPT(is_nothrow_constructible<lambda_wrapper<SROOK_DEDUCED_TYPENAME de
 {
     return lambda_wrapper<SROOK_DEDUCED_TYPENAME decay<F>::type>(srook::forward<F>(f));
 }
-
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
