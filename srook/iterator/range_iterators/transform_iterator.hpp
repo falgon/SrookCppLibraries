@@ -67,7 +67,7 @@ template <class Pred, srook::concepts::Iterator Iter>
 template <class Pred, class Iter, SROOK_REQUIRES(is_iterator<Iter>::value)>
 #endif
 SROOK_FORCE_INLINE SROOK_CONSTEXPR transform_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>
-make_transform_iterator(Pred&& pred, Iter first, Iter last)
+make_transform_iterator(Pred&& pred, Iter first, Iter last) SROOK_NOEXCEPT(transform_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>(first, last, srook::forward<Pred>(pred)))
 {
     return transform_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>(first, last, srook::forward<Pred>(pred));
 }

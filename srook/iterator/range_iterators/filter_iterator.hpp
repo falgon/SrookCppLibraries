@@ -19,19 +19,28 @@ class filter_iterator : public srook::iterator_traits<Iter> {
     SROOK_STATIC_ASSERT(is_iterator<Iter>::value, "Type must be iterator");
     SROOK_STATIC_ASSERT((type_traits::detail::Land<is_nothrow_destructible<Iter>, is_nothrow_destructible<Pred>>::value), "Iterator and Predicate type must be nothrow destructible");
 public:
-    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef std::forward_iterator_tag iterator_category;
     typedef Iter iterator;
     typedef iterator const_iterator;
 
     SROOK_CONSTEXPR SROOK_FORCE_INLINE filter_iterator(Iter first, Iter last, Pred pred)
-    SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_constructible<Iter&, Iter>, is_nothrow_constructible<lambda_wrapper<Pred>&, Pred>>::value)
+    SROOK_MEMFN_NOEXCEPT(
+        type_traits::detail::Land<
+            is_nothrow_constructible<Iter&, Iter>, 
+            is_nothrow_constructible<lambda_wrapper<Pred>&, Pred>, 
+            bool_constant<noexcept(skip<srook::range::iterator::detail::next_advance>())>
+        >::value
+    )
         : first_(first), last_(last), pred_(pred)
-    {}
+    {
+        skip<srook::range::iterator::detail::next_advance>();
+    }
 
     SROOK_CONSTEXPR SROOK_FORCE_INLINE filter_iterator& operator++() 
     SROOK_MEMFN_NOEXCEPT(type_traits::detail::Land<is_nothrow_preincrementable<iterator>, bool_constant<noexcept(skip())>>::value)
     {
-        return ++first_, skip<srook::range::iterator::detail::next_advance>();
+        typedef srook::range::iterator::detail::next_advance skip_type;
+        return skip_type::apply_skip(first_), skip<skip_type>();
     }
 
     SROOK_CXX14_CONSTEXPR SROOK_FORCE_INLINE filter_iterator& operator++(int)
@@ -39,24 +48,6 @@ public:
     {
         filter_iterator t = *this;
         return ++*this, t;
-    }
-
-    SROOK_CONSTEXPR SROOK_FORCE_INLINE filter_iterator& operator--()
-    SROOK_MEMFN_NOEXCEPT(type_traits::detail::Land<is_nothrow_predecrementable<iterator>, bool_constant<noexcept(skip())>>::value)
-    {
-        typedef SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::iterator_category source_iterator_category;
-        SROOK_STATIC_ASSERT(
-            (type_traits::detail::Lor<is_same<source_iterator_category, std::bidirectional_iterator_tag>, is_same<source_iterator_category, std::random_access_iterator_tag>>::value),
-            "The given Iter is not decrementable iterator"
-        );
-        return --first_, skip<srook::range::iterator::detail::prev_advance>();
-    }
-
-    SROOK_CXX14_CONSTEXPR SROOK_FORCE_INLINE filter_iterator& operator--(int)
-    SROOK_MEMFN_NOEXCEPT(type_traits::detail::Land<is_nothrow_predecrementable<iterator>, bool_constant<noexcept(skip())>>::value)
-    {
-        filter_iterator t = *this;
-        return --*this, t;
     }
 
     SROOK_CONSTEXPR SROOK_FORCE_INLINE filter_iterator& operator=(const filter_iterator& rhs)
@@ -101,7 +92,11 @@ template <class Pred, srook::concepts::Iterator Iter>
 template <class Pred, class Iter, SROOK_REQUIRES(is_iterator<Iter>::value)>
 #endif
 SROOK_FORCE_INLINE SROOK_CONSTEXPR filter_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>
-make_filter_iterator(Pred&& pred, Iter first, Iter last) { return filter_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>(first, last, srook::forward<Pred>(pred)); }
+make_filter_iterator(Pred&& pred, Iter first, Iter last) 
+SROOK_NOEXCEPT(filter_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>(first, last, srook::forward<Pred>(pred)))
+{ 
+    return filter_iterator<SROOK_DEDUCED_TYPENAME decay<Pred>::type, Iter>(first, last, srook::forward<Pred>(pred)); 
+}
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(iterator, range, srook)

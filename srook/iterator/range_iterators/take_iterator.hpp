@@ -19,7 +19,7 @@ class take_iterator : public srook::iterator_traits<Iter> {
     SROOK_STATIC_ASSERT(is_iterator<Iter>::value, "Type must be iterator");
     SROOK_STATIC_ASSERT(is_nothrow_destructible<Iter>::value, "Iterator and Predicate type must be nothrow destructible");
 public:
-    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef std::forward_iterator_tag iterator_category;
     typedef Iter iterator;
     typedef iterator const_iterator;
 
@@ -41,24 +41,6 @@ public:
     {
         take_iterator t = *this;
         return ++*this, t;
-    }
-
-    SROOK_CONSTEXPR SROOK_FORCE_INLINE take_iterator& operator--()
-    SROOK_MEMFN_NOEXCEPT(type_traits::detail::Land<is_nothrow_predecrementable<iterator>, bool_constant<noexcept(skip())>>::value)
-    {
-        typedef SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::iterator_category source_iterator_category;
-        SROOK_STATIC_ASSERT(
-            (type_traits::detail::Lor<is_same<source_iterator_category, std::bidirectional_iterator_tag>, is_same<source_iterator_category, std::random_access_iterator_tag>>::value),
-            "The given Iter is not decrementable iterator"
-        );
-        return skip<srook::range::iterator::detail::prev_advance>();
-    }
-
-    SROOK_CXX14_CONSTEXPR SROOK_FORCE_INLINE take_iterator& operator--(int)
-    SROOK_MEMFN_NOEXCEPT(type_traits::detail::Land<is_nothrow_predecrementable<iterator>, bool_constant<noexcept(skip())>>::value)
-    {
-        take_iterator t = *this;
-        return --*this, t;
     }
 
     SROOK_CONSTEXPR SROOK_FORCE_INLINE take_iterator& operator=(const take_iterator& rhs)
@@ -102,7 +84,10 @@ template <srook::concepts::Iterator Iter>
 template <class Iter, SROOK_REQUIRES(is_iterator<Iter>::value)>
 #endif
 SROOK_FORCE_INLINE SROOK_CONSTEXPR take_iterator<Iter>
-make_take_iterator(std::size_t s, Iter first, Iter last) { return take_iterator<Iter>(first, last, srook::move(s)); }
+make_take_iterator(std::size_t s, Iter first, Iter last) SROOK_NOEXCEPT(take_iterator<Iter>(first, last, srook::move(s))) 
+{ 
+    return take_iterator<Iter>(first, last, srook::move(s)); 
+}
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(iterator, range, srook)
