@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
-#ifndef INCLUDED_ADAPTOR_FILTERD_HPP
-#define INCLUDED_ADAPTOR_FILTERD_HPP
+#ifndef INCLUDED_ADAPTOR_FILTERED_HPP
+#define INCLUDED_ADAPTOR_FILTERED_HPP
 #include <srook/iterator/range_iterators/range_iterator.hpp>
 #include <srook/iterator/range_iterators/filter_iterator.hpp>
 #include <srook/iterator/range_access.hpp>
@@ -46,7 +46,7 @@ private:
 } // namespace detail
 
 template <class Pred>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR detail::range_filter<SROOK_DEDUCED_TYPENAME decay<Pred>::type> filterd(Pred&& pred)
+SROOK_FORCE_INLINE SROOK_CONSTEXPR detail::range_filter<SROOK_DEDUCED_TYPENAME decay<Pred>::type> filtered(Pred&& pred)
 SROOK_NOEXCEPT(is_nothrow_constructible<range_filter<SROOK_DEDUCED_TYPENAME decay<Pred>::type>, Pred&&>::value)
 {
     return detail::range_filter<SROOK_DEDUCED_TYPENAME decay<Pred>::type>(srook::forward<Pred>(pred));
