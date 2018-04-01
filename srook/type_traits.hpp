@@ -24,6 +24,7 @@
 #include <srook/type_traits/disjunction.hpp>
 #include <srook/type_traits/enable_disable_if.hpp>
 #include <srook/type_traits/enable_if.hpp>
+#include <srook/type_traits/endian.hpp>
 #include <srook/type_traits/extent.hpp>
 #include <srook/type_traits/float_promote.hpp>
 #include <srook/type_traits/has_iterator.hpp>
