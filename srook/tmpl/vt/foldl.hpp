@@ -14,31 +14,32 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
-    
+
 template <template <class, class> class, class, class...>
 struct foldl_impl;
 
-template <template <class, class> class F, class T>
-struct foldl_impl<F, T>
-    : type_constant<T> {};
+template <template <class, class> class F, class Init, class X, class... Xs>
+struct foldl_impl<F, Init, X, Xs...>
+    : F<SROOK_DEDUCED_TYPENAME foldl_impl<F, Init, Xs...>::type, X> {};
 
-template <template <class, class> class F, class T, class X, class... Xs>
-struct foldl_impl<F, T, X, Xs...> 
-    : foldl_impl<F, SROOK_DEDUCED_TYPENAME F<T, X>::type, Xs...> {};
+template <template <class, class> class F, class Init>
+struct foldl_impl<F, Init>
+    : type_constant<Init> {};
 
 } // namespace detail
 
-template <template <class, class> class F, class T, class... Xs>
-struct foldl : detail::foldl_impl<F, T, Xs...> {};
+template <template <class, class> class F, class Init, class... Xs>
+struct foldl : detail::foldl_impl<F, Init, Xs...> {};
 
-template <template <class, class> class F, class T, class... Xs>
-struct foldl<F, T, packer<Xs...>> : foldl<F, T, Xs...> {};
+template <template <class, class> class F, class Init, class... Xs>
+struct foldl<F, Init, packer<Xs...>> : foldl<F, Init, Xs...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
-template <template <class, class> class F, class T, class... Xs>
-using foldl_t = SROOK_DEDUCED_TYPENAME foldl<F, T, Xs...>::type;
+template <template <class, class> class F, class Init, class... Xs>
+using foldl_t = SROOK_DEDUCED_TYPENAME foldl<F, Init, Xs...>::type;
 #endif
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(vt, tmpl, srook)
+
 #endif

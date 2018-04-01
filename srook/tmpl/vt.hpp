@@ -64,6 +64,7 @@
 #include <srook/tmpl/vt/take_whileD.hpp>
 #include <srook/tmpl/vt/transfer.hpp>
 #include <srook/tmpl/vt/transpose.hpp>
+#include <srook/tmpl/vt/tt_proxy.hpp>
 #include <srook/tmpl/vt/unique.hpp>
 
 #endif

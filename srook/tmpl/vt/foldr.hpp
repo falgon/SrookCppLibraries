@@ -14,30 +14,32 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
-    
+
 template <template <class, class> class, class, class...>
 struct foldr_impl;
 
-template <template <class, class> class F, class T>
-struct foldr_impl<F, T> : type_constant<T> {};
+template <template <class, class> class F, class Init, class X, class... Xs>
+struct foldr_impl<F, Init, X, Xs...>
+    : F<X, SROOK_DEDUCED_TYPENAME foldr_impl<F, Init, Xs...>::type> {};
 
-template <template <class, class> class F, class T, class X, class... Xs>
-struct foldr_impl<F, T, X, Xs...> 
-    : F<X, SROOK_DEDUCED_TYPENAME foldr_impl<F, T, Xs...>::type> {};
+template <template <class, class> class F, class Init>
+struct foldr_impl<F, Init>
+    : type_constant<Init> {};
 
 } // namespace detail
 
-template <template <class, class> class F, class T, class... Xs>
-struct foldr : detail::foldr_impl<F, T, Xs...> {};
+template <template <class, class> class F, class Init, class... Xs>
+struct foldr : detail::foldr_impl<F, Init, Xs...> {};
 
-template <template <class, class> class F, class T, class... Xs>
-struct foldr<F, T, packer<Xs...>> : foldr<F, T, Xs...> {};
+template <template <class, class> class F, class Init, class... Xs>
+struct foldr<F, Init, packer<Xs...>> : foldr<F, Init, Xs...> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
-template <template <class, class> class F, class T, class... Xs>
-using foldr_t = SROOK_DEDUCED_TYPENAME foldr<F, T, Xs...>::type;
+template <template <class, class> class F, class Init, class... Xs>
+using foldr_t = SROOK_DEDUCED_TYPENAME foldr<F, Init, Xs...>::type;
 #endif
 
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(vt, tmpl, srook)
+
 #endif

@@ -35,7 +35,10 @@ TEST1 = mpl/constant_sequence/constant_exp.o\
 	range/adaptor/reversed.o\
 	range/adaptor/take.o\
 	range/adaptor/take_while.o\
-	range/adaptor/transformed.o
+	range/adaptor/transformed.o\
+	tmpl/vt/sort/bsort.o\
+	tmpl/vt/sort/qsort.o\
+	tmpl/vt/fold.o
 
 all: gcc_target1
 
@@ -70,6 +73,9 @@ run:
 	./range/adaptor/take.o $(BOOST_TEST_OP)
 	./range/adaptor/take_while.o $(BOOST_TEST_OP)
 	./range/adaptor/transformed.o $(BOOST_TEST_OP)
+	./tmpl/vt/sort/bsort.o $(BOOST_TEST_OP)
+	./tmpl/vt/sort/qsort.o $(BOOST_TEST_OP)
+	./tmpl/vt/fold.o $(BOOST_TEST_OP)
 
 clean:
 	$(RM) $(TEST1)
