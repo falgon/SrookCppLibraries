@@ -28,7 +28,6 @@ struct f
       
 BOOST_AUTO_TEST_CASE(fold_test1)
 {
-
     typedef srook::tmpl::vt::packer<srook::uint32_t, srook::uint8_t, srook::uint64_t, srook::uint16_t> type;
 
     // reverse
