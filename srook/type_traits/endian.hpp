@@ -90,7 +90,7 @@ SROOK_CXX14_CONSTEXPR bool is_little() noexcept
 {
     constexpr auto x = srook::uint16_t(0x0001);
     srook::uint8_t b {};
-    ::srook::type_traits::detail::srook::cstring::memcpy(&b, &x, sizeof b);
+    ::srook::cstring::memcpy(&b, &x, sizeof b);
     return b;
 }
 
