@@ -122,7 +122,6 @@ struct packer<srook::integral_constant<Integral, x>>
             return os << x;
         }
 };
-
     
 #if !SROOK_CPP_FOLD_EXPRESSIONS
 template <class T, class Integral, Integral... val>
@@ -138,19 +137,31 @@ SROOK_FORCE_INLINE void output_impl(srook::ostream_joiner<T>& os, const std::int
 #endif
 }
 #endif
-template <class Integral, Integral... val>
-SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<srook::utility::integer_sequence<Integral, val...>>&)
-{
-    srook::ostream_joiner<char*> joiner(os, ",");
+
 #if SROOK_CPP_FOLD_EXPRESSIONS
-    ((joiner = val), ...);
-    return os;
+#define SROOK_DEF_OUTPUT_SHIFT(NAMESPACE)\
+    template <class Integral, Integral... val>\
+    SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<NAMESPACE::integer_sequence<Integral, val...>>&)\
+    {\
+        srook::ostream_joiner<char*> joiner(os, ",");\
+        ((joiner = val), ...);\
+        return os;\
+    }
 #else
-    typedef SROOK_DEDUCED_TYPENAME srook::constant_sequence::reverse<std::integer_sequence<Integral, val...>>::type revtype;
-    output_impl(joiner, revtype());
-    return os;
+#define SROOK_DEF_OUTPUT_SHIFT(NAMESPACE)\
+    template <class Integral, Integral... val>\
+    SROOK_FORCE_INLINE std::ostream& operator<<(std::ostream& os, const packer<NAMESPACE::integer_sequence<Integral, val...>>&)\
+    {\
+        srook::ostream_joiner<char*> joiner(os, ",");\
+        typedef SROOK_DEDUCED_TYPENAME srook::constant_sequence::reverse<std::integer_sequence<Integral, val...>>::type revtype;\
+        output_impl(joiner, revtype());\
+        return os;\
+    }
 #endif
-}
+
+SROOK_DEF_OUTPUT_SHIFT(srook::utility)
+SROOK_DEF_OUTPUT_SHIFT(std)
+#undef SROOK_DEF_OUTPUT_SHIFT
 
 template <class Integral, Integral... val>
 struct packer<srook::utility::integer_sequence<Integral, val...>> 
@@ -158,6 +169,15 @@ struct packer<srook::utility::integer_sequence<Integral, val...>>
     typedef srook::utility::integer_sequence<Integral, val...> pack_type;
 #ifdef SROOK_HAS_BOOST_TYPE_INDEX
     using packer_base<packer<srook::utility::integer_sequence<Integral, val...>>>::pretty_name;
+#endif
+};
+
+template <class Integral, Integral... val>
+struct packer<std::integer_sequence<Integral, val...>>
+    : protected packer_base<packer<std::integer_sequence<Integral, val...>>> {
+    typedef std::integer_sequence<Integral, val...> pack_type;
+#ifdef SROOK_HAS_BOOST_TYPE_INDEX
+    using packer_base<packer<std::integer_sequence<Integral, val...>>>::pretty_name;
 #endif
 };
 
