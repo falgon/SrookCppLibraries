@@ -1,7 +1,7 @@
 // Reference: https://www.jstage.jst.go.jp/article/itej/64/5/64_5_729/_pdf/-char/ja
-#ifndef INCLUDED_SROOK_IO2D_OPENCV_ALGORITHM_POISSON_POISSON_HPP
-#define INCLUDED_SROOK_IO2D_OPENCV_ALGORITHM_POISSON_POISSON_HPP
-#include <srook/io2d/opencv/algorithm/poisson/config.hpp>
+#ifndef INCLUDED_SROOK_IO2D_THIRD_PARTY_OPENCV_ALGORITHM_POISSON_POISSON_HPP
+#define INCLUDED_SROOK_IO2D_THIRD_PARTY_OPENCV_ALGORITHM_POISSON_POISSON_HPP
+#include <srook/io2d/third_party/opencv/algorithm/poisson/config.hpp>
 #include <srook/array.hpp>
 #include <srook/limits/numeric_limits.hpp>
 #include <srook/type_traits/iterator/is_randomaccessiterator.hpp>

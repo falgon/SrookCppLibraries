@@ -1,4 +1,4 @@
-#include <srook/io2d/opencv/algorithm/poisson.hpp>
+#include <srook/io2d/third_party/opencv/algorithm/poisson.hpp>
 
 int main(const int argc, const char* const* const argv)
 {
