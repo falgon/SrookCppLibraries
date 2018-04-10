@@ -34,7 +34,7 @@ advance(RandomAccessIter& iter, Distance n, std::random_access_iterator_tag)
 SROOK_NOEXCEPT(is_nothrow_incrementable<InputIter>::value)
 {
 #ifdef __GNU_LIBRARY__
-    return __builtin_constant_p(n) && n == 1 ? ++iter : __builtin_constant_p(n) && n == -1 ? --iter : iter += n;
+    return __builtin_constant_p(n) && n == static_cast<Distance>(1) ? ++iter : __builtin_constant_p(n) && n == static_cast<Distance>(-1) ? --iter : iter += n;
 #else
     return iter += n;
 #endif

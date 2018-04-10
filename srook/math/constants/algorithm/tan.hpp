@@ -46,7 +46,7 @@ constexpr FloatType tan(FloatType x)
 															  : detail::builtin_tan(x)
 #else
 															  : x == 0 ? x 
-                                                              : srook::math::sin(static_cast<SROOK_DEDUCED_TYPENAME srook::math::detail::float_compute<FloatType>::type(x)) / srook::math::cos(static_cast<SROOK_DEDUCED_TYPENAME srook::math::detail::float_compute<FloatType>::type(x))
+                                                              : srook::math::sin(static_cast<SROOK_DEDUCED_TYPENAME srook::math::detail::float_compute<FloatType>::type>(x)) / srook::math::cos(static_cast<SROOK_DEDUCED_TYPENAME srook::math::detail::float_compute<FloatType>::type>(x))
 #endif
 	;
 }

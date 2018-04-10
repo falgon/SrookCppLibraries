@@ -9,5 +9,6 @@
 #endif
 
 #include <srook/math/geometry/algorithm/min_area_polygon.hpp>
+#include <srook/math/geometry/algorithm/line.hpp>
 
 #endif

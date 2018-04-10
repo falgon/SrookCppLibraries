@@ -33,7 +33,7 @@
 #include <srook/tmpl/vt/replace_all_like.hpp>
 #include <srook/tmpl/vt/transfer.hpp>
 
-SROOK_NESTED_NAMESPACE(srook, math, geometory) {
+SROOK_NESTED_NAMESPACE(srook, math, geometory, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
@@ -191,7 +191,7 @@ min_area_polygon(const std::pair<A1, A2>& one, const std::pair<A3, A4>& two, con
 }
 
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(geometory, math, srook)
+} SROOK_NESTED_NAMESPACE_END(algorithm, geometory, math, srook)
 
 #ifndef SROOK_NO_UNDEF_CONFIG_DBCF
 #   undef SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION

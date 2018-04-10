@@ -9,5 +9,6 @@
 #endif
 
 #include <srook/math/geometry/algorithm.hpp>
+#include <srook/math/geometry/fundamental.hpp>
 
 #endif
