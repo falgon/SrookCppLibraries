@@ -14,9 +14,10 @@ all: test
 test: $(TARGET1) $(TARGET2)
 	$(GXX) $(INCLUDE_DIR) $(TARGET1) $(LIBS) $(FLAGS) -o zlib1.o
 	$(GXX) $(INCLUDE_DIR) $(TARGET2) $(LIBS) $(FLAGS) -o zlib2.o
+
 run: test
 	./zlib1.o -h
-	wget -q http://www.gutenberg.org/files/45/45-0.txt
+	 ../travis/script/get_sample_txt.sh 
 	head -n 15 45-0.txt
 	./zlib1.o -c 6 -i 45-0.txt
 	file 45-0.txt_out
