@@ -23,7 +23,7 @@ function shuffle () {
     echo "${swap[0]}"
 }
 
-declare -a urls=`shuffle ${URL1} ${URL2} ${URL3}`
+declare -a urls=`shuffle ${URL1} ${URL2} ${URL3} ${URL4} ${URL5} ${URL6}`
 
 while [ ${#urls[@]} -ne 0 ]; do
     url=${urls[0]}

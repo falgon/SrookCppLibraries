@@ -17,6 +17,7 @@ test: $(TARGET1) $(TARGET2)
 
 run: test
 	./zlib1.o -h
+	chmod +x ../travis/script/get_sample_txt.sh
 	 ../travis/script/get_sample_txt.sh 
 	head -n 15 45-0.txt
 	./zlib1.o -c 6 -i 45-0.txt
