@@ -38,7 +38,6 @@ done
 
 if [ -e ${FILENAME} ]; then
     echo "Completed download"
-    mv ${FILENAME} ../../tests/
 else
     echo "All server downed"
 fi
