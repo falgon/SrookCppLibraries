@@ -33,6 +33,7 @@ SROOK_INLINE_NAMESPACE(v1)
 template <std::size_t I, std::size_t F>
 class fixed_point {
 public:
+    struct fixed_point_tag {}; // composed only
     typedef detail::fixed_point_traits<I + F> traits_type;
     typedef SROOK_DEDUCED_TYPENAME traits_type::size_type size_type;
     typedef SROOK_DEDUCED_TYPENAME traits_type::value_type value_type;

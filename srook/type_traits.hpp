@@ -61,6 +61,7 @@
 #include <srook/type_traits/is_equal.hpp>
 #include <srook/type_traits/is_equality_comparable.hpp>
 #include <srook/type_traits/is_final.hpp>
+#include <srook/type_traits/is_fixed_point.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_function.hpp>
 #include <srook/type_traits/is_function_object.hpp>

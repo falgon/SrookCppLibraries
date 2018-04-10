@@ -14,6 +14,7 @@
 #include <srook/math/constants/pi.hpp>
 #include <srook/math/detail/float_compute.hpp>
 #include <srook/type_traits/is_integral.hpp>
+#include <srook/type_traits/is_floating_point.hpp>
 
 namespace srook {
 namespace math {

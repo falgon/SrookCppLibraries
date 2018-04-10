@@ -11,5 +11,6 @@
 #include <srook/math/constants/pi.hpp>
 #include <srook/math/constants/root.hpp>
 #include <srook/math/constants/math.hpp>
+#include <srook/math/constants/ln.hpp>
 
 #endif
