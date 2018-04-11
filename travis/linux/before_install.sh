@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/bash -ex
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
     sudo apt-get remove -qq -y postgresql-9.1 postgresql-9.2 postgresql-9.3 postgresql-9.4 postgresql-9.6 postgresql-contrib-9.6

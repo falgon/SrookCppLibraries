@@ -146,10 +146,12 @@ public:
     {
         if (SROOK_UNLIKELY(first == last || srook::iterator::next(first) == last)) return;
         
-        const size_type hardware_concurrency = srook::thread::hardware_concurrency();
+        size_type hardware_concurrency = srook::thread::hardware_concurrency();
         std::vector<RandomAccessIter> pivots;
 
+        if (hardware_concurrency <= 1) hardware_concurrency = 2;
         pivots.reserve(hardware_concurrency);
+
         take_pivots(std::back_inserter(pivots), hardware_concurrency >> 1, first, last, comp);
         // In order to simpligy indexing, linearizing the vectors that are recursively structured.
         // Since the size of elements is usually small, it should not cost most of the load.

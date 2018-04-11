@@ -28,6 +28,7 @@
 #include <srook/math/constants/algorithm/signbit.hpp>
 #include <srook/math/constants/algorithm/sin.hpp>
 #include <srook/math/constants/algorithm/sqrt.hpp>
+#include <srook/math/constants/algorithm/tan.hpp>
 #include <srook/math/constants/algorithm/trunc.hpp>
 
 #endif

@@ -8,6 +8,7 @@
 #   endif
 #endif
 
-#include <srook/math/geometry/min_area_polygon.hpp>
+#include <srook/math/geometry/algorithm.hpp>
+#include <srook/math/geometry/fundamental.hpp>
 
 #endif

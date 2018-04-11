@@ -34,6 +34,7 @@
 #include <srook/tmpl/vt/last.hpp>
 #include <srook/tmpl/vt/lat.hpp>
 #include <srook/tmpl/vt/map.hpp>
+#include <srook/tmpl/vt/mapD.hpp>
 #include <srook/tmpl/vt/max.hpp>
 #include <srook/tmpl/vt/min.hpp>
 #include <srook/tmpl/vt/move_at.hpp>
@@ -45,6 +46,7 @@
 #include <srook/tmpl/vt/partial_tail.hpp>
 #include <srook/tmpl/vt/pop_back.hpp>
 #include <srook/tmpl/vt/pop_front.hpp>
+#include <srook/tmpl/vt/primes.hpp>
 #include <srook/tmpl/vt/replace.hpp>
 #include <srook/tmpl/vt/replace_all.hpp>
 #include <srook/tmpl/vt/replace_all_like.hpp>

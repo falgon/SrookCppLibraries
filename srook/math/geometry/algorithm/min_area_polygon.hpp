@@ -30,11 +30,10 @@
 #include <srook/type_traits/is_arithmetic.hpp>
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/type_traits/decay.hpp>
-#include <srook/tmpl/vt/size_eq.hpp>
 #include <srook/tmpl/vt/replace_all_like.hpp>
 #include <srook/tmpl/vt/transfer.hpp>
 
-SROOK_NESTED_NAMESPACE(srook, math, geometory) {
+SROOK_NESTED_NAMESPACE(srook, math, geometory, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
@@ -156,7 +155,7 @@ SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME
 enable_if<
     type_traits::detail::Land<
         type_traits::detail::Land<is_floating_point<Ts>...>, 
-        tmpl::vt::size_eq<6, Ts...>
+        bool_constant<sizeof...(Ts) == 6>
     >::value, 
     SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type
 >::type
@@ -172,7 +171,7 @@ min_area_polygon(const std::tuple<Ts...>& ts)
 template <typename... ArithmeticType>
 SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
 enable_if<
-    type_traits::detail::Land<tmpl::vt::size_eq<6, ArithmeticType...>, type_traits::detail::Land<is_arithmetic<ArithmeticType>...>>::value, 
+    type_traits::detail::Land<bool_constant<6 == sizeof...(ArithmeticType)>, type_traits::detail::Land<is_arithmetic<ArithmeticType>...>>::value, 
     SROOK_DEDUCED_TYPENAME detail::do_remove_integer<false>::value_type
 >::type
 min_area_polygon(ArithmeticType&&... ints)
@@ -192,7 +191,7 @@ min_area_polygon(const std::pair<A1, A2>& one, const std::pair<A3, A4>& two, con
 }
 
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(geometory, math, srook)
+} SROOK_NESTED_NAMESPACE_END(algorithm, geometory, math, srook)
 
 #ifndef SROOK_NO_UNDEF_CONFIG_DBCF
 #   undef SROOK_CONFIG_DISABLE_BUILTIN_CMATH_FUNCTION
