@@ -91,7 +91,7 @@ private:
         template <class U, class... Us>
         static void f(U&& u, Us&&... us)
         {
-            detail::arguments.load(std::memory_order_relaxe)->dots.push_back(u);
+            detail::arguments.load(std::memory_order_relaxed)->dots.push_back(u);
             f(srook::forward<Us>(us)...);
         }
     };
