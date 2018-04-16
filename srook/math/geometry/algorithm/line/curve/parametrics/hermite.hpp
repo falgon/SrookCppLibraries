@@ -43,7 +43,9 @@ private:
     {
         container_type res(granularity_);
         SROOK_DEDUCED_TYPENAME container_type::iterator iter = res.begin();
-        for (double i = 0; i < 1; i += 1 / static_cast<double>(granularity_)) *iter++ = point_type(x_compute(i), y_compute(i));
+        for (double i = 0; i < 1; i += 1 / static_cast<double>(granularity_)) { // TODO
+            *iter++ = point_type(x_compute(i), y_compute(i));
+        }
         return res;
     }
 
