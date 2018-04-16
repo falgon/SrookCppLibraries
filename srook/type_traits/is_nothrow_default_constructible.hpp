@@ -24,9 +24,9 @@ template <class T>
 struct is_nothrow_default_constructible_impl<T, true>
     : public 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-	Land<
+	::srook::type_traits::detail::Land<
 #else
-	Land_2<
+	::srook::type_traits::detail::Land_2<
 #endif
 	is_array_known_bounds<T>, is_nothrow_default_constructible_atom<typename remove_all_extents<T>::type> > {
 };
@@ -40,7 +40,7 @@ struct is_nothrow_default_constructible_impl<T, false> : public is_nothrow_defau
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 template <class T>
 struct is_nothrow_default_constructible
-    : public detail::Land<is_default_constructible<T>, detail::is_nothrow_default_constructible_impl<T> > {
+    : public ::srook::type_traits::detail::Land<is_default_constructible<T>, detail::is_nothrow_default_constructible_impl<T> > {
 };
 #else
 template <class T>

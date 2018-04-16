@@ -16,10 +16,10 @@ SROOK_INLINE_NAMESPACE(v1)
 template <class T>
 struct is_hash 
     : type_traits::detail::Land<
-        is_copy_constructible<T>, 
+        is_copy_constructible<T&>, 
         is_destructible<T>, 
         is_function_object<T, SROOK_DEDUCED_TYPENAME T::argument_type>,
-        is_same<SROOK_DEDUCED_TYPENAME invoke_result<T, SROOK_DEDUCED_TYPENAME T::argument_type>::type, std::size_t>
+        is_same<SROOK_DEDUCED_TYPENAME T::result_type, std::size_t>
     > {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES

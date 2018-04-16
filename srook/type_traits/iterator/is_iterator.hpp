@@ -53,9 +53,9 @@ public:
 
 template <class T>
 struct is_iterator
-    : type_traits::detail::Lor<
+    : ::srook::type_traits::detail::Lor<
         is_pointer<T>,
-        type_traits::detail::Land<
+        ::srook::type_traits::detail::Land<
             is_dereferenceable<T>, SROOK_DEDUCED_TYPENAME detail::preincrementable_to_ref<T>::type,
             is_copy_assignable<T>, is_destructible<T>,
             SROOK_DEDUCED_TYPENAME conditional<is_lvalue_reference<T>::value, is_swappable<T>, SROOK_TRUE_TYPE>::type,

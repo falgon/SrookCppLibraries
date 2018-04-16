@@ -5,10 +5,12 @@ CXXFLAGS += -std=c++1z -O3 -Wall -Wextra -pedantic -I /usr/local/include -framew
 all: gsline
 
 gsline:
-	$(GXX) $(CXXFLAGS) gsline.cpp
+	$(GXX) $(CXXFLAGS) ./straight.cpp -o straight
+	$(GXX) $(CXXFLAGS) ./hermite.cpp -o hermite
 
 run:
-	./a.out
+	./straight
+	./hermite
 
 clean:
-	$(RM) a.out
+	$(RM) straight hermite

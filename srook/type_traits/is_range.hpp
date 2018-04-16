@@ -16,7 +16,7 @@ SROOK_NESTED_NAMESPACE(srook, type_traits) {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class T>
-struct is_range : type_traits::detail::Lor<has_iterator<T>, is_array<T>> {};
+struct is_range : ::srook::type_traits::detail::Lor<has_iterator<T>, is_array<T>> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

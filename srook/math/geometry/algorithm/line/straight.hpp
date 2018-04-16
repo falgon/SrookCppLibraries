@@ -8,7 +8,7 @@
 #   endif
 #endif
 
-#include <srook/math/geometry/algorithm/line/straight/points.hpp>
+#include <srook/math/geometry/algorithm/line/straight/simple_line.hpp>
 #include <srook/math/geometry/algorithm/line/straight/slope.hpp>
 
 #endif

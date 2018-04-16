@@ -26,9 +26,9 @@ namespace detail {
 
 template <class T>
 inline SROOK_DEDUCED_TYPENAME 
-enable_if<Land<Lnot<is_tuple<T>>, is_move_constructible<T>, is_move_assignable<T>>::value>::type
+enable_if<::srook::type_traits::detail::Land<::srook::type_traits::detail::Lnot<is_tuple<T>>, is_move_constructible<T>, is_move_assignable<T>>::value>::type
 swap(T&, T&)
-noexcept(Land<is_nothrow_move_constructible<T>, std::is_nothrow_move_assignable<T>>::value);
+noexcept(::srook::type_traits::detail::Land<is_nothrow_move_constructible<T>, std::is_nothrow_move_assignable<T>>::value);
 
 template <class T, std::size_t n>
 inline SROOK_DEDUCED_TYPENAME
