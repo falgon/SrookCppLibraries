@@ -9,6 +9,8 @@
 #endif
 
 #include <srook/tmpl/vt/sort/bsort.hpp>
+#include <srook/tmpl/vt/sort/msort.hpp>
+#include <srook/tmpl/vt/sort/isort.hpp>
 #include <srook/tmpl/vt/sort/qsort.hpp>
 
 #endif

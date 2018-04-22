@@ -20,7 +20,7 @@
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
 
-template <class, template <class, class> class Compare = srook::tmpl::vt::lt>
+template <class, template <class, class> class = srook::tmpl::vt::lt>
 struct bsort;
 
 namespace detail {

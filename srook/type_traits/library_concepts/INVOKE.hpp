@@ -2,17 +2,16 @@
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_CONCEPT_CXX17_INVOKE_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_CONCEPT_CXX17_INVOKE_HPP
 
+#include <functional>
 #include <srook/config/cpp_predefined.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#include <functional>
-#include <utility>
 #include <srook/type_traits/true_false_type.hpp>
 #include <srook/type_traits/enable_if.hpp>
 #include <srook/type_traits/is_base_of.hpp>
 #include <srook/type_traits/is_function.hpp>
+#include <srook/type_traits/is_member_pointer.hpp>
 #include <srook/type_traits/decay.hpp>
 #include <srook/utility/forward.hpp>
-#include <type_traits>
 
 namespace srook{
 namespace type_traits {
@@ -69,14 +68,14 @@ auto INVOKE(T Base::*pmd, Pointer&& ptr)
 template <class F, class... Args>
 auto INVOKE(F&& f, Args&&... args)
 -> typename enable_if<
-	!std::is_member_pointer<typename decay<F>::type>::value,
+	!srook::is_member_pointer<typename decay<F>::type>::value,
 	decltype(srook::forward<F>(f)(srook::forward<Args>(args)...))
 >::type;
 
 template <class F, class... Args>
 auto INVOKE(F&& f, Args&&... args)
 -> typename enable_if<
-    !std::is_member_pointer<typename decay<F>::type>::value,
+    !srook::is_member_pointer<typename decay<F>::type>::value,
     decltype(srook::forward<F>(f)()(srook::forward<Args>(args)...))
 >::type;
 

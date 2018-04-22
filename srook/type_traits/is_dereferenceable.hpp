@@ -37,11 +37,11 @@ struct is_nothrow_deferenceable_helper {
 
 template <class T>
 struct is_dereferenceable 
-    : type_traits::detail::Lor<SROOK_DECLTYPE(detail::is_dereferenceable_helper<T>::test(declval<T>())), is_pointer<T>, is_array<T>> {};
+    : ::srook::type_traits::detail::Lor<SROOK_DECLTYPE(detail::is_dereferenceable_helper<T>::test(declval<T>())), is_pointer<T>, is_array<T>> {};
 
 template <class T>
 struct is_nothrow_dereferenceable
-    : type_traits::detail::Lor<SROOK_DECLTYPE(detail::is_nothrow_deferenceable_helper<T>::test(declval<T>())), is_pointer<T>, is_array<T>> {};
+    : ::srook::type_traits::detail::Lor<SROOK_DECLTYPE(detail::is_nothrow_deferenceable_helper<T>::test(declval<T>())), is_pointer<T>, is_array<T>> {};
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <class T>

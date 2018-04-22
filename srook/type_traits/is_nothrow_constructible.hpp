@@ -28,9 +28,9 @@ template <class T, class... Args>
 struct is_nothrow_constructible : 
 	public 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-	detail::Land<
+	::srook::type_traits::detail::Land<
 #else
-	detail::Land_2<
+	::srook::type_traits::detail::Land_2<
 #endif
 	is_constructible<T, Args...>, detail::is_nothrow_constructible_impl<T, Args...> > {
 };

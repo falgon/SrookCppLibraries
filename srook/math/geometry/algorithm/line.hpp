@@ -9,5 +9,6 @@
 #endif
 
 #include <srook/math/geometry/algorithm/line/straight.hpp>
+#include <srook/math/geometry/algorithm/line/curve.hpp>
 
 #endif

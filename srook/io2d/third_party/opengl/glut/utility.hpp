@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_IO2D_THIRD_PARTY_OPENGL_GLUT_UTILITY_HPP
 #define INCLUDED_SROOK_IO2D_THIRD_PARTY_OPENGL_GLUT_UTILITY_HPP
 
-#include <srook/io2d/third_party/opengl/glut/utility/gsline.hpp>
+#include <srook/io2d/third_party/opengl/glut/utility/painter.hpp>
+#include <srook/io2d/third_party/opengl/glut/utility/params.hpp>
 
 #endif

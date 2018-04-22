@@ -1,6 +1,6 @@
 // Copyright (C) 2011-2018 Roki. Distributed under the MIT License
-#ifndef INCLUDED_SROOK_MATH_GEOMETORY_ALGORITHM_LINE_STRAIGHT_POINTS_HPP
-#define INCLUDED_SROOK_MATH_GEOMETORY_ALGORITHM_LINE_STRAIGHT_POINTS_HPP
+#ifndef INCLUDED_SROOK_MATH_GEOMETORY_ALGORITHM_LINE_STRAIGHT_SIMPLE_EQUATION_HPP
+#define INCLUDED_SROOK_MATH_GEOMETORY_ALGORITHM_LINE_STRAIGHT_SIMPLE_EQUATION_HPP
 
 #ifdef _MSC_VER
 #   if _MSC_VER > 1000
@@ -9,6 +9,7 @@
 #endif
 
 #include <srook/math/geometry/algorithm/line/straight/slope.hpp>
+#include <srook/math/geometry/fundamental/point.hpp>
 #include <srook/math/constants/algorithm/isnan.hpp>
 #include <srook/range/adaptor/copied.hpp>
 #include <srook/range/adaptor/transformed.hpp>
@@ -24,6 +25,7 @@ namespace detail {
 
 template <class T = double>
 class line_axis {
+protected:
     typedef T value_type;
     typedef srook::math::geometry::fundamental::point<T> point_type;
     typedef std::vector<point_type> container_type;
@@ -120,7 +122,7 @@ private:
         }
         return xl;
     }
-
+protected:
     SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR std::size_t compute_capacity(value_type b, value_type e) const SROOK_NOEXCEPT_TRUE
     {
         long capacity = static_cast<long>(e - b + 1);
@@ -158,7 +160,7 @@ private:
 
     template <class U>
     SROOK_FORCE_INLINE SROOK_CONSTEXPR U& round_frac1_impl(U& val, SROOK_FALSE_TYPE) const SROOK_NOEXCEPT_TRUE { return val; }
-
+private:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME point_type::value_type 
     from_x(value_type m, SROOK_DEDUCED_TYPENAME point_type::value_type x) const SROOK_NOEXCEPT_TRUE
     {
@@ -176,9 +178,11 @@ protected:
 
 } // namespace detail
 
-class points : protected detail::line_axis<> {
+class simple_equation : protected detail::line_axis<> {
     typedef detail::line_axis<> base_type;
 public:
+    typedef srook::math::geometry::fundamental::point<> point_type;
+    typedef std::pair<point_type, point_type> argument_type;
     using base_type::base_type;
     using base_type::operator();
 };

@@ -31,16 +31,16 @@ public:
     typedef SROOK_DEDUCED_TYPENAME base_type::first_type value_type;
 
     SROOK_FORCE_INLINE SROOK_CONSTEXPR point() SROOK_DEFAULT
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR point(const point& other)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR point(const point& other) SROOK_NOEXCEPT_TRUE
         : base_type(other.x(), other.y()) {}
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR point(point&& other)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR point(point&& other) SROOK_NOEXCEPT_TRUE
         : base_type(srook::move(other.x()), srook::move(other.y())) {}
     
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR point& operator=(const point& other)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR point& operator=(const point& other) SROOK_NOEXCEPT_TRUE
     {
         return this->first = other.x(), this->second = other.y(), *this;
     }
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR point& operator=(point&& other)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR point& operator=(point&& other) SROOK_NOEXCEPT_TRUE
     {
         return this->first = srook::move(other.x()), this->second = srook::move(other.y()), *this;
     }
