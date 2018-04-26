@@ -43,11 +43,11 @@ public:
         return pred_.reset(rhs.pred_), first_ = rhs.first_, last_ = rhs.last_, *this;
     }
 
-    SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::value_type operator*()
-    SROOK_NOEXCEPT(is_nothrow_invocable<detail::lambda_wrapper<Pred>, SROOK_DEDUCED_TYPENAME std::iterator_traits<Iter>::value_type>::value) { return pred_(*first_); }
+    SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME srook::invoke_result<Pred, SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::value_type>::type operator*()
+    SROOK_NOEXCEPT(is_nothrow_invocable<detail::lambda_wrapper<Pred>, SROOK_DEDUCED_TYPENAME srook::iterator_traits<Iter>::value_type>::value) { return pred_(*first_); }
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
-    SROOK_FORCE_INLINE const SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::value_type operator*() const 
-    SROOK_NOEXCEPT(is_nothrow_invocavke<detail::lambda_wrapper<Pred>, SROOK_DEDUCED_TYPENAME std::iterator_traits<Iter>::value_type>::value) { return pred_(*first_); }
+    SROOK_FORCE_INLINE const SROOK_DEDUCED_TYPENAME srook::invoke_result<Pred, SROOK_DEDUCED_TYPENAME srook::iterator_traits<iterator>::value_type>::type operator*() const 
+    SROOK_NOEXCEPT(is_nothrow_invocavke<detail::lambda_wrapper<Pred>, SROOK_DEDUCED_TYPENAME srook::iterator_traits<Iter>::value_type>::value) { return pred_(*first_); }
 #endif
     SROOK_FORCE_INLINE ~transform_iterator() SROOK_NOEXCEPT_TRUE {}
 private:
