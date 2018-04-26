@@ -29,7 +29,7 @@ struct moved_t_impl {
 		return Range(std::make_move_iterator(first_), std::make_move_iterator(last_));
 	}
 private:
-	Iterator first_,last_;
+	Iterator first_, last_;
 };
 
 template<class Iterator>

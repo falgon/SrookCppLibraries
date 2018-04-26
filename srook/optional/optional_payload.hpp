@@ -49,7 +49,7 @@ public:
         : payload_(li, srook::forward<Args>(args)...), engaged_(true) {}
 
     template <class U>
-    struct ctor_tag SROOK_FINAL : private enable_copy_move<false, false, false, false> {};
+    struct ctor_tag SROOK_FINAL {};
 
     SROOK_CONSTEXPR optional_payload(ctor_tag<bool>, const T& other)
         : payload_(other), engaged_(true) {}

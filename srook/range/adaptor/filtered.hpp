@@ -2,6 +2,7 @@
 #ifndef INCLUDED_ADAPTOR_FILTERED_HPP
 #define INCLUDED_ADAPTOR_FILTERED_HPP
 #include <srook/range/adaptor/adaptor_operator.hpp>
+#include <srook/range/adaptor/detail/deduce_iter.hpp>
 #include <srook/iterator/range_iterators/range_iterator.hpp>
 #include <srook/iterator/range_iterators/filter_iterator.hpp>
 #include <srook/iterator/range_access.hpp>
@@ -14,15 +15,13 @@ namespace detail {
 
 template <class Pred>
 class range_filter {
-    template <class Range>
-    struct deduce_iter : type_constant<SROOK_DEDUCED_TYPENAME decay<Range>::type::iterator> {};
 public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR explicit range_filter(Pred pred) SROOK_NOEXCEPT(is_nothrow_constructible<Pred>::value)
         : pred_(pred) {}
 
     template <class Range, SROOK_REQUIRES(is_range<SROOK_DEDUCED_TYPENAME decay<Range>::type>::value)>
     SROOK_FORCE_INLINE SROOK_CONSTEXPR srook::range::iterator::range_iterator<srook::range::iterator::filter_iterator<Pred, SROOK_DEDUCED_TYPENAME deduce_iter<Range>::type>>
-    operator()(Range&& range) 
+    operator()(Range&& range) const
     SROOK_NOEXCEPT(
         type_traits::detail::Land<
             is_nothrow_constructible<

@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_TAKE_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_TAKE_HPP
 #include <srook/range/adaptor/adaptor_operator.hpp>
+#include <srook/range/adaptor/detail/deduce_iter.hpp>
 #include <srook/iterator/range_iterators/range_iterator.hpp>
 #include <srook/iterator/range_iterators/take_iterator.hpp>
 #include <srook/iterator/range_access.hpp>
@@ -13,15 +14,13 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 class range_take {
-    template <class Range>
-    struct deduce_iter : type_constant<SROOK_DEDUCED_TYPENAME decay<Range>::type::iterator> {};
 public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR explicit range_take(std::size_t s) SROOK_NOEXCEPT_TRUE
         : s_(srook::move(s)) {}
 
     template <class Range, SROOK_REQUIRES(is_range<SROOK_DEDUCED_TYPENAME decay<Range>::type>::value)>
     SROOK_FORCE_INLINE SROOK_CONSTEXPR srook::range::iterator::range_iterator<srook::range::iterator::take_iterator<SROOK_DEDUCED_TYPENAME deduce_iter<Range>::type>>
-    operator()(Range&& range) 
+    operator()(Range&& range) const
     SROOK_NOEXCEPT(
         type_traits::detail::Land<
             is_nothrow_constructible<

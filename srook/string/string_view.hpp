@@ -35,6 +35,7 @@ public:
     typedef const charT *const_pointer;
     typedef charT &reference;
     typedef const charT &const_reference;
+    typedef pointer iterator;
     typedef const_pointer const_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     typedef const_reverse_iterator reverse_iterator;
