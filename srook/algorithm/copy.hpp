@@ -30,7 +30,7 @@ SROOK_INLINE_NAMESPACE(v1)
 #if SROOK_HAS_CONCEPTS
 template <srook::concepts::InputIterator InputIter, srook::concepts::OutputIterator OutputIter>
 #else
-template <class InputIter, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value)>
+template <class InputIter, class OutputIter>
 #endif
 SROOK_CONSTEXPR OutputIter copy(InputIter first, InputIter last, OutputIter d_first)
 SROOK_NOEXCEPT(
@@ -51,7 +51,7 @@ SROOK_NOEXCEPT(
 #if SROOK_HAS_CONCEPTS
 template <srook::concepts::InputIterator InputIter, srook::concepts::OutputIterator OutputIter>
 #else
-template <class InputIter, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_inputiterator<InputIter>, is_outputiterator<OutputIter>>::value)>
+template <class InputIter, class OutputIter>
 #endif
 SROOK_FORCE_INLINE OutputIter
 copy(InputIter first, InputIter last, OutputIter d_first)
@@ -73,7 +73,8 @@ SROOK_NOEXCEPT(
 #if SROOK_HAS_CONCEPTS
 template <class SinglePassRange, srook::concepts::OutputIterator OutputIter>
 #else
-template <class SinglePassRange, class OutputIter, SROOK_REQUIRES(type_traits::detail::Land<is_range<SROOK_DEDUCED_TYPENAME decay<SinglePassRange>::type>, is_outputiterator<OutputIter>>::value)>
+template <class SinglePassRange, class OutputIter, 
+SROOK_REQUIRES(is_range<SROOK_DEDUCED_TYPENAME decay<SinglePassRange>::type>::value)>
 #endif
 SROOK_FORCE_INLINE SROOK_DEDUCED_TYPENAME enable_if<is_range<SinglePassRange>::value, OutputIter>::type
 copy(const SinglePassRange& range, OutputIter d_first)
