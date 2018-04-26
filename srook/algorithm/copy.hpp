@@ -43,7 +43,7 @@ SROOK_NOEXCEPT(
     >::value
 )
 {
-    return first != last ? (*d_first++ = *first++, srook::algorithm::copy(first, last, d_first)) : d_first;
+    return first != last ? (*d_first = *first, srook::algorithm::copy(++first, last, ++d_first)) : d_first;
 }
 
 #else
