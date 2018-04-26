@@ -2,7 +2,7 @@
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_DETAIL_DEDUCE_ITER_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_DETAIL_DEDUCE_ITER_HPP
 #include <srook/range/adaptor/adaptor_operator.hpp>
-#include <srook/type_traits/decay.hpp>
+#include <srook/iterator/range_access.hpp>
 #include <srook/type_traits/type_constant.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, range, adaptors) {
@@ -12,7 +12,7 @@ namespace detail {
 
 template <class Range>
 struct deduce_iter
-    : type_constant<SROOK_DEDUCED_TYPENAME decay<Range>::type::const_iterator> {};
+    : type_constant<SROOK_DECLTYPE(srook::begin(declval<Range&>()))> {};
 
 } // namespace detail
 
