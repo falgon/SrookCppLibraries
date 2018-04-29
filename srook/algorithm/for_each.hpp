@@ -3,13 +3,13 @@
 #define INCLUDED_SROOK_ALGORITHM_FOREACH_HPP
 #include <algorithm>
 #include <initializer_list>
+#include <srook/config/cpp_predefined.hpp>
 #include <srook/config/libraries/type_traits/index_sequence.hpp>
 #include <srook/config/require.hpp>
-#include <srook/config/cpp_predefined.hpp>
 #include <srook/iterator/range_iterators.hpp>
+#include <srook/type_traits/enable_if.hpp>
 #include <srook/type_traits/has_iterator.hpp>
 #include <srook/type_traits/is_callable.hpp>
-#include <srook/type_traits/enable_if.hpp>
 #include <srook/utility/forward.hpp>
 #include <tuple>
 #include <type_traits>
@@ -47,7 +47,9 @@ SROOK_FORCE_INLINE auto for_each(Range&& r, Functor&& functor) -> decltype(srook
 namespace {
 
 template <class Functor>
-void tuple_for_eacher(Functor&&) {}
+void tuple_for_eacher(Functor&&)
+{
+}
 
 template <class Functor, class Head, class... Tail, REQUIRES(is_callable<remove_ref_cv(Functor)>::value)>
 void tuple_for_eacher(Functor&& functor, Head&& head, Tail&&... tail)
@@ -138,16 +140,50 @@ struct counter : select_ref<Range> {
     using select_ref<Range>::select_ref;
     using iterator = typename remove_ref_cv(Range)::iterator;
     using const_iterator = typename remove_ref_cv(Range)::const_iterator;
-
-    auto begin() const { return std::begin(this->r_); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+    auto begin() const
+    {
+        return std::begin(this->r_);
+    }
     auto end() const { return std::end(this->r_); }
-    auto begin() { return std::begin(this->r_); }
-    auto end() { return std::end(this->r_); }
+#endif
+    iterator begin()
+    {
+        return std::begin(this->r_);
+    }
+    iterator end() { return std::end(this->r_); }
     const_iterator cbegin() const { return this->r_.cbegin(); }
     const_iterator cend() const { return this->r_.cend(); }
-
     std::size_t& get_counter() { return this->value_; }
     typename select_ref<Range>::reference_type operator*() { return static_cast<typename select_ref<Range>::reference_type>(this->r_); }
+};
+
+template <class P>
+struct counter<P*> {
+    explicit constexpr counter(P* b, P* e, std::size_t value)
+        : begin_(b), end_(e), value_(value) {}
+
+    using iterator = P*;
+    using const_iterator = const P*;
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
+    auto begin() const
+    {
+        return begin_;
+    }
+    auto end() const { return end_; }
+#endif
+    iterator begin()
+    {
+        return begin_;
+    }
+    iterator end() { return end_; }
+    const_iterator cbegin() const { return begin_; }
+    const_iterator cend() const { return end_; }
+    std::size_t& get_counter() { return value_; }
+
+private:
+    P *begin_, *end_;
+    std::size_t value_;
 };
 
 template <bool, class Tuple>
@@ -188,10 +224,16 @@ struct counter_iters {
     using iterator = remove_ref_cv(Iterator);
     using const_iterator = const iterator;
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
-    iterator begin() const { return first_; }
+    iterator begin() const
+    {
+        return first_;
+    }
     iterator end() const { return last_; }
 #endif
-    iterator begin() { return first_; }
+    iterator begin()
+    {
+        return first_;
+    }
     iterator end() { return last_; }
     const_iterator cbegin() const { return first_; }
     const_iterator cend() const { return last_; }
@@ -204,7 +246,9 @@ private:
 };
 
 template <class Functor>
-void counting_for_eacher(std::size_t&, Functor&&) {}
+void counting_for_eacher(std::size_t&, Functor&&)
+{
+}
 
 template <class Functor, class Head, class... Tail, REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
 void counting_for_eacher(std::size_t& counter, Functor&& functor_, Head&& head, Tail&&... tail)
@@ -236,17 +280,23 @@ constexpr auto make_counter(std::array<T, s>& ar, std::size_t value = 0)
     return counter<decltype(ar)>(ar, std::move(value));
 }
 
-template <class Tuple, REQUIRES(!has_iterator<remove_ref_cv(Tuple)>::value)>
+template <class Tuple, REQUIRES(!has_iterator<remove_ref_cv(Tuple)>::value && !is_array<remove_ref_cv(Tuple)>::value)>
 constexpr auto make_counter(Tuple&& t, std::size_t value = 0)
--> typename enable_if<!has_iterator<remove_ref_cv(Tuple)>::value /*or !is_range_iterator_v<remove_ref_cv(Tuple)>*/, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple> >::type
+    -> typename enable_if<!has_iterator<remove_ref_cv(Tuple)>::value /*or !is_range_iterator_v<remove_ref_cv(Tuple)>*/, counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple> >::type
 {
     return counter_tuple<std::is_lvalue_reference<Tuple>::value, Tuple>(srook::forward<Tuple>(t), std::move(value));
 }
 
-template <class Range, REQUIRES(has_iterator<remove_ref_cv(Range)>::value /*or is_range_iterator_v<remove_ref_cv(Range)>*/)>
+template <class Range, REQUIRES(has_iterator<remove_ref_cv(Range)>::value && !is_array<remove_ref_cv(Range)>::value /*or is_range_iterator_v<remove_ref_cv(Range)>*/)>
 constexpr auto make_counter(Range&& r, std::size_t value = 0) -> counter<decltype(srook::forward<Range>(r))>
 {
     return counter<decltype(srook::forward<Range>(r))>(srook::forward<Range>(r), std::move(value));
+}
+
+template <class T, std::size_t N>
+constexpr auto make_counter(T (&ar)[N], std::size_t value = 0) -> counter<T*>
+{
+    return counter<T*>(ar, ar + N, std::move(value));
 }
 
 template <class T>
@@ -289,6 +339,16 @@ auto for_each(counter<Range> cr, Functor&& functor) -> typename counter<Range>::
     return *cr;
 }
 
+template <class T, class Functor>
+auto for_each(counter<T*> cr, Functor&& functor) -> typename counter<T*>::iterator
+{
+    for (decltype(std::begin(cr)) iter = std::begin(cr); iter != std::end(cr); ++iter) {
+        functor(*iter, cr.get_counter());
+        ++cr.get_counter();
+    }
+    return std::begin(cr);
+}
+
 template <
     class Iterator,
     class Functor,
@@ -319,5 +379,5 @@ using algorithm::for_each;
 
 } // namespace srook
 
-#    undef remove_cv_t
+#undef remove_cv_t
 #endif

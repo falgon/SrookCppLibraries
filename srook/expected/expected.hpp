@@ -51,7 +51,7 @@ class expected_payload<T, ErrType, is_tcc, is_tmc, srook::optionally::optional_p
     typedef SROOK_DEDUCED_TYPENAME base_type::Stored_type stored_value_type;
     typedef SROOK_DEDUCED_TYPENAME remove_const<ErrType>::type error_type;
     template <class U>
-    struct ctor_tag : public enable_copy_move<false, false, false, false> {};
+    struct ctor_tag {};
 
     SROOK_CONSTEXPR expected_payload(ctor_tag<bool>, const expected_payload& other)
         : base_type(other), exempty_() {}
@@ -1048,9 +1048,6 @@ private:
             is_assignable<T1&, expected<T2, UU, Payload>&&>
         >;
 
-    template <class U>
-    using expected_relop = SROOK_DEDUCED_TYPENAME enable_if<is_convertible<T, bool>::value, bool>::type;
-
 public:
     SROOK_CONSTEXPR expected() SROOK_DEFAULT
 
@@ -1556,9 +1553,6 @@ private:
             is_assignable<T1&, const expected<T2, UU, Payload>&&>,
             is_assignable<T1&, expected<T2, UU, Payload>&&>
         >;
-
-    template <class U>
-    using expected_relop = SROOK_DEDUCED_TYPENAME enable_if<is_convertible<T, bool>::value, bool>::type;
 
 public:
     SROOK_CONSTEXPR expected() SROOK_DEFAULT
