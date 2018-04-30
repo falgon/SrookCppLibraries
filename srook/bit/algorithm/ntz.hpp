@@ -6,12 +6,10 @@
 #   if _MSC_VER > 1000
 #       pragma once
 #   endif
-#   if SROOK_ARCH_IS_X86_64
-#       include <intrin.h>
-#   endif
 #endif
 
 #include <srook/config.hpp>
+#include <srook/config/compiler/msvc/includes/intrin.h>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #if ((defined(_MSC_VER) && SROOK_ARCH_IS_X86_64) || defined(__GNUC__))
 #   define SROOK_ASM_CONSTEXPR SROOK_CONSTEXPR

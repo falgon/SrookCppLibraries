@@ -10,8 +10,7 @@
 
 #include <srook/config.hpp>
 #ifdef _WIN32
-#   define NOMINMAX
-#   include <windows.h>
+#   include <srook/config/compiler/includes/msvc/windows.h>
 #   define SROOK_SECURE_ZERO(X, S) SecureZeroMemory(X, S)
 #elif  __STDC_VERSION__ >= 201112L && defined(__STDC_LIB_EXT1__)
 #   ifndef __STDC_WANT_LIB_EXT1__

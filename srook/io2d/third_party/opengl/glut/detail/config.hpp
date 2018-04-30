@@ -11,7 +11,7 @@ extern "C" {
 #   endif
 #elif defined(_WIN32)
 #   define NOMINMAX
-#   include <windows.h>
+#   include <srook/config/compiler/includes/msvc/windows.h>
 extern "C" {
 #   include <GL/gl.h> 
 #   include <GL/glut.h>

@@ -6,7 +6,6 @@
 #   if _MSC_VER > 1000
 #       pragma once
 #   endif
-#   include <intrin.h>
 #endif
 
 #ifdef __GNUC__
@@ -17,6 +16,7 @@
 #endif
 
 #include <srook/config.hpp>
+#include <srook/config/compiler/msvc/includes/intrin.h>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/cstdint.hpp>
 #include <srook/bit/algorithm/ntz.hpp>

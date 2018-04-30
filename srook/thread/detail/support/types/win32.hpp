@@ -10,7 +10,7 @@
 
 #	include <fibersapi.h>
 #	include <process.h>
-#	include <windows.h>
+#   include <srook/config/compiler/includes/msvc/windows.h>
 
 namespace srook {
 namespace threading {

@@ -4,7 +4,7 @@
 
 #include <srook/config.hpp>
 #ifdef _MSC_VER
-#   include <intrin.h>
+#   include <srook/config/compiler/msvc/includes/intrin.h>
 #elif defined(__GNUC__)
 #   include <x86intrin.h>
 #elif deifned(__clang__)

@@ -7,7 +7,7 @@
 #       pragma once
 #   endif
 #   if _MSC_VER >= 1100
-#       include <intrin.h>
+#       include <srook/config/compiler/msvc/includes/intrin.h>
 #       pragma intrinsic(__rdtsc)
 #       define SROOK_HAS_MSC_INTRINSICS_RDTSC 1
 #   endif

@@ -39,18 +39,7 @@ using memory::launder;
 #    define SROOK_LAUNDER_DEPRECATED_MESSAGE
 #	 define SROOK_COND_CONSTEXPR
 #elif defined(_MSC_VER)
-#    if _MSC_VER <= 1400
-#        define _interlockedbittestandset(a, b) _interlockedbittestandset(volatile long*, long)
-#        define _interlockedbittestandreset(a, b) _interlockedbittestandreset(volatile long*, long)
-#        define _interlockedbittestandset64(a, b) _interlockedbittestandset(volatile long long*, long long)
-#        define _interlockedbittestandreset64(a, b) _interlockedbittestandreset(volatile long long*, long long)
-#    endif
-#    include <intrin.h>
-#    pragma intrinsic(_ReadWriteBarrier)
-#    undef _interlockedbittestandset
-#    undef _interlockedbittestandreset
-#    undef _interlockedbittestandset64
-#    undef _interlockedbittestandreset64
+#    include <srook/config/compiler/msvc/includes/intrin.h>
 // reference of this hack:
 // https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Build_Instructions/Intrin.h
 #    define SROOK_APPLY_LAUNDER(p) _ReadWriteBarrier()

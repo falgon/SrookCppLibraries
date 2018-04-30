@@ -8,6 +8,7 @@
 #else
 #   include <cstdint>
 #   ifdef _MSC_VER
+#       include <srook/config/compiler/msvc/includes/intrin.h>
 #       include <intrin.h>
 #   endif
 #endif
@@ -23,7 +24,7 @@ namespace detail {
 SROOK_CONSTEXPR bool has_intel_knl_features_impl() SROOK_NOEXCEPT_TRUE
 {
     SROOK_CONSTEXPR_OR_CONST unsigned long knl_features = (_FEATURE_AVX512F | _FEATURE_AVX512ER | _FEATURE_AVX512PF | _FEATURE_AVX512CD );
-    return _may_i_use_cpu_feature( knl_features );
+    return _may_i_use_cpu_feature(knl_features);
 }
 #else
 
