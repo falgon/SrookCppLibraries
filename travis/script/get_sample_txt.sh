@@ -3,9 +3,8 @@
 URL1="http://www.gutenberg.org/files/45/45-0.txt"
 URL2="http://www.eresumes.com/download/eresumes_practice_erezsample_plaintext2.txt"
 URL3="https://www.cl.cam.ac.uk/~mgk25/ucs/examples/UTF-8-demo.txt"
-URL4="https://textfiles.com/apple/ADC/adv.1988.index"
-URL5="http://www.gutenberg.org/files/12345/12345-8.txt"
-URL6="http://www.gutenberg.org/files/42/42.txt"
+URL4="http://www.gutenberg.org/files/12345/12345-8.txt"
+URL5="http://www.gutenberg.org/files/42/42.txt"
 
 FILENAME="45-0.txt"
 
@@ -23,7 +22,7 @@ function shuffle () {
     echo "${swap[0]}"
 }
 
-declare -a urls=`shuffle ${URL1} ${URL2} ${URL3} ${URL4} ${URL5} ${URL6}`
+declare -a urls=`shuffle ${URL1} ${URL2} ${URL3} ${URL4} ${URL5}`
 
 while [ ${#urls[@]} -ne 0 ]; do
     url=${urls[0]}
