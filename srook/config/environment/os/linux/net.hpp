@@ -3,7 +3,7 @@
 #define INCLUDED_SROOK_CONFIG_ENVIRONMENT_OS_LIUNX_NET_HPP
 
 #ifdef __linux__
-#   include <srook/config/environment/os/linux/net/if_ether.hpp>
+//#   include <srook/config/environment/os/linux/net/if_ether.hpp>
 #endif
 
 #endif

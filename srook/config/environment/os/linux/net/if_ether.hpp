@@ -33,7 +33,7 @@ struct ethernet_traits {
     SROOK_DECL_STATIC_CONS size_type mtu_min = ETH_MIN_MTU;
     SROOK_DECL_STATIC_CONS size_type mtu_max = ETH_MAX_MTU;
     
-    SROOK_STRONG_ENUM (protocols) {
+    SROOK_STRONG_ENUM_BEGIN (protocols) {
         loop = ETH_P_LOOP,
         pup =  ETH_P_PUP,
         pupat = ETH_P_PUPAT,
@@ -93,7 +93,7 @@ struct ethernet_traits {
         qinq3 = ETH_P_QINQ3,
         edsa = ETH_P_EDSA,
         af_iucv = ETH_P_AF_IUCV,
-        all = ETH_P_ALL;
+        all = ETH_P_ALL,
         frame_802_2 = ETH_P_802_2,
         snap = ETH_P_SNAP,
         ddcmp = ETH_P_DDCMP,
