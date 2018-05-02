@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_CONFIG_FEATURE_STRONG_ENUM_HPP
 #define INCLUDED_SROOK_CONFIG_FEATURE_STRONG_ENUM_HPP
 
+#include <srook/config/attribute/visibility.hpp>
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/noexcept_detection.hpp>
 
@@ -9,11 +10,11 @@
 #    define SROOK_STRONG_ENUM_BEGIN(x) _LIBCPP_DECLARE_STRONG_ENUM(x)
 #    define SROOK_STRONG_ENUM_EPILOG(x) _LIBCPP_DECLARE_STRONG_ENUM_EPILOG(x)
 #elif (SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT)
-#    define SROOK_STRONG_ENUM_BEGIN(x) enum class x
+#    define SROOK_STRONG_ENUM_BEGIN(x) enum class SROOK_ATTRIBUTE_ENUM_VIS_DEFAULT x
 #    define SROOK_STRONG_ENUM_EPILOG(x)
 #else
 #    define SROOK_STRONG_ENUM_BEGIN(x)              \
-        struct x { \
+        struct SROOK_ATTRIBUTE_ENUM_VIS_DEFAULT x { \
             enum lx
 #    define SROOK_STRONG_ENUM_EPILOG(x)                                            \
         lx v;                                                                      \

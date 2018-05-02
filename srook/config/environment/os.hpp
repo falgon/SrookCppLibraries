@@ -8,7 +8,6 @@
 #include <srook/config/environment/os/stdio.hpp>
 #include <srook/config/environment/os/apple.hpp>
 #include <srook/config/environment/os/win.hpp>
-#include <srook/config/environment/os/linux.hpp>
 
 #if defined(__clang__)
 #	define SROOK_HAS_BUILTIN_OPERATOR_NEW !defined(_LIBCPP_HAS_NO_BUILTIN_OPERATOR_NEW_DELETE)
