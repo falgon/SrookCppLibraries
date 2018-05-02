@@ -93,7 +93,7 @@ struct ethernet_traits {
         qinq3 = ETH_P_QINQ3,
         edsa = ETH_P_EDSA,
         af_iucv = ETH_P_AF_IUCV,
-        all = ETH_P_ALL;
+        all = ETH_P_ALL,
         frame_802_2 = ETH_P_802_2,
         snap = ETH_P_SNAP,
         ddcmp = ETH_P_DDCMP,
