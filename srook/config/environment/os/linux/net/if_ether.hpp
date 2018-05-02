@@ -33,7 +33,7 @@ struct ethernet_traits {
     SROOK_DECL_STATIC_CONS size_type mtu_min = ETH_MIN_MTU;
     SROOK_DECL_STATIC_CONS size_type mtu_max = ETH_MAX_MTU;
     
-    SROOK_STRONG_ENUM (protocols) {
+    SROOK_STRONG_ENUM_BEGIN (protocols) {
         loop = ETH_P_LOOP,
         pup =  ETH_P_PUP,
         pupat = ETH_P_PUPAT,
