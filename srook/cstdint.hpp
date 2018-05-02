@@ -12,7 +12,7 @@
 #   define __STDC_CONSTANT_MACROS
 #endif
 
-#include <srook/config.hpp>
+#include <srook/config/environment/os.hpp>
 #if SROOK_HAS_INCLUDE(<boost/cstdint.hpp>)
 #   include <boost/cstdint.hpp>
 #   define SROOK_HAS_BOOST_CSTDINT_HPP 1
@@ -432,4 +432,19 @@ typedef __UINTPTR_TYPE__ uintptr_t;
 #   endif
 #endif
 #endif
+
+#if defined(SROOK_HAS_INT128) && !defined(__STRICT_ANSI__)
+namespace srook {
+
+#ifdef SROOK_GCC
+__extension__ typedef __int128 int128_t;
+__extension__ typedef unsigned __int128 uint128_t;
+#else
+typedef __int128 int128_t;
+typedef unsigned __int128 uint128_t; 
+#endif
+
+} // namespace srook
+#endif
+
 #endif // include gurad
