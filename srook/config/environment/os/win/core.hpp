@@ -6,7 +6,7 @@
 #	define SROOK_OS_IS_WIN32 1
 #	define SROOK_OS_WIN32 SROOK_OS_IS_WIN32
 #	define SROOK_OBJECT_FORMAT_IS_COFF 1
-#	include <windows.h>
+#   include <srook/config/compiler/includes/msvc/intrin.h>
 #	include <stdio.h>
 #	include <tchar.h>
 #	if defined(__CYGWIN32__) || defined(__CYGWIN__)
