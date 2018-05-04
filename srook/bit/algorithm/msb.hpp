@@ -9,6 +9,9 @@
 #endif
 
 #include <srook/config/compiler/msvc/includes/intrin.h>
+#ifdef _MSC_VER
+#   pragma intrinsic(_BitScanReverse)
+#endif
 #include <srook/bit/algorithm/popcnt.hpp>
 #include <srook/cstring/memcpy.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
@@ -52,7 +55,7 @@ do_msb(Integral x)
 {
     SROOK_STATIC_ASSERT(sizeof(Integral) % 2 == 0, "The Integral type must be an even bit size.");
     SROOK_STATIC_ASSERT(CHAR_BIT == 8, "CHAR_BIT must be 8");
-    return !x ? x : srook::bit::algorithm::popcnt(msb_impl<1, ((sizeof(Integral) * CHAR_BIT) >> 1)>::apply(x)) - 1;
+    return srook::bit::algorithm::popcnt(msb_impl<1, ((sizeof(Integral) * CHAR_BIT) >> 1)>::apply(x)) - 1;
 }
 
 #ifdef SROOK_MSB_HAS_COMPILER_INTRINSIC
@@ -64,9 +67,6 @@ struct builtin_bitscan {
         return do_msb(srook::move(n));
     }
 };
-
-template <std::size_t>
-struct builtin_bitscan;
 
 #ifdef __ARMCC_VERSION
 template <>
@@ -111,11 +111,13 @@ struct builtin_bitscan<8> {
 template <class Integral, SROOK_REQUIRES(type_traits::detail::Land<is_unsigned<Integral>, is_integral<Integral>>::value)>
 SROOK_FORCE_INLINE SROOK_ASM_CONSTEXPR SROOK_DEDUCED_TYPENAME detail::popcnt<sizeof(Integral)>::result_type msb(Integral x)
 {
+    return x ?
 #ifdef SROOK_MSB_HAS_COMPILER_INTRINSIC
-    return builtin_bitscan<sizeof(Integral)>::apply(srook::move(x));
+    builtin_bitscan<sizeof(Integral)>::apply(srook::move(x)) :
 #else
-    return do_msb(srook::move(x));
+    do_msb(srook::move(x)) :
 #endif
+    x;
 }
 
 } // namespace detail

@@ -8,7 +8,6 @@
    	defined(__thumb__) ||\
 	defined(_ARM) ||\
 	defined(_M_ARM) ||\
-	defined(_M_ARM64) ||\
 	defined(_M_ARMT) ||\
 	defined(__arm) ||\
 	defined(__TARGET_ARCH_ARM) ||\
