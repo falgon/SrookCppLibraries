@@ -1,7 +1,6 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License.
 #ifndef INCLUDED_SROOK_CONFIG_ARCH_HPP
 #define INCLUDED_SROOK_CONFIG_ARCH_HPP
-
 #include <srook/config/arch/AMD64.hpp>
 #include <srook/config/arch/ARM.hpp>
 #include <srook/config/arch/AVR.hpp>
@@ -22,5 +21,4 @@
 #include <srook/config/arch/TMS.hpp>
 #include <srook/config/arch/ZArchitecture.hpp>
 #include <srook/config/arch/x86.hpp>
-
 #endif

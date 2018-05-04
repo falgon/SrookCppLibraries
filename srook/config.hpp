@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_CONFIG_HPP
 
 #include <srook/config/arch.hpp>
+#include <srook/config/arch_wordsize.hpp>
 #include <srook/config/attribute.hpp>
 #include <srook/config/byte.hpp>
 #include <srook/config/compiler.hpp>
