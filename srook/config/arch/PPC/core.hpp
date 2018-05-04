@@ -9,8 +9,16 @@
 	defined(_ARCH_PPC) ||\
 	defined(__PPCGECKO__) ||\
    	defined(__PPCBROADWAY__) ||\
-   	defined(_XENON)
-#	define SROOK_ARCH_IS_PPC 1
+   	defined(_XENON) ||\
+    defined(__ppc64__) ||\
+    defined(__PPC64__) ||\
+    defined(_ARCH_PPC64) ||\
+    defined(__powerpc64__)
+#   if defined(__ppc64__) || defined(__PPC64__) || defined(__powerpc64__) || defined(_ARCH_PPC64)
+#       define SROOK_ARCH_IS_PPC64 1
+#   else
+#	    define SROOK_ARCH_IS_PPC 1
+#   endif
 #	if defined(_ARCH_440)
 #		define SROOK_ARCH_PPC440 440
 #	else
@@ -49,6 +57,7 @@
 #	endif
 #else
 #	define SROOK_ARCH_IS_PPC 0
+#   define SROOK_ARCH_IS_PPC64 0
 #	define SROOK_ARCH_440 0
 #	define SROOK_ARCH_450 0
 #	define SROOK_ARCH_PPC601 0

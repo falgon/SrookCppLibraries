@@ -9,5 +9,6 @@
 #include <srook/bit/algorithm/reverse.hpp>
 #include <srook/bit/algorithm/hamming.hpp>
 #include <srook/bit/algorithm/msb.hpp>
+#include <srook/bit/algorithm/ffs.hpp>
 
 #endif
