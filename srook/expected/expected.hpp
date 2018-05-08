@@ -4,7 +4,7 @@
 
 #include <srook/optional/optional_payload.hpp>
 #include <srook/optional/safe_optional_payload.hpp>
-#include <srook/functional.hpp>
+#include <srook/functional/invoke.hpp>
 #include <srook/expected/unexpected.hpp>
 #include <stdexcept>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
@@ -1489,6 +1489,20 @@ public:
     operator>>=(const expected& this_, F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type>()))
     {
         return this_ ? srook::invoke(srook::forward<F>(f), *this_) : this_;
+    }
+
+    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
+    friend SROOK_FORCE_INLINE expected
+    operator<<=(F&& f, const expected& this_) SROOK_NOEXCEPT(declval<F>()(declval<value_type()))
+    {
+        return this_ >>= f;
+    }
+
+    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type>::value)>
+    friend SROOK_FORCE_INLINE expected
+    operator>>(const expected& this_, F&& f) SROOK_NOEXCEPT(declval<F>()(declval<value_type()))
+    {
+        return this_ ? srook::invoke(srook::forward<F>(f)) : this_;
     }
 
     template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
