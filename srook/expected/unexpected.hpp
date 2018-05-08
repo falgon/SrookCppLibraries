@@ -3,8 +3,7 @@
 #define INCLUDED_SROOK_EXPECTED_UNEXPECTED_HPP
 
 #include <srook/config.hpp>
-#include <srook/type_traits.hpp>
-#include <srook/utility.hpp>
+#include <srook/type_traits/remove_cv.hpp>
 #include <stdexcept>
 #if SROOK_HAS_INCLUDE(<boost/exception_ptr.hpp>) && SROOK_CONFIG_ENABLE_USE_BOOST_EXCEPTION_PTR
 #   include <boost/exception_ptr.hpp>

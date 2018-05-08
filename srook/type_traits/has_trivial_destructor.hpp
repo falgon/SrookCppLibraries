@@ -45,7 +45,6 @@ struct has_trivial_destructor
 
 template <>
 struct has_trivial_destructor<void> : SROOK_FALSE_TYPE {};
-template <>
 #ifndef SROOK_NO_CV_VOID_SPECIALIZATIONS
 template <>
 struct has_trivial_destructor<void const> : SROOK_FALSE_TYPE {};

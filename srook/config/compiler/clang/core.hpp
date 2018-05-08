@@ -219,9 +219,15 @@
 #            define SROOK_HAS_INT128
 #        endif
 #        if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
-#            define SROOK_SYMBOL_EXPORT __attribute__((__visibility__("default")))
-#            define SROOK_SYMBOL_IMPORT
-#            define SROOK_SYMBOL_VISIBLE __attribute__((__visibility__("default")))
+#            ifndef SROOK_SYMBOL_EXPORT
+#               define SROOK_SYMBOL_EXPORT __attribute__((__visibility__("default")))
+#            endif
+#            ifndef SROOK_SYMBOL_IMPORT
+#               define SROOK_SYMBOL_IMPORT
+#            endif
+#            ifndef SROOK_SYMBOL_VISIBLE
+#               define SROOK_SYMBOL_VISIBLE __attribute__((__visibility__("default")))
+#            endif
 #        endif
 #        if __cplusplus >= 201103L && defined(__has_warning)
 #            if __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
