@@ -33,7 +33,6 @@
 #       include <cstdint>
 #       include <unistd.h>
 #       include <features.h>
-        extern "C" void* memcpy(void*, void*, std::size_t);
 #       define SROOK_MEMCPY_NONCONST(x, y, z) ::memcpy(x, y, z)
 #   else
 #       include <cstring>

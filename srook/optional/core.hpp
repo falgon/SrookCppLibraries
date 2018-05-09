@@ -3,6 +3,7 @@
 #define INCLUDED_SROOK_OPTIONAL_CORE_HPP
 #include <srook/optional/optional.h>
 #include <srook/optional/optional_base.hpp>
+#include <srook/optional/applicative.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 namespace srook {
 namespace optionally {
@@ -26,6 +27,7 @@ private:
 
 public:
     typedef T value_type;
+    struct srook_optional_tag {}; // exposition only
 
     SROOK_CONSTEXPR optional() SROOK_DEFAULT
 #    define DEF_CONSTRUCTOR(X) \
@@ -877,6 +879,20 @@ SROOK_NOEXCEPT((is_nothrow_constructible<T, U, SROOK_DEDUCED_TYPENAME decay<Args
     return optional<T, safe_optional_payload>(in_place, li, srook::forward<Args>(args)...);
 }
 
+template <class... Ts>
+SROOK_CONSTEXPR std::tuple<srook::optional<SROOK_DEDUCED_TYPENAME decay<Ts>::type>...> make_optionals(Ts&&... ts)
+SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_constructible<Ts>...>::value)
+{
+    return std::make_tuple(srook::optionally::make_optional(srook::forward<Ts>(ts))...);
+}
+
+template <class... Ts>
+SROOK_CONSTEXPR std::tuple<srook::optional<SROOK_DEDUCED_TYPENAME decay<Ts>::type, safe_optional_payload>...> make_safe_optionals(Ts&&... ts)
+SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_constructible<Ts>...>::value)
+{
+    return std::make_tuple(srook::optionally::make_safe_optional(srook::forward<Ts>(ts))...);
+}
+
 // TASK: specialize hash
 
 SROOK_INLINE_NAMESPACE_END
@@ -885,6 +901,8 @@ SROOK_INLINE_NAMESPACE_END
 using optionally::swap;
 using optionally::make_optional;
 using optionally::make_safe_optional;
+using optionally::make_optionals;
+using optionally::make_safe_optionals;
 
 } // namespace srook
 #endif
