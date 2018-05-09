@@ -18,6 +18,7 @@
 #include <srook/optional/nullopt.hpp>
 #include <srook/optional/exception.hpp>
 #include <initializer_list>
+#include <tuple>
 
 namespace srook {
 namespace optionally {
@@ -25,9 +26,9 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-template <class T, bool, bool>
+template <class, bool, bool>
 class optional_payload;
-template <class T, bool, bool>
+template <class, bool, bool>
 class safe_optional_payload;
 
 } // namespace detail
@@ -41,18 +42,36 @@ class optional;
 template <class T>
 SROOK_CONSTEXPR optional<SROOK_DEDUCED_TYPENAME decay<T>::type> make_optional(T&&);
 
+template <class T>
+SROOK_CONSTEXPR optional<SROOK_DEDUCED_TYPENAME decay<T>::type, safe_optional_payload> make_safe_optional(T&&);
+
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_RVALUE_REFERENCES
 template <class T, class... Args>
 SROOK_CONSTEXPR optional<T> make_optional(Args&&...);
 
 template <class T, class U, class... Args>
 SROOK_CONSTEXPR optional<T> make_optional(std::initializer_list<U>, Args&&...);
+
+template <class T, class... Args>
+SROOK_CONSTEXPR optional<T, safe_optional_payload> make_safe_optional(Args&&...);
+
+template <class T, class U, class... Args>
+SROOK_CONSTEXPR optional<T, safe_optional_payload> make_safe_optional(std::initializer_list<U>, Args&&...);
+
+template <class... Ts>
+SROOK_CONSTEXPR std::tuple<optional<SROOK_DEDUCED_TYPENAME decay<Ts>::type>...> make_optionals(Ts&&...);
+
+template <class... Ts>
+SROOK_CONSTEXPR std::tuple<optional<SROOK_DEDUCED_TYPENAME decay<Ts>::type, safe_optional_payload>...> make_safe_optionals(Ts&&...);
 #endif
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace optionally
 
 using optionally::make_optional;
+using optionally::make_safe_optional;
+using optionally::make_optionals;
+using optionally::make_safe_optionals;
 using optionally::optional;
 
 } // namespace srook

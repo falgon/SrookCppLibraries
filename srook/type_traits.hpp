@@ -88,6 +88,7 @@
 #include <srook/type_traits/is_nullptr.hpp>
 #include <srook/type_traits/is_numeric_type.hpp>
 #include <srook/type_traits/is_object.hpp>
+#include <srook/type_traits/is_optional.hpp>
 #include <srook/type_traits/is_pod.hpp>
 #include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/is_polymorphic.hpp>
