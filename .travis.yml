@@ -6,6 +6,9 @@ notifications:
   slack:
     secure: ujjO4WTtnEa5yq5HuEy+dcqjmEOTuoYyaRIBnt7dgf+8tv+nv4NsvGNURaYH2QTXjMOnVTTUUmPb3YnMgAQCXQlVQTsfqq1kHXgBNZPVYvazN9NB+3sseGBv5kwur+BWP3gLPgtfU0kuNSLFC+g2BoGjZ6dZZQ+jq4UtYCp/9NhZlbQVRj7HiKLTbTHS4UPh/ZxAZqT4hSN75NlY4P+7+9QkyOjcL7bQy8jlpTDE6Y0FJtQk6ibWqoigmMGoPZv9JVvpL4SPZV/3v8cwzXiYfhBJkOqpYjnC62pGF4kzemn3yTaIJFQoN5xiXQiCkg4IWylNt1G4DTd5zYmj/zLqPfH2nuABJBw27hZxYUxJwxDJUojz84phnOq5iv+7MmbkPXhQSo+mM81a2sUfQWcncU5bFV+ZM5ZhXCUZdpjbQRiCzD6+/bFBHxkRCpPy0WIDFaEhixXeAzAYrafNZJ10EIqKVfdO9AZCwSmzV/q84AK1ZZkyHfOHdhafoBCZ9+nQbOkesoNPiBN6aqqBatgFExT8qs445TCDoIKV2xF36V9hw26sRv3nqRclDGfDkmlEPJm0PdNT8e5lxpASgY2DcC7AdT2GqcWvhbq9zPh4y8okBnR4Xc+r1gBYbYgL6htiIISdv1L8pNiayZIR49OXiKFd8SILRCPcye/2Lz+UCkc=
 
+apt:
+    update: true
+
 language: cpp
 os:
     - linux
