@@ -155,6 +155,73 @@ SROOK_NOEXCEPT(is_nothrow_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK
     return srook::apply(srook::move(l), std::tuple_cat(std::forward_as_tuple(srook::forward<F>(f)), srook::move(tp)));
 }
 
+namespace applicative_operators {
+
+template <class F, class Optional,
+SROOK_REQUIRES(
+    type_traits::detail::Land<
+        is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK_DEDUCED_TYPENAME decay<Optional>::type::value_type>,
+        is_optional<SROOK_DEDUCED_TYPENAME decay<Optional>::type>
+    >::value
+)>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME
+invoke_result<
+    detail::make_optional_common_type<Optional>,
+    SROOK_DEDUCED_TYPENAME invoke_result<F&&, SROOK_DEDUCED_TYPENAME decay<Optional>::type::value_type>::type
+>::type
+operator&(F&& f, Optional&& opt)
+SROOK_NOEXCEPT(is_nothrow_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK_DEDUCED_TYPENAME decay<Optional>::type::value_type>::value)
+{
+    return srook::optionally::applicative(srook::forward<F>(f), srook::forward<Optional>(opt));
+}
+
+// <$>
+template <class F, class... Optionals,
+SROOK_REQUIRES(
+    type_traits::detail::Land<
+        is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK_DEDUCED_TYPENAME decay<Optionals>::type::value_type...>,
+        is_optional<SROOK_DEDUCED_TYPENAME decay<Optionals>::type>...
+    >::value
+)>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME
+invoke_result<
+    detail::make_optional_common_type<Optionals...>,
+    SROOK_DEDUCED_TYPENAME invoke_result<F&&, SROOK_DEDUCED_TYPENAME decay<Optionals>::type::value_type...>::type
+>::type
+operator&(F&& f, std::tuple<Optionals...> tp)
+SROOK_NOEXCEPT(is_nothrow_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK_DEDUCED_TYPENAME decay<Optionals>::type::value_type...>::value)
+{
+    return srook::optionally::applicative(srook::forward<F>(f), srook::move(tp));
+}
+
+// <*>
+template <class Optional, SROOK_REQUIRES(is_optional<SROOK_DEDUCED_TYPENAME decay<Optional>::type>::value)>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR std::tuple<Optional&&, Optional&&>
+operator*(Optional&& lhs, Optional&& rhs) SROOK_NOEXCEPT_TRUE
+{
+    return std::forward_as_tuple(srook::forward<Optional>(lhs), srook::forward<Optional>(rhs));
+}
+
+// <*>
+template <class Optional, class... Opts,
+SROOK_REQUIRES(type_traits::detail::Land<is_optional<SROOK_DEDUCED_TYPENAME decay<Optional>::type>, is_optional<SROOK_DEDUCED_TYPENAME decay<Opts>::type>...>::value)>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR std::tuple<Optional&&, Opts...>
+operator*(Optional&& lhs, std::tuple<Opts...> tp) SROOK_NOEXCEPT_TRUE
+{
+    return std::tuple_cat(std::forward_as_tuple(srook::forward<Optional>(lhs)), srook::move(tp));
+}
+
+// <*>
+template <class Optional, class... Opts,
+SROOK_REQUIRES(type_traits::detail::Land<is_optional<SROOK_DEDUCED_TYPENAME decay<Optional>::type>, is_optional<SROOK_DEDUCED_TYPENAME decay<Opts>::type>...>::value)>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR std::tuple<Opts..., Optional&&>
+operator*(std::tuple<Opts...> tp, Optional&& rhs) SROOK_NOEXCEPT_TRUE
+{
+    return std::tuple_cat(srook::move(tp), std::forward_as_tuple(srook::forward<Optional>(rhs)));
+}
+
+} // namespace applicative_operators
+
 SROOK_INLINE_NAMESPACE_END
 } SROOK_NESTED_NAMESPACE_END(optionally, srook)
 

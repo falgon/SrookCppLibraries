@@ -10,6 +10,7 @@
 
 #include <srook/config/feature/nested_namespace.hpp>
 #include <srook/config/feature/inline_namespace.hpp>
+#include <srook/config/feature/static_assert.hpp>
 #include <srook/config/compiler.hpp>
 #include <srook/config/cpp_predefined/feature_testing.hpp>
 #include <srook/type_traits/type_constant.hpp>

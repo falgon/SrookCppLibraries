@@ -44,4 +44,30 @@ BOOST_AUTO_TEST_CASE(optional_applicative3)
     BOOST_TEST(*(result >>= [](int x) noexcept -> srook::optional<bool> { return x == 12; }));
 }
 
+BOOST_AUTO_TEST_CASE(optional_applicative4)
+{
+    using namespace srook::optionally::applicative_operators;
+
+    {
+        auto result = [](int x) SROOK_CXX17_CONSTEXPR noexcept -> int { return x * 2; } & srook::make_optional(2);
+        SROOK_ST_ASSERT((is_same<SROOK_DECLTYPE(result), srook::optional<int>>::value));
+        BOOST_TEST(*(result >>= [](int x) noexcept -> srook::optional<bool> { return x == 4; }));
+    }
+
+    const auto l = [](int x, int y, int z) SROOK_CXX17_CONSTEXPR noexcept -> int { return x * y * z; };
+    {
+        auto result = l & srook::make_optional(2) * srook::make_optional(3) * srook::make_optional(4);
+        SROOK_ST_ASSERT((is_same<SROOK_DECLTYPE(result), srook::optional<int>>::value));
+        BOOST_TEST(*(result >>= [](int x) noexcept -> srook::optional<bool> { return x == 24; }));
+    }
+    {
+        auto result = l & srook::make_optionals(2, 3, 4);
+        SROOK_ST_ASSERT((is_same<SROOK_DECLTYPE(result), srook::optional<int>>::value));
+        BOOST_TEST(*(result >>= [](int x) noexcept -> srook::optional<bool> { return x == 24; }));
+
+        result = l & srook::make_optionals(2, 3) * srook::make_optional(4);
+        BOOST_TEST(*(result >>= [](int x) noexcept -> srook::optional<bool> { return x == 24; }));
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
