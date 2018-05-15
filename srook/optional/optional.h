@@ -70,8 +70,10 @@ SROOK_INLINE_NAMESPACE_END
 
 using optionally::make_optional;
 using optionally::make_safe_optional;
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT && SROOK_CPP_RVALUE_REFERENCES
 using optionally::make_optionals;
 using optionally::make_safe_optionals;
+#endif
 using optionally::optional;
 
 } // namespace srook
