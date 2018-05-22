@@ -254,8 +254,8 @@ typedef  ::srook::ulong_long_type   uint64_t;
 typedef  ::srook::ulong_long_type   uint_least64_t;
 typedef  ::srook::ulong_long_type   uint_fast64_t;
 #       endif
-#   elif ULONG_MAX != 0xffffffff
-#       if ULONG_MAX == 18446744073709551615 
+#   elif ULONG_MAX != 0xffffffffUL
+#       if ULONG_MAX == 18446744073709551615UL
 typedef long                 intmax_t;
 typedef unsigned long        uintmax_t;
 typedef long                 int64_t;
