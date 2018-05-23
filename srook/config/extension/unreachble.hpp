@@ -4,10 +4,20 @@
 
 #ifdef __GNUC__
 #   include <srook/config/compiler/gcc.hpp>
-#   if SROOK_GCC_VERSION >= 40800
+#   if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
 #       define SROOK_UNREACHABLE_RETURN(x) __builtin_unreachable()
+#       define SROOK_UNREACHABLE() __builtin_unreachable()
 #   endif
+#elif defined(__clang__)
+#   if __has_builtin(__builtin_unreachable)
+#       define SROOK_UNREACHABLE_RETURN(x) __builtin_unreachable()
+#       define SROOK_UNREACHABLE() __builtin_unreachable()
+#   endif
+#elif defined(_MSC_VER)
+#   define SROOK_UNREACHABLE_RETURN(x) __assume(0)
+#   define SROOK_UNREACHABLE() __assume(0)
 #endif
+
 #ifndef SROOK_UNREACHABLE_RETURN
 #   include <srook/config/cpp_predefined/macro_names.hpp>
 #   ifdef SROOK_CPLUSPLUS
