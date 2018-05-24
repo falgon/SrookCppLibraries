@@ -259,7 +259,7 @@ public:
     SROOK_CONSTEXPR expected_payload(bool, bool, const expected_payload&& other)
         : expected_payload(srook::move(other)) {}
 
-    SROOK_CONSTEXPR expected_payload(const expected_payload& other)
+    SROOK_CXX14_CONSTEXPR expected_payload(const expected_payload& other)
     {
         if (other.load_engaged()) {
             construct(other.payload_);
@@ -270,7 +270,7 @@ public:
         }
     }
 
-    SROOK_CONSTEXPR expected_payload(expected_payload&& other)
+    SROOK_CXX14_CONSTEXPR expected_payload(expected_payload&& other)
     {
         if (other.load_payload()) {
             construct(srook::move(other.payload_));
@@ -412,7 +412,7 @@ public:
     SROOK_CONSTEXPR expected_payload(bool, bool, expected_payload&& other)
         : expected_payload(srook::move(other)) {}
     
-    SROOK_CONSTEXPR expected_payload(const expected_payload& other)
+    SROOK_CXX14_CONSTEXPR expected_payload(const expected_payload& other)
     {
         if (other.load_engaged()) {
             construct(other.payload_);
@@ -423,7 +423,7 @@ public:
         }
     }
 
-    SROOK_CONSTEXPR expected_payload(expected_payload&& other)
+    SROOK_CXX14_CONSTEXPR expected_payload(expected_payload&& other)
     {
         if (other.load_payload()) {
             construct(srook::move(other.payload_));
@@ -745,24 +745,26 @@ protected:
     {
         return payload_.any_engaged();
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const stored_value_type& get() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
         return payload_.load_payload();
     }
+#endif
 
     SROOK_CONSTEXPR stored_value_type& get() SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
         return payload_.load_payload();
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const error_type& get_error() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_error_engaged());
         return payload_.load_error();
     }
+#endif
 
     SROOK_CONSTEXPR error_type& get_error() SROOK_NOEXCEPT_TRUE
     {
@@ -926,24 +928,25 @@ protected:
     {
         return payload_.any_engaged();
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const stored_value_type& get() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
         return payload_.load_payload();
     }
-
+#endif
     SROOK_CONSTEXPR stored_value_type& get() SROOK_NOEXCEPT_TRUE
     {
         assert(is_engaged());
         return payload_.load_payload();
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const error_type& get_error() const SROOK_NOEXCEPT_TRUE
     {
         assert(is_error_engaged());
         return payload_.load_error();
     }
+#endif
 
     SROOK_CONSTEXPR error_type& get_error() SROOK_NOEXCEPT_TRUE
     {
@@ -1399,18 +1402,24 @@ public:
 
     SROOK_CONSTEXPR const T* operator->() const { return srook::addressof(this->get()); }
     T* operator->() { return srook::addressof(this->get()); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const T& operator*() const& { return this->get(); }
+#endif
     SROOK_CONSTEXPR T& operator*() & { return this->get(); }
     SROOK_CONSTEXPR T&& operator*() && { return srook::move(this->get()); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR T&& operator*() const&& { return srook::move(this->get()); }
+#endif
     SROOK_CONSTEXPR SROOK_EXPLICIT operator bool() const SROOK_NOEXCEPT_TRUE { return this->is_engaged(); }
     SROOK_CONSTEXPR bool has_value() const SROOK_NOEXCEPT_TRUE { return bool(*this); }
     SROOK_CONSTEXPR bool valid() const SROOK_NOEXCEPT_TRUE { return has_value(); }
 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const error_type& error() const&
     {
         return this->get_error();
     }
+#endif
 
     SROOK_CONSTEXPR error_type& error() &
     {
@@ -1421,7 +1430,7 @@ public:
     {
         return srook::move(this->get_error());
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR error_type&& error() const&&
     {
         return srook::move(this->get_error());
@@ -1433,6 +1442,7 @@ public:
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), this->get()) 
             : (detail::throw_bad_expected_access(), this->get());
     }
+#endif
 
     SROOK_CONSTEXPR value_type& value() &
     {
@@ -1447,14 +1457,16 @@ public:
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), srook::move(this->get())) 
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
-    
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR value_type&& value() const&&
     {
         return this->is_engaged() ? srook::move(this->get()) 
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), srook::move(this->get())) 
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
+#endif
 
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
     SROOK_CONSTEXPR value_type value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
     {
@@ -1463,6 +1475,7 @@ public:
 
         return this->is_engaged() ? this->get() : srook::forward<U>(u);
     }
+#endif
 
     template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
     SROOK_CONSTEXPR value_type&& value_or(U&& u) && SROOK_NOEXCEPT_TRUE
@@ -1848,21 +1861,27 @@ public:
             }
         }
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const T* operator->() const { return srook::addressof(this->get()); }
+#endif
     T* operator->() { return srook::addressof(this->get()); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const T& operator*() const& { return this->get(); }
+#endif
     SROOK_CONSTEXPR T& operator*() & { return this->get(); }
     SROOK_CONSTEXPR T&& operator*() && { return srook::move(this->get()); }
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR T&& operator*() const&& { return srook::move(this->get()); }
+#endif
     SROOK_CONSTEXPR SROOK_EXPLICIT operator bool() const SROOK_NOEXCEPT_TRUE { return this->is_engaged(); }
     SROOK_CONSTEXPR bool has_value() const SROOK_NOEXCEPT_TRUE { return bool(*this); }
     SROOK_CONSTEXPR bool valid() const SROOK_NOEXCEPT_TRUE { return has_value(); }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR const error_type& error() const&
     {
         return this->get_error();
     }
+#endif
 
     SROOK_CONSTEXPR error_type& error() &
     {
@@ -1873,7 +1892,7 @@ public:
     {
         return srook::move(this->get_error());
     }
-
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR error_type&& error() const&&
     {
         return srook::move(this->get_error());
@@ -1885,6 +1904,7 @@ public:
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), this->get()) 
             : (detail::throw_bad_expected_access(), this->get());
     }
+#endif
 
     SROOK_CONSTEXPR value_type& value() &
     {
@@ -1899,13 +1919,14 @@ public:
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), srook::move(this->get())) 
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
-    
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     SROOK_CONSTEXPR value_type&& value() const&&
     {
         return this->is_engaged() ? srook::move(this->get()) 
             : this->is_error_engaged() ? (detail::throw_expected_error(this->get_error()), srook::move(this->get())) 
             : (detail::throw_bad_expected_access(), srook::move(this->get()));
     }
+#endif
     
     template <class U, SROOK_REQUIRES(is_convertible<SROOK_DEDUCED_TYPENAME decay<U>::type, value_type>::value)>
     SROOK_CONSTEXPR value_type value_or(U&& u) const& SROOK_NOEXCEPT_TRUE
