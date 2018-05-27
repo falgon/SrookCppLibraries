@@ -50,6 +50,7 @@
 #include <srook/tmpl/vt/replace.hpp>
 #include <srook/tmpl/vt/replace_all.hpp>
 #include <srook/tmpl/vt/replace_all_like.hpp>
+#include <srook/tmpl/vt/replicate.hpp>
 #include <srook/tmpl/vt/reverse.hpp>
 #include <srook/tmpl/vt/select.hpp>
 #include <srook/tmpl/vt/set_difference.hpp>
