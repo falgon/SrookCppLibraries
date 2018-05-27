@@ -406,23 +406,23 @@ private:
     //
     // optional for monad semantics
     // see also: https://goo.gl/EcV2Tf
-    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
-    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR optional
+    template <class F, SROOK_REQUIRES(type_traits::detail::Lor<is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>, is_optional<SROOK_DEDUCED_TYPENAME invoke_result<F, value_type>::type>>::value)>
+    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F, value_type>::type
     operator>>=(const optional& this_, F&& f) SROOK_NOEXCEPT(f(declval<value_type>()))
     {
         return this_ ? srook::forward<F>(f)(*this_) : nullopt;
     }
 
     // =<<
-    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>::value)>
-    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR optional
+    template <class F, SROOK_REQUIRES(type_traits::detail::Lor<is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, value_type>, is_optional<SROOK_DEDUCED_TYPENAME invoke_result<F, value_type>::type>>::value)>
+    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F, value_type>::type
     operator<<=(F&& f, const optional& this_) SROOK_NOEXCEPT(f(declval<value_type>()))
     {
         return this_ >>= f;
     }
 
-    template <class F, SROOK_REQUIRES(is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type>::value)>
-    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR optional
+    template <class F, SROOK_REQUIRES(type_traits::detail::Lor<is_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type>, is_optional<SROOK_DEDUCED_TYPENAME invoke_result<F>::type>>::value)>
+    friend SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F>::type
     operator>>(const optional& this_, F&& f) SROOK_NOEXCEPT(f(declval<value_type>()))
     {
         return this_ ? srook::forward<F>(f)() : nullopt;
