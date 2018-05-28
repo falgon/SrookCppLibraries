@@ -108,7 +108,7 @@ SROOK_NOEXCEPT(is_nothrow_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK
 #else
     detail::all_true(bool(ts)...)
 #endif
-    ? detail::make_optional_common_type<Ts...>()(srook::invoke(srook::forward<F>(f), *ts...)) : srook::nullopt;
+    ? detail::make_optional_common_type<Ts...>()(srook::invoke(srook::forward<F>(f), srook::forward<Ts>(*ts)...)) : srook::nullopt;
 }
 
 #if !SROOK_CPP_LAMBDAS
