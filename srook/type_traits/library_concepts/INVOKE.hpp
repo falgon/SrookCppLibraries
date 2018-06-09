@@ -76,7 +76,7 @@ template <class F, class... Args>
 auto INVOKE(F&& f, Args&&... args)
 -> typename enable_if<
     !srook::is_member_pointer<typename decay<F>::type>::value,
-    decltype(srook::forward<F>(f)()(srook::forward<Args>(args)...))
+    decltype(srook::forward<F>(f)(srook::forward<Args>(args)...))
 >::type;
 
 } // namespace library_concept

@@ -25,6 +25,9 @@ struct take_enable_type : type_constant<packer<Xs...>> {};
 template <std::size_t x, class... Xs>
 struct take_enable_type<false, x, Xs...> : srook::tmpl::vt::partial_head<x, Xs...> {};
 
+template <class... Xs>
+struct take_enable_type<false, 0, Xs...> : type_constant<packer<>> {};
+
 } // namespace detail
 
 template <std::size_t x, class... Xs>

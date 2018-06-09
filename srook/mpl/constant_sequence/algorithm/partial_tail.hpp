@@ -80,6 +80,11 @@ template <std::size_t target, std::size_t... xs>
 struct partial_tail<target, std::index_sequence<xs...>>
     : detail::partial_tail_impl1<target, xs...> {};
 
+#if SROOK_CPP_ALIAS_TEMPLATES
+template <std::size_t n, class T>
+using partial_tail_t = SROOK_DEDUCED_TYPENAME srook::constant_sequence::partial_tail<n, T>::type;
+#endif
+
 SROOK_INLINE_NAMESPACE_END
 } // namespace constant_sequence
 SROOK_INLINE_NAMESPACE_END

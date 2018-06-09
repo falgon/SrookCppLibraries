@@ -30,6 +30,9 @@ struct is_member_function_pointer
 
 SROOK_INLINE_NAMESPACE_END
 } // namespace type_traits
+
+using type_traits::is_member_function_pointer;
+
 } // namespace srook
 
 #endif

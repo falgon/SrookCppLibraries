@@ -11,6 +11,7 @@
 #include <srook/type_traits/aligned_union.hpp>
 #include <srook/type_traits/alignment_of.hpp>
 #include <srook/type_traits/any_constant.hpp>
+#include <srook/type_traits/arguments.hpp>
 #include <srook/type_traits/bool_constant.hpp>
 #include <srook/type_traits/clock.hpp>
 #include <srook/type_traits/concepts.hpp>
@@ -18,6 +19,7 @@
 #include <srook/type_traits/conjunction.hpp>
 #include <srook/type_traits/copy_move_able.hpp>
 #include <srook/type_traits/decay.hpp>
+#include <srook/type_traits/derivation_invoke_result.hpp>
 #include <srook/type_traits/detail.hpp>
 #include <srook/type_traits/detect.hpp>
 #include <srook/type_traits/disable_if.hpp>

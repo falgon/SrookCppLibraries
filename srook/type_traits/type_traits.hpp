@@ -24,6 +24,7 @@
 #include <srook/type_traits/disjunction.hpp>
 #include <srook/type_traits/enable_disable_if.hpp>
 #include <srook/type_traits/enable_if.hpp>
+#include <srook/type_traits/endian.hpp>
 #include <srook/type_traits/extent.hpp>
 #include <srook/type_traits/float_promote.hpp>
 #include <srook/type_traits/has_iterator.hpp>
@@ -60,8 +61,11 @@
 #include <srook/type_traits/is_equal.hpp>
 #include <srook/type_traits/is_equality_comparable.hpp>
 #include <srook/type_traits/is_final.hpp>
+#include <srook/type_traits/is_fixed_point.hpp>
 #include <srook/type_traits/is_floating_point.hpp>
 #include <srook/type_traits/is_function.hpp>
+#include <srook/type_traits/is_function_object.hpp>
+#include <srook/type_traits/is_hash.hpp>
 #include <srook/type_traits/is_incrementable.hpp>
 #include <srook/type_traits/is_integral.hpp>
 #include <srook/type_traits/is_invocable.hpp>
@@ -84,6 +88,7 @@
 #include <srook/type_traits/is_nullptr.hpp>
 #include <srook/type_traits/is_numeric_type.hpp>
 #include <srook/type_traits/is_object.hpp>
+#include <srook/type_traits/is_optional.hpp>
 #include <srook/type_traits/is_pod.hpp>
 #include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/is_polymorphic.hpp>
@@ -91,6 +96,7 @@
 #include <srook/type_traits/is_postincrementable.hpp>
 #include <srook/type_traits/is_predecrementable.hpp>
 #include <srook/type_traits/is_preincrementable.hpp>
+#include <srook/type_traits/is_range.hpp>
 #include <srook/type_traits/is_reference.hpp>
 #include <srook/type_traits/is_referenceable.hpp>
 #include <srook/type_traits/is_rvalue_reference.hpp>
@@ -120,6 +126,8 @@
 #include <srook/type_traits/make_unsigned.hpp>
 #include <srook/type_traits/match_cv_qualifiers.hpp>
 #include <srook/type_traits/negation.hpp>
+#include <srook/type_traits/param_types.hpp>
+#include <srook/type_traits/random.hpp>
 #include <srook/type_traits/rank.hpp>
 #include <srook/type_traits/remove_all_extents.hpp>
 #include <srook/type_traits/remove_const.hpp>
