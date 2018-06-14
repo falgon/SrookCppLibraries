@@ -7,5 +7,8 @@
 #include <srook/tuple/utility/nth.hpp>
 #include <srook/tuple/utility/pipeop.hpp>
 #include <srook/tuple/utility/uncurry.hpp>
+#include <srook/tuple/utility/ampersand.hpp>
+#include <srook/tuple/utility/take.hpp>
+#include <srook/tuple/utility/drop.hpp>
 
 #endif

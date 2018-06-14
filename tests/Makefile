@@ -7,7 +7,8 @@ INCLUDE_PATH := -I../ -isystem ../include -L../lib
 GXX = g++-7
 BOOST_TEST_OP := --show_progress=yes --build_info=yes --detect_memory_leak=1 --result_code=yes --log_level=all
 
-TEST1 = mpl/constant_sequence/constant_exp.o\
+TEST1 = tuple/utility/test.o\
+	mpl/constant_sequence/constant_exp.o\
 	mpl/math/compile_time_four_arithmetic_operations_parser_test.o\
 	mpl/string/stoi.o\
 	cxx17/any_pack/meta_random_engine_test.o\

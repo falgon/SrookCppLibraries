@@ -3,7 +3,8 @@
 #define INCLUDED_SROOK_TUPLE_UTILITY_NTH_HPP
 
 #include <srook/tuple/utility/detail/utils.hpp>
-#include <srook/tuple/algorithm/split.hpp>
+#include <srook/tuple/utility/take.hpp>
+#include <srook/tuple/utility/drop.hpp>
 #include <srook/type_traits/is_tuple.hpp>
 #include <srook/utility/index_sequence.hpp>
 
@@ -12,25 +13,28 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-template <class, class, std::size_t>
-struct nth_tuple_elements_impl;
+template <class>
+struct rewrap;
 
-template <class Tuple, std::size_t... I, std::size_t offset>
-struct nth_tuple_elements_impl<Tuple, srook::utility::index_sequence<I...>, offset>
-    : type_constant<srook::tmpl::vt::packer<SROOK_DEDUCED_TYPENAME std::tuple_element<offset + I, Tuple>::type...>> {};
+template <class... Ts>
+struct rewrap<std::tuple<Ts...>>
+    : type_constant<srook::tmpl::vt::packer<Ts...>> {};
 
-template <class Tuple, std::size_t I, std::size_t offset>
-struct nth_tuple_elements 
-    : nth_tuple_elements_impl<Tuple, SROOK_DEDUCED_TYPENAME srook::utility::make_index_sequence_type<I>::type, offset> {};
+template <class L, class R>
+struct rewrap<std::pair<L, R>>
+    : type_constant<srook::tmpl::vt::packer<L, R>> {};
 
-template <class T, std::size_t I, class F>
-struct get_return_type
-    : srook::tmpl::vt::concat<
+template <class F, std::size_t I, class Tuple>
+struct return_type 
+    : srook::tmpl::vt::transfer<
+        std::tuple,
         SROOK_DEDUCED_TYPENAME srook::tmpl::vt::concat<
-            SROOK_DEDUCED_TYPENAME nth_tuple_elements<T, I - 1, 0>::type,
-            SROOK_DEDUCED_TYPENAME invoke_result<F, SROOK_DEDUCED_TYPENAME std::tuple_element<I, T>::type>::type
-        >::type,
-        SROOK_DEDUCED_TYPENAME nth_tuple_elements<T, I + 1, I - 1>::type    
+            SROOK_DEDUCED_TYPENAME srook::tmpl::vt::concat<
+                SROOK_DEDUCED_TYPENAME srook::tmpl::vt::take<I, SROOK_DEDUCED_TYPENAME rewrap<SROOK_DEDUCED_TYPENAME decay<Tuple>::type>::type>::type,
+                SROOK_DEDUCED_TYPENAME invoke_result<SROOK_DEDUCED_TYPENAME decay<F>::type, SROOK_DEDUCED_TYPENAME std::tuple_element<I, SROOK_DEDUCED_TYPENAME decay<Tuple>::type>::type>::type
+            >::type,
+            SROOK_DEDUCED_TYPENAME srook::tmpl::vt::drop<I + 1, SROOK_DEDUCED_TYPENAME detail::rewrap<decay_t<Tuple>>::type>::type
+        >::type
       > {};
 
 #if !SROOK_CPP_LAMBDAS && SROOK_CPLUSPLUS < SROOK_CPLUSPLUS14_CONSTANT
@@ -44,10 +48,10 @@ public:
     
     template <class T, SROOK_REQUIRES(is_tuple<SROOK_DEDUCED_TYPENAME decay<T>::type>::value)>
     SROOK_CONSTEXPR SROOK_FORCE_INLINE 
-    SROOK_DEDUCED_TYPENAME detail::get_return_type<SROOK_DEDUCED_TYPENAME decay<T>::type, I, F>::type
+    SROOK_DEDUCED_TYPENAME detail::return_type<F, I, SROOK_DEDUCED_TYPENAME decay<T>::type>::type
     operator()(T&& tpl) SROOK_MEMFN_NOEXCEPT(detail::is_noexcept_type<F>::value)
     {
-        return std::tuple_cat(srook::tuple::split_first<I>(tpl), std::make_tuple(base_type::operator()(std::get<I>(tpl))), srook::tuple::split_last<I + 1>(tpl));
+        return std::tuple_cat(take<I>(tpl), std::make_tuple(base_type::operator()(std::get<I>(tpl))), drop<I + 1>(tpl));
     }
 };
 #endif
@@ -66,9 +70,9 @@ nth(F&& fn) SROOK_NOEXCEPT(detail::is_noexcept_type<F>::value)
     return
         [f = srook::forward<F>(fn)](auto&& tpl) SROOK_CXX17_CONSTEXPR
         noexcept(detail::is_noexcept_type<F>::value) 
-        //-> SROOK_DEDUCED_TYPENAME srook::tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME detail::get_return_type<decay_t<SROOK_DECLTYPE(tpl)>, I, F>::type>::type
+        -> SROOK_DEDUCED_TYPENAME detail::return_type<F, I, SROOK_DECLTYPE(tpl)>::type
         {
-            return std::tuple_cat(srook::tuple::split_first<I>(tpl), std::make_tuple(f(std::get<I>(tpl))), srook::tuple::split_last<I + 1>(tpl));
+            return std::tuple_cat(srook::tuple::utility::take<I>(tpl), std::make_tuple(f(std::get<I>(tpl))), srook::tuple::utility::drop<I + 1>(tpl));
         };
 #else
     return detail::intrinsic_lambda_nth<SROOK_DEDUCED_TYPENAME decay<F>::type, I>(srook::forward<F>(fn));

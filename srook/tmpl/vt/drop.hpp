@@ -19,13 +19,16 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <bool, std::size_t, class... Xs>
-struct drop_enable_type : type_constant<packer<>> {};
+struct drop_enable_type 
+    : type_constant<packer<>> {};
 
 template <std::size_t x, class... Xs>
-struct drop_enable_type<false, x, Xs...> : srook::tmpl::vt::partial_tail<x, Xs...> {};
+struct drop_enable_type<false, x, Xs...> 
+    : srook::tmpl::vt::partial_tail<x - 1, Xs...> {};
 
 template <class... Xs>
-struct drop_enable_type<false, 0, Xs...> : type_constant<packer<Xs...>> {};
+struct drop_enable_type<false, 0, Xs...> 
+    : type_constant<packer<Xs...>> {};
 
 } // namespace detail
 
