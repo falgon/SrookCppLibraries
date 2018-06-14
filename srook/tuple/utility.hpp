@@ -3,6 +3,9 @@
 #define INCLUDED_SROOK_TUPLE_UTILITY_HPP
 
 #include <srook/tuple/utility/curry.hpp>
+#include <srook/tuple/utility/dupe.hpp>
+#include <srook/tuple/utility/nth.hpp>
+#include <srook/tuple/utility/pipeop.hpp>
 #include <srook/tuple/utility/uncurry.hpp>
 
 #endif

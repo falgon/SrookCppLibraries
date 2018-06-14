@@ -30,7 +30,8 @@ private:
         : base_type(srook::forward<Fn>(f)) {}
     
     template <class Fn, class Res, class Arg, bool is_n, class F>
-    friend SROOK_CONSTEXPR intrinsic_lambda_uncurry<Fn, Res, Arg, is_n> intrinsic_lambda_uncurry_construct(F&&) SROOK_NOEXCEPT_TRUE;
+    friend SROOK_CONSTEXPR intrinsic_lambda_uncurry<Fn, Res, Arg, is_n> 
+    intrinsic_lambda_uncurry_construct(F&&) SROOK_NOEXCEPT_TRUE;
 };
 
 template <class FnType, class ResultType, class ArgType, bool is_noexcept, class F>
@@ -64,7 +65,7 @@ detail::intrinsic_lambda_uncurry<
     detail::is_noexcept_type<F>::value
 >
 #endif
-uncurry(F&& fn) SROOK_NOEXCEPT_TRUE
+uncurry(F&& fn) SROOK_NOEXCEPT(detail::is_noexcept_type<F>::value)
 {
 #if SROOK_CPP_LAMBDAS && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     return 

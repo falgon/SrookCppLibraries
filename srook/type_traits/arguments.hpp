@@ -13,6 +13,7 @@
 #include <srook/type_traits/is_callable.hpp>
 #include <srook/type_traits/is_pointer.hpp>
 #include <srook/type_traits/conditional.hpp>
+#include <srook/type_traits/remove_pointer.hpp>
 #include <srook/tmpl/vt/detail/config.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, type_traits) {
@@ -73,7 +74,10 @@ struct arguments_impl<true, F>
 
 template <class F>
 struct arguments 
-    : detail::arguments_impl<type_traits::detail::Lor<is_function<F>, is_member_function_pointer<F>, is_callable<F>>::value, F> {};
+    : detail::arguments_impl<
+        type_traits::detail::Lor<is_function<SROOK_DEDUCED_TYPENAME remove_pointer<F>::type>, is_member_function_pointer<F>, is_callable<F>>::value, 
+        SROOK_DEDUCED_TYPENAME conditional<is_member_function_pointer<F>::value, F, SROOK_DEDUCED_TYPENAME remove_pointer<F>::type>::type
+    > {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <class F>

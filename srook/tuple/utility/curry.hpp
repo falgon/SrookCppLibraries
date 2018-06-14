@@ -66,7 +66,7 @@ detail::intrinsic_lambda_curry<
     detail::is_noexcept_type<F>::value
 >
 #endif
-curry(F&& fn) SROOK_NOEXCEPT_TRUE
+curry(F&& fn) SROOK_NOEXCEPT(detail::is_noexcept_type<F>::value)
 {
 #if SROOK_CPP_LAMBDAS && SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
     return 
