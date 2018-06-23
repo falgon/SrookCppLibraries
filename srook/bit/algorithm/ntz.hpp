@@ -38,7 +38,7 @@ struct magic<srook::uint8_t> : public integral_constant<unsigned int, 0x1dU> {
 };
 
 template <>
-struct magic<srook::uint16_t> : public integral_constant<unsigned int, 0x0d2dU> {
+struct magic<srook::uint16_t> : public integral_constant<unsigned int, 0x0f2dU> {
     static SROOK_CONSTEXPR_OR_CONST int shift = 11;
     static SROOK_CONSTEXPR_OR_CONST int table[] = {
         16, 0, -1, 1, -1, 8, -1, 2, 14, -1, -1, 9, -1, 11, -1, 3,
@@ -58,7 +58,7 @@ struct magic<srook::uint32_t> : public integral_constant<srook::uint32_t, 0x07c5
 };
 
 template <>
-struct magic<srook::uint64_t> : public integral_constant<srook::uint64_t, 0x03F0A933ADCBD8D1ULL> {
+struct magic<srook::uint64_t> : public integral_constant<srook::uint64_t, 0x03f0a933adcbd8d1ULL> {
     static SROOK_CONSTEXPR_OR_CONST int shift = 57;
     static SROOK_CONSTEXPR_OR_CONST int table[] = {
         64,  0, -1, 1, -1, 12, -1, 2, 60, -1, 13, -1, -1, 53, -1, 3,
