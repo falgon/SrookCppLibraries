@@ -31,6 +31,7 @@
 #include <srook/tmpl/vt/intersperse.hpp>
 #include <srook/tmpl/vt/is_contained_in.hpp>
 #include <srook/tmpl/vt/is_contained_in_like.hpp>
+#include <srook/tmpl/vt/iterate.hpp>
 #include <srook/tmpl/vt/last.hpp>
 #include <srook/tmpl/vt/lat.hpp>
 #include <srook/tmpl/vt/map.hpp>
