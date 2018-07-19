@@ -7,8 +7,14 @@
 #include <srook/config/cpp_predefined.hpp>
 #include <srook/config/feature.hpp>
 #include <srook/config/require.hpp>
-#include <srook/type_traits.hpp>
-#include <srook/utility.hpp>
+#include <srook/type_traits/is_constructible.hpp>
+#include <srook/type_traits/is_copy_assignable.hpp>
+#include <srook/type_traits/remove_pointer.hpp>
+#include <srook/type_traits/is_copy_constructible.hpp>
+#include <srook/type_traits/decay.hpp>
+#include <srook/utility/move.hpp>
+#include <srook/utility/noncopyable.hpp>
+#include <srook/utility/exchange.hpp>
 #include <type_traits>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
