@@ -10,7 +10,7 @@
 
 #include <srook/config.hpp>
 #include <iterator>
-#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS14_CONSTANT
 #include <initializer_list>
 #include <valarray>
 
