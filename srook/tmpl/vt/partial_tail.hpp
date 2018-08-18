@@ -4,6 +4,7 @@
 
 #include <srook/tmpl/vt/detail/config.hpp>
 #include <srook/utility/index_sequence.hpp>
+#include <srook/utility/void_t.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)

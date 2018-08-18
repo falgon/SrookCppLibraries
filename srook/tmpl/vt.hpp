@@ -2,6 +2,7 @@
 #ifndef INCLUDED_SROOK_TMPL_VT_HPP
 #define INCLUDED_SROOK_TMPL_VT_HPP
 
+#include <srook/tmpl/vt/any.hpp>
 #include <srook/tmpl/vt/apply.hpp>
 #include <srook/tmpl/vt/at.hpp>
 #include <srook/tmpl/vt/bind.hpp>
@@ -31,6 +32,8 @@
 #include <srook/tmpl/vt/intersperse.hpp>
 #include <srook/tmpl/vt/is_contained_in.hpp>
 #include <srook/tmpl/vt/is_contained_in_like.hpp>
+#include <srook/tmpl/vt/is_infix_of.hpp>
+#include <srook/tmpl/vt/is_prefix_of.hpp>
 #include <srook/tmpl/vt/iterate.hpp>
 #include <srook/tmpl/vt/last.hpp>
 #include <srook/tmpl/vt/lat.hpp>
@@ -63,6 +66,7 @@
 #include <srook/tmpl/vt/swap_at.hpp>
 #include <srook/tmpl/vt/swap_at_specified.hpp>
 #include <srook/tmpl/vt/tail.hpp>
+#include <srook/tmpl/vt/tails.hpp>
 #include <srook/tmpl/vt/take.hpp>
 #include <srook/tmpl/vt/take_while.hpp>
 #include <srook/tmpl/vt/take_whileD.hpp>
