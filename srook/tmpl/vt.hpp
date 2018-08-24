@@ -9,6 +9,7 @@
 #include <srook/tmpl/vt/compare.hpp>
 #include <srook/tmpl/vt/concat.hpp>
 #include <srook/tmpl/vt/cons.hpp>
+#include <srook/tmpl/vt/defines.hpp>
 #include <srook/tmpl/vt/drop.hpp>
 #include <srook/tmpl/vt/drop_while.hpp>
 #include <srook/tmpl/vt/drop_whileD.hpp>
@@ -37,6 +38,7 @@
 #include <srook/tmpl/vt/iterate.hpp>
 #include <srook/tmpl/vt/last.hpp>
 #include <srook/tmpl/vt/lat.hpp>
+#include <srook/tmpl/vt/lookup.hpp>
 #include <srook/tmpl/vt/map.hpp>
 #include <srook/tmpl/vt/mapD.hpp>
 #include <srook/tmpl/vt/max.hpp>
@@ -74,5 +76,6 @@
 #include <srook/tmpl/vt/transpose.hpp>
 #include <srook/tmpl/vt/tt_proxy.hpp>
 #include <srook/tmpl/vt/unique.hpp>
-
+#include <srook/tmpl/vt/zip.hpp>
+#include <srook/tmpl/vt/zip_with.hpp>
 #endif
