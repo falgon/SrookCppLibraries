@@ -7,8 +7,6 @@
 #include <srook/tmpl/vt/map.hpp>
 #include <srook/math/constants/algorithm/abs.hpp>
 
-#include <boost/type_index.hpp>
-
 BOOST_AUTO_TEST_SUITE(srook_math_vector_test)
 
 BOOST_AUTO_TEST_CASE(vector_construct)

@@ -16,20 +16,8 @@
 #include <srook/tmpl/vt/bind.hpp>
 #include <complex>
 
-#include <iostream>
-
 SROOK_NESTED_NAMESPACE(srook, math) {
 SROOK_INLINE_NAMESPACE(v1)
-
-namespace detail {
-
-template <template <class...> class F>
-struct result_proxy {
-    template <class... U>
-    using type = SROOK_DEDUCED_TYPENAME F<U...>::result_type;
-};
-
-} // namespace detail
 
 template <class... Ts>
 class vector : public detail::vector_impl<Ts...> {
