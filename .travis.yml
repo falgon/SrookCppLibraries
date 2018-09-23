@@ -5,30 +5,27 @@ env:
 notifications:
   slack:
     secure: ujjO4WTtnEa5yq5HuEy+dcqjmEOTuoYyaRIBnt7dgf+8tv+nv4NsvGNURaYH2QTXjMOnVTTUUmPb3YnMgAQCXQlVQTsfqq1kHXgBNZPVYvazN9NB+3sseGBv5kwur+BWP3gLPgtfU0kuNSLFC+g2BoGjZ6dZZQ+jq4UtYCp/9NhZlbQVRj7HiKLTbTHS4UPh/ZxAZqT4hSN75NlY4P+7+9QkyOjcL7bQy8jlpTDE6Y0FJtQk6ibWqoigmMGoPZv9JVvpL4SPZV/3v8cwzXiYfhBJkOqpYjnC62pGF4kzemn3yTaIJFQoN5xiXQiCkg4IWylNt1G4DTd5zYmj/zLqPfH2nuABJBw27hZxYUxJwxDJUojz84phnOq5iv+7MmbkPXhQSo+mM81a2sUfQWcncU5bFV+ZM5ZhXCUZdpjbQRiCzD6+/bFBHxkRCpPy0WIDFaEhixXeAzAYrafNZJ10EIqKVfdO9AZCwSmzV/q84AK1ZZkyHfOHdhafoBCZ9+nQbOkesoNPiBN6aqqBatgFExT8qs445TCDoIKV2xF36V9hw26sRv3nqRclDGfDkmlEPJm0PdNT8e5lxpASgY2DcC7AdT2GqcWvhbq9zPh4y8okBnR4Xc+r1gBYbYgL6htiIISdv1L8pNiayZIR49OXiKFd8SILRCPcye/2Lz+UCkc=
+  email: false
 
 apt:
     update: true
+cache:
+    apt: true
+    directories:
+        - "$TRAVIS_BUILD_DIR/include"
+        - "$TRAVIS_BUILD_DIR/lib"
 
 language: cpp
 os:
     - linux
 sudo: required
 dist: trusty
-script:
-    - g++-7 --version
-    - cd tests && make && make run
-    - make clean
-    - make -f Makefile.zlib run
-    - make -f Makefile.zlib clean
-    - chmod +x ./cstring/sde_script.sh
-    - ./cstring/sde_script.sh 1
-    - ./cstring/sde_script.sh 0
-    - make -f ./cstring/Makefile && make -f ./cstring/Makefile run && make -f ./cstring/Makefile clean
 compiler:
     - gcc
+
 before_install:
-    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then chmod +x ./travis/linux/before_install.sh; ./travis/linux/before_install.sh; fi;
-    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then chmod +x ./travis/mac/before_install.sh; ./travis/mac/before_install.sh; fi;
+    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then chmod +x ./travis/linux/before_install.sh; source ./travis/linux/before_install.sh; fi;
+    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then chmod +x ./travis/mac/before_install.sh; source ./travis/mac/before_install.sh; fi;
 install:
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then chmod +x ./travis/linux/install.sh; ./travis/linux/install.sh; fi;
     - if [ "$TRAVIS_OS_NAME" = "osx" ]; then chmod +x ./travis/osx/install.sh; ./travis/osx/install.sh; fi;
@@ -36,6 +33,19 @@ install:
     - tar xzf boost_1_65_1.tar.gz
     - cd boost_1_65_1
     - ./bootstrap.sh
-    - ./b2 link=static,shared install -d0 -j3 --prefix=../ --with-program_options
+    - ./b2 link=static,shared install -d0 -j ${CPU_NUM} --prefix=$TRAVIS_BUILD_DIR --with-program_options
     - export LD_LIBRARY_PATH=../lib:$LD_LIBRARY_PATH
     - cd ../
+script:
+    - g++-7 --version
+    - cd tests 
+    - make -j ${CPU_NUM}
+    - make run
+    - make clean
+    - make -f Makefile.zlib -j ${CPU_NUM} run
+    - make -f Makefile.zlib clean
+    - chmod +x ./cstring/sde_script.sh
+    - ./cstring/sde_script.sh 1
+    - ./cstring/sde_script.sh 0
+    - make -f ./cstring/Makefile -j ${CPU_NUM}
+    - make -f ./cstring/Makefile run && make -f ./cstring/Makefile clean

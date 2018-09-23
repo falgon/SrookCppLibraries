@@ -1,0 +1,154 @@
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+#ifndef INCLUDED_SROOK_MATH_GEOMETORY_FUNDAMENTAL_VECTOR_CORE_HPP
+#define INCLUDED_SROOK_MATH_GEOMETORY_FUNDAMENTAL_VECTOR_CORE_HPP
+
+#ifndef _MSC_VER
+#   if _MSC_VER > 1000
+#       pragma once
+#   endif
+#endif
+
+#include <srook/config.hpp>
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#include <srook/math/vector/impl.hpp>
+#include <srook/tmpl/vt/map.hpp>
+#include <srook/tmpl/vt/composition.hpp>
+#include <srook/tmpl/vt/bind.hpp>
+#include <complex>
+
+#include <iostream>
+
+SROOK_NESTED_NAMESPACE(srook, math) {
+SROOK_INLINE_NAMESPACE(v1)
+
+namespace detail {
+
+template <template <class...> class F>
+struct result_proxy {
+    template <class... U>
+    using type = SROOK_DEDUCED_TYPENAME F<U...>::result_type;
+};
+
+} // namespace detail
+
+template <class... Ts>
+class vector : public detail::vector_impl<Ts...> {
+    typedef detail::vector_impl<Ts...> base_type;
+public:
+    using base_type::base_type;
+};
+
+template <class T>
+class vector<T> : public detail::vector_impl<T> {
+    typedef detail::vector_impl<T> base_type;
+public:
+    using base_type::base_type;
+
+    template <class U>
+    SROOK_CONSTEXPR int cross_product(const vector<U>&) const SROOK_NOEXCEPT_TRUE { return 0; }
+    template <class U>
+    SROOK_CONSTEXPR int cross_product(const std::complex<U>&) const SROOK_NOEXCEPT_TRUE { return 0; }
+};
+
+template <class T1, class T2, class T3>
+class vector<T1, T2, T3> : public detail::vector_impl<T1, T2, T3> {
+    typedef detail::vector_impl<T1, T2, T3> base_type;
+public:
+    using base_type::base_type;
+
+    template <class U1, class U2, class U3>
+    SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<
+        tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<U1, U2, U3>, tmpl::vt::packer<T1, T2, T3>>::type>::value,
+        detail::Expression<
+            detail::Expression<vector<T2, T3, T1>, std::multiplies<>, vector<U3, U1, U2>>,
+            std::minus<>,
+            detail::Expression<vector<T3, T1, T2>, std::multiplies<>, vector<U2, U3, U1>>
+        >
+    >::type
+    cross_product(const vector<U1, U2, U3>& rhs) const
+    {
+        typedef detail::Expression<vector<T2, T3, T1>, std::multiplies<>, vector<U3, U1, U2>> left_exp;
+        typedef detail::Expression<vector<T3, T1, T2>, std::multiplies<>, vector<U2, U3, U1>> right_exp;
+        typedef detail::Expression<left_exp, std::minus<>, right_exp> expression_type;
+        return 
+            expression_type(
+                left_exp(
+                    vector<T2, T3, T1>(this->template get<1>(), this->template get<2>(), this->template get<0>()),
+                    vector<U3, U1, U2>(rhs.template get<2>(), rhs.template get<0>(), rhs.template get<1>())),
+                right_exp(
+                    vector<T3, T1, T2>(this->template get<2>(), this->template get<0>(), this->template get<1>()),
+                    vector<U2, U3, U1>(rhs.template get<1>(), rhs.template get<2>(), rhs.template get<0>())));
+    }
+    
+    template <class U1, class U2, class U3>
+    SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<
+        tmpl::vt::and_<
+            SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<
+                is_convertible, 
+                SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, U1, U2, U3>::type, 
+                SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, T1, T2, T3>::type
+            >::type
+        >::value,
+        detail::Expression<
+            detail::Expression<
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, T2, T3, T1>::type>::type, 
+                std::multiplies<>, 
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, U3, U1, U2>::type>::type
+            >,
+            std::minus<>,
+            detail::Expression<
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, T3, T1, T2>::type>::type, 
+                std::multiplies<>, 
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, U2, U3, U1>::type>::type
+            >
+        >
+    >::type
+    cross_product(U1&& u1, U2&& u2, U3&& u3) const
+    {
+        typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, U1, U2, U3>::type>::type vec_type;
+        return cross_product(vec_type(srook::forward<U1>(u1), srook::forward<U2>(u2), srook::forward<U3>(u3)));
+    }
+};
+
+// helper functions
+template <class... Ts>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> make_vector(Ts&&... ts) SROOK_NOEXCEPT_TRUE
+{
+    return vector<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>(srook::forward<Ts>(ts)...);
+}
+
+template <class... Ts>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> make_vector(const std::tuple<Ts...>& ts) SROOK_NOEXCEPT_TRUE
+{
+    return vector<Ts...>(ts);
+}
+
+#if SROOK_CPP_DEDUCTION_GUIDES
+template <class... Ts>
+vector(Ts&&...) -> vector<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>;
+
+template <class... Ts>
+vector(const std::tuple<Ts...>&) -> vector<Ts...>;
+#endif
+
+SROOK_INLINE_NAMESPACE_END
+} SROOK_NESTED_NAMESPACE_END(math, srook)
+
+namespace std {
+
+template <class... Ts>
+struct tuple_size<srook::math::vector<Ts...>> : integral_constant<std::size_t, sizeof...(Ts)> {};
+
+template <std::size_t I, class... Ts>
+struct tuple_element<I, srook::math::vector<Ts...>> 
+    : srook::tmpl::vt::boolean<
+        srook::tmpl::vt::ignore<SROOK_NULLOPT_T>::template generate,
+        srook::math::detail::index_bind<I>::template generate,
+        srook::math::detail::is_onemore,
+        Ts...
+    > {};
+    
+} // namespace std
+
+#endif
+#endif

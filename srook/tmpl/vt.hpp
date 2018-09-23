@@ -2,11 +2,15 @@
 #ifndef INCLUDED_SROOK_TMPL_VT_HPP
 #define INCLUDED_SROOK_TMPL_VT_HPP
 
+#include <srook/tmpl/vt/all.hpp>
+#include <srook/tmpl/vt/and.hpp>
 #include <srook/tmpl/vt/any.hpp>
 #include <srook/tmpl/vt/apply.hpp>
 #include <srook/tmpl/vt/at.hpp>
 #include <srook/tmpl/vt/bind.hpp>
+#include <srook/tmpl/vt/boolean.hpp>
 #include <srook/tmpl/vt/compare.hpp>
+#include <srook/tmpl/vt/composition.hpp>
 #include <srook/tmpl/vt/concat.hpp>
 #include <srook/tmpl/vt/cons.hpp>
 #include <srook/tmpl/vt/defines.hpp>
@@ -23,9 +27,11 @@
 #include <srook/tmpl/vt/first.hpp>
 #include <srook/tmpl/vt/foldl.hpp>
 #include <srook/tmpl/vt/foldr.hpp>
+#include <srook/tmpl/vt/foldr1.hpp>
 #include <srook/tmpl/vt/group.hpp>
 #include <srook/tmpl/vt/group_by.hpp>
 #include <srook/tmpl/vt/head.hpp>
+#include <srook/tmpl/vt/ignore.hpp>
 #include <srook/tmpl/vt/index_of.hpp>
 #include <srook/tmpl/vt/init.hpp>
 #include <srook/tmpl/vt/insert_at.hpp>
@@ -48,6 +54,7 @@
 #include <srook/tmpl/vt/move_tail.hpp>
 #include <srook/tmpl/vt/not_fn.hpp>
 #include <srook/tmpl/vt/null.hpp>
+#include <srook/tmpl/vt/or.hpp>
 #include <srook/tmpl/vt/partial_head.hpp>
 #include <srook/tmpl/vt/partial_tail.hpp>
 #include <srook/tmpl/vt/pop_back.hpp>

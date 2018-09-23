@@ -28,7 +28,6 @@ TEST1 = tuple/utility/test.o\
 	numeric/fixed_point/compare_test.o\
 	numeric/fixed_point/construct_test.o\
 	numeric/fixed_point/operator_test.o\
-	cfenv/round_switch/test1.o\
 	algorithm/sort/intro.o\
 	range/adaptor/drop.o\
 	range/adaptor/drop_while.o\
@@ -39,7 +38,9 @@ TEST1 = tuple/utility/test.o\
 	range/adaptor/transformed.o\
 	tmpl/vt/sort/bsort.o\
 	tmpl/vt/sort/qsort.o\
-	tmpl/vt/fold.o
+	tmpl/vt/fold.o\
+	math/vector/test1.o\
+	cfenv/round_switch/test1.o
 
 all: gcc_target1
 
@@ -65,7 +66,6 @@ run:
 	./numeric/fixed_point/cast_test.o $(BOOST_TEST_OP)
 	./numeric/fixed_point/construct_test.o $(BOOST_TEST_OP)
 	./numeric/fixed_point/operator_test.o $(BOOST_TEST_OP)
-	./cfenv/round_switch/test1.o $(BOOST_TEST_OP)
 	./algorithm/sort/intro.o $(BOOST_TEST_OP)
 	./range/adaptor/drop.o $(BOOST_TEST_OP)
 	./range/adaptor/drop_while.o $(BOOST_TEST_OP)
@@ -77,6 +77,8 @@ run:
 	./tmpl/vt/sort/bsort.o $(BOOST_TEST_OP)
 	./tmpl/vt/sort/qsort.o $(BOOST_TEST_OP)
 	./tmpl/vt/fold.o $(BOOST_TEST_OP)
+	./math/vector/test1.o $(BOOST_TEST_OP)
+	./cfenv/round_switch/test1.o $(BOOST_TEST_OP)
 
 clean:
 	$(RM) $(TEST1)

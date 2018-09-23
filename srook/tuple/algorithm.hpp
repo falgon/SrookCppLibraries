@@ -10,6 +10,7 @@
 #include <srook/tuple/algorithm/erase_at.hpp>
 #include <srook/tuple/algorithm/filter_type.hpp>
 #include <srook/tuple/algorithm/reverse.hpp>
+#include <srook/tuple/algorithm/replicate.hpp>
 #include <srook/tuple/algorithm/rotate.hpp>
 #include <srook/tuple/algorithm/split.hpp>
 

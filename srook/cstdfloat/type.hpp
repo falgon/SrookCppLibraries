@@ -432,6 +432,54 @@ namespace srook {
     
 } // namespace srook
 
+
+#if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#include <type_traits>
+#include <srook/type_traits/type_constant.hpp>
+
+namespace std {
+
+#ifndef __clang__
+template <>
+struct common_type<srook::floatmax_t, srook::floatmax_t>
+    : srook::type_constant<srook::floatmax_t> {};
+#endif
+
+template <class T>
+struct common_type<srook::floatmax_t, T>
+    : std::conditional<
+        std::is_integral<T>::value, 
+        srook::floatmax_t, 
+        SROOK_DEDUCED_TYPENAME std::conditional<(sizeof(srook::floatmax_t) > sizeof(T)), srook::floatmax_t, T>::type
+    > {};
+
+template <class T>
+struct common_type<T, srook::floatmax_t>
+    : common_type<srook::floatmax_t, T> {};
+
+#define COMMON_QUALS_DEF(QUALS)\
+    template <class T> \
+    struct common_type<srook::floatmax_t QUALS, T> \
+        : common_type<srook::floatmax_t, T> {}; \
+    template <class T> \
+    struct common_type<T, srook::floatmax_t QUALS> \
+        : common_type<T, srook::floatmax_t> {}
+
+COMMON_QUALS_DEF(const);
+COMMON_QUALS_DEF(const &);
+COMMON_QUALS_DEF(const &&);
+COMMON_QUALS_DEF(volatile);
+COMMON_QUALS_DEF(volatile &);
+COMMON_QUALS_DEF(volatile &&);
+COMMON_QUALS_DEF(const volatile);
+COMMON_QUALS_DEF(const volatile &);
+COMMON_QUALS_DEF(const volatile &&);
+
+#undef COMMON_QUALS_DEF
+
+} // namespace std
+#endif
+
 #if SROOK_HAS_DECIMAL_FLOATS && SROOK_HAS_INCLUDE(<decimal/decimal>)
 #   include <decimal/decimal>
 #endif
