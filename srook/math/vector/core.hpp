@@ -111,6 +111,15 @@ SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> make_vector(const std::tuple<Ts
     return vector<Ts...>(ts);
 }
 
+template <class Exp>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+enable_if<detail::has_exp_tag<SROOK_DEDUCED_TYPENAME decay<Exp>::type>::value, SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME decay<Exp>::type::packed_type>::type>::type
+make_vector(Exp&& exp) SROOK_NOEXCEPT_TRUE
+{
+    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME decay<Exp>::type::packed_type>::type vec_type;
+    return vec_type(srook::forward<Exp>(exp));
+}
+
 #if SROOK_CPP_DEDUCTION_GUIDES
 template <class... Ts>
 vector(Ts&&...) -> vector<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>;
