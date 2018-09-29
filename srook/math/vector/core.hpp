@@ -95,7 +95,6 @@ public:
                     SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type,
                     SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
                 >
-                //vector<U2, U3, U1>
             >
         >
     >::type
