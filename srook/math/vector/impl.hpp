@@ -49,25 +49,16 @@ SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
 
-template <class... Xs>
-struct is_onemore : bool_constant<(sizeof...(Xs) > 0)> {};
-
-template <std::size_t I>
-struct index_bind {
-    template <class... Ts>
-    struct generate : tmpl::vt::at<I, Ts...> {};
-};
-
-template <class... Ts, class L, class Operator, class R>
+template <class... Ts, class L, class Operator, class R, std::size_t s>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl<Ts...>&
-vector_impl_calculate(vector_impl<Ts...>& this_, const Expression<L, Operator, R>&, srook::index_sequence<>) SROOK_NOEXCEPT_TRUE 
+vector_impl_calculate(vector_impl<Ts...>& this_, const Expression<L, Operator, R, s>&, srook::index_sequence<>) SROOK_NOEXCEPT_TRUE 
 {
     return this_;
 }
 
-template <class... Ts, class L, class Operator, class R, std::size_t I1, std::size_t... Is>
+template <class... Ts, class L, class Operator, class R, std::size_t s, std::size_t I1, std::size_t... Is>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl<Ts...>& 
-vector_impl_calculate(vector_impl<Ts...>& v, const Expression<L, Operator, R>& exp, srook::index_sequence<I1, Is...>)
+vector_impl_calculate(vector_impl<Ts...>& v, const Expression<L, Operator, R, s>& exp, srook::index_sequence<I1, Is...>)
 {
     return v.template get<I1>() = SROOK_DEDUCED_TYPENAME std::tuple_element<I1, vector_impl<Ts...>>::type(exp.template get<I1>()), vector_impl_calculate(v, exp, srook::index_sequence<Is...>{});
 }
@@ -140,14 +131,14 @@ public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const std::tuple<Us...>& us) SROOK_NOEXCEPT(is_nothrow_constructible<std::tuple<Ts...>, Us&&...>::value)
         : elems_(us) {}
 
-    template <class L, class Operator, class R>
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const srook::math::detail::Expression<L, Operator, R>& exp)
+    template <class L, class Operator, class R, std::size_t s>
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const srook::math::detail::Expression<L, Operator, R, s>& exp)
     {
         detail::vector_impl_calculate(*this, exp, SROOK_DEDUCED_TYPENAME srook::make_index_sequence_type<sizeof...(Ts)>::type());
     }
 
-    template <class L, class Operator, class R>
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl& operator=(const srook::math::detail::Expression<L, Operator, R>& exp)
+    template <class L, class Operator, class R, std::size_t s>
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl& operator=(const srook::math::detail::Expression<L, Operator, R, s>& exp)
     {
         return detail::vector_impl_calculate(*this, exp, SROOK_DEDUCED_TYPENAME srook::make_index_sequence_type<size>::type());
     }

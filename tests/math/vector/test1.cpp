@@ -91,4 +91,16 @@ BOOST_AUTO_TEST_CASE(vector_perpendicular)
     SROOK_ST_ASSERT(srook::math::make_vector(1.f, 2.f, 2.f).perpendicular(4.f, 0.f, 3.f) == srook::math::make_vector(-0.6f, 2.f, .8f));
 }
 
+BOOST_AUTO_TEST_CASE(vector_compute_triangle_from_points)
+{
+    // Compute the area of the triangle for P1 = (1, 3, 0), P2 = (3, 4, 0), P3 = (2, 6, 0) 
+    // in compile time.
+    using namespace srook::math;
+
+    constexpr auto p1 = make_vector(1, 3, 0), p2 = make_vector(3, 4, 0), p3 = make_vector(2, 6, 0);
+    SROOK_ST_ASSERT(
+        ((p2 - p1).cross_product(p3 - p1).length() / 2 - 2.5) < srook::numeric_limits<double>::epsilon()
+    );
+}
+
 BOOST_AUTO_TEST_SUITE_END()

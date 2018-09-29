@@ -11,6 +11,7 @@
 #include <srook/config.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/math/vector/impl.hpp>
+#include <srook/tmpl/vt/at.hpp>
 #include <srook/tmpl/vt/map.hpp>
 #include <srook/tmpl/vt/composition.hpp>
 #include <srook/tmpl/vt/bind.hpp>
@@ -37,6 +38,75 @@ public:
     template <class U>
     SROOK_CONSTEXPR int cross_product(const std::complex<U>&) const SROOK_NOEXCEPT_TRUE { return 0; }
 };
+
+namespace detail {
+
+template <class L, class Operator, class R>
+struct Expression<L, Operator, R, 3> : Expression<L, Operator, R, 0> {
+private:
+    typedef Expression<L, Operator, R, 0> base_type;
+    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME base_type::packed_type>::type T1;
+    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::at<1, SROOK_DEDUCED_TYPENAME base_type::packed_type>::type T2;
+    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME base_type::packed_type>::type T3;
+public:
+    using base_type::base_type;
+
+    template <class U1, class U2, class U3>
+    SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<
+        tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<U1, U2, U3>, SROOK_DEDUCED_TYPENAME base_type::packed_type>::type>::value,
+        detail::Expression<
+            detail::Expression<vector<T2, T3, T1>, std::multiplies<>, vector<U3, U1, U2>>,
+            std::minus<>,
+            detail::Expression<vector<T3, T1, T2>, std::multiplies<>, vector<U2, U3, U1>>
+        >
+    >::type
+    cross_product(const vector<U1, U2, U3>& r) const SROOK_NOEXCEPT_TRUE
+    {
+        typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME base_type::packed_type>::type vec_type;
+        return vec_type(*this).cross_product(r);
+    }
+
+    template <class L1, class Op, class R1>
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR 
+    SROOK_DEDUCED_TYPENAME enable_if<
+        tmpl::vt::and_<
+            SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<
+                is_convertible, 
+                SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type, 
+                SROOK_DEDUCED_TYPENAME base_type::packed_type
+            >::type
+        >::value,
+        detail::Expression<
+            detail::Expression<
+                vector<T2, T3, T1>, 
+                std::multiplies<>, 
+                vector<
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type, 
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type,
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<1, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
+                >
+            >,
+            std::minus<>,
+            detail::Expression<
+                vector<T3, T1, T2>, 
+                std::multiplies<>, 
+                vector<
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<1, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type, 
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type,
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
+                >
+                //vector<U2, U3, U1>
+            >
+        >
+    >::type
+    cross_product(const Expression<L1, Op, R1, 3>& exp) const SROOK_NOEXCEPT_TRUE
+    {
+        typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type vec_type;
+        return cross_product(vec_type(exp));
+    }
+};
+
+} // namespace detail
 
 template <class T1, class T2, class T3>
 class vector<T1, T2, T3> : public detail::vector_impl<T1, T2, T3> {
