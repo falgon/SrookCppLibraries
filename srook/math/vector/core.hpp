@@ -12,7 +12,9 @@
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 #include <srook/math/vector/impl.hpp>
 #include <srook/tmpl/vt/at.hpp>
+#include <srook/tmpl/vt/bind.hpp>
 #include <srook/tmpl/vt/map.hpp>
+#include <srook/tmpl/vt/mapD.hpp>
 #include <srook/tmpl/vt/composition.hpp>
 #include <srook/tmpl/vt/bind.hpp>
 #include <complex>
@@ -40,6 +42,16 @@ public:
 };
 
 namespace detail {
+
+template <class... Ts>
+struct holder;
+
+template <class, class>
+struct type2i;
+
+template <class... Ts, std::size_t I>
+struct type2i<holder<Ts...>, integral_constant<std::size_t, I>>
+    : tmpl::vt::at<I, tmpl::vt::packer<Ts...>> {};
 
 template <class L, class Operator, class R>
 struct Expression<L, Operator, R, 3> : Expression<L, Operator, R, 0> {
@@ -80,21 +92,31 @@ public:
             detail::Expression<
                 vector<T2, T3, T1>, 
                 std::multiplies<>, 
-                vector<
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type, 
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type,
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<1, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
-                >
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<
+                    vector,
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::mapD<
+                        tmpl::vt::bind<
+                            type2i, 
+                            SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<holder, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
+                        >,
+                        tmpl::vt::packer<integral_constant<std::size_t, 2>, integral_constant<std::size_t, 0>, integral_constant<std::size_t, 1>>
+                    >::type
+                >::type
             >,
             std::minus<>,
             detail::Expression<
                 vector<T3, T1, T2>, 
                 std::multiplies<>, 
-                vector<
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<1, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type, 
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<2, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type,
-                    SROOK_DEDUCED_TYPENAME tmpl::vt::at<0, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
-                >
+                SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<
+                    vector,
+                    SROOK_DEDUCED_TYPENAME tmpl::vt::mapD<
+                        tmpl::vt::bind<
+                            type2i, 
+                            SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<holder, SROOK_DEDUCED_TYPENAME Expression<L1, Op, R1, 3>::packed_type>::type
+                        >,
+                        tmpl::vt::packer<integral_constant<std::size_t, 1>, integral_constant<std::size_t, 2>, integral_constant<std::size_t, 0>>
+                    >::type
+                >::type
             >
         >
     >::type
