@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_ITERATOR_RANGE_ITERATORS_RANGE_ITERATORS_HPP
 #define INCLUDED_SROOK_ITERATOR_RANGE_ITERATORS_RANGE_ITERATORS_HPP
 #include <srook/iterator/iterator_traits.hpp>

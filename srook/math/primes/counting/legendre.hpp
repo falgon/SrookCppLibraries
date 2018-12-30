@@ -1,11 +1,11 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 /**
  * @addtogroup srook_math_primes_counting
  * @file legendre.hpp
  * @brief The prime number counting function by Legendre (1808)
  * @author roki
  * @par Copyright
- * Copyright (C) 2011-2018 Roki. Distributed under the MIT License.
+ * Copyright (C) 2011-2019 Roki. Distributed under the MIT License.
  */
 //! @ingroup srook_math_primes_counting
 //! @{

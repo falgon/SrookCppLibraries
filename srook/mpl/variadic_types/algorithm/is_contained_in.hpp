@@ -1,5 +1,5 @@
 // Inspired by n4115
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #include <srook/config.hpp>
 #include <srook/mpl/variadic_types/pack.hpp>
 

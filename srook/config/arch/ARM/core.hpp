@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 // Reference: http://infocenter.arm.com/help/topic/com.arm.doc.dui0376d/DUI0376D_compiler_reference.pdf
 #include <srook/config/user_config.hpp>
 
