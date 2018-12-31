@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef SROOK_INCLUDED_ADAPTOR_OPERATOR
 #define SROOK_INCLUDED_ADAPTOR_OPERATOR
 #if 0

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_TAKE_WHILE_HPP
 #define INCLUDED_SROOK_RANGE_ADAPTOR_TAKE_WHILE_HPP
 #include <srook/range/adaptor/adaptor_operator.hpp>

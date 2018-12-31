@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INLCUDED_SROOK_PREPROCESSOR_CONCAT_HPP
 #define INLCUDED_SROOK_PREPROCESSOR_CONCAT_HPP
 

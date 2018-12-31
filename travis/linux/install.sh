@@ -2,7 +2,8 @@
 
 if [ "$TRAVIS_OS_NAME" = "linux" ]; then 
     sudo apt-get -qq -y install build-essential software-properties-common zlib1g-dev
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+#    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+	sudo add-apt-repository -y ppa:jonathonf/gcc
     sudo apt-get -qq update -y
     sudo apt-get -qq install gcc-7 g++-7 subversion make cmake python libtool zlib1g zlib1g-dev -y
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
