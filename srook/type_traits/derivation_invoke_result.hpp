@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_TYPE_TRAITS_DERIVATION_INVOKE_RESULT_HPP
 #define INCLUDED_SROOK_TYPE_TRAITS_DERIVATION_INVOKE_RESULT_HPP
 #include <srook/type_traits/detail/config.hpp>

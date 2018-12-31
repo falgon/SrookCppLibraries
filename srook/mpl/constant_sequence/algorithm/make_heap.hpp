@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_MAKE_HEAP_HPP
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_MAKE_HEAP_HPP
 #include<utility>

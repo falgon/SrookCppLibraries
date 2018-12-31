@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 // Reference: http://infocenter.arm.com/help/topic/com.arm.doc.dui0376d/DUI0376D_compiler_reference.pdf
 #ifndef INCLUDED_SROOK_CONFIG_ARCH_ARM_VERSION_HPP
 #define INCLUDED_SROOK_CONFIG_ARCH_ARM_VERSION_HPP

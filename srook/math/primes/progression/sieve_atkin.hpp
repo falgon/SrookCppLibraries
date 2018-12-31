@@ -1,11 +1,11 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 /**
  * @addtogroup srook_math_primes_progression
  * @file sieve_atkin.hpp
  * @brief The prime number generator by sieve of atkin algorithm.
  * @author roki
  * @par Copyright
- * Copyright (C) 2011-2018 Roki. Distributed under the MIT License.
+ * Copyright (C) 2011-2019 Roki. Distributed under the MIT License.
  */
 
 //! @ingroup srook_math_primes_progression

@@ -1,11 +1,11 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 /**
  * @addtogroup srook_math_primes_counting
  * @file sieve_sundaram.hpp
  * @brief The prime number counter by sieve of sundaram algorithm.
  * @author roki
  * @par Copyright
- * Copyright (C) 2011-2018 Roki. Distributed under the MIT License.
+ * Copyright (C) 2011-2019 Roki. Distributed under the MIT License.
  */
 
 //! @ingroup srook_math_primes_counting
