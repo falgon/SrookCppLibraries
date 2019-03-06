@@ -13,5 +13,15 @@
 #include <srook/tuple/algorithm/replicate.hpp>
 #include <srook/tuple/algorithm/rotate.hpp>
 #include <srook/tuple/algorithm/split.hpp>
+#include <srook/tuple/algorithm/take.hpp>
+#include <srook/tuple/algorithm/drop.hpp>
+#include <srook/tuple/algorithm/foldr.hpp>
+#include <srook/tuple/algorithm/foldr1.hpp>
+#include <srook/tuple/algorithm/foldl.hpp>
+#include <srook/tuple/algorithm/foldl1.hpp>
+#include <srook/tuple/algorithm/map.hpp>
+#include <srook/tuple/algorithm/iterate.hpp>
+#include <srook/tuple/algorithm/swap.hpp>
+#include <srook/tuple/algorithm/zip_with.hpp>
 
 #endif

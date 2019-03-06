@@ -1,11 +1,14 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
 #include <srook/math/vector.hpp>
+#include <srook/math/matrix.hpp>
 #include <srook/type_traits/is_same.hpp>
 #include <srook/type_traits/detail/logical.hpp>
 #include <srook/type_traits/decay.hpp>
 #include <srook/tmpl/vt/map.hpp>
 #include <srook/math/constants/algorithm/abs.hpp>
+
+#include <boost/type_index.hpp>
 
 BOOST_AUTO_TEST_SUITE(srook_math_vector_test)
 
@@ -101,6 +104,28 @@ BOOST_AUTO_TEST_CASE(vector_compute_triangle_from_points)
     SROOK_ST_ASSERT(
         ((p2 - p1).cross_product(p3 - p1).length() / 2 - 2.5) < srook::numeric_limits<double>::epsilon()
     );
+}
+
+BOOST_AUTO_TEST_CASE(vector_matrix_conversion)
+{
+    constexpr auto vec0 = srook::math::make_vector(1, 3, 0);
+    constexpr SROOK_DEDUCED_TYPENAME srook::tmpl::vt::transfer<
+        srook::math::linear_algebra::detail::matrix_impl, 
+        SROOK_DEDUCED_TYPENAME srook::tmpl::vt::replicate<
+            SROOK_DECLTYPE(vec0)::size,
+            SROOK_DEDUCED_TYPENAME srook::tmpl::vt::transfer<
+                srook::math::row,
+                SROOK_DEDUCED_TYPENAME srook::tmpl::vt::foldr1<std::common_type, SROOK_DEDUCED_TYPENAME SROOK_DECLTYPE(vec0)::packed_type>::type
+            >::type
+        >::type
+    >::type mat0 = srook::math::make_matrix(vec0);
+    constexpr auto vec1 = srook::math::make_vector(mat0);
+    SROOK_ST_ASSERT(vec0 == vec1);
+    SROOK_ST_ASSERT(vec0 == mat0);
+
+    constexpr SROOK_DECLTYPE(mat0) mat1 { 2, 3, 0 };
+    SROOK_ST_ASSERT(vec0 != mat1);
+    SROOK_ST_ASSERT(srook::math::make_vector(2, 3, 0) == mat1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

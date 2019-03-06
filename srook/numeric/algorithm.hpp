@@ -11,5 +11,13 @@
 #include <srook/numeric/algorithm/accumulate.hpp>
 #include <srook/numeric/algorithm/inner_product.hpp>
 #include <srook/numeric/algorithm/iota.hpp>
+#include <srook/numeric/algorithm/correlation_coefficient.hpp>
+#include <srook/math/geometry/algorithm/line/straight/least_squares.hpp>
+
+SROOK_NESTED_NAMESPACE(srook, numeric, algorithm) {
+
+using srook::math::geometry::algorithm::line::straight::least_squares;
+
+} SROOK_NESTED_NAMESPACE_END(algorithm, numeric, srook)
 
 #endif

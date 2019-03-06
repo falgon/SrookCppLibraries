@@ -17,6 +17,9 @@ template <template <class...> class MF>
 struct tt_proxy {
     template <class... Xs>
     struct type : MF<Xs...>::type {};
+
+    template <class... Xs>
+    struct ftype : MF<Xs...> {};
 };
 
 SROOK_INLINE_NAMESPACE_END

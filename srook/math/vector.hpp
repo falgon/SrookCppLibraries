@@ -8,6 +8,15 @@
 #   endif
 #endif
 
-#include <srook/math/vector/core.hpp>
+#include <srook/math/linear_algebra/vector.hpp>
+
+SROOK_NESTED_NAMESPACE(srook, math) {
+SROOK_INLINE_NAMESPACE(v1)
+
+using srook::math::linear_algebra::vector;
+using srook::math::linear_algebra::make_vector;
+
+SROOK_INLINE_NAMESPACE_END
+} SROOK_NESTED_NAMESPACE_END(math, srook)
 
 #endif

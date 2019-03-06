@@ -22,7 +22,7 @@ template <class F, class Tuple, std::size_t... I>
 SROOK_CONSTEXPR auto apply_impl(F&& f, Tuple&& t, index_sequence<I...>)
 -> typename invoke_result<F, decltype(std::get<I>(t))...>::type 
 {
-	return invoke(srook::forward<F>(f), std::get<I>(srook::forward<Tuple>(t))...);
+	return functional::invoke(srook::forward<F>(f), std::get<I>(srook::forward<Tuple>(t))...);
 }
 
 } // namespace detail

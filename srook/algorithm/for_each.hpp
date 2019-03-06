@@ -47,26 +47,24 @@ SROOK_FORCE_INLINE auto for_each(Range&& r, Functor&& functor) -> decltype(srook
 namespace {
 
 template <class Functor>
-void tuple_for_eacher(Functor&&)
-{
-}
+SROOK_CXX14_CONSTEXPR void tuple_for_eacher(Functor&&) {}
 
 template <class Functor, class Head, class... Tail, REQUIRES(is_callable<remove_ref_cv(Functor)>::value)>
-void tuple_for_eacher(Functor&& functor, Head&& head, Tail&&... tail)
+SROOK_CXX14_CONSTEXPR void tuple_for_eacher(Functor&& functor, Head&& head, Tail&&... tail)
 {
     functor(srook::forward<Head>(head));
     tuple_for_eacher(srook::forward<Functor>(functor), srook::forward<Tail>(tail)...);
 }
 
 template <class... Ts, class Functor, std::size_t... I, REQUIRES(is_callable<remove_ref_cv(Functor)>::value)>
-std::tuple<Ts...>& tuple_for_eacher(std::tuple<Ts...>& t, Functor&& functor, const SROOK_INDEX_SEQUENCE<I...>&&)
+SROOK_CXX14_CONSTEXPR std::tuple<Ts...>& tuple_for_eacher(std::tuple<Ts...>& t, Functor&& functor, const SROOK_INDEX_SEQUENCE<I...>&&)
 {
     tuple_for_eacher(srook::forward<Functor>(functor), std::get<I>(t)...);
     return t;
 }
 
 template <class... Ts, class Functor, std::size_t... I, REQUIRES(is_callable<remove_ref_cv(Functor)>::value)>
-const std::tuple<Ts...>& tuple_for_eacher(const std::tuple<Ts...>& t, Functor&& functor, const SROOK_INDEX_SEQUENCE<I...>&&)
+SROOK_CXX14_CONSTEXPR const std::tuple<Ts...>& tuple_for_eacher(const std::tuple<Ts...>& t, Functor&& functor, const SROOK_INDEX_SEQUENCE<I...>&&)
 {
     tuple_for_eacher(srook::forward<Functor>(functor), std::get<I>(t)...);
     return t;
@@ -79,7 +77,7 @@ template <
     class Functor,
     REQUIRES(
         is_callable<remove_ref_cv(Functor)>::value && !std::is_const<Tuple>::value && (std::tuple_size<typename remove_reference<Tuple>::type>::value or !std::tuple_size<typename remove_reference<Tuple>::type>::value))>
-SROOK_FORCE_INLINE auto for_each(Tuple&& t, Functor&& functor)
+SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR auto for_each(Tuple&& t, Functor&& functor)
     SROOK_NOEXCEPT(
         tuple_for_eacher(
             std::declval<decltype(static_cast<Tuple&&>(t))>(),
@@ -99,7 +97,7 @@ template <
     class... Ts,
     class Functor,
     REQUIRES(is_callable_v<remove_ref_cv(Functor)>)>
-SROOK_FORCE_INLINE auto for_each(const std::tuple<Ts...>& t, Functor&& functor)
+SROOK_FORCE_INLINE SROOK_CXX14_CONSTEXPR auto for_each(const std::tuple<Ts...>& t, Functor&& functor)
     SROOK_NOEXCEPT(
         tuple_for_eacher(t, std::declval<decltype(srook::forward<Functor>(functor))>(),
                          std::declval<SROOK_MAKE_INDEX_SEQUENCE(std::tuple_size<std::tuple<Ts...> >::value)>()))

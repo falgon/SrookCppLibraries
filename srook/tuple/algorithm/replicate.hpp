@@ -34,10 +34,21 @@ struct replicator<1> {
     }
 };
 
+template <>
+struct replicator<0> {
+    template <class... Ts>
+    static SROOK_CONSTEXPR std::tuple<>
+    execute(Ts&&...) SROOK_NOEXCEPT_TRUE
+    {
+        return std::make_tuple();
+    }
+};
+
 } // namespace detail
 
 template <std::size_t I, class T>
-SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<I, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
+SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME 
+tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<I, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
 replicate(T&& val) SROOK_NOEXCEPT_TRUE
 {
     return detail::replicator<I>::execute(srook::forward<T>(val));

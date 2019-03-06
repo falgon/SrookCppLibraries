@@ -1,7 +1,8 @@
-#ifndef INCLUDED_SROOK_MATH_VECTOR_EXPRESSION_HPP
-#define INCLUDED_SROOK_MATH_VECTOR_EXPRESSION_HPP
+// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+#ifndef INCLUDED_SROOK_MATH_VECTOR_LINEAR_ALGEBRA_EXPRESSION_HPP
+#define INCLUDED_SROOK_MATH_VECTOR_LIBEAR_ALGEBRA_EXPRESSION_HPP
 
-#include <srook/math/vector/impl.h>
+#include <srook/math/linear_algebra/vector/impl.h>
 #include <srook/cstdfloat.hpp>
 #include <srook/tmpl/vt/all.hpp>
 #include <srook/tmpl/vt/boolean.hpp>
@@ -10,7 +11,6 @@
 #include <srook/tmpl/vt/replicate.hpp>
 #include <srook/tmpl/vt/transfer.hpp>
 #include <srook/tmpl/vt/zip_with.hpp>
-#include <srook/type_traits/detail/has_type_gen.hpp>
 #include <srook/type_traits/detail/logical.hpp>
 #include <srook/type_traits/bool_constant.hpp>
 #include <srook/type_traits/is_arithmetic.hpp>
@@ -20,12 +20,9 @@
 #include <srook/utility/forward.hpp>
 #include <ostream>
 
-SROOK_NESTED_NAMESPACE(srook, math) {
+SROOK_NESTED_NAMESPACE(srook, math, linear_algebra) {
 SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
-
-SROOK_TT_DEF_HAS_TYPE_IMPL(exp_tag);
-SROOK_TT_DEF_HAS_TYPE(exp_tag);
 
 template <class L, class Operator, class R, std::size_t = L::size>
 struct Expression {
@@ -276,5 +273,5 @@ SROOK_NOEXCEPT(
 
 } // namespace detail
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(math, srook)
+} SROOK_NESTED_NAMESPACE_END(linear_algebra, math, srook)
 #endif

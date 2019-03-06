@@ -5,7 +5,7 @@
 #include <functional> // for std::plus,std::minus ...
 #include <srook/config/feature/constexpr.hpp>
 #include <srook/config/require.hpp>
-#include <srook/tuple/algorithm/split.hpp>
+#include <srook/tuple/algorithm/deprecated/split.hpp>
 #include <srook/type_traits/conditional.hpp>
 #include <srook/type_traits/conjunction.hpp>
 #include <srook/type_traits/decay.hpp>

@@ -12,5 +12,7 @@
 #include <srook/math/geometry.hpp>
 #include <srook/math/primes.hpp>
 #include <srook/math/complex.hpp>
+#include <srook/math/vector.hpp>
+#include <srook/math/matrix.hpp>
 
 #endif

@@ -20,10 +20,16 @@ tuple_reverse_impl(const std::tuple<Ts...> &tpl, SROOK_INDEX_SEQUENCE<n...>)
 
 } // namespace detail
 
-template <class... Ts>
-constexpr Transfer_t<std::tuple, Reverse_t<Ts...>> reverse(const std::tuple<Ts...> &tpl)
+template <class T, class... Ts>
+constexpr Transfer_t<std::tuple, Reverse_t<T, Ts...>> reverse(const std::tuple<T, Ts...> &tpl)
 {
-    return detail::tuple_reverse_impl(tpl, make_reverse_sequence<std::tuple_size<std::tuple<Ts...>>::value>());
+    return detail::tuple_reverse_impl(tpl, make_reverse_sequence<std::tuple_size<std::tuple<T, Ts...>>::value>());
+}
+
+SROOK_FORCE_INLINE SROOK_CONSTEXPR std::tuple<> 
+reverse(const std::tuple<>&)
+{
+    return std::make_tuple();
 }
 
 } // inline namespace v1
