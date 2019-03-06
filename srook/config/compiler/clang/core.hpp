@@ -167,7 +167,9 @@
 #        endif
 #        define SROOK_CLANG 1
 #    else
-#        define SROOK_HAS_PRAGMA_ONCE
+#        ifndef SROOK_HAS_PRAGMA_ONCE
+#            define SROOK_HAS_PRAGMA_ONCE
+#        endif
 #        if defined(_MSC_VER) && (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 4))
 #            define SROOK_HAS_PRAGMA_DETECT_MISMATCH
 #        endif
@@ -200,9 +202,17 @@
 #        if __has_include(<stdint.h>)
 #            define SROOK_HAS_STDINT_H
 #        endif
-#        define SROOK_HAS_NRVO
+#        ifndef SROOK_HAS_NRVO
+#            define SROOK_HAS_NRVO
+#        endif
 #        if !defined(__c2__) && defined(__has_builtin)
 #            if __has_builtin(__builtin_expect)
+#                ifdef SROOK_LIKELY
+#                    undef SROOK_LIKELY
+#                endif
+#                ifdef SROOK_UNLIKELY
+#                    undef SROOK_UNLIKELY
+#                endif
 #                define SROOK_LIKELY(x) __builtin_expect(x, 1)
 #                define SROOK_UNLIKELY(x) __builtin_expect(x, 0)
 #            endif
@@ -216,7 +226,9 @@
 #            endif
 #        endif
 #        if defined(__SIZEOF_INT128__) && !defined(SROOK_NVCC_CXX03) && !defined(_MSC_VER)
-#            define SROOK_HAS_INT128
+#            ifndef SROOK_HAS_INT128
+#                define SROOK_HAS_INT128
+#            endif
 #        endif
 #        if !defined(_WIN32) && !defined(__WIN32__) && !defined(WIN32)
 #            ifndef SROOK_SYMBOL_EXPORT
@@ -370,7 +382,9 @@
 #        if (__clang_major__ == 3) && (__clang_minor__ == 0)
 #            define SROOK_NO_CXX11_FIXED_LENGTH_VARIADIC_TEMPLATE_EXPANSION_PACKS
 #        endif
-#        define SROOK_ATTRIBUTE_UNUSED __attribute__((__unused__))
+#        ifndef SROOK_ATTRIBUTE_UNUSED
+#            define SROOK_ATTRIBUTE_UNUSED __attribute__((__unused__))
+#        endif
 #        if __has_attribute(__may_alias__)
 #            define SROOK_MAY_ALIAS __attribute__((__may_alias__))
 #        endif
