@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 // N4660 19.8 Predefined macro names [cpp.predefined]
 #ifndef INCLUDED_SROOK_CONFIG_CPP_PREDEFINED_MACRO_NAMES_HPP
 #define INCLUDED_SROOK_CONFIG_CPP_PREDEFINED_MACRO_NAMES_HPP

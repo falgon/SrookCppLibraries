@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CONFIG_ARCH_PARISC_CORE_HPP
 #define INCLUDED_SROOK_CONFIG_ARCH_PARISC_CORE_HPP
 #if defined(__hppa__) || defined(__hppa) || defined(__HPPA__)

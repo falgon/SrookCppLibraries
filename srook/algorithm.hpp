@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_ALGORITHM_HPP
 #define INCLUDED_ALGORITHM_HPP
 #include <srook/algorithm/back.hpp>

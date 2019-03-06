@@ -1,4 +1,4 @@
-//  Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+//  Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 /**
  * @file med_element.hpp
  * @brief Finds the median element in the range [first, last).

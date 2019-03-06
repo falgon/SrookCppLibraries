@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #define BOOST_TEST_MAIN
 #include <boost/test/included/unit_test.hpp>
 #include <srook/optional.hpp>

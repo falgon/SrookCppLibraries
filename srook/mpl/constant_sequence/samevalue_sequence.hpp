@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_SAMEVALUE_SEQUENCE
 #define INCLUDED_SROOK_MPL_CONSTANT_SEQUENCE_SAMEVALUE_SEQUENCE
 #include <srook/config/attribute/deprecated.hpp>
