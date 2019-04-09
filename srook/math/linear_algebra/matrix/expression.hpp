@@ -82,8 +82,6 @@ SROOK_DEDUCED_TYPENAME enable_if<
 >::type
 operator*(T&& val, const Exp& exp) SROOK_NOEXCEPT_TRUE
 {
-    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::column_length, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type row_type;
-    
     return srook::math::linear_algebra::detail::matrix_expression<
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<matrix_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::row_length, Exp>::type>::type,
         std::multiplies<>,
@@ -130,8 +128,6 @@ SROOK_DEDUCED_TYPENAME enable_if<
 >::type
 operator/(const Exp& exp, T&& val) SROOK_NOEXCEPT_TRUE
 {
-    typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::column_length, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type row_type;
-    
     return srook::math::linear_algebra::detail::matrix_expression<
         Exp,
         std::divides<>,
