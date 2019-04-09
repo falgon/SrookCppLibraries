@@ -8,9 +8,9 @@
 #include <srook/math/config/builtin.hpp>
 #include <type_traits>
 
-#if !SROOK_USE_BUILTIN_CMATH_FUNCTION or !SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
+//#if !SROOK_USE_BUILTIN_CMATH_FUNCTION or !SROOK_BUILTIN_CMATH_FUNCTION_IS_DEFINED_CONSTEXPR
 #include <srook/math/constants/algorithm/fabs.hpp>
-#endif
+//#endif
 
 namespace srook {
 namespace math {

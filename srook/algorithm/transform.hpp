@@ -18,6 +18,7 @@
 #include <srook/type_traits/invoke_result.hpp>
 #include <srook/type_traits/is_assignable.hpp>
 #include <srook/iterator/range_access.hpp>
+#include <srook/tuple/algorithm/map.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, algorithm) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -84,6 +85,13 @@ transform(const SinglePassRange& range, InputIter2 first2, OutputIter oiter, Bin
     return ::srook::algorithm::transform(range.cbegin(), range.cend(), first2, oiter, binary_op);
 }
 
+template <class... Ts, class UnaryOperation>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR 
+SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<std::tuple, SROOK_DEDUCED_TYPENAME tmpl::vt::mapD<tmpl::vt::bind<invoke_result, UnaryOperation>, Ts...>::type>::type
+transform(const std::tuple<Ts...>& ts, UnaryOperation unary_op)
+{
+    return srook::tuple::map(unary_op, ts);
+}
 #else
 
 template <class InputIter, class OutputIter, class UnaryOperation>

@@ -9,6 +9,8 @@
 #endif
 
 #include <srook/tmpl/vt/detail/config.hpp>
+#include <srook/tmpl/vt/tt_proxy.hpp>
+#include <srook/tmpl/vt/reverse.hpp>
 
 SROOK_NESTED_NAMESPACE(srook, tmpl, vt) {
 SROOK_INLINE_NAMESPACE(v1)
@@ -23,18 +25,31 @@ struct generate_impl<T, F, Fs...>
     : generate_impl<SROOK_DEDUCED_TYPENAME F<T>::type, Fs...> {};
 
 template <class T>
-struct generate_impl<T> : type_constant<T> {};
+struct generate_impl<T> 
+    : type_constant<T> {};
 
+/*
 template <template <class...> class... Fs>
 struct composition_impl {
     template <class T>
     struct generate : generate_impl<T, Fs...> {};
+};*/
+
+template <class>
+struct composition_impl;
+
+template <class... TTP>
+struct composition_impl<tmpl::vt::packer<TTP...>> {
+    template <class T>
+    struct generate 
+        : generate_impl<T, TTP::template ftype...> {};
 };
 
 } // namespace detail
 
 template <template <class...> class... Xs>
-struct composition : detail::composition_impl<Xs...> {};
+struct composition 
+    : detail::composition_impl<SROOK_DEDUCED_TYPENAME tmpl::vt::reverse<tt_proxy<Xs>...>::type> {};
 
 #if SROOK_CPP_ALIAS_TEMPLATES
 template <template <class...> class... Xs>

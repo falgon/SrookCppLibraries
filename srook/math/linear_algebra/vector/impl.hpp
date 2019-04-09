@@ -8,16 +8,18 @@
 #   endif
 #endif
 
-#include <srook/math/vector/impl.h>
+#include <srook/math/linear_algebra/vector/impl.h>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
+#include <srook/math/linear_algebra/matrix/impl.h>
+#include <srook/math/linear_algebra/vector/expression.hpp>
+#include <srook/math/linear_algebra/matrix/utils.hpp>
+#include <srook/math/constants/algorithm/abs.hpp>
+#include <srook/math/constants/algorithm/sqrt.hpp>
 #include <srook/algorithm/for_each.hpp>
 #include <srook/config/libraries/optional.hpp>
 #include <srook/cstdfloat.hpp>
-#include <srook/math/vector/expression.hpp>
-#include <srook/math/constants/algorithm/abs.hpp>
 #include <srook/limits/numeric_limits.hpp>
 #include <srook/utility/index_sequence.hpp>
-#include <srook/math/constants/algorithm/sqrt.hpp>
 #include <srook/optional.hpp>
 
 #include <srook/tmpl/vt/and.hpp>
@@ -43,8 +45,10 @@
 #include <srook/type_traits/is_floating_point.hpp>
 
 #include <srook/tuple/algorithm/replicate.hpp>
+#include <srook/tuple/algorithm/foldr1.hpp>
+#include <srook/tuple/algorithm/zip_with.hpp>
 
-SROOK_NESTED_NAMESPACE(srook, math) {
+SROOK_NESTED_NAMESPACE(srook, math, linear_algebra) {
 SROOK_INLINE_NAMESPACE(v1)
 
 namespace detail {
@@ -118,6 +122,10 @@ public:
     SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl() SROOK_NOEXCEPT(is_nothrow_constructible<elems_type&, elems_type>::value)
         : vector_impl(SROOK_DEDUCED_TYPENAME detail::is_onemore<Ts...>::type()) {}
 
+    template <class... Row, SROOK_REQUIRES(bool_constant<matrix_impl<Row...>::column_length == 1>::value)>
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const matrix_impl<Row...>& m) 
+        : elems_(tuple::map([](const auto& x) { return std::get<0>(x); } , m.to_tuple())) {}
+
     SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const vector_impl&) SROOK_DEFAULT
     SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl& operator=(const vector_impl&) SROOK_DEFAULT
 
@@ -132,13 +140,13 @@ public:
         : elems_(us) {}
 
     template <class L, class Operator, class R, std::size_t s>
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const srook::math::detail::Expression<L, Operator, R, s>& exp)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl(const srook::math::linear_algebra::detail::Expression<L, Operator, R, s>& exp)
     {
         detail::vector_impl_calculate(*this, exp, SROOK_DEDUCED_TYPENAME srook::make_index_sequence_type<sizeof...(Ts)>::type());
     }
 
     template <class L, class Operator, class R, std::size_t s>
-    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl& operator=(const srook::math::detail::Expression<L, Operator, R, s>& exp)
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR vector_impl& operator=(const srook::math::linear_algebra::detail::Expression<L, Operator, R, s>& exp)
     {
         return detail::vector_impl_calculate(*this, exp, SROOK_DEDUCED_TYPENAME srook::make_index_sequence_type<size>::type());
     }
@@ -159,6 +167,11 @@ public:
         return std::get<I>(elems_);
     }
 #endif
+
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const elems_type& to_tuple() const SROOK_NOEXCEPT_TRUE
+    {
+        return to_tuple_impl(bool_constant<(sizeof...(Ts) > 0)>{});
+    }
 
     SROOK_FORCE_INLINE SROOK_CONSTEXPR bool is_unit() const SROOK_NOEXCEPT_TRUE
     {
@@ -274,7 +287,7 @@ public:
     >::type
     dot_product(const vector_impl<Us...>& rhs) const
     {
-        typedef srook::math::detail::Expression<vector_impl<Ts...>, std::multiplies<>, vector_impl<Us...>> expression_type;
+        typedef srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::multiplies<>, vector_impl<Us...>> expression_type;
         typedef 
             SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<std::common_type, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>::type 
         vec_type;
@@ -336,7 +349,7 @@ public:
             detail::has_exp_tag<Exp>,
             bool_constant<Exp::size == sizeof...(Ts)>
         >::value, 
-        srook::math::detail::Expression<packed_type, std::plus<>, Exp>
+        srook::math::linear_algebra::detail::Expression<packed_type, std::plus<>, Exp>
     >::type
     operator+=(const Exp& exp) SROOK_NOEXCEPT_TRUE
     {
@@ -394,6 +407,16 @@ public:
 protected:
     elems_type elems_;
 
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR const std::tuple<Ts...>& to_tuple_impl(bool_constant<true>) const
+    {
+        return elems_;
+    }
+
+    SROOK_FORCE_INLINE SROOK_CONSTEXPR std::tuple<> to_tuple_impl(bool_constant<false>) const
+    {
+        return std::make_tuple();
+    }
+
     template <std::size_t... Is>
     SROOK_FORCE_INLINE SROOK_CONSTEXPR srook::floatmax_t 
     length_impl(index_sequence<Is...>) const SROOK_NOEXCEPT_TRUE
@@ -404,7 +427,7 @@ protected:
     SROOK_FORCE_INLINE std::ostream& 
     output_stream(SROOK_TRUE_TYPE, std::ostream& os) const
     {
-        srook::for_each(elems_, [&os](const auto& val) { os << val << " "; });
+        srook::for_each(elems_, [&os](const auto& val) { os << val << "\n"; });
         return os;
     }
 
@@ -422,91 +445,14 @@ protected:
 };
 
 // Equality
-template <bool>
-struct round_err_equal {
-    template <class L, class R>
-    SROOK_FORCE_INLINE static SROOK_CONSTEXPR bool eq(L&& l, R&& r)
-    SROOK_NOEXCEPT(tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::map<tmpl::vt::composition<is_nothrow_equality_comparable, decay>::template generate, L, R>::type>::value) 
-    {
-        return srook::forward<L>(l) == srook::forward<R>(r);
-    }
-};
-
-template <>
-struct round_err_equal<true> {
-    template <class L, class R>
-    SROOK_FORCE_INLINE static SROOK_CONSTEXPR bool eq(L&& l, R&& r)
-    {
-        typedef SROOK_DEDUCED_TYPENAME tmpl::vt::apply<std::common_type, SROOK_DEDUCED_TYPENAME tmpl::vt::map<decay, L, R>::type>::type cm_type;
-        return srook::math::abs(srook::forward<L>(l) - srook::forward<R>(r)) < numeric_limits<cm_type>::epsilon();
-    }
-};
-
-#if !SROOK_CPP_FOLD_EXPRESSIONS
-SROOK_CONSTEXPR bool equality_no_fold() SROOK_NOEXCEPT_TRUE
-{
-    return true;
-}
-template <class B, class... Bs>
-SROOK_CONSTEXPR bool equality_no_fold(B&& b, Bs&&... bs) SROOK_NOEXCEPT_TRUE
-{
-    return b && equality_no_fold(srook::forward<Bs>(bs)...);
-}
-#endif
-template <class... Ts, class... Us, std::size_t... Is>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR 
-SROOK_DEDUCED_TYPENAME enable_if<
-    type_traits::detail::Land<
-        bool_constant<sizeof...(Ts) == sizeof...(Us)>,
-        tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>
-    >::value,
-    bool
->::type
-equality(const vector_impl<Ts...>& lhs, const vector_impl<Us...>& rhs, index_sequence<Is...>)
-SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_equality_comparable<Ts>..., is_nothrow_equality_comparable<Us>...>::value)
-{
-    return [](auto&&... bs){ 
-#if SROOK_CPP_FOLD_EXPRESSIONS
-        return  (srook::forward<SROOK_DECLTYPE(bs)>(bs) && ...);
-#else
-        return equality_no_fold(srook::forward<SROOK_DECLTYPE(bs)>(bs)...);
-#endif
-    }(round_err_equal<
-        tmpl::vt::any<
-            is_floating_point, 
-            SROOK_DEDUCED_TYPENAME decay<SROOK_DECLTYPE(lhs.template get<Is>())>::type, 
-            SROOK_DEDUCED_TYPENAME decay<SROOK_DECLTYPE(rhs.template get<Is>())>::type
-        >::type::value
-    >::eq(lhs.template get<Is>(), rhs.template get<Is>())...);
-}
-
 template <class... Ts, class... Us>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR
-SROOK_DEDUCED_TYPENAME enable_if<
-    type_traits::detail::Land<
-        bool_constant<sizeof...(Ts) != sizeof...(Us)>,
-        tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>
-    >::value,
-    bool
->::type
-operator==(const vector_impl<Ts...>&, const vector_impl<Us...>&) SROOK_NOEXCEPT_TRUE
-{
-    return false;
-}
-
-template <class... Ts, class... Us>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR 
-SROOK_DEDUCED_TYPENAME enable_if<
-    type_traits::detail::Land<
-        bool_constant<sizeof...(Ts) == sizeof...(Us)>,
-        tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>
-    >::value,
-    bool
->::type
+SROOK_FORCE_INLINE SROOK_CONSTEXPR bool
 operator==(const vector_impl<Ts...>& lhs, const vector_impl<Us...>& rhs) 
 SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_equality_comparable<Ts>..., is_nothrow_equality_comparable<Us>...>::value)
 {
-    return equality(lhs, rhs, SROOK_DEDUCED_TYPENAME make_index_sequence_type<sizeof...(Ts)>::type());
+    return 
+        sizeof...(Ts) == sizeof...(Us) ? 
+            tuple::foldr1(std::logical_and<bool>{}, tuple::zip_with(m_equality{}, lhs.to_tuple(), rhs.to_tuple())) : false;
 }
 
 template <class... Ts, class... Us>
@@ -517,6 +463,40 @@ SROOK_NOEXCEPT(type_traits::detail::Land<is_nothrow_equality_comparable<Ts>..., 
     return !(lhs == rhs);
 }
 
+template <class... Row, class... Ts>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<matrix_impl<Row...>::column_length == 1, bool>::type
+operator==(const matrix_impl<Row...>& lhs, const vector_impl<Ts...>& rhs)
+SROOK_NOEXCEPT(type_traits::detail::Land<row_elems_apply<tmpl::vt::all, is_nothrow_equality_comparable, Row...>, is_nothrow_equality_comparable<Ts>...>::value)
+{
+    typedef vector_impl<SROOK_DEDUCED_TYPENAME std::tuple_element<0, Row>::type...> vec_type;
+    return vec_type(lhs) == rhs;
+}
+
+template <class... Ts, class... Row>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<matrix_impl<Row...>::column_length == 1, bool>::type
+operator==(const vector_impl<Ts...>& lhs, const matrix_impl<Row...>& rhs)
+SROOK_NOEXCEPT(type_traits::detail::Land<row_elems_apply<tmpl::vt::all, is_nothrow_equality_comparable, Row...>, is_nothrow_equality_comparable<Ts>...>::value)
+{
+    return rhs == lhs;
+}
+
+template <class... Row, class... Ts>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<matrix_impl<Row...>::column_length == 1, bool>::type
+operator!=(const matrix_impl<Row...>& lhs, const vector_impl<Ts...>& rhs)
+SROOK_NOEXCEPT(type_traits::detail::Land<row_elems_apply<tmpl::vt::all, is_nothrow_equality_comparable, Row...>, is_nothrow_equality_comparable<Ts>...>::value)
+{
+    return !(lhs == rhs);
+}
+
+template <class... Ts, class... Row>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME enable_if<matrix_impl<Row...>::column_length == 1, bool>::type
+operator!=(const vector_impl<Ts...>& lhs, const matrix_impl<Row...>& rhs)
+SROOK_NOEXCEPT(type_traits::detail::Land<row_elems_apply<tmpl::vt::all, is_nothrow_equality_comparable, Row...>, is_nothrow_equality_comparable<Ts>...>::value)
+{
+    return rhs != lhs;
+}
+
+
 // Vector sum
 template <class... Ts, class... Us>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR 
@@ -525,11 +505,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         bool_constant<(sizeof...(Ts) == sizeof...(Us))>, 
         tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>
     >::value,
-    srook::math::detail::Expression<vector_impl<Ts...>, std::plus<>, vector_impl<Us...>>
+    srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::plus<>, vector_impl<Us...>>
 >::type
 operator+(const vector_impl<Ts...>& l, const vector_impl<Us...>& r) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::plus<>, vector_impl<Us...>>(l, r);
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::plus<>, vector_impl<Us...>>(l, r);
 }
 
 template <class... Ts, class Exp>
@@ -539,11 +519,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp>,
         bool_constant<Exp::size == sizeof...(Ts)>
     >::value, 
-    srook::math::detail::Expression<vector_impl<Ts...>, std::plus<>, Exp>
+    srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::plus<>, Exp>
 >::type
 operator+(const vector_impl<Ts...>& l, const Exp& exp) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::plus<>, Exp>(l, exp);
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::plus<>, Exp>(l, exp);
 }
 
 template <class... Ts, class Exp>
@@ -553,11 +533,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp>,
         bool_constant<Exp::size == sizeof...(Ts)>
     >::value, 
-    srook::math::detail::Expression<Exp, std::plus<>, vector_impl<Ts...>>
+    srook::math::linear_algebra::detail::Expression<Exp, std::plus<>, vector_impl<Ts...>>
 >::type
 operator+(const Exp& exp, const vector_impl<Ts...>& r) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<Exp, std::plus<>, vector_impl<Ts...>>(exp, r);
+    return srook::math::linear_algebra::detail::Expression<Exp, std::plus<>, vector_impl<Ts...>>(exp, r);
 }
 
 template <class Exp1, class Exp2>
@@ -568,11 +548,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp2>,
         bool_constant<Exp1::size == Exp2::size>
     >::value, 
-    srook::math::detail::Expression<Exp1, std::plus<>, Exp2>
+    srook::math::linear_algebra::detail::Expression<Exp1, std::plus<>, Exp2>
 >::type
 operator+(const Exp1& exp1, const Exp2& exp2) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<Exp1, std::plus<>, Exp2>(exp1, exp2);
+    return srook::math::linear_algebra::detail::Expression<Exp1, std::plus<>, Exp2>(exp1, exp2);
 }
 
 // Vector sub
@@ -583,11 +563,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         bool_constant<(sizeof...(Ts) == sizeof...(Us))>, 
         tmpl::vt::and_<SROOK_DEDUCED_TYPENAME tmpl::vt::zip_with<is_convertible, tmpl::vt::packer<Ts...>, tmpl::vt::packer<Us...>>::type>
     >::value,
-    srook::math::detail::Expression<vector_impl<Ts...>, std::minus<>, vector_impl<Us...>>
+    srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::minus<>, vector_impl<Us...>>
 >::type
 operator-(const vector_impl<Ts...>& l, const vector_impl<Us...>& r) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::minus<>, vector_impl<Us...>>(l, r);
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::minus<>, vector_impl<Us...>>(l, r);
 }
 
 template <class... Ts, class Exp>
@@ -597,11 +577,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp>,
         bool_constant<Exp::size == sizeof...(Ts)>
     >::value, 
-    srook::math::detail::Expression<vector_impl<Ts...>, std::minus<>, Exp>
+    srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::minus<>, Exp>
 >::type
 operator-(const vector_impl<Ts...>& l, const Exp& exp) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::minus<>, Exp>(l, exp);
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::minus<>, Exp>(l, exp);
 }
 
 template <class... Ts, class Exp>
@@ -611,11 +591,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp>,
         bool_constant<Exp::size == sizeof...(Ts)>
     >::value, 
-    srook::math::detail::Expression<Exp, std::minus<>, vector_impl<Ts...>>
+    srook::math::linear_algebra::detail::Expression<Exp, std::minus<>, vector_impl<Ts...>>
 >::type
 operator-(const Exp& exp, const vector_impl<Ts...>& r) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<Exp, std::minus<>, vector_impl<Ts...>>(exp, r);
+    return srook::math::linear_algebra::detail::Expression<Exp, std::minus<>, vector_impl<Ts...>>(exp, r);
 }
 
 template <class Exp1, class Exp2>
@@ -626,11 +606,11 @@ SROOK_DEDUCED_TYPENAME enable_if<
         detail::has_exp_tag<Exp2>,
         bool_constant<Exp1::size == Exp2::size>
     >::value, 
-    srook::math::detail::Expression<Exp1, std::minus<>, Exp2>
+    srook::math::linear_algebra::detail::Expression<Exp1, std::minus<>, Exp2>
 >::type
 operator-(const Exp1& exp1, const Exp2& exp2) SROOK_NOEXCEPT_TRUE
 {
-    return srook::math::detail::Expression<Exp1, std::minus<>, Exp2>(exp1, exp2);
+    return srook::math::linear_algebra::detail::Expression<Exp1, std::minus<>, Exp2>(exp1, exp2);
 }
 
 // Scalar multiplication
@@ -638,7 +618,7 @@ template <class... Ts, class T>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR
 SROOK_DEDUCED_TYPENAME enable_if<
     type_traits::detail::Land<is_convertible<SROOK_DEDUCED_TYPENAME decay<T>::type, Ts>...>::value,
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         vector_impl<Ts...>, std::multiplies<>, 
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<sizeof...(Ts), SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -646,14 +626,14 @@ SROOK_DEDUCED_TYPENAME enable_if<
 operator*(const vector_impl<Ts...>& v, T&& val)
 {
     typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<sizeof...(Ts), SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type scalar;
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::multiplies<>, scalar>(v, tuple::replicate<sizeof...(Ts)>(srook::forward<T>(val)));
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::multiplies<>, scalar>(v, tuple::replicate<sizeof...(Ts)>(srook::forward<T>(val)));
 }
 
 template <class... Ts, class T>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR 
 SROOK_DEDUCED_TYPENAME enable_if<
     type_traits::detail::Land<is_convertible<SROOK_DEDUCED_TYPENAME decay<T>::type, Ts>...>::value,
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         vector_impl<Ts...>, std::multiplies<>, 
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<sizeof...(Ts), SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -667,7 +647,7 @@ template <class T, class Exp>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR
 SROOK_DEDUCED_TYPENAME enable_if<
     detail::has_exp_tag<Exp>::value, 
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         Exp, std::multiplies<>,
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::size, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -675,14 +655,14 @@ SROOK_DEDUCED_TYPENAME enable_if<
 operator*(const Exp& exp, T&& val) SROOK_NOEXCEPT_TRUE
 {
     typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::size, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type scalar;
-    return srook::math::detail::Expression<Exp, std::multiplies<>, scalar>(exp, tuple::replicate<Exp::size>(srook::forward<T>(val)));
+    return srook::math::linear_algebra::detail::Expression<Exp, std::multiplies<>, scalar>(exp, tuple::replicate<Exp::size>(srook::forward<T>(val)));
 }
 
 template <class T, class Exp>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR
 SROOK_DEDUCED_TYPENAME enable_if<
     detail::has_exp_tag<Exp>::value, 
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         Exp, std::multiplies<>,
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::size, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -697,7 +677,7 @@ template <class... Ts, class T>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR
 SROOK_DEDUCED_TYPENAME enable_if<
     type_traits::detail::Land<is_convertible<SROOK_DEDUCED_TYPENAME decay<T>::type, Ts>...>::value,
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         vector_impl<Ts...>, std::divides<>, 
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<sizeof...(Ts), SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -705,14 +685,14 @@ SROOK_DEDUCED_TYPENAME enable_if<
 operator/(const vector_impl<Ts...>& v, T&& val)
 {
     typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<sizeof...(Ts), SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type scalar;
-    return srook::math::detail::Expression<vector_impl<Ts...>, std::divides<>, scalar>(v, tuple::replicate<sizeof...(Ts)>(srook::forward<T>(val)));
+    return srook::math::linear_algebra::detail::Expression<vector_impl<Ts...>, std::divides<>, scalar>(v, tuple::replicate<sizeof...(Ts)>(srook::forward<T>(val)));
 }
 
 template <class T, class Exp>
 SROOK_FORCE_INLINE SROOK_CONSTEXPR
 SROOK_DEDUCED_TYPENAME enable_if<
     detail::has_exp_tag<Exp>::value, 
-    srook::math::detail::Expression<
+    srook::math::linear_algebra::detail::Expression<
         Exp, std::divides<>,
         SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::size, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type
     >
@@ -720,7 +700,7 @@ SROOK_DEDUCED_TYPENAME enable_if<
 operator/(const Exp& exp, T&& val) SROOK_NOEXCEPT_TRUE
 {
     typedef SROOK_DEDUCED_TYPENAME tmpl::vt::transfer<vector_impl, SROOK_DEDUCED_TYPENAME tmpl::vt::replicate<Exp::size, SROOK_DEDUCED_TYPENAME decay<T>::type>::type>::type scalar;
-    return srook::math::detail::Expression<Exp, std::divides<>, scalar>(exp, tuple::replicate<Exp::size>(srook::forward<T>(val)));
+    return srook::math::linear_algebra::detail::Expression<Exp, std::divides<>, scalar>(exp, tuple::replicate<Exp::size>(srook::forward<T>(val)));
 }
 
 } // namespace detail
@@ -794,19 +774,19 @@ inner_product(const Exp1& exp1, const Exp2& exp2) SROOK_NOEXCEPT_TRUE
 
 
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(math, srook)
+} SROOK_NESTED_NAMESPACE_END(linear_algebra, math, srook)
 
 namespace std {
 
 template <class... Ts>
-struct tuple_size<srook::math::detail::vector_impl<Ts...>> : integral_constant<std::size_t, sizeof...(Ts)> {};
+struct tuple_size<srook::math::linear_algebra::detail::vector_impl<Ts...>> : integral_constant<std::size_t, sizeof...(Ts)> {};
 
 template <std::size_t I, class... Ts>
-struct tuple_element<I, srook::math::detail::vector_impl<Ts...>> 
+struct tuple_element<I, srook::math::linear_algebra::detail::vector_impl<Ts...>> 
     : srook::tmpl::vt::boolean<
         srook::tmpl::vt::ignore<SROOK_NULLOPT_T>::template generate,
-        srook::math::detail::index_bind<I>::template generate,
-        srook::math::detail::is_onemore,
+        srook::math::linear_algebra::detail::index_bind<I>::template generate,
+        srook::math::linear_algebra::detail::is_onemore,
         Ts...
     > {};
 

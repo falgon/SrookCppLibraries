@@ -10,7 +10,8 @@
 
 #include <srook/config.hpp>
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
-#include <srook/math/vector/impl.hpp>
+#include <srook/math/linear_algebra/vector/impl.hpp>
+#include <srook/math/linear_algebra/matrix/impl.hpp>
 #include <srook/tmpl/vt/at.hpp>
 #include <srook/tmpl/vt/bind.hpp>
 #include <srook/tmpl/vt/map.hpp>
@@ -19,7 +20,7 @@
 #include <srook/tmpl/vt/bind.hpp>
 #include <complex>
 
-SROOK_NESTED_NAMESPACE(srook, math) {
+SROOK_NESTED_NAMESPACE(srook, math, linear_algebra) {
 SROOK_INLINE_NAMESPACE(v1)
 
 template <class... Ts>
@@ -42,6 +43,9 @@ public:
 };
 
 namespace detail {
+
+template <class... Ts>
+struct is_vector<vector<Ts...>> : SROOK_TRUE_TYPE {};
 
 template <class... Ts>
 struct holder;
@@ -191,13 +195,16 @@ public:
 
 // helper functions
 template <class... Ts>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> make_vector(Ts&&... ts) SROOK_NOEXCEPT_TRUE
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME
+enable_if<type_traits::detail::Land<type_traits::detail::Lnot<detail::is_matrix<SROOK_DEDUCED_TYPENAME decay<Ts>::type>>...>::value, vector<Ts...>>::type
+make_vector(Ts&&... ts) SROOK_NOEXCEPT_TRUE
 {
     return vector<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>(srook::forward<Ts>(ts)...);
 }
 
 template <class... Ts>
-SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> make_vector(const std::tuple<Ts...>& ts) SROOK_NOEXCEPT_TRUE
+SROOK_FORCE_INLINE SROOK_CONSTEXPR vector<Ts...> 
+make_vector(const std::tuple<Ts...>& ts) SROOK_NOEXCEPT_TRUE
 {
     return vector<Ts...>(ts);
 }
@@ -211,6 +218,15 @@ make_vector(Exp&& exp) SROOK_NOEXCEPT_TRUE
     return vec_type(srook::forward<Exp>(exp));
 }
 
+template <class... Row>
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME
+enable_if<detail::matrix_impl<Row...>::column_length == 1, vector<SROOK_DEDUCED_TYPENAME std::tuple_element<0, Row>::type...>>::type
+make_vector(const detail::matrix_impl<Row...>& m) SROOK_NOEXCEPT_TRUE
+{
+    typedef vector<SROOK_DEDUCED_TYPENAME std::tuple_element<0, Row>::type...> vec_type;
+    return vec_type(m);
+}
+
 #if SROOK_CPP_DEDUCTION_GUIDES
 template <class... Ts>
 vector(Ts&&...) -> vector<SROOK_DEDUCED_TYPENAME decay<Ts>::type...>;
@@ -220,19 +236,19 @@ vector(const std::tuple<Ts...>&) -> vector<Ts...>;
 #endif
 
 SROOK_INLINE_NAMESPACE_END
-} SROOK_NESTED_NAMESPACE_END(math, srook)
+} SROOK_NESTED_NAMESPACE_END(linear_algebra, math, srook)
 
 namespace std {
 
 template <class... Ts>
-struct tuple_size<srook::math::vector<Ts...>> : integral_constant<std::size_t, sizeof...(Ts)> {};
+struct tuple_size<srook::math::linear_algebra::vector<Ts...>> : integral_constant<std::size_t, sizeof...(Ts)> {};
 
 template <std::size_t I, class... Ts>
-struct tuple_element<I, srook::math::vector<Ts...>> 
+struct tuple_element<I, srook::math::linear_algebra::vector<Ts...>> 
     : srook::tmpl::vt::boolean<
         srook::tmpl::vt::ignore<SROOK_NULLOPT_T>::template generate,
-        srook::math::detail::index_bind<I>::template generate,
-        srook::math::detail::is_onemore,
+        srook::math::linear_algebra::detail::index_bind<I>::template generate,
+        srook::math::linear_algebra::detail::is_onemore,
         Ts...
     > {};
     

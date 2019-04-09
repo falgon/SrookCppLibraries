@@ -6,6 +6,7 @@
 #include <srook/config/noexcept_detection.hpp>
 #include <srook/type_traits/concepts/cxx17/invoke.hpp>
 #include <srook/type_traits/invoke_result.hpp>
+#include <srook/type_traits/is_nothrow_invocable.hpp>
 
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT
 
@@ -13,7 +14,8 @@ namespace srook {
 namespace functional {
 
 template <class F, class... Args>
-typename invoke_result<F, Args...>::type invoke(F&& f, Args&&... args) SROOK_NOEXCEPT_TRUE
+SROOK_FORCE_INLINE SROOK_CONSTEXPR SROOK_DEDUCED_TYPENAME invoke_result<F, Args...>::type invoke(F&& f, Args&&... args)
+SROOK_NOEXCEPT(is_nothrow_invocable<SROOK_DEDUCED_TYPENAME decay<F>::type, Args&&...>::value)
 {
     return cxx17::concepts::INVOKE(std::forward<F>(f), std::forward<Args>(args)...);
 }

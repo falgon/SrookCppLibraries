@@ -14,35 +14,35 @@ SROOK_INLINE_NAMESPACE(v1)
 namespace detail {
 
 template <class F, class... Args>
-inline auto INVOKE(F&& f, Args&&... args)
+inline SROOK_CONSTEXPR auto INVOKE(F&& f, Args&&... args)
 -> decltype(std::forward<F>(f)(std::forward<Args>(args)...))
 {
     return std::forward<F>(f)(std::forward<Args>(args)...);
 }
 
 template <class Base, class T, class Derived>
-inline auto INVOKE(T Base::*pmd, Derived&& ref)
+inline SROOK_CONSTEXPR auto INVOKE(T Base::*pmd, Derived&& ref)
 -> decltype(std::forward<Derived>(ref).*pmd)
 {
     return std::forward<Derived>(ref).*pmd;
 }
 
 template <class Base, class T, class Derived, class... Args>
-inline auto INVOKE(T Base::*pmf, Derived&& ref, Args&&... args)
+inline SROOK_CONSTEXPR auto INVOKE(T Base::*pmf, Derived&& ref, Args&&... args)
 -> decltype((std::forward<Derived>(ref).*pmf)(std::forward<Args>(args)...))
 {
     return (std::forward<Derived>(ref).*pmf)(std::forward<Args>(args)...);
 }
 
 template <class PMD, class Pointer>
-inline auto INVOKE(PMD&& pmd, Pointer&& ptr)
-    -> decltype((*std::forward<Pointer>(ptr)).*std::forward<PMD>(pmd))
+inline SROOK_CONSTEXPR auto INVOKE(PMD&& pmd, Pointer&& ptr)
+-> decltype((*std::forward<Pointer>(ptr)).*std::forward<PMD>(pmd))
 {
     return (*std::forward<Pointer>(ptr)).*std::forward<PMD>(pmd);
 }
 
 template <class PMF, class Pointer, class... Args>
-inline auto INVOKE(PMF&& pmf, Pointer&& ptr, Args&&... args)
+inline SROOK_CONSTEXPR auto INVOKE(PMF&& pmf, Pointer&& ptr, Args&&... args)
 -> decltype(((*std::forward<Pointer>(ptr)).*std::forward<PMF>(pmf))(std::forward<Args>(args)...))
 {
     return ((*std::forward<Pointer>(ptr)).*std::forward<PMF>(pmf))(std::forward<Args>(args)...);

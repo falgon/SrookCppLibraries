@@ -21,11 +21,19 @@ template <class...>
 struct and_impl;
 
 template <class... Xs>
-struct and_impl<SROOK_TRUE_TYPE, Xs...> 
+struct and_impl<integral_constant<bool, true>, Xs...>
     : and_impl<Xs...> {};
 
 template <class... Xs>
-struct and_impl<SROOK_FALSE_TYPE, Xs...> 
+struct and_impl<std::integral_constant<bool, true>, Xs...>
+    : and_impl<Xs...> {};
+
+template <class... Xs>
+struct and_impl<integral_constant<bool, false>, Xs...>
+    : SROOK_FALSE_TYPE {};
+
+template <class... Xs>
+struct and_impl<std::integral_constant<bool, false>, Xs...>
     : SROOK_FALSE_TYPE {};
 
 template <>

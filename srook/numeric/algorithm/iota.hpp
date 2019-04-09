@@ -13,6 +13,7 @@
 #include <srook/type_traits/is_range.hpp>
 #include <srook/algorithm/for_each.hpp>
 #include <srook/iterator/range_access.hpp>
+#include <srook/execution.hpp>
 #if SROOK_HAS_THREADS
 #   include <srook/thread.hpp>
 #endif

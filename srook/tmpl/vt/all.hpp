@@ -36,7 +36,7 @@ using all_t = SROOK_DEDUCED_TYPENAME all<F, Ts...>::type;
 
 #if SROOK_CPP_VARIABLE_TEMPLATES
 template <template <class...> class F, class... Ts>
-SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool allv = all<F, Ts...>::type::value;
+SROOK_INLINE_VARIABLE SROOK_CONSTEXPR bool all_v = all<F, Ts...>::type::value;
 #endif
 
 SROOK_INLINE_NAMESPACE_END
