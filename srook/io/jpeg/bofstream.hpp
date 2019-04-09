@@ -192,7 +192,7 @@ private:
 		if(p.second.forward_iter + p.first.n < p.second.last){
 			p.second.set_fullbit();
 
-			if constexpr(srook::has_iterator_v<std::decay_t<Range>>){
+			if constexpr(srook::type_traits::has_iterator_v<std::decay_t<Range>>){
 				std::memcpy(p.second.forward_iter,r.data(),p.first.n);
 			}else{
 				std::memcpy(p.second.forward_iter,r,p.first.n);

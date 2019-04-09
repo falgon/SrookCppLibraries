@@ -115,7 +115,7 @@ private:
         if (++forward_iter >= last) readflag = false;
     }
 
-    template <class Range, REQUIRES(srook::has_iterator_v<std::decay_t<Range> >)>
+    template <class Range, REQUIRES(srook::type_traits::has_iterator_v<std::decay_t<Range> >)>
     friend std::pair<const decltype(Bytes) &, bifstream&>
     operator>>(std::pair<const decltype(Bytes) &, bifstream&> p, Range& ar) noexcept(false)
     {
@@ -135,7 +135,7 @@ private:
         return p;
     }
 
-    template <class Value, REQUIRES(!srook::is_callable_v<std::decay_t<Value> > and !srook::has_iterator_v<std::decay_t<Value> >)>
+    template <class Value, REQUIRES(!srook::is_callable_v<std::decay_t<Value> > and !srook::type_traits::has_iterator_v<std::decay_t<Value> >)>
     friend std::pair<const decltype(Byte) &, bifstream&>
     operator>>(std::pair<const decltype(Byte) &, bifstream&> p, Value& src) noexcept(false)
     {
@@ -221,7 +221,7 @@ private:
         return p;
     }
 
-    template <class Range, REQUIRES(srook::has_iterator_v<std::decay_t<Range> >)>
+    template <class Range, REQUIRES(srook::type_traits::has_iterator_v<std::decay_t<Range> >)>
     friend std::pair<const Byte_n&, bifstream&>
     operator>>(std::pair<const Byte_n&, bifstream&> p, Range& r) noexcept(false)
     {
