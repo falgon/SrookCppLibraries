@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CONFIG_COMPILER_MSVC_CORE_HPP
 #define INCLUDED_SROOK_CONFIG_COMPILER_MSVC_CORE_HPP
 #ifdef _MSC_VER

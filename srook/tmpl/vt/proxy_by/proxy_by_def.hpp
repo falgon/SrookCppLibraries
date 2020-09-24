@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_TMPL_VT_PROXY_BY_PROXY_BY_DEF_HPP
 #define INCLUDED_SROOK_TMPL_VT_PROXY_BY_PROXY_BY_DEF_HPP
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCULDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_EQUAL_HPP
 #define INCULDED_SROOK_MPL_CONSTANT_SEQUENCE_ALGORITHM_EQUAL_HPP
 #include<utility>

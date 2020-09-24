@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Roki
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #include <srook/brainfk/brainfk.hpp>
 
 int main(const int argc, const char* argv[])

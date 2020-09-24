@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_ITERATOR_HPP
 #define INCLUDED_ITERATOR_HPP
 #include <srook/iterator/ostream_joiner.hpp>

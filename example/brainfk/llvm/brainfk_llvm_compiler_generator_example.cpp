@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2018 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #include <srook/brainfk/llvm/brainfk_compiler.hpp>
 
 int main()

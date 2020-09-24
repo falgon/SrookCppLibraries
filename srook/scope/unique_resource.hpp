@@ -1,5 +1,5 @@
 // This header inspired P0052R5
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 
 #ifndef INCLUDED_SROOK_SCOPE_UNIQUE_RESOURCE_HPP
 #define INCLUDED_SROOK_SCOPE_UNIQUE_RESOURCE_HPP

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
 #define INCLUDE_SROOK_TYPE_TRAITS_HAS_ITERATOR
 #if SROOK_CPLUSPLUS >= SROOK_CPLUSPLUS11_CONSTANT

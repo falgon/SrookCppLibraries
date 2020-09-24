@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CXX17_MPL_RUN_LENGTH_HPP
 #define INCLUDED_SROOK_CXX17_MPL_RUN_LENGTH_HPP
 #include<srook/cxx17/mpl/any_pack/any_pack.hpp>

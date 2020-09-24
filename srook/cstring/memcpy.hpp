@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_CSTRING_MEMCPY_HPP
 #define INCLUDED_CSTRING_MEMCPY_HPP
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDE_SROOK_CONFIG_FEATURE_DELETE_HPP
 #define INCLUDE_SROOK_CONFIG_FEATURE_DELETE_HPP
 

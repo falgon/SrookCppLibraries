@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_MPL_CONSTANT_SEQUENCE_ALGORITHM_IS_HEAP_HPP
 #define INCLUDED_MPL_CONSTANT_SEQUENCE_ALGORITHM_IS_HEAP_HPP
 #include<srook/mpl/constant_sequence/algorithm/minmax.hpp>

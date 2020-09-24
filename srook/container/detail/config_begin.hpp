@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CONTAINER_DETAIL_CONFIG_BEGIN_HPP
 #define INCLUDED_SROOK_CONTAINER_DETAIL_CONFIG_BEGIN_HPP
 
