@@ -1,0 +1,15 @@
+version: '3'
+services:
+    test:
+        image: roki/srook-cpp-lib-test:1.0.0
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                - cpuproc=1
+                - sde_url=${SDE_URL}
+        container_name: srook-cpp-lib-test
+        volumes:
+            - ../:/proj
+        environment:
+            - sde_url

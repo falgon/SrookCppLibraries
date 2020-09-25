@@ -1,5 +1,5 @@
 // Inspired by p0653r1
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_MEMORY_TO_ADDRESS_HPP
 #define INCLUDED_SROOK_MEMORY_TO_ADDRESS_HPP
 #include <srook/config/attribute/force_inline.hpp>

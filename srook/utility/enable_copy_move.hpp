@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_UTILITY_ENABLE_COPY_MOVE_HPP
 #define INCLUDED_SROOK_UTILITY_ENABLE_COPY_MOVE_HPP
 

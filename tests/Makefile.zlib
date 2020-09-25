@@ -5,7 +5,7 @@
 GXX := g++-7
 INCLUDE_DIR := -I../ -isystem ../include
 FLAGS := -Wall -Wextra -pedantic -std=c++1z
-LIBS := -L../lib -lboost_program_options -lz -pthread
+LIBS := -L/usr/local/lib -lboost_program_options -lz -pthread
 TARGET1 := ./algorithm/coding/zlib/zlib_test.cpp
 TARGET2 := ./algorithm/coding/zlib/blob_decompress.cpp
 

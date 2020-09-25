@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CONSTANT_SEQUENCE_ALGORITHM_HPP
 #define INCLUDED_SROOK_CONSTANT_SEQUENCE_ALGORITHM_HPP
 #include <srook/mpl/constant_sequence/algorithm/adjacent_find.hpp>

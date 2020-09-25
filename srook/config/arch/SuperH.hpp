@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 // Detecting to pre-defined macro of [SuperH architecture](http://en.wikipedia.org/wiki/SuperH)
 #ifndef INCLUDED_SROOK_CONFIG_ARCH_SUPERH_HPP
 #define INCLUDED_SROOK_CONFIG_ARCH_SUPERH_HPP

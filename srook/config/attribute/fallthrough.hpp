@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_CONFIG_ATTRIBUTE_FALLTHROUGH_HPP
 #define INCLUDED_SROOK_CONFIG_ATTRIBUTE_FALLTHROUGH_HPP
 #include <srook/config/cpp_predefined/__cplusplus_constant.hpp>

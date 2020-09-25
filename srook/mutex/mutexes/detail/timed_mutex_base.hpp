@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_MUTEX_MUTEXES_DETAIL_TIMED_MUTEX_BASE_HPP
 #define INCLUDED_SROOK_MUTEX_MUTEXES_DETAIL_TIMED_MUTEX_BASE_HPP
 

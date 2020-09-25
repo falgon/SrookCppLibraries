@@ -1,4 +1,4 @@
-// Copyright (C) 2011-2019 Roki. Distributed under the MIT License
+// Copyright (C) 2011-2020 Roki. Distributed under the MIT License
 #ifndef INCLUDED_SROOK_RANGE_ADAPTOR_MOVED
 #define INCLUDED_SROOK_RANGE_ADAPTOR_MOVED
 #include <srook/config.hpp>
